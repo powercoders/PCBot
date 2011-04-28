@@ -172,7 +172,7 @@ public class Walking extends MethodProvider {
 	public boolean walkTileMM(final RSTile t, final int x, final int y) {
 		int xx = t.getX(), yy = t.getY();
 		if (x > 0) {
-			if (random(1, 3) == random(1, 3)) { //Side note: random(int, int) 2nd param is EXCLUSIVE. So random(1, 3) is a 50/50 chance.
+			if (random(1, 3) == random(1, 3)) { //Side note: random(int, int) 2nd param is EXCLUSIVE. So random(1, 3) is a 50/50 chance to be 1 or 2
 				xx += random(0, x + 1);
 			} else {
 				xx -= random(0, x + 1);
@@ -227,10 +227,7 @@ public class Walking extends MethodProvider {
 			y -= random(0, r + 1);
 		}
 		RSTile dest = new RSTile(x, y);
-		if (methods.players.getMyPlayer().getLocation().equals(dest)) {
-			return false;
-		}
-		return walkTileMM(dest, 0, 0);
+		return !methods.players.getMyPlayer().getLocation().equals(dest) && walkTileMM(dest, 0, 0);
 	}
 
 	/**
@@ -243,8 +240,7 @@ public class Walking extends MethodProvider {
 	 * @return True if successful.
 	 */
 	public boolean walkTileOnScreen(final RSTile tileToWalk) {
-		return methods.tiles.doAction(methods.calc.getTileOnScreen(tileToWalk),
-				"Walk ");
+		return methods.tiles.doAction(methods.calc.getTileOnScreen(tileToWalk), "Walk ");
 	}
 
 	/**
@@ -267,13 +263,11 @@ public class Walking extends MethodProvider {
 	public boolean rest(final int stopEnergy) {
 		int energy = getEnergy();
 		for (int d = 0; d < 5; d++) {
-			methods.interfaces.getComponent(INTERFACE_RUN_ORB, 1).doAction(
-					"Rest");
+			methods.interfaces.getComponent(INTERFACE_RUN_ORB, 1).doAction("Rest");
 			methods.mouse.moveSlightly();
 			sleep(random(400, 600));
 			int anim = methods.players.getMyPlayer().getAnimation();
-			if (anim == 12108 || anim == 2033 || anim == 2716 || anim == 11786
-					|| anim == 5713) {
+			if (anim == 12108 || anim == 2033 || anim == 2716 || anim == 11786 || anim == 5713) {
 				break;
 			}
 			if (d == 4) {

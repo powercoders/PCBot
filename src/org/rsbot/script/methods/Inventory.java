@@ -218,11 +218,11 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Drops the item in the specified column and row.
-	 * 
-	 * @param col
-	 *            The column the item is in.
-	 * @param row
-	 *            The row the item is in.
+	 *
+	 * @param col The column the item is in.
+	 * @param row The row the item is in.
+	 * @return <tt>true</tt> if we tried to drop the item,
+	 *         <tt>false</tt> if not (e.g., if item is undroppable)
 	 */
 	public boolean dropItem(final int col, final int row) {
 		if (methods.interfaces.canContinue()) {

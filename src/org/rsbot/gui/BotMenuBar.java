@@ -50,12 +50,14 @@ public class BotMenuBar extends JMenuBar {
 
 		TITLES = new String[]{"File", "Edit", "View", "Help"};
 		ELEMENTS = new String[][]{
-				{"New Bot", "Close Bot", "-", /*"Service Key", "-",*/ "Run Script", "Stop Script",
-						"Pause Script", "-", "Save Screenshot",
-						"-", "Exit"},
-				{"Accounts", "-", "ToggleF Force Input", "ToggleF Less CPU",
-						"-", "ToggleF Disable Anti-Randoms",
-						"ToggleF Disable Auto Login", "-",
+				{"New Bot", "Close Bot", "-",
+						/*"Service Key", "-",*/
+						"Run Script", "Stop Script", "Pause Script", "-",
+						"Save Screenshot", "-",
+						"Exit"},
+				{"Accounts", "-",
+						"ToggleF Force Input", "Less CPU", "-",
+						"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", "-",
 						"ToggleF Disable Advertisements", "ToggleF Disable Confirmations"}, constructDebugs(),
 				{"Site", "Project", "About"}};
 	}
@@ -82,8 +84,7 @@ public class BotMenuBar extends JMenuBar {
 		debugItems.add("-");
 		for (String key : DEBUG_MAP.keySet()) {
 			Class<?> el = DEBUG_MAP.get(key);
-			if (!(TextPaintListener.class.isAssignableFrom(el))
-					&& !(PaintListener.class.isAssignableFrom(el))) {
+			if (!(TextPaintListener.class.isAssignableFrom(el)) && !(PaintListener.class.isAssignableFrom(el))) {
 				debugItems.add(key);
 			}
 		}
@@ -96,10 +97,10 @@ public class BotMenuBar extends JMenuBar {
 		return debugItems.toArray(new String[debugItems.size()]);
 	}
 
-	private Map<String, JCheckBoxMenuItem> eventCheckMap = new HashMap<String, JCheckBoxMenuItem>();
-	private Map<String, JCheckBoxMenuItem> commandCheckMap = new HashMap<String, JCheckBoxMenuItem>();
-	private Map<String, JMenuItem> commandMenuItem = new HashMap<String, JMenuItem>();
-	private ActionListener listener;
+	private final Map<String, JCheckBoxMenuItem> eventCheckMap = new HashMap<String, JCheckBoxMenuItem>();
+	private final Map<String, JCheckBoxMenuItem> commandCheckMap = new HashMap<String, JCheckBoxMenuItem>();
+	private final Map<String, JMenuItem> commandMenuItem = new HashMap<String, JMenuItem>();
+	private final ActionListener listener;
 
 	public BotMenuBar(ActionListener listener) {
 		this.listener = listener;
@@ -115,8 +116,7 @@ public class BotMenuBar extends JMenuBar {
 	}
 
 	public void setPauseScript(boolean pause) {
-		commandMenuItem.get("Pause Script").setText(
-				pause ? "Resume Script" : "Pause Script");
+		commandMenuItem.get("Pause Script").setText(pause ? "Resume Script" : "Pause Script");
 	}
 
 	public void setBot(Bot bot) {
@@ -130,8 +130,7 @@ public class BotMenuBar extends JMenuBar {
 				item.setSelected(false);
 				item.setEnabled(false);
 			}
-			disable("All Debugging", "Force Input", "Less CPU",
-					"Disable Anti-Randoms", "Disable Auto Login");
+			disable("All Debugging", "Force Input", "Disable Anti-Randoms", "Disable Auto Login");
 		} else {
 			commandMenuItem.get("Close Bot").setEnabled(true);
 			commandMenuItem.get("Run Script").setEnabled(true);
@@ -139,11 +138,9 @@ public class BotMenuBar extends JMenuBar {
 			commandMenuItem.get("Pause Script").setEnabled(true);
 			commandMenuItem.get("Save Screenshot").setEnabled(true);
 			int selections = 0;
-			for (Map.Entry<String, JCheckBoxMenuItem> entry : eventCheckMap
-					.entrySet()) {
+			for (Map.Entry<String, JCheckBoxMenuItem> entry : eventCheckMap.entrySet()) {
 				entry.getValue().setEnabled(true);
-				boolean selected = bot
-						.hasListener(DEBUG_MAP.get(entry.getKey()));
+				boolean selected = bot.hasListener(DEBUG_MAP.get(entry.getKey()));
 				entry.getValue().setSelected(selected);
 				if (selected) {
 					++selections;
@@ -151,7 +148,6 @@ public class BotMenuBar extends JMenuBar {
 			}
 			enable("All Debugging", selections == eventCheckMap.size());
 			enable("Force Input", bot.overrideInput);
-			enable("Less CPU", bot.disableRendering);
 			enable("Disable Anti-Randoms", bot.disableRandoms);
 			enable("Disable Auto Login", bot.disableAutoLogin);
 		}
@@ -180,12 +176,10 @@ public class BotMenuBar extends JMenuBar {
 		}
 		FileReader freader = null;
 		BufferedReader in = null;
-
 		try {
 			freader = new FileReader(path);
 			in = new BufferedReader(freader);
 			String line;
-
 			while ((line = in.readLine()) != null) {
 				line = line.trim();
 				if (commandCheckMap.containsKey(line)) {
@@ -209,16 +203,13 @@ public class BotMenuBar extends JMenuBar {
 		String path = GlobalConfiguration.Paths.getMenuBarPrefs();
 		FileWriter fstream = null;
 		BufferedWriter out = null;
-
 		try {
 			File f = new File(path);
 			if (f.exists()) {
 				f.delete();
 			}
-
 			fstream = new FileWriter(path);
 			out = new BufferedWriter(fstream);
-
 			for (Entry<String, JCheckBoxMenuItem> item : commandCheckMap.entrySet()) {
 				boolean checked = item.getValue().isSelected();
 				if (!checked) {
@@ -228,7 +219,6 @@ public class BotMenuBar extends JMenuBar {
 				out.newLine();
 			}
 		} catch (IOException ioe) {
-
 		} finally {
 			try {
 				if (out != null) {
@@ -249,7 +239,6 @@ public class BotMenuBar extends JMenuBar {
 				menu.add(new JSeparator());
 			} else {
 				JMenuItem jmi;
-
 				if (e.startsWith("Toggle")) {
 					e = e.substring("Toggle".length());
 					char state = e.charAt(0);
@@ -266,7 +255,6 @@ public class BotMenuBar extends JMenuBar {
 					commandCheckMap.put(e, ji);
 				} else {
 					jmi = new JMenuItem(e);
-
 					commandMenuItem.put(e, jmi);
 				}
 				jmi.addActionListener(listener);
