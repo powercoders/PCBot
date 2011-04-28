@@ -61,7 +61,7 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	@Override
 	public final void paint(final Graphics graphics) {
 		if (client != null) {
-			client.paint(graphics);
+			//client.paint(graphics);
 		} else {
 			Font font = new Font("Helvetica", 1, 13);
 			FontMetrics fontMetrics = getFontMetrics(font);
@@ -157,7 +157,7 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	@Override
 	public final void update(Graphics graphics) {
 		if (client != null) {
-			client.update(graphics);
+			//client.update(graphics);
 		} else {
 			paint(graphics);
 		}
