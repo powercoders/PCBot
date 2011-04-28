@@ -96,7 +96,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
             t += " beta";
         if (title != null)
             t = title + " - " + t;
-        super.setTitle("Janca's Fork - " + t);
+        super.setTitle(t);
     }
 
     public void actionPerformed(ActionEvent evt) {
