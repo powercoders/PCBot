@@ -172,12 +172,12 @@ public class Calculations extends MethodProvider {
 	 *               0-1;
 	 * @param height Height offset (normal to the ground) to return the
 	 *               <code>Point</code> at.
-	 * @return <code>Point</code> based on position on the game plane; otherwise
+	 * @return <code>new Point(-1, -1)</code> if tile is null or a <code>Point</code> based on position on the game plane; otherwise
 	 *         <code>new Point(-1, -1)</code>.
 	 */
 	public Point tileToScreen(final RSTile tile, final double dX, final double dY, final int height) {
-		return groundToScreen((int) ((tile.getX() - methods.client.getBaseX() + dX) * 512),
-				(int) ((tile.getY() - methods.client.getBaseY() + dY) * 512), height);
+		return tile != null ? groundToScreen((int) ((tile.getX() - methods.client.getBaseX() + dX) * 512),
+				(int) ((tile.getY() - methods.client.getBaseY() + dY) * 512), height) : new Point(-1, -1);
 	}
 
 	/**
