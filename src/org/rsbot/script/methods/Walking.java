@@ -37,13 +37,66 @@ public class Walking extends MethodProvider {
 	 * Generates a path from the player's current location to a destination
 	 * tile.
 	 * 
-	 * @param destination
-	 *            The destination tile.
+	 * @param destination The destination tile.
 	 * @return The path as an RSPath.
 	 */
 	public RSPath getPath(final RSTile destination) {
 		return new RSLocalPath(methods, destination);
 	}
+	
+	/**
+	*Finds a tile that is not ubstructed by walls or interactable objects closest to a given tile
+	*
+	*@param t The tile to start searching from
+	*
+	*@return The closest tile to the parameter that is not obstructed by RSObjects, or null if the tile is too far away.
+	*/
+	public RSTile getUnobstructedTile(RSTile t) {
+		try {
+			RSObject o = methods.objects.getTopAt(t);
+			if (o == null || (!o.getType().equals(RSObject.Type.INTERACTABLE) && !o.getType().equals(RSObject.Type.BOUNDARY))) {
+				return t;
+			}
+			int x = t.getX(), y = t.getY();
+			for (int i = 0; i < 10; i++) {
+				o = methods.objects.getTopAt(new RSTile(x + 1 + i, y));
+				if (o == null || (!o.getType().equals(RSObject.Type.INTERACTABLE) && !o.getType().equals(RSObject.Type.BOUNDARY))) {
+					return o.getLocation();
+				}
+				o = methods.objects.getTopAt(new RSTile(x, y + 1 + i));
+				if (o == null || (!o.getType().equals(RSObject.Type.INTERACTABLE) && !o.getType().equals(RSObject.Type.BOUNDARY))) {
+					return o.getLocation();
+				}
+				o = methods.objects.getTopAt(new RSTile(x - 1 - i, y));
+				if (o == null || (!o.getType().equals(RSObject.Type.INTERACTABLE) && !o.getType().equals(RSObject.Type.BOUNDARY))) {
+					return o.getLocation();
+				}
+				o = methods.objects.getTopAt(new RSTile(x, y - 1 - i));
+				if (o == null || (!o.getType().equals(RSObject.Type.INTERACTABLE) && !o.getType().equals(RSObject.Type.BOUNDARY))) {
+					return o.getLocation();
+				}
+				o = methods.objects.getTopAt(new RSTile(x + 1 + i, y + 1 + i));
+				if (o == null || (!o.getType().equals(RSObject.Type.INTERACTABLE) && !o.getType().equals(RSObject.Type.BOUNDARY))) {
+					return o.getLocation();
+				}
+				o = methods.objects.getTopAt(new RSTile(x + 1 + i, y - 1 - i));
+				if (o == null || (!o.getType().equals(RSObject.Type.INTERACTABLE) && !o.getType().equals(RSObject.Type.BOUNDARY))) {
+					return o.getLocation();
+				}
+				o = methods.objects.getTopAt(new RSTile(x - 1 - i, y - 1 - i));
+				if (o == null || (!o.getType().equals(RSObject.Type.INTERACTABLE) && !o.getType().equals(RSObject.Type.BOUNDARY))) {
+					return o.getLocation();
+				}
+				o = methods.objects.getTopAt(new RSTile(x - 1 + i, y + 1 + i));
+				if (o == null || (!o.getType().equals(RSObject.Type.INTERACTABLE) && !o.getType().equals(RSObject.Type.BOUNDARY))) {
+					return o.getLocation();
+				}
+			}
+			return null;
+		} catch (Exception e) {
+			return null;
+		}
+    }
 	
 	/*
 	 * Generates a path from the player's current location to a destination tile

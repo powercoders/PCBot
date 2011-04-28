@@ -25,10 +25,13 @@ public class RSLocalPath extends RSPath {
 	protected int offX, offY;
 
 	private RSTilePath tilePath;
+	private RSTile origEnd;
 
 	public RSLocalPath(MethodContext ctx, RSTile end) {
 		super(ctx);
-		this.end = end;
+		origEnd = end;
+		RSTile temp = methods.walking.isLocal(end) ? methods.walking.getUnobstructedTile(end) : end;		
+		this.end = temp != null ? temp : end;
 	}
 
 	/**
@@ -54,6 +57,10 @@ public class RSLocalPath extends RSPath {
 			if (flags != null) {
 				base = methods.game.getMapBase();
 				RSTile start = methods.players.getMyPlayer().getLocation();
+				if (methods.walking.isLocal(origEnd)) {
+					RSTile temp = methods.walking.isLocal(origEnd) ? methods.walking.getUnobstructedTile(origEnd) : origEnd;
+					end = temp != null ? temp : origEnd;
+				}
 				RSTile[] tiles = findPath(start, end);
 				if (tiles == null) {
 					base = null;
