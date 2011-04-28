@@ -9,7 +9,7 @@ GOTO :eof
 
 :setvars
 SET cc=javac
-SET cflags=-g -Xlint:deprecation
+SET cflags=-g -verbose -Xlint:deprecation
 SET src=src
 SET lib=lib
 SET res=resources

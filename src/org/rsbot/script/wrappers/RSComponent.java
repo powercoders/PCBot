@@ -580,8 +580,18 @@ public class RSComponent extends MethodProvider {
 	 *
 	 * @return the absolute position or new Point(-1, -1) if null
 	 */
-	public Point getLocation() {
+	public Point getAbsoluteLocation() {
 		return new Point(getAbsoluteX(), getAbsoluteY());
+	}
+	
+	/**
+	*Gets a random Point of the child's area
+	*
+	*@return a random Point on the rectangle or new Point(-1, -1) if nulls
+	*/	
+	public Point getLocation() {
+		rectangle area = getArea();
+		return new Point((int) random(area.getMinX(), area.getMaxX()), (int) random(area.getMinY(), area.getMaxY()));
 	}
 
 	/**
