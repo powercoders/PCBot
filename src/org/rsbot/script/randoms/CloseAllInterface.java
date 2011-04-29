@@ -37,7 +37,6 @@ public class CloseAllInterface extends Random {
 		addChild(594, 48); // Report
 		addChild(275, 8); // Quest
 		addChild(206, 13); // Price check
-		addChild(266, 11); // Grove
 		addChild(102, 13); // Death items
 		addChild(14, 88, true); // New pin
 		addChild(14, 11); // Pin settings
