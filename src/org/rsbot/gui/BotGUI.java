@@ -9,6 +9,7 @@ import org.rsbot.script.internal.event.ScriptListener;
 import org.rsbot.script.methods.Environment;
 import org.rsbot.script.util.WindowUtil;
 import org.rsbot.service.ScriptDeliveryNetwork;
+import org.rsbot.service.TwitterUpdates;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.ScreenshotUtil;
 import org.rsbot.util.UpdateUtil;
@@ -64,6 +65,12 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					UpdateUtil updater = new UpdateUtil(BotGUI.this);
 					updater.checkUpdate(false);
 				}
+				TwitterUpdates.loadTweets(GlobalConfiguration.TwitterMessages);
+				(new Thread() {
+					public void run() {
+						ScriptDeliveryNetwork.getInstance().start();
+					}
+				}).start();
 			}
 		});
 	}
@@ -271,6 +278,11 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	public void addBot() {
+		final int max = 6;
+		if (bots.size() >= max) {
+			log.warning("Cannot run more than " + Integer.toString(max) + " bots");
+			return;
+		}
 		final Bot bot = new Bot();
 		bots.add(bot);
 		toolBar.addTab();
@@ -382,7 +394,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				}
 			}
 		});
-		setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON, GlobalConfiguration.Paths.ICON));
+		setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON));
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
