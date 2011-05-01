@@ -36,7 +36,7 @@ public class WebQueue {
 					if (tileFlags != null) {
 						addedString += tileFlags.toString() + "\n";
 						try {
-							Thread.sleep(5);
+							Thread.sleep(10);
 						} catch (InterruptedException ignored) {
 						}
 					}
@@ -44,6 +44,14 @@ public class WebQueue {
 				cacheWriter.add(addedString);
 				addedString = null;
 				theFlagsList2.clear();
+			}
+		}.start();
+	}
+
+	public static void Remove(final RSTile tile) {
+		new Thread() {
+			public void run() {
+
 			}
 		}.start();
 	}

@@ -26,7 +26,7 @@ public class DrawWeb implements PaintListener {
 		Iterator<Map.Entry<RSTile, TileFlags>> rs = Web.map.entrySet().iterator();
 		while (rs.hasNext()) {
 			TileFlags t = rs.next().getValue();
-			render.setColor(t.isBlocked() ? Color.red : Color.green);
+			render.setColor(t.isWalkable() ? t.isQuestionable() ? Color.yellow : Color.green : t.isWater() ? Color.cyan : Color.red);
 			if (ctx.calc.tileOnMap(t.getTile())) {
 				Point p = ctx.calc.tileToMinimap(t.getTile());
 				render.drawLine(p.x, p.y, p.x, p.y);
