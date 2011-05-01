@@ -4,6 +4,7 @@ SRC=src
 LIB=lib
 RES=resources
 BINDIR=bin
+SCRIPTBINDIR=$(BINDIR)/scripts
 LSTF=temp.txt
 IMGDIR=$(RES)/images
 MANIFEST=$(RES)/Manifest.txt
@@ -20,27 +21,32 @@ INSTALLDIR=$(HOME)/$(NAME)
 all: Bundle
 
 Bot:
-	@if [ ! -d $(BINDIR) ]; then mkdir $(BINDIR); fi
-	$(CC) $(CFLAGS) -d $(BINDIR) `find $(SRC) -name \*.java`
+	@if [ ! -d "$(BINDIR)" ]; then mkdir "$(BINDIR)"; fi
+	$(CC) $(CFLAGS) -d "$(BINDIR)" `find "$(SRC)" -name \*.java`
 
 Scripts: mostlyclean Bot
-	$(CC) $(CFLAGS) -cp $(BINDIR) $(SCRIPTS)/*.java
-	
+	@if [ ! -d "$(SCRIPTBINDIR)" ]; then mkdir "$(SCRIPTBINDIR)"; fi
+	@if test -d scripts && find scripts -name \*.java -type f | grep -q .; \
+	then \
+		echo "$(CC) $(CFLAGS) -cp $(BINDIR) -d $(SCRIPTBINDIR) $(SCRIPTS)/*.java"; \
+		$(CC) $(CFLAGS) -cp "$(BINDIR)" -d "$(SCRIPTBINDIR)" "$(SCRIPTS)"/*.java; \
+	fi
+
 Bundle: Scripts
-	@rm -fv $(LSTF)
-	@cp $(MANIFEST) $(LSTF)
-	@echo "Specification-Version: \"$(VERSION)\"" >> $(LSTF)
-	@echo "Implementation-Version: \"$(VERSION)\"" >> $(LSTF)
-	@if [ -e $(DIST) ]; then rm -fv $(DIST); fi
-	jar cfm $(DIST) $(LSTF) -C $(BINDIR) . $(VERSIONFILE) $(SCRIPTS)/*.class $(IMGDIR)/* $(RES)/*.bat $(RES)/*.sh
-	@rm -f $(LSTF)
+	@rm -fv "$(LSTF)"
+	@cp "$(MANIFEST)" "$(LSTF)"
+	@echo "Specification-Version: \"$(VERSION)\"" >> "$(LSTF)"
+	@echo "Implementation-Version: \"$(VERSION)\"" >> "$(LSTF)"
+	@if [ -e "$(DIST)" ]; then rm -fv "$(DIST)"; fi
+	jar cfm "$(DIST)" "$(LSTF)" -C "$(BINDIR)" . "$(VERSIONFILE)" -C "$(SCRIPTBINDIR)" . "$(IMGDIR)"/* "$(RES)"/*.bat "$(RES)"/*.sh
+	@rm -f "$(LSTF)"
 
 mostlyclean:
-	@rm -fv $(SCRIPTS)/*.class
+	@rm -fv "$(SCRIPTBINDIR)"/*.class
 
 clean: mostlyclean
-	@rm -fv $(DIST)
-	@rm -rfv $(BINDIR)
+	@rm -fv "$(DIST)"
+	@rm -rfv "$(BINDIR)"
 
 remove:
 	@if [ -e "$(ACCOUNTS)" ]; then rm -fv "$(ACCOUNTS)"; fi
