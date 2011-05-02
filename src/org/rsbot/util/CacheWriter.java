@@ -1,5 +1,7 @@
 package org.rsbot.util;
 
+import org.rsbot.service.WebQueue;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +58,7 @@ public class CacheWriter {
 
 		public void run() {
 			List<String> outList = new ArrayList<String>();
-			while ((!destroy || queue.size() > 0) && file.exists() && file.canWrite()) {
+			while ((!destroy || queue.size() > 0 || WebQueue.weAreBuffering) && file.exists() && file.canWrite()) {
 				try {
 					if (removeQueue.size() > 0) {
 						removeStack.clear();
