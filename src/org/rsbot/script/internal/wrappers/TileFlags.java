@@ -69,7 +69,7 @@ public class TileFlags {
 			int flag = keysIterator.next();
 			flags += flag + "=";
 		}
-		return tile.getX() + "," + tile.getY() + tile.getZ() + "." + flags;
+		return tile.getX() + "," + tile.getY() + "," + tile.getZ() + "tile=data" + flags;
 	}
 
 	@Override
