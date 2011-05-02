@@ -17,11 +17,16 @@ public class WebQueue {
 	private static final Logger log = Logger.getLogger("WebQueue");
 	public static boolean weAreBuffering = false;
 	public static boolean speedBuffer = false;
+	public static int bufferingCount = 0;
 
 	public static void Create() {
 		if (cacheWriter == null) {
 			cacheWriter = new CacheWriter(GlobalConfiguration.Paths.getWebCache());
 		}
+	}
+
+	public static CacheWriter getCacheWriter() {
+		return cacheWriter;
 	}
 
 	public static void Add(final HashMap<RSTile, TileFlags> theFlagsList) {
@@ -33,6 +38,7 @@ public class WebQueue {
 					final HashMap<RSTile, TileFlags> theFlagsList2 = new HashMap<RSTile, TileFlags>();
 					theFlagsList2.putAll(theFlagsList);
 					final Map<RSTile, TileFlags> tl = Collections.unmodifiableMap(theFlagsList2);
+					bufferingCount += tl.size();
 					Iterator<Map.Entry<RSTile, TileFlags>> tileFlagsIterator = tl.entrySet().iterator();
 					while (tileFlagsIterator.hasNext()) {
 						TileFlags tileFlags = tileFlagsIterator.next().getValue();
@@ -55,6 +61,7 @@ public class WebQueue {
 					} catch (InterruptedException ignored) {
 					}
 					weAreBuffering = false;
+					bufferingCount -= tl.size();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -35,6 +35,18 @@ public class CacheWriter {
 		writer.destroyWriter();
 	}
 
+	public int queueSize(final int id) {
+		switch (id) {
+			case 0:
+				return queue.size();
+			case 1:
+				return removeQueue.size();
+			case 2:
+				return removeStack.size();
+		}
+		return -1;
+	}
+
 	private class QueueWriter extends Thread { //For slow systems and reduced lag, let's make writing slow and threaded (lol at thread and reducing cpu usage..).
 		private boolean destroy = false;
 		private final File file, tmpFile;
@@ -90,6 +102,7 @@ public class CacheWriter {
 								continue;
 							}
 						}
+						removeStack.clear();
 					}
 					FileWriter fileWriter = new FileWriter(file, true);
 					BufferedWriter out = new BufferedWriter(fileWriter);
