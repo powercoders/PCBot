@@ -12,7 +12,7 @@ VERSIONFILE=$(RES)/version.txt
 VERSION=`cat $(VERSIONFILE)`
 SCRIPTS=scripts
 NAME=RSBot
-DIST=RSBot.jar
+DIST=$(NAME).jar
 ACCOUNTS=$(HOME)/.$(shell echo $(NAME) | tr '[A-Z]' '[a-z]')acct
 INSTALLDIR=$(HOME)/$(NAME)
 
