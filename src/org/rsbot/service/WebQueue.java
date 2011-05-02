@@ -51,9 +51,13 @@ public class WebQueue {
 	public static void Remove(final RSTile tile) {
 		new Thread() {
 			public void run() {
-
+				cacheWriter.remove(tile.getX() + "," + tile.getY() + tile.getZ());
 			}
 		}.start();
+	}
+
+	public static boolean IsRunning() {
+		return cacheWriter.IsRunning();
 	}
 
 	public static void Destroy() {
