@@ -72,7 +72,7 @@ public class CacheWriter {
 							Iterator<String> removeLines = removeStack.listIterator();
 							while (removeLines.hasNext()) {
 								String str = removeLines.next();
-								if (line.contains(str)) {
+								if (str != null && line.contains(str)) {
 									good = false;
 									break;
 								}
