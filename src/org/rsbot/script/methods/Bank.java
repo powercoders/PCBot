@@ -726,6 +726,7 @@ public class Bank extends MethodProvider {
 	 * Gets the equipment items from the bank interface.
 	 *
 	 * @return All equipment items that are being worn.
+	 * @author LastCoder
 	 */
 	public RSItem[] getEquipmentItems() {
 		if (methods.interfaces.get(INTERFACE_EQUIPMENT).getComponent(
