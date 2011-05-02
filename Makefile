@@ -24,7 +24,11 @@ Bot:
 	$(CC) $(CFLAGS) -d "$(BINDIR)" `find "$(SRC)" -name \*.java`
 
 Scripts: mostlyclean Bot
-	$(CC) $(CFLAGS) -cp "$(BINDIR)" "$(SCRIPTS)"/*.java
+	@if test -d scripts && find scripts -name \*.java -type f | grep -q .; \
+	then \
+		echo "$(CC) $(CFLAGS) -cp $(BINDIR) $(SCRIPTS)/*.java"; \
+		$(CC) $(CFLAGS) -cp "$(BINDIR)" "$(SCRIPTS)"/*.java; \
+	fi
 
 Bundle: Scripts
 	@rm -fv "$(LSTF)"
