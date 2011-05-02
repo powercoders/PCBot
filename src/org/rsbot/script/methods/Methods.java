@@ -23,123 +23,123 @@ public class Methods {
 	/**
 	 * The singleton of Skills
 	 */
-	protected Skills skills;
+	protected static Skills skills;
 	/**
 	 * The singleton of Settings
 	 */
-	protected Settings settings;
+	protected static Settings settings;
 	/**
 	 * The singleton of Magic
 	 */
-	protected Magic magic;
+	protected static Magic magic;
 	/**
 	 * The singleton of Bank
 	 */
-	protected Bank bank;
+	protected static Bank bank;
 	/**
 	 * The singleton of Players
 	 */
-	protected Players players;
+	protected static Players players;
 	/**
 	 * The singleton of Store
 	 */
-	protected Store store;
+	protected static Store store;
 	/**
 	 * The singleton of GrandExchange
 	 */
-	protected GrandExchange grandExchange;
+	protected static GrandExchange grandExchange;
 	/**
 	 * The singletion of Hiscores
 	 */
-	protected Hiscores hiscores;
+	protected static Hiscores hiscores;
 	/**
 	 * The singleton of ClanChat
 	 */
-	protected ClanChat clanChat;
+	protected static ClanChat clanChat;
 	/**
 	 * The singleton of Camera
 	 */
-	protected Camera camera;
+	protected static Camera camera;
 	/**
 	 * The singleton of NPCs
 	 */
-	protected NPCs npcs;
+	protected static NPCs npcs;
 	/**
 	 * The singleton of GameScreen
 	 */
-	protected Game game;
+	protected static Game game;
 	/**
 	 * The singleton of Combat
 	 */
-	protected Combat combat;
+	protected static Combat combat;
 	/**
 	 * The singleton of Interfaces
 	 */
-	protected Interfaces interfaces;
+	protected static Interfaces interfaces;
 	/**
 	 * The singleton of Mouse
 	 */
-	protected Mouse mouse;
+	protected static Mouse mouse;
 	/**
 	 * The singleton of Keyboard
 	 */
-	protected Keyboard keyboard;
+	protected static Keyboard keyboard;
 	/**
 	 * The singleton of Menu
 	 */
-	protected Menu menu;
+	protected static Menu menu;
 	/**
 	 * The singleton of Tiles
 	 */
-	protected Tiles tiles;
+	protected static Tiles tiles;
 	/**
 	 * The singleton of Objects
 	 */
-	protected Objects objects;
+	protected static Objects objects;
 	/**
 	 * The singleton of Walking
 	 */
-	protected Walking walking;
+	protected static Walking walking;
 	/**
 	 * The singleton of Calculations
 	 */
-	protected Calculations calc;
+	protected static Calculations calc;
 	/**
 	 * The singleton of Inventory
 	 */
-	protected Inventory inventory;
+	protected static Inventory inventory;
 	/**
 	 * The singleton of Equipment
 	 */
-	protected Equipment equipment;
+	protected static Equipment equipment;
 	/**
 	 * The singleton of GroundItems
 	 */
-	protected GroundItems groundItems;
+	protected static GroundItems groundItems;
 	/**
 	 * The singleton of Account
 	 */
-	protected Account account;
+	protected static Account account;
 	/**
 	 * The singleton of Summoning
 	 */
-	protected Summoning summoning;
+	protected static Summoning summoning;
 	/**
 	 * The singleton of Environment
 	 */
-	protected Environment env;
+	protected static Environment env;
 	/**
 	 * The singleton of Prayer
 	 */
-	protected Prayer prayer;
+	protected static Prayer prayer;
 	/**
 	 * The singleton of FriendsChat
 	 */
-	protected FriendChat friendChat;
+	protected static FriendChat friendChat;
 	/**
 	 * The singleton of Trade
 	 */
-	protected Trade trade;
+	protected static Trade trade;
 
 
 	/**
@@ -148,36 +148,36 @@ public class Methods {
 	 * @param ctx The MethodContext.
 	 */
 	public void init(MethodContext ctx) {
-		this.skills = ctx.skills;
-		this.settings = ctx.settings;
-		this.magic = ctx.magic;
-		this.bank = ctx.bank;
-		this.players = ctx.players;
-		this.store = ctx.store;
-		this.grandExchange = ctx.grandExchange;
-		this.hiscores = ctx.hiscores;
-		this.clanChat = ctx.clanChat;
-		this.camera = ctx.camera;
-		this.npcs = ctx.npcs;
-		this.game = ctx.game;
-		this.combat = ctx.combat;
-		this.interfaces = ctx.interfaces;
-		this.mouse = ctx.mouse;
-		this.keyboard = ctx.keyboard;
-		this.menu = ctx.menu;
-		this.tiles = ctx.tiles;
-		this.objects = ctx.objects;
-		this.walking = ctx.walking;
-		this.calc = ctx.calc;
-		this.inventory = ctx.inventory;
-		this.equipment = ctx.equipment;
-		this.groundItems = ctx.groundItems;
-		this.account = ctx.account;
-		this.summoning = ctx.summoning;
-		this.env = ctx.env;
-		this.prayer = ctx.prayer;
-		this.friendChat = ctx.friendChat;
-		this.trade = ctx.trade;
+		skills = ctx.skills;
+		settings = ctx.settings;
+		magic = ctx.magic;
+		bank = ctx.bank;
+		players = ctx.players;
+		store = ctx.store;
+		grandExchange = ctx.grandExchange;
+		hiscores = ctx.hiscores;
+		clanChat = ctx.clanChat;
+		camera = ctx.camera;
+		npcs = ctx.npcs;
+		game = ctx.game;
+		combat = ctx.combat;
+		interfaces = ctx.interfaces;
+		mouse = ctx.mouse;
+		keyboard = ctx.keyboard;
+		menu = ctx.menu;
+		tiles = ctx.tiles;
+		objects = ctx.objects;
+		walking = ctx.walking;
+		calc = ctx.calc;
+		inventory = ctx.inventory;
+		equipment = ctx.equipment;
+		groundItems = ctx.groundItems;
+		account = ctx.account;
+		summoning = ctx.summoning;
+		env = ctx.env;
+		prayer = ctx.prayer;
+		friendChat = ctx.friendChat;
+		trade = ctx.trade;
 	}
 
 	/**
