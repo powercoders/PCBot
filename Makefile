@@ -4,7 +4,6 @@ SRC=src
 LIB=lib
 RES=resources
 BINDIR=bin
-SCRIPTBINDIR=$(BINDIR)/scripts
 LSTF=temp.txt
 IMGDIR=$(RES)/images
 MANIFEST=$(RES)/Manifest.txt
@@ -25,12 +24,7 @@ Bot:
 	$(CC) $(CFLAGS) -d "$(BINDIR)" `find "$(SRC)" -name \*.java`
 
 Scripts: mostlyclean Bot
-	@if [ ! -d "$(SCRIPTBINDIR)" ]; then mkdir "$(SCRIPTBINDIR)"; fi
-	@if test -d scripts && find scripts -name \*.java -type f | grep -q .; \
-	then \
-		echo "$(CC) $(CFLAGS) -cp $(BINDIR) -d $(SCRIPTBINDIR) $(SCRIPTS)/*.java"; \
-		$(CC) $(CFLAGS) -cp "$(BINDIR)" -d "$(SCRIPTBINDIR)" "$(SCRIPTS)"/*.java; \
-	fi
+	$(CC) $(CFLAGS) -cp "$(BINDIR)" "$(SCRIPTS)"/*.java
 
 Bundle: Scripts
 	@rm -fv "$(LSTF)"
@@ -38,11 +32,11 @@ Bundle: Scripts
 	@echo "Specification-Version: \"$(VERSION)\"" >> "$(LSTF)"
 	@echo "Implementation-Version: \"$(VERSION)\"" >> "$(LSTF)"
 	@if [ -e "$(DIST)" ]; then rm -fv "$(DIST)"; fi
-	jar cfm "$(DIST)" "$(LSTF)" -C "$(BINDIR)" . "$(VERSIONFILE)" -C "$(SCRIPTBINDIR)" . "$(IMGDIR)"/* "$(RES)"/*.bat "$(RES)"/*.sh
+	jar cfm "$(DIST)" "$(LSTF)" -C "$(BINDIR)" . "$(VERSIONFILE)" "$(IMGDIR)"/* "$(RES)"/*.bat "$(RES)"/*.sh
 	@rm -f "$(LSTF)"
 
 mostlyclean:
-	@rm -fv "$(SCRIPTBINDIR)"/*.class
+	@rm -fv "$(SCRIPTS)"/*.class
 
 clean: mostlyclean
 	@rm -fv "$(DIST)"
