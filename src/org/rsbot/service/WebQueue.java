@@ -39,10 +39,10 @@ public class WebQueue {
 						if (tileFlags != null) {
 							addedString += tileFlags.toString() + "\n";
 							try {
+								weAreBuffering = true;
 								if (!speedBuffer) {
 									Thread.sleep(10);
 								}
-								weAreBuffering = true;
 							} catch (InterruptedException ignored) {
 							}
 						}
@@ -50,6 +50,10 @@ public class WebQueue {
 					cacheWriter.add(addedString);
 					addedString = null;
 					theFlagsList2.clear();
+					try {
+						Thread.sleep(500);//Prevent data loss.
+					} catch (InterruptedException ignored) {
+					}
 					weAreBuffering = false;
 				} catch (Exception e) {
 					e.printStackTrace();
