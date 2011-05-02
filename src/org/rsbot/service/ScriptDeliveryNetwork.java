@@ -10,7 +10,7 @@ import org.rsbot.script.Script;
  * @author Paris
  */
 public class ScriptDeliveryNetwork implements ScriptSource {
-	private static ScriptDeliveryNetwork instance = new ScriptDeliveryNetwork();
+	private static ScriptDeliveryNetwork instance = new ScriptDeliveryNetwork();;
 	private String key;
 	private final String defaultKey = "0000000000000000000000000000000000000000";
 	
