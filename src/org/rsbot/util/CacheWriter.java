@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class CacheWriter {
 	private final List<String> queue = new ArrayList<String>(), removeQueue = new ArrayList<String>(), removeStack = new ArrayList<String>();
 	private final QueueWriter writer;
 	private static boolean stopped = false;
+	private static final Logger log = Logger.getLogger("CacheWriter");
 
 	public CacheWriter(final String fileName) {
 		writer = new QueueWriter(fileName);
@@ -39,6 +41,7 @@ public class CacheWriter {
 			file = new File(fileName);
 			tmpFile = new File(fileName + ".tmp");
 			if (!file.exists()) {
+				log.info("File not created, creating: " + fileName);
 				try {
 					if (file.createNewFile()) {
 						file.setExecutable(false);
