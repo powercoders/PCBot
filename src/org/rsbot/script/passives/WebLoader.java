@@ -46,11 +46,7 @@ public class WebLoader extends PassiveScript {
 								theFlagsList.put(tile, tileFlags);
 							} catch (Exception e) {
 							}
-						} else {
-							log.info("Length != 3");
 						}
-					} else {
-						log.info("Lengh != 2" + line);
 					}
 				}
 				Web.map.putAll(theFlagsList);

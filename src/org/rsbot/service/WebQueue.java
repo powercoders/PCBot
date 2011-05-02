@@ -33,17 +33,19 @@ public class WebQueue {
 		Web.map.putAll(theFlagsList);
 		new Thread() {
 			public void run() {
+				final int count = theFlagsList.size();
 				try {
 					String addedString = "";
 					final HashMap<RSTile, TileFlags> theFlagsList2 = new HashMap<RSTile, TileFlags>();
 					theFlagsList2.putAll(theFlagsList);
 					final Map<RSTile, TileFlags> tl = Collections.unmodifiableMap(theFlagsList2);
-					bufferingCount += tl.size();
+					bufferingCount = bufferingCount + count;
 					Iterator<Map.Entry<RSTile, TileFlags>> tileFlagsIterator = tl.entrySet().iterator();
 					while (tileFlagsIterator.hasNext()) {
 						TileFlags tileFlags = tileFlagsIterator.next().getValue();
 						if (tileFlags != null) {
 							addedString += tileFlags.toString() + "\n";
+							bufferingCount--;
 							try {
 								weAreBuffering = true;
 								if (!speedBuffer) {
@@ -53,6 +55,9 @@ public class WebQueue {
 							}
 						}
 					}
+					if (bufferingCount < 0) {
+						bufferingCount = 0;
+					}
 					cacheWriter.add(addedString);
 					addedString = null;
 					theFlagsList2.clear();
@@ -61,8 +66,11 @@ public class WebQueue {
 					} catch (InterruptedException ignored) {
 					}
 					weAreBuffering = false;
-					bufferingCount -= tl.size();
 				} catch (Exception e) {
+					bufferingCount = count;
+					if (bufferingCount < 0) {
+						bufferingCount = 0;
+					}
 					e.printStackTrace();
 				}
 			}
