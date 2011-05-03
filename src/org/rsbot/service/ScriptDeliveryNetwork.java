@@ -42,7 +42,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 				init();
 			} catch (Exception e) {
 				e.printStackTrace();
-				log.severe("Could not download scripts from the network");
+				log.severe("Could not download scripts from the network!");
 			}
 		}
 	}
@@ -177,7 +177,6 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			}
 			delete.remove(path);
 			tasks.add(new Callable<Collection<Object>>() {
-				@Override
 				public Collection<Object> call() throws Exception {
 					log.fine("Downloading: " + path.getName());
 					HttpAgent.download(key.getValue(), path);
@@ -202,7 +201,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 				deleted++;
 		}
 		
-		log.fine(String.format("Downloaded %1$d new scripts, updated %2$d and deleted %3$d", created, deleted, updated));
+		log.info(String.format("Downloaded %1$d new scripts, updated %2$d and deleted %3$d", created, deleted, updated));
 	}
 	
 	private String getFileName(final URL url) {
