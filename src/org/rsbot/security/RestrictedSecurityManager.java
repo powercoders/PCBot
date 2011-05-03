@@ -43,11 +43,15 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 		if (isCallerScript()) {
 			ArrayList<String> whitelist = new ArrayList<String>();
-			whitelist.add("imageshack.us");
-			whitelist.add("tinypic.com");
-			whitelist.add("imgur.com");
-			whitelist.add("powerbot.org");
-			whitelist.add("runescape.com");
+
+			// NOTE: prefix with '.' boundary because .example.com won't match on hacked-example.com
+			whitelist.add(".imageshack.us");
+			whitelist.add(".tinypic.com");
+			whitelist.add(".imgur.com");
+			whitelist.add(".powerbot.org");
+			whitelist.add(".runescape.com");
+
+			whitelist.add("shadowscripting.org"); // iDungeon
 
 			if (isIpAddress(host)) {
 				try {
