@@ -2,6 +2,7 @@
 *.diff
 *.patch
 .svn
+.DS_Store
 /*.iml
 /*.ipr
 /*.iws
