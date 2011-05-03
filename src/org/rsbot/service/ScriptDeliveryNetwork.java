@@ -1,5 +1,9 @@
 package org.rsbot.service;
 
+import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.util.HttpAgent;
+import org.rsbot.util.IniParser;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,10 +20,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpAgent;
-import org.rsbot.util.IniParser;
-
 /**
  * @author Paris
  */
@@ -30,12 +30,12 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 	private final String defaultKey = "0000000000000000000000000000000000000000";
 	private final int version = 1;
 	private URL base = null;
-	
+
 	private ScriptDeliveryNetwork() {
 		super(new File(GlobalConfiguration.Paths.getScriptsNetworkDirectory()));
 		key = defaultKey;
 	}
-	
+
 	public void start() {
 		if (load()) {
 			try {
@@ -48,8 +48,9 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 	}
 
 	public static ScriptDeliveryNetwork getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new ScriptDeliveryNetwork();
+		}
 		return instance;
 	}
 
@@ -76,7 +77,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		if (keys.containsKey("error")) {
 			error = keys.get("error");
 		}
-		
+
 		if (keys.containsKey("version")) {
 			final int remoteVersion = Integer.parseInt(keys.get("version"));
 			if (version != remoteVersion) {
@@ -84,24 +85,26 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 				error = "please update your version of the bot";
 			}
 		}
-		
+
 		if (keys.containsKey("url")) {
 			try {
 				base = new URL(keys.get("url").replace("%key", getKey()));
-			} catch (MalformedURLException e) { }
+			} catch (MalformedURLException e) {
+			}
 		}
-		
-		if (base == null)
+
+		if (base == null) {
 			enabled = false;
+		}
 
 		if (!enabled) {
 			log.warning("Service disabled: " + error);
 		}
-		
+
 		return enabled;
 	}
-	
-	private void init() throws MalformedURLException, IOException {	
+
+	private void init() throws MalformedURLException, IOException {
 		File cache = new File(GlobalConfiguration.Paths.getScriptsNetworkDirectory());
 
 		if (!cache.exists()) {
@@ -115,25 +118,27 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			} catch (IOException e) {
 			}
 		}
-		
+
 		BufferedReader br, br1;
 		String line, line1;
 		HashMap<String, URL> scripts = new HashMap<String, URL>(64);
-		
+
 		final File manifest = getChachedFile("manifest.txt");
 		final HttpURLConnection con = (HttpURLConnection) HttpAgent.download(base, manifest);
 		base = con.getURL();
 		br = new BufferedReader(new FileReader(manifest));
-		
+
 		while ((line = br.readLine()) != null) {
 			final URL packUrl = new URL(base, line);
 			long mod = 0;
 			final File pack = getChachedFile("pack-" + getFileName(packUrl));
-			if (pack.exists())
+			if (pack.exists()) {
 				mod = pack.lastModified();
+			}
 			final HttpURLConnection packCon = (HttpURLConnection) HttpAgent.download(packUrl, pack);
-			if (pack.lastModified() == mod)
+			if (pack.lastModified() == mod) {
 				continue;
+			}
 			br1 = new BufferedReader(new FileReader(pack));
 			while ((line1 = br1.readLine()) != null) {
 				final URL scriptUrl = new URL(packCon.getURL(), line1);
@@ -141,39 +146,45 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			}
 			br1.close();
 		}
-		
+
 		br.close();
-		
-		if (!scripts.isEmpty())
+
+		if (!scripts.isEmpty()) {
 			sync(scripts);
+		}
 	}
-	
+
 	private void sync(final HashMap<String, URL> scripts) {
 		int n = 0;
-		for (String name : scripts.keySet())
-			if (!name.contains("$"))
+		for (String name : scripts.keySet()) {
+			if (!name.contains("$")) {
 				n++;
-		if (n > 0)
+			}
+		}
+		if (n > 0) {
 			log.info("Loading " + Integer.toString(n) + " scripts from the network");
-		
+		}
+
 		int created = 0, deleted = 0, updated = 0;
 		final File dir = new File(GlobalConfiguration.Paths.getScriptsNetworkDirectory());
 		ArrayList<File> delete = new ArrayList<File>(64);
 
 		for (final File f : dir.listFiles()) {
-			if (f.getName().endsWith(".class"))
+			if (f.getName().endsWith(".class")) {
 				delete.add(f);
+			}
 		}
-		
+
 		ArrayList<Callable<Collection<Object>>> tasks = new ArrayList<Callable<Collection<Object>>>();
-		
+
 		for (final Entry<String, URL> key : scripts.entrySet()) {
 			final File path = new File(dir, key.getKey());
 			if (!path.getName().contains("$")) {
-				if (delete.contains(path))
+				if (delete.contains(path)) {
 					updated++;
-				else
+				} else {
 					created++;
+				}
 			}
 			delete.remove(path);
 			tasks.add(new Callable<Collection<Object>>() {
@@ -181,10 +192,12 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 					log.fine("Downloading: " + path.getName());
 					HttpAgent.download(key.getValue(), path);
 					return null;
-				};
+				}
+
+				;
 			});
 		}
-		
+
 		final int threads = 2;
 		ExecutorService executorService = Executors.newFixedThreadPool(threads);
 		try {
@@ -192,25 +205,26 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		for (final File f : delete) {
 			if (!f.delete()) {
 				f.deleteOnExit();
 			}
-			if (!f.getName().contains("$"))
+			if (!f.getName().contains("$")) {
 				deleted++;
+			}
 		}
-		
+
 		log.info(String.format("Downloaded %1$d new scripts, updated %2$d and deleted %3$d", created, deleted, updated));
 	}
-	
+
 	private String getFileName(final URL url) {
 		final String path = url.getPath();
 		return path.substring(path.lastIndexOf('/') + 1);
 	}
-	
+
 	private File getChachedFile(final String name) {
-		return new File(GlobalConfiguration.Paths.getCacheDirectory(), "sdn-" + name); 
+		return new File(GlobalConfiguration.Paths.getCacheDirectory(), "sdn-" + name);
 	}
 
 	private boolean parseBool(String mode) {

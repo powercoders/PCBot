@@ -1,11 +1,6 @@
 package org.rsbot.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Logger;
@@ -16,11 +11,11 @@ import java.util.zip.GZIPInputStream;
  */
 public class HttpAgent {
 	private static final Logger log = Logger.getLogger(HttpAgent.class.getName());
-	
+
 	public static HttpURLConnection download(final URL url, final File file) throws IOException {
 		HttpURLConnection con = GlobalConfiguration.getHttpConnection(url);
 		con.setUseCaches(true);
-		
+
 		if (file.exists()) {
 			con.setIfModifiedSince(file.lastModified());
 			con.connect();
@@ -30,7 +25,7 @@ public class HttpAgent {
 				return con;
 			}
 		}
-		
+
 		log.fine("Downloading new " + file.getName());
 
 		DataInputStream di = new DataInputStream(con.getInputStream());
@@ -52,13 +47,13 @@ public class HttpAgent {
 			fos.flush();
 			fos.close();
 		}
-		
+
 		file.setLastModified(con.getLastModified());
-		
+
 		con.disconnect();
 		return con;
 	}
-	
+
 
 	private static byte[] ungzip(byte[] data) {
 		if (data.length < 2) {
