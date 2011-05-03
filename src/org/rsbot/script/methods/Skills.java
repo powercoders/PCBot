@@ -7,6 +7,7 @@ import org.rsbot.script.util.SkillTracker;
  * <p/>
  * Example usage: skills.getRealLevel(Skills.ATTACK);
  */
+@SuppressWarnings("deprecation")
 public class Skills extends MethodProvider {
 	public static final String[] SKILL_NAMES = {"attack", "defence",
 			"strength", "constitution", "range", "prayer", "magic", "cooking",
