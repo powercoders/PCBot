@@ -148,10 +148,9 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 						boolean selected = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 						current.overrideInput = selected;
 						toolBar.setOverrideInput(selected);
-					} else if (option.equals("Disable Rendering")) {
-						current.disableRendering = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
-					} else if (option.equals("Disable Canvas")) {
-						current.disableCanvas = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
+					} else if (option.equals("Less CPU")) {
+                        current.disableRendering = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
+                        current.disableCanvas = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals("Disable Anti-Randoms")) {
 						current.disableRandoms = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals("Disable Auto Login")) {
@@ -365,24 +364,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 	}
 
-	private void lessCpu(final boolean enable) {
-		if (enable) {
-			noModificationBots.clear();
-			for (final Bot bot : bots) {
-				if (bot.disableCanvas || bot.disableRendering) {
-					noModificationBots.add(bot);
-				}
-			}
-		}
-		for (final Bot bot : bots) {
-			boolean restore = !enable && noModificationBots.contains(bot);
-			int botIndex = noModificationBots.indexOf(bot);
-			Bot rBot = restore ? noModificationBots.get(botIndex) : null;
-			bot.disableCanvas = rBot != null ? rBot.disableCanvas : enable;
-			bot.disableRendering = rBot != null ? rBot.disableRendering : enable;
-		}
-	}
-
 	private void init() {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -392,18 +373,18 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				}
 			}
 		});
-		addWindowStateListener(new WindowStateListener() {
-			public void windowStateChanged(WindowEvent arg0) {
-				switch (arg0.getID()) {
-					case WindowEvent.WINDOW_ICONIFIED:
-						lessCpu(true);
-						break;
-					case WindowEvent.WINDOW_DEICONIFIED:
-						lessCpu(false);
-						break;
-				}
-			}
-		});
+//		addWindowStateListener(new WindowStateListener() {
+//			public void windowStateChanged(WindowEvent arg0) {
+//				switch (arg0.getID()) {
+//					case WindowEvent.WINDOW_ICONIFIED:
+//						lessCpu(true);
+//						break;
+//					case WindowEvent.WINDOW_DEICONIFIED:
+//						lessCpu(false);
+//						break;
+//				}
+//			}
+//		});
 		setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON));
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		try {
