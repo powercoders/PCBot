@@ -215,7 +215,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			}
 		}
 
-		log.info(String.format("Downloaded %1$d new scripts, updated %2$d and deleted %3$d", created, deleted, updated));
+		log.fine(String.format("Downloaded %1$d new scripts, updated %2$d and deleted %3$d", created, deleted, updated));
 	}
 
 	private String getFileName(final URL url) {
