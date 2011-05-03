@@ -42,7 +42,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 				init();
 			} catch (Exception e) {
 				e.printStackTrace();
-				log.severe("Could not download scripts from the network");
+				log.severe("Could not download scripts from the network!");
 			}
 		}
 	}
