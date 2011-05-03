@@ -34,6 +34,12 @@ public class BeehiveSolver extends Random {
 	private static final int BUILD_BEEHIVE = 40;
 	private static final int CLOSE_WINDOW = 38;
 
+
+	public void onFinish() {
+		BeehiveKeeper = null;
+		solved = false;
+	}
+
 	@Override
 	public boolean activateCondition() {
 		if (!game.isLoggedIn()) {
@@ -46,15 +52,15 @@ public class BeehiveSolver extends Random {
 		}
 
 		/*BeehiveKeeper = npcs.getNearest(BEEHIVE_KEEPER_ID);
-						  if ((BeehiveKeeper != null) || getBeehiveInterface().isValid()) {
-							  sleep(random(1000, 1500));
-							  BeehiveKeeper = npcs.getNearest(BEEHIVE_KEEPER_ID);
-							  if ((BeehiveKeeper != null) || getBeehiveInterface().isValid()) {
-								  solved = false;
-								  sleep(random(1000, 1500));
-								  return true;
-							  }
-						  }*/
+									if ((BeehiveKeeper != null) || getBeehiveInterface().isValid()) {
+										sleep(random(1000, 1500));
+										BeehiveKeeper = npcs.getNearest(BEEHIVE_KEEPER_ID);
+										if ((BeehiveKeeper != null) || getBeehiveInterface().isValid()) {
+											solved = false;
+											sleep(random(1000, 1500));
+											return true;
+										}
+									}*/
 		return false;
 	}
 

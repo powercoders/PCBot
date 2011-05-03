@@ -30,8 +30,8 @@ public class ClientLoader {
 	public void init(URL script, File cache) throws IOException, ParseException {
 		byte[] data = null;
 		FileInputStream fis = null;
-		
-		try{
+
+		try {
 			HttpAgent.download(script, cache);
 			fis = new FileInputStream(cache);
 			data = load(fis);
@@ -41,9 +41,10 @@ public class ClientLoader {
 			try {
 				if (fis != null)
 					fis.close();
-			} catch (IOException ioe1) { }
+			} catch (IOException ioe1) {
+			}
 		}
-		
+
 		this.script = new ModScript(data);
 	}
 

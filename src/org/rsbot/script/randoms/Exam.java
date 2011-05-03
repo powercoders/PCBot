@@ -319,9 +319,9 @@ public class Exam extends Random {
 	}
 
 	/*
-			  * Don't use this with any other monster.I edited for this script only cause
-			  * Mr. Mordaunt doesn't move
-			  */
+				   * Don't use this with any other monster.I edited for this script only cause
+				   * Mr. Mordaunt doesn't move
+				   */
 	public boolean clickCharacter(final RSCharacter c, final String action) {
 		try {
 			Point screenLoc;

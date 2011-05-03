@@ -32,12 +32,9 @@ public class GlobalConfiguration {
 			public static final String ICON_PLAY = ROOT_IMG + "/control_play_blue.png";
 			public static final String ICON_PAUSE = ROOT_IMG + "/control_pause.png";
 			public static final String ICON_ADD = ROOT_IMG + "/add.png";
-			public static final String ICON_ADD_OVER = ROOT_IMG + "/add_over.png";
-			public static final String ICON_ADD_DOWN = ROOT_IMG + "/add_down.png";
 			public static final String ICON_HOME = ROOT_IMG + "/home.png";
 			public static final String ICON_BOT = ROOT_IMG + "/bot.png";
 			public static final String ICON_CLOSE = ROOT_IMG + "/close.png";
-			public static final String ICON_CLOSE_OVER = ROOT_IMG + "/close_over.png";
 			public static final String ICON_TICK = ROOT_IMG + "/tick.png";
 			public static final String ICON_MOUSE = ROOT_IMG + "/mouse.png";
 			public static final String ICON_KEYBOARD = ROOT_IMG + "/keyboard.png";
@@ -182,8 +179,8 @@ public class GlobalConfiguration {
 	private static final OperatingSystem CURRENT_OS;
 	public static boolean RUNNING_FROM_JAR = false;
 	public static final boolean SCRIPT_DRM = true;
-	
-	
+
+
 	public static class Twitter {
 		public static final boolean ENABLED = true;
 		public static final String NAME = "rsbotorg";
@@ -266,7 +263,7 @@ public class GlobalConfiguration {
 			}
 		}
 	}
-	
+
 	public static URL getResourceURL(final String path) throws MalformedURLException {
 		return RUNNING_FROM_JAR ? GlobalConfiguration.class.getResource("/" + path) : new File(path).toURI().toURL();
 	}
@@ -274,14 +271,15 @@ public class GlobalConfiguration {
 	public static Image getImage(String resource) {
 		try {
 			return Toolkit.getDefaultToolkit().getImage(getResourceURL(resource));
-		} catch (Exception e) { }
+		} catch (Exception e) {
+		}
 		return null;
 	}
 
 	public static OperatingSystem getCurrentOperatingSystem() {
 		return GlobalConfiguration.CURRENT_OS;
 	}
-	
+
 	static String httpUserAgent = null;
 
 	public static String getHttpUserAgent() {
