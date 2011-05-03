@@ -182,8 +182,8 @@ public class GlobalConfiguration {
 	private static final OperatingSystem CURRENT_OS;
 	public static boolean RUNNING_FROM_JAR = false;
 	public static final boolean SCRIPT_DRM = true;
-	
-	
+
+
 	public static class Twitter {
 		public static final boolean ENABLED = true;
 		public static final String NAME = "rsbotorg";
@@ -266,7 +266,7 @@ public class GlobalConfiguration {
 			}
 		}
 	}
-	
+
 	public static URL getResourceURL(final String path) throws MalformedURLException {
 		return RUNNING_FROM_JAR ? GlobalConfiguration.class.getResource("/" + path) : new File(path).toURI().toURL();
 	}
@@ -274,14 +274,15 @@ public class GlobalConfiguration {
 	public static Image getImage(String resource) {
 		try {
 			return Toolkit.getDefaultToolkit().getImage(getResourceURL(resource));
-		} catch (Exception e) { }
+		} catch (Exception e) {
+		}
 		return null;
 	}
 
 	public static OperatingSystem getCurrentOperatingSystem() {
 		return GlobalConfiguration.CURRENT_OS;
 	}
-	
+
 	static String httpUserAgent = null;
 
 	public static String getHttpUserAgent() {

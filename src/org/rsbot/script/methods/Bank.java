@@ -3,7 +3,6 @@ package org.rsbot.script.methods;
 import org.rsbot.script.util.Filter;
 import org.rsbot.script.wrappers.*;
 
-import java.lang.Integer;
 import java.awt.*;
 
 /**
