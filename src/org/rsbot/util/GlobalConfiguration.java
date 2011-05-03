@@ -182,8 +182,8 @@ public class GlobalConfiguration {
 	private static final OperatingSystem CURRENT_OS;
 	public static boolean RUNNING_FROM_JAR = false;
 	public static final boolean SCRIPT_DRM = true;
-	
-	
+
+
 	public static class Twitter {
 		public static final boolean ENABLED = true;
 		public static final String NAME = "rsbotorg";
@@ -266,7 +266,7 @@ public class GlobalConfiguration {
 			}
 		}
 	}
-	
+
 	public static URL getResourceURL(final String path) throws MalformedURLException {
 		return RUNNING_FROM_JAR ? GlobalConfiguration.class.getResource("/" + path) : new File(path).toURI().toURL();
 	}
@@ -274,24 +274,27 @@ public class GlobalConfiguration {
 	public static Image getImage(String resource) {
 		try {
 			return Toolkit.getDefaultToolkit().getImage(getResourceURL(resource));
-		} catch (Exception e) { }
+		} catch (Exception e) {
+		}
 		return null;
 	}
 
 	public static OperatingSystem getCurrentOperatingSystem() {
 		return GlobalConfiguration.CURRENT_OS;
 	}
-	
+
 	static String httpUserAgent = null;
 
 	public static String getHttpUserAgent() {
-		if (httpUserAgent != null)
+		if (httpUserAgent != null) {
 			return httpUserAgent;
+		}
 		String os = "Windows NT 6.1";
-		if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.MAC)
+		if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.MAC) {
 			os = "Macintosh; Intel Mac OS X 10_6_6";
-		else if (GlobalConfiguration.getCurrentOperatingSystem() != GlobalConfiguration.OperatingSystem.WINDOWS)
+		} else if (GlobalConfiguration.getCurrentOperatingSystem() != GlobalConfiguration.OperatingSystem.WINDOWS) {
 			os = "X11; Linux x86_64";
+		}
 		StringBuilder buf = new StringBuilder(125);
 		buf.append("Mozilla/5.0 (").append(os).append(")");
 		buf.append(" AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.60 Safari/534.24");
