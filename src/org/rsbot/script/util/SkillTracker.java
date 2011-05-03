@@ -21,6 +21,7 @@ public class SkillTracker {
 	public int[] skills;
 	public int[] startExp, currentExp;
 
+	private final Bot bot;
 	private final MethodContext context;
 
 	public transient int firstIndex;
@@ -29,6 +30,7 @@ public class SkillTracker {
 	public boolean started;
 
 	public SkillTracker(Bot bot, int... skills) {
+		this.bot = bot;
 		context = bot.getMethodContext();
 		firstIndex = 0;
 		int size = skills.length;

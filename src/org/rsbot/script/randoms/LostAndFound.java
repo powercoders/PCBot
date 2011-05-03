@@ -63,7 +63,7 @@ public class LostAndFound extends Random {
 	}
 
 	private int getOddAppendage() {
-		final int[] settings = LostAndFound.settings.getSettingArray();
+		final int[] settings = this.settings.getSettingArray();
 		try {
 			for (final int element : answerN) {
 				if (settings[setting] == element) {
