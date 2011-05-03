@@ -16,7 +16,10 @@ import org.rsbot.util.UpdateUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,7 +44,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private boolean showAds = true;
 	private boolean disableConfirmations = false;
 	private static final ScriptDeliveryNetwork sdn = ScriptDeliveryNetwork.getInstance();
-	private final List<Bot> noModificationBots = new ArrayList<Bot>();
 
 	public BotGUI() {
 		init();
@@ -62,8 +64,9 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					UpdateUtil updater = new UpdateUtil(BotGUI.this);
 					updater.checkUpdate(false);
 				}
-				if (GlobalConfiguration.Twitter.ENABLED)
+				if (GlobalConfiguration.Twitter.ENABLED) {
 					TwitterUpdates.loadTweets(GlobalConfiguration.Twitter.MESSAGES);
+				}
 				(new Thread() {
 					public void run() {
 						ScriptDeliveryNetwork.getInstance().start();
@@ -148,9 +151,10 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 						boolean selected = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 						current.overrideInput = selected;
 						toolBar.setOverrideInput(selected);
-					} else if (option.equals("Less CPU")) {
-                        current.disableRendering = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
-                        current.disableCanvas = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
+					} else if (option.equals("Disable Rendering")) {
+						current.disableRendering = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
+					} else if (option.equals("Disable Canvas")) {
+						current.disableCanvas = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals("Disable Anti-Randoms")) {
 						current.disableRandoms = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals("Disable Auto Login")) {
@@ -373,18 +377,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				}
 			}
 		});
-//		addWindowStateListener(new WindowStateListener() {
-//			public void windowStateChanged(WindowEvent arg0) {
-//				switch (arg0.getID()) {
-//					case WindowEvent.WINDOW_ICONIFIED:
-//						lessCpu(true);
-//						break;
-//					case WindowEvent.WINDOW_DEICONIFIED:
-//						lessCpu(false);
-//						break;
-//				}
-//			}
-//		});
 		setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON));
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		try {

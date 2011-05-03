@@ -290,7 +290,6 @@ public class BotToolBar extends JToolBar {
 			g.setColor(new Color(180, 180, 180, 200));
 			g.drawRoundRect(0, 0, getWidth() - 2, getHeight() - 1, 4, 4);
 			g.drawImage(hovered && close ? IMAGE_CLOSE_OVER : IMAGE_CLOSE, 90, 3, null);
-			repaint();
 		}
 	}
 
@@ -347,7 +346,6 @@ public class BotToolBar extends JToolBar {
 			} else {
 				g.drawImage(ICON, 2, 2, null);
 			}
-			repaint();
 		}
 
 	}
