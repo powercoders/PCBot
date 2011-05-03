@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -65,7 +64,9 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					UpdateUtil updater = new UpdateUtil(BotGUI.this);
 					updater.checkUpdate(false);
 				}
-				TwitterUpdates.loadTweets(GlobalConfiguration.TwitterMessages);
+				if (GlobalConfiguration.Twitter.ENABLED) {
+					TwitterUpdates.loadTweets(GlobalConfiguration.Twitter.MESSAGES);
+				}
 				(new Thread() {
 					public void run() {
 						ScriptDeliveryNetwork.getInstance().start();
@@ -150,8 +151,10 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 						boolean selected = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 						current.overrideInput = selected;
 						toolBar.setOverrideInput(selected);
-					} else if (option.equals("Less CPU")) {
-						log.info("Minimize the window to significantly reduce CPU usage.");
+					} else if (option.equals("Disable Rendering")) {
+						current.disableRendering = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
+					} else if (option.equals("Disable Canvas")) {
+						current.disableCanvas = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals("Disable Anti-Randoms")) {
 						current.disableRandoms = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals("Disable Auto Login")) {
@@ -279,7 +282,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	public void addBot() {
 		final int max = 6;
-		if (bots.size() >= max) {
+		if (bots.size() >= max && GlobalConfiguration.RUNNING_FROM_JAR) {
 			log.warning("Cannot run more than " + Integer.toString(max) + " bots");
 			return;
 		}
@@ -365,32 +368,12 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 	}
 
-	private void lessCpu(final boolean enable) {
-		for (final Bot bot : bots) {
-			bot.disableCanvas = enable;
-			bot.disableRendering = enable;
-		}
-	}
-	
 	private void init() {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				if (cleanExit()) {
 					dispose();
-				}
-			}
-		});
-		addWindowStateListener(new WindowStateListener() {
-			@Override
-			public void windowStateChanged(WindowEvent arg0) {
-				switch (arg0.getID()){
-				case WindowEvent.WINDOW_ICONIFIED:
-					lessCpu(true);
-					break;
-				case WindowEvent.WINDOW_DEICONIFIED:
-					lessCpu(false);
-					break;
 				}
 			}
 		});
