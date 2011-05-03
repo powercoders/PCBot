@@ -7,7 +7,9 @@ import org.rsbot.service.ScriptDeliveryNetwork;
 
 import java.io.FileDescriptor;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.Permission;
+import java.util.ArrayList;
 
 /**
  * @author Paris
@@ -35,10 +37,56 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkConnect(String host, int port) {
-		if (port == -1 || port == 80 || port == 443)
-			super.checkConnect(host, port);
-		else
+		// ports other than HTTP (80), HTTPS (443) and unknown (-1) are automatically denied
+		if (!(port == -1 || port == 80 || port == 443))
 			throw new SecurityException();
+
+		if (isCallerScript()) {
+			ArrayList<String> whitelist = new ArrayList<String>();
+			whitelist.add("imageshack.us");
+			whitelist.add("tinypic.com");
+			whitelist.add("imgur.com");
+			whitelist.add("powerbot.org");
+			whitelist.add("runescape.com");
+
+			if (isIpAddress(host)) {
+				try {
+					InetAddress addr = InetAddress.getByName(host);
+					host = addr.getHostName();
+				} catch (UnknownHostException e) {
+					throw new SecurityException();
+				}
+			}
+
+			boolean allowed = false;
+
+			for (String check : whitelist) {
+				if (host.endsWith(check)) {
+					allowed = true;
+					break;
+				}
+			}
+
+			if (!allowed)
+				throw new SecurityException();
+		}
+
+		super.checkConnect(host, port);
+	}
+
+	private boolean isIpAddress(String check) {
+		final int l = check.length();
+		if (l < 7 || l > 15)
+			return false;
+		String[] parts = check.split("\\.", 4);
+		if (parts.length != 4)
+			return false;
+		for (int i = 0; i < 4; i++) {
+			int n = Integer.parseInt(parts[i]);
+			if (n < 0 || n > 255)
+				return false;
+		}
+		return true;
 	}
 
 	public void checkConnect(String host, int port, Object context) {
