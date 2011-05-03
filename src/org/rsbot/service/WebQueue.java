@@ -85,6 +85,14 @@ public class WebQueue {
 		}.start();
 	}
 
+	public static void Remove(final String str) {
+		new Thread() {
+			public void run() {
+				cacheWriter.remove(str);
+			}
+		}.start();
+	}
+
 	public static boolean IsRunning() {
 		return cacheWriter.IsRunning();
 	}

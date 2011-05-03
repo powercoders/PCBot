@@ -5,6 +5,7 @@ import org.rsbot.script.PassiveScriptManifest;
 import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.service.WebQueue;
 import org.rsbot.util.GlobalConfiguration;
 
 import java.io.BufferedReader;
@@ -46,7 +47,11 @@ public class WebLoader extends PassiveScript {
 								theFlagsList.put(tile, tileFlags);
 							} catch (Exception e) {
 							}
+						} else {
+							WebQueue.Remove(line);//Line is bad, remove from file.
 						}
+					} else {
+						WebQueue.Remove(line);//Line is bad, remove from file.
 					}
 				}
 				Web.map.putAll(theFlagsList);
