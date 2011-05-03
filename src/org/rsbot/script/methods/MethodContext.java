@@ -175,14 +175,9 @@ public class MethodContext {
 	 * The singleton of Trade
 	 */
 	public final Trade trade = new Trade(this);
-	
-	/**
-	 * The singleton of Paint
-	 */
-	public final Paint paint = new Paint(this);
 
 	/**
-	 * The singleton of Lobby
+	 * The singleton of Trade
 	 */
 	public final Lobby lobby = new Lobby(this);
 
