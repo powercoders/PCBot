@@ -94,7 +94,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkConnect(String host, int port, Object context) {
-		throw new SecurityException();
+		checkConnect(host, port);
 	}
 
 	public void checkCreateClassLoader() {
