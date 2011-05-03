@@ -7,7 +7,9 @@ import org.rsbot.service.ScriptDeliveryNetwork;
 
 import java.io.FileDescriptor;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.Permission;
+import java.util.ArrayList;
 
 /**
  * @author Paris
@@ -17,18 +19,16 @@ public class RestrictedSecurityManager extends SecurityManager {
 		final String prefix = Application.class.getPackage().getName() + ".";
 		for (StackTraceElement s : Thread.currentThread().getStackTrace()) {
 			final String name = s.getClassName();
-			if (name.startsWith(prefix) && !name.equals(RestrictedSecurityManager.class.getName())) {
+			if (name.startsWith(prefix) && !name.equals(RestrictedSecurityManager.class.getName()))
 				return name;
-			}
 		}
 		return "";
 	}
 
 	private boolean isCallerScript() {
 		final String name = getCallingClass();
-		if (name.isEmpty()) {
+		if (name.isEmpty())
 			return false;
-		}
 		return name.startsWith(Script.class.getName());
 	}
 
@@ -37,11 +37,56 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkConnect(String host, int port) {
-		if (port == -1 || port == 80 || port == 443) {
-			super.checkConnect(host, port);
-		} else {
+		// ports other than HTTP (80), HTTPS (443) and unknown (-1) are automatically denied
+		if (!(port == -1 || port == 80 || port == 443))
 			throw new SecurityException();
+
+		if (isCallerScript()) {
+			ArrayList<String> whitelist = new ArrayList<String>();
+			whitelist.add("imageshack.us");
+			whitelist.add("tinypic.com");
+			whitelist.add("imgur.com");
+			whitelist.add("powerbot.org");
+			whitelist.add("runescape.com");
+
+			if (isIpAddress(host)) {
+				try {
+					InetAddress addr = InetAddress.getByName(host);
+					host = addr.getHostName();
+				} catch (UnknownHostException e) {
+					throw new SecurityException();
+				}
+			}
+
+			boolean allowed = false;
+
+			for (String check : whitelist) {
+				if (host.endsWith(check)) {
+					allowed = true;
+					break;
+				}
+			}
+
+			if (!allowed)
+				throw new SecurityException();
 		}
+
+		super.checkConnect(host, port);
+	}
+
+	private boolean isIpAddress(String check) {
+		final int l = check.length();
+		if (l < 7 || l > 15)
+			return false;
+		String[] parts = check.split("\\.", 4);
+		if (parts.length != 4)
+			return false;
+		for (int i = 0; i < 4; i++) {
+			int n = Integer.parseInt(parts[i]);
+			if (n < 0 || n > 255)
+				return false;
+		}
+		return true;
 	}
 
 	public void checkConnect(String host, int port, Object context) {
@@ -53,29 +98,26 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkDelete(String file) {
-		if (isCallerScript()) {
+		if (isCallerScript())
 			throw new SecurityException();
-		} else {
+		else
 			super.checkDelete(file);
-		}
 	}
 
 	public void checkExec(String cmd) {
 		final String calling = getCallingClass();
-		if (calling.equals(ScriptDeliveryNetwork.class.getName()) || calling.equals(BotGUI.class.getName())) {
+		if (calling.equals(ScriptDeliveryNetwork.class.getName()) || calling.equals(BotGUI.class.getName()))
 			super.checkExec(cmd);
-		} else {
+		else
 			throw new SecurityException();
-		}
 	}
 
 	public void checkExit(int status) {
 		final String calling = getCallingClass();
-		if (calling.equals(BotGUI.class.getName())) {
+		if (calling.equals(BotGUI.class.getName()))
 			super.checkExit(status);
-		} else {
+		else
 			throw new SecurityException();
-		}
 	}
 
 	public void checkLink(String lib) {
@@ -127,9 +169,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkRead(FileDescriptor fd) {
-		if (isCallerScript()) {
+		if (isCallerScript())
 			throw new SecurityException();
-		}
 		super.checkRead(fd);
 	}
 
@@ -138,9 +179,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkRead(String file, Object context) {
-		if (isCallerScript()) {
+		if (isCallerScript())
 			throw new SecurityException();
-		}
 		super.checkRead(file, context);
 	}
 
@@ -161,16 +201,14 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkWrite(FileDescriptor fd) {
-		if (isCallerScript()) {
+		if (isCallerScript())
 			throw new SecurityException();
-		}
 		super.checkWrite(fd);
 	}
 
 	public void checkWrite(String file) {
-		if (isCallerScript()) {
+		if (isCallerScript())
 			throw new SecurityException();
-		}
 		super.checkWrite(file);
 	}
 }
