@@ -4,7 +4,7 @@ import org.rsbot.loader.asm.ClassReader;
 import org.rsbot.loader.script.ModScript;
 import org.rsbot.loader.script.ParseException;
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpAgent;
+import org.rsbot.util.HttpClient;
 
 import javax.swing.*;
 import java.io.*;
@@ -32,7 +32,7 @@ public class ClientLoader {
 		FileInputStream fis = null;
 
 		try {
-			HttpAgent.download(script, cache);
+			HttpClient.download(script, cache);
 			fis = new FileInputStream(cache);
 			data = load(fis);
 		} catch (IOException ioe) {

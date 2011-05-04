@@ -1,7 +1,7 @@
 package org.rsbot.service;
 
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpAgent;
+import org.rsbot.util.HttpClient;
 import org.rsbot.util.IniParser;
 
 import java.io.BufferedReader;
@@ -62,7 +62,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		try {
 			URL source = new URL(GlobalConfiguration.Paths.URLs.SDN_CONTROL);
 			final File cache = getChachedFile("control.txt");
-			HttpAgent.download(source, cache);
+			HttpClient.download(source, cache);
 			BufferedReader reader = new BufferedReader(new FileReader(cache));
 			keys = IniParser.deserialise(reader).get(IniParser.emptySection);
 			reader.close();
@@ -124,7 +124,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		HashMap<String, URL> scripts = new HashMap<String, URL>(64);
 
 		final File manifest = getChachedFile("manifest.txt");
-		final HttpURLConnection con = (HttpURLConnection) HttpAgent.download(base, manifest);
+		final HttpURLConnection con = (HttpURLConnection) HttpClient.download(base, manifest);
 		base = con.getURL();
 		br = new BufferedReader(new FileReader(manifest));
 
@@ -135,7 +135,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			if (pack.exists()) {
 				mod = pack.lastModified();
 			}
-			final HttpURLConnection packCon = (HttpURLConnection) HttpAgent.download(packUrl, pack);
+			final HttpURLConnection packCon = (HttpURLConnection) HttpClient.download(packUrl, pack);
 			if (pack.lastModified() == mod) {
 				continue;
 			}
@@ -190,7 +190,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			tasks.add(new Callable<Collection<Object>>() {
 				public Collection<Object> call() throws Exception {
 					log.fine("Downloading: " + path.getName());
-					HttpAgent.download(key.getValue(), path);
+					HttpClient.download(key.getValue(), path);
 					return null;
 				}
 
