@@ -39,8 +39,9 @@ public class ClientLoader {
 			log.severe("Could not load ModScript data");
 		} finally {
 			try {
-				if (fis != null)
+				if (fis != null) {
 					fis.close();
+				}
 			} catch (IOException ioe1) {
 			}
 		}

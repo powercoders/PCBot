@@ -272,12 +272,13 @@ public class PaintUtil {
 						60 * 60 * 1000))), 60, 444);
 		g2.drawString("Status:  " + status, 60, 466);
 
-		if (img == null)
+		if (img == null) {
 			img = (BufferedImage) getImage(String.valueOf(skill), true,
 					"http://dl.dropbox.com/u/23938245/Scripts/Paint%20Class/capes/"
 							+ skill + ".png");
-		else
+		} else {
 			g2.drawImage(img, 440, 330, null);
+		}
 
 		drawProgressBar(skill, 4, 3, 512, 18, Color.RED, Color.GREEN,
 				textColor, 127);
@@ -395,11 +396,13 @@ public class PaintUtil {
 		g2.drawOval(m.x - 1, m.y - 1, 2, 2);
 		g2.drawOval(m.x - diameter / 2, m.y - diameter / 2, diameter, diameter);
 		if (click) {
-			while (!mouseClick.isEmpty() && mouseClick.peek().isUp())
+			while (!mouseClick.isEmpty() && mouseClick.peek().isUp()) {
 				mouseClick.remove();
+			}
 			MouseClick click1 = new MouseClick(p.x, p.y, lastingTime);
-			if (mouseClick.isEmpty() || !mouseClick.getLast().equals(click1))
+			if (mouseClick.isEmpty() || !mouseClick.getLast().equals(click1)) {
 				mouseClick.add(click1);
+			}
 			MouseClick lastPoint = null;
 			for (MouseClick a : mouseClick) {
 				if (lastPoint != null) {
@@ -439,11 +442,13 @@ public class PaintUtil {
 
 	public void drawMouseLine(final Color color, final int lastingTime) {
 		Point m = ctx.mouse.getLocation();
-		while (!mousePath.isEmpty() && mousePath.peek().isUp())
+		while (!mousePath.isEmpty() && mousePath.peek().isUp()) {
 			mousePath.remove();
+		}
 		MousePathPoint mp = new MousePathPoint(m.x, m.y, lastingTime);
-		if (mousePath.isEmpty() || !mousePath.getLast().equals(mp))
+		if (mousePath.isEmpty() || !mousePath.getLast().equals(mp)) {
 			mousePath.add(mp);
+		}
 		MousePathPoint lastPoint = null;
 		for (MousePathPoint a : mousePath) {
 			if (lastPoint != null) {
@@ -467,12 +472,14 @@ public class PaintUtil {
 	public void drawCircleMouseLine(final Color color, final int lastingTime,
 	                                final int diameter) {
 		Point m = ctx.mouse.getLocation();
-		while (!mouseCirclePath.isEmpty() && mouseCirclePath.peek().isUp())
+		while (!mouseCirclePath.isEmpty() && mouseCirclePath.peek().isUp()) {
 			mouseCirclePath.remove();
+		}
 		MouseCirclePathPoint mp = new MouseCirclePathPoint(m.x, m.y,
 				lastingTime);
-		if (mouseCirclePath.isEmpty() || !mouseCirclePath.getLast().equals(mp))
+		if (mouseCirclePath.isEmpty() || !mouseCirclePath.getLast().equals(mp)) {
 			mouseCirclePath.add(mp);
+		}
 		MouseCirclePathPoint lastPoint = null;
 		for (MouseCirclePathPoint a : mouseCirclePath) {
 			if (lastPoint != null) {
@@ -504,11 +511,13 @@ public class PaintUtil {
 		int h = image.getHeight(null);
 		int w = image.getWidth(null);
 		Point m = ctx.mouse.getLocation();
-		while (!mousePic.isEmpty() && mousePic.peek().isUp())
+		while (!mousePic.isEmpty() && mousePic.peek().isUp()) {
 			mousePic.remove();
+		}
 		MousePicPoint mp = new MousePicPoint(m.x, m.y, lastingTime);
-		if (mousePic.isEmpty() || !mousePic.getLast().equals(mp))
+		if (mousePic.isEmpty() || !mousePic.getLast().equals(mp)) {
 			mousePic.add(mp);
+		}
 		MousePicPoint lastPoint = null;
 		for (MousePicPoint a : mousePic) {
 			if (lastPoint != null) {
@@ -531,11 +540,13 @@ public class PaintUtil {
 	public void drawPicMouseLine(final Image image, final int lastingTime,
 	                             final int offsetX, final int offsetY) {
 		Point m = ctx.mouse.getLocation();
-		while (!mousePic.isEmpty() && mousePic.peek().isUp())
+		while (!mousePic.isEmpty() && mousePic.peek().isUp()) {
 			mousePic.remove();
+		}
 		MousePicPoint mp = new MousePicPoint(m.x, m.y, lastingTime);
-		if (mousePic.isEmpty() || !mousePic.getLast().equals(mp))
+		if (mousePic.isEmpty() || !mousePic.getLast().equals(mp)) {
 			mousePic.add(mp);
+		}
 		MousePicPoint lastPoint = null;
 		for (MousePicPoint a : mousePic) {
 			if (lastPoint != null) {
@@ -557,12 +568,14 @@ public class PaintUtil {
 	public void drawSquareMouseLine(final Color color, final int lastingTime,
 	                                final int sideLength) {
 		Point m = ctx.mouse.getLocation();
-		while (!mouseSquarePath.isEmpty() && mouseSquarePath.peek().isUp())
+		while (!mouseSquarePath.isEmpty() && mouseSquarePath.peek().isUp()) {
 			mouseSquarePath.remove();
+		}
 		MouseSquarePathPoint mp = new MouseSquarePathPoint(m.x, m.y,
 				lastingTime);
-		if (mouseSquarePath.isEmpty() || !mouseSquarePath.getLast().equals(mp))
+		if (mouseSquarePath.isEmpty() || !mouseSquarePath.getLast().equals(mp)) {
 			mouseSquarePath.add(mp);
+		}
 		MouseSquarePathPoint lastPoint = null;
 		for (MouseSquarePathPoint a : mouseSquarePath) {
 			if (lastPoint != null) {

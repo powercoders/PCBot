@@ -19,16 +19,18 @@ public class RestrictedSecurityManager extends SecurityManager {
 		final String prefix = Application.class.getPackage().getName() + ".";
 		for (StackTraceElement s : Thread.currentThread().getStackTrace()) {
 			final String name = s.getClassName();
-			if (name.startsWith(prefix) && !name.equals(RestrictedSecurityManager.class.getName()))
+			if (name.startsWith(prefix) && !name.equals(RestrictedSecurityManager.class.getName())) {
 				return name;
+			}
 		}
 		return "";
 	}
 
 	private boolean isCallerScript() {
 		final String name = getCallingClass();
-		if (name.isEmpty())
+		if (name.isEmpty()) {
 			return false;
+		}
 		return name.startsWith(Script.class.getName());
 	}
 
@@ -38,20 +40,22 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	public void checkConnect(String host, int port) {
 		// ports other than HTTP (80), HTTPS (443) and unknown (-1) are automatically denied
-		if (!(port == -1 || port == 80 || port == 443))
+		if (!(port == -1 || port == 80 || port == 443)) {
 			throw new SecurityException();
+		}
 
 		if (isCallerScript()) {
 			ArrayList<String> whitelist = new ArrayList<String>();
 
-			// NOTE: prefix with '.' boundary because .example.com won't match on hacked-example.com
-			whitelist.add(".imageshack.us");
-			whitelist.add(".tinypic.com");
-			whitelist.add(".imgur.com");
-			whitelist.add(".powerbot.org");
-			whitelist.add(".runescape.com");
+			// NOTE: give an exact host name!
+			whitelist.add("imageshack.us");
+			whitelist.add("tinypic.com");
+			whitelist.add("imgur.com");
+			whitelist.add("powerbot.org");
+			whitelist.add("runescape.com");
 
 			whitelist.add("shadowscripting.org"); // iDungeon
+			whitelist.add("shadowscripting.wordpress.com"); // iDungeon
 
 			if (isIpAddress(host)) {
 				try {
@@ -65,14 +69,15 @@ public class RestrictedSecurityManager extends SecurityManager {
 			boolean allowed = false;
 
 			for (String check : whitelist) {
-				if (host.endsWith(check)) {
+				if (host.equalsIgnoreCase(check)) {
 					allowed = true;
 					break;
 				}
 			}
 
-			if (!allowed)
+			if (!allowed) {
 				throw new SecurityException();
+			}
 		}
 
 		super.checkConnect(host, port);
@@ -80,15 +85,18 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	private boolean isIpAddress(String check) {
 		final int l = check.length();
-		if (l < 7 || l > 15)
+		if (l < 7 || l > 15) {
 			return false;
+		}
 		String[] parts = check.split("\\.", 4);
-		if (parts.length != 4)
+		if (parts.length != 4) {
 			return false;
+		}
 		for (int i = 0; i < 4; i++) {
 			int n = Integer.parseInt(parts[i]);
-			if (n < 0 || n > 255)
+			if (n < 0 || n > 255) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -102,26 +110,29 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkDelete(String file) {
-		if (isCallerScript())
+		if (isCallerScript()) {
 			throw new SecurityException();
-		else
+		} else {
 			super.checkDelete(file);
+		}
 	}
 
 	public void checkExec(String cmd) {
 		final String calling = getCallingClass();
-		if (calling.equals(ScriptDeliveryNetwork.class.getName()) || calling.equals(BotGUI.class.getName()))
+		if (calling.equals(ScriptDeliveryNetwork.class.getName()) || calling.equals(BotGUI.class.getName())) {
 			super.checkExec(cmd);
-		else
+		} else {
 			throw new SecurityException();
+		}
 	}
 
 	public void checkExit(int status) {
 		final String calling = getCallingClass();
-		if (calling.equals(BotGUI.class.getName()))
+		if (calling.equals(BotGUI.class.getName())) {
 			super.checkExit(status);
-		else
+		} else {
 			throw new SecurityException();
+		}
 	}
 
 	public void checkLink(String lib) {
@@ -173,8 +184,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkRead(FileDescriptor fd) {
-		if (isCallerScript())
+		if (isCallerScript()) {
 			throw new SecurityException();
+		}
 		super.checkRead(fd);
 	}
 
@@ -183,8 +195,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkRead(String file, Object context) {
-		if (isCallerScript())
+		if (isCallerScript()) {
 			throw new SecurityException();
+		}
 		super.checkRead(file, context);
 	}
 
@@ -205,14 +218,16 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkWrite(FileDescriptor fd) {
-		if (isCallerScript())
+		if (isCallerScript()) {
 			throw new SecurityException();
+		}
 		super.checkWrite(fd);
 	}
 
 	public void checkWrite(String file) {
-		if (isCallerScript())
+		if (isCallerScript()) {
 			throw new SecurityException();
+		}
 		super.checkWrite(file);
 	}
 }

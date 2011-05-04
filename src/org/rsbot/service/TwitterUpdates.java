@@ -37,30 +37,38 @@ public class TwitterUpdates {
 			while ((s = reader.readLine()) != null) {
 				final String a = "<text>", b = "</text>";
 				int x = s.indexOf(a);
-				if (x == -1)
+				if (x == -1) {
 					continue;
+				}
 				x += a.length();
 				final int y = s.indexOf(b, x);
-				if (y == -1)
+				if (y == -1) {
 					continue;
+				}
 				String msg = s.substring(x, y).trim();
-				if (!msg.contains(GlobalConfiguration.Twitter.HASHTAG))
+				if (!msg.contains(GlobalConfiguration.Twitter.HASHTAG)) {
 					continue;
-				if (msg.endsWith(GlobalConfiguration.Twitter.HASHTAG))
+				}
+				if (msg.endsWith(GlobalConfiguration.Twitter.HASHTAG)) {
 					msg = msg.substring(0, msg.length() - GlobalConfiguration.Twitter.HASHTAG.length()).trim();
-				if (msg.isEmpty())
+				}
+				if (msg.isEmpty()) {
 					continue;
+				}
 				log.log(level, msg, param);
-				if (++c == count)
+				if (++c == count) {
 					break;
+				}
 			}
 		} catch (IOException ioe) {
 		} finally {
 			try {
-				if (reader != null)
+				if (reader != null) {
 					reader.close();
-				if (stream != null)
+				}
+				if (stream != null) {
 					stream.close();
+				}
 			} catch (IOException ioe1) {
 			}
 		}
