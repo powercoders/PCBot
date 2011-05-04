@@ -4,8 +4,11 @@ import org.rsbot.Application;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.script.Script;
 import org.rsbot.service.ScriptDeliveryNetwork;
+import org.rsbot.util.GlobalConfiguration;
 
+import java.io.File;
 import java.io.FileDescriptor;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.security.Permission;
 import java.util.ArrayList;
@@ -26,11 +29,12 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	private boolean isCallerScript() {
-		final String name = getCallingClass();
-		if (name.isEmpty()) {
-			return false;
+		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
+		for (int i = s.length - 1; i > -1; i--) {
+			if (s[i].getClass().isInstance(Script.class))
+				return true;
 		}
-		return name.startsWith(Script.class.getName());
+		return false;
 	}
 
 	public void checkAccept(String host, int port) {
@@ -114,11 +118,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkDelete(String file) {
-		if (isCallerScript()) {
-			throw new SecurityException();
-		} else {
-			super.checkDelete(file);
-		}
+		checkFilePath(file);
+		super.checkDelete(file);
 	}
 
 	public void checkExec(String cmd) {
@@ -199,10 +200,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkRead(String file, Object context) {
-		if (isCallerScript()) {
-			throw new SecurityException();
-		}
-		super.checkRead(file, context);
+		checkRead(file);
 	}
 
 	public void checkSecurityAccess(String target) {
@@ -229,9 +227,16 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkWrite(String file) {
-		if (isCallerScript()) {
-			throw new SecurityException();
-		}
+		checkFilePath(file);
 		super.checkWrite(file);
+	}
+
+	private void checkFilePath(String path) {
+		final File file = new File(path);
+		path = file.getAbsolutePath();
+		if (isCallerScript()) {
+			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory() + File.separator + getCallingClass()))
+				throw new SecurityException();
+		}
 	}
 }

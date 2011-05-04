@@ -9,7 +9,9 @@ import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Methods;
 import org.rsbot.script.randoms.LoginBot;
 import org.rsbot.script.util.Timer;
+import org.rsbot.util.GlobalConfiguration;
 
+import java.io.File;
 import java.util.EventListener;
 import java.util.HashSet;
 import java.util.Map;
@@ -353,5 +355,9 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 
 	public Bot getBot() {
 		return ctx.bot;
+	}
+	
+	public File getCacheDirectory() {
+		return new File(GlobalConfiguration.Paths.getScriptCacheDirectory(), getClass().getName());
 	}
 }
