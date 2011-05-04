@@ -49,12 +49,12 @@ public class RestrictedSecurityManager extends SecurityManager {
 		if (isCallerScript()) {
 			ArrayList<String> whitelist = new ArrayList<String>();
 
-			// NOTE: give an exact host name!
-			whitelist.add("imageshack.us");
-			whitelist.add("tinypic.com");
-			whitelist.add("imgur.com");
-			whitelist.add("powerbot.org");
-			whitelist.add("runescape.com");
+			// NOTE: if whitelist item starts with a dot "." then it is checked at the end of the host
+			whitelist.add(".imageshack.us");
+			whitelist.add(".tinypic.com");
+			whitelist.add(".imgur.com");
+			whitelist.add(".powerbot.org");
+			whitelist.add(".runescape.com");
 
 			whitelist.add("shadowscripting.org"); // iDungeon
 			whitelist.add("shadowscripting.wordpress.com"); // iDungeon
@@ -66,10 +66,14 @@ public class RestrictedSecurityManager extends SecurityManager {
 			boolean allowed = false;
 
 			for (String check : whitelist) {
-				if (host.equalsIgnoreCase(check)) {
+				if (check.startsWith(".")) {
+					if (host.endsWith(check))
+						allowed = true;
+				} else if (host.equals(check)) {
 					allowed = true;
-					break;
 				}
+				if (allowed = true)
+					break;
 			}
 
 			if (!allowed) {
