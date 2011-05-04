@@ -44,7 +44,8 @@ public class BotToolBar extends JToolBar {
 	public BotToolBar(ActionListener listener) {
 		try {
 			IMAGE_CLOSE = getTransparentImage(GlobalConfiguration.getResourceURL(GlobalConfiguration.Paths.Resources.ICON_CLOSE), 0.5f);
-		} catch (MalformedURLException e) { }
+		} catch (MalformedURLException e) {
+		}
 
 		this.listener = listener;
 
@@ -182,7 +183,8 @@ public class BotToolBar extends JToolBar {
 		BufferedImage loaded = null;
 		try {
 			loaded = ImageIO.read(url);
-		} catch (final IOException e) { }
+		} catch (final IOException e) {
+		}
 		BufferedImage aimg = new BufferedImage(loaded.getWidth(), loaded.getHeight(), BufferedImage.TRANSLUCENT);
 		Graphics2D g = aimg.createGraphics();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
@@ -332,8 +334,9 @@ public class BotToolBar extends JToolBar {
 			URL src = null;
 			try {
 				src = GlobalConfiguration.getResourceURL(GlobalConfiguration.Paths.Resources.ICON_ADD);
-			} catch (final MalformedURLException e) { }
-			ICON = getTransparentImage(src , 0.3f);
+			} catch (final MalformedURLException e) {
+			}
+			ICON = getTransparentImage(src, 0.3f);
 			ICON_OVER = getTransparentImage(src, 0.7f);
 
 			setPreferredSize(new Dimension(20, 20));
