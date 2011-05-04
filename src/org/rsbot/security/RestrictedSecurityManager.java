@@ -52,6 +52,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 			// NOTE: if whitelist item starts with a dot "." then it is checked at the end of the host
 			whitelist.add(".imageshack.us");
 			whitelist.add(".tinypic.com");
+			whitelist.add(".photobucket.com");
 			whitelist.add(".imgur.com");
 			whitelist.add(".powerbot.org");
 			whitelist.add(".runescape.com");
