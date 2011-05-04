@@ -68,7 +68,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 			for (String check : whitelist) {
 				if (check.startsWith(".")) {
-					if (host.endsWith(check))
+					if (host.endsWith(check) || check.equals("." + host))
 						allowed = true;
 				} else if (host.equals(check)) {
 					allowed = true;
