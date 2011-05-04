@@ -67,7 +67,7 @@ public class BotStub implements AppletStub, AppletContext {
 	}
 
 	public AudioClip getAudioClip(final URL url) {
-                  throw new UnsupportedOperationException("NOT YET IMPLEMENTED getAudioClip=" + url);
+		throw new UnsupportedOperationException("NOT YET IMPLEMENTED getAudioClip=" + url);
 	}
 
 	public URL getCodeBase() {

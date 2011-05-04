@@ -4,10 +4,12 @@ import org.rsbot.Application;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.script.Script;
 import org.rsbot.service.ScriptDeliveryNetwork;
+import org.rsbot.util.GlobalConfiguration;
 
+import java.io.File;
 import java.io.FileDescriptor;
+import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.security.Permission;
 import java.util.ArrayList;
 
@@ -27,11 +29,12 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	private boolean isCallerScript() {
-		final String name = getCallingClass();
-		if (name.isEmpty()) {
-			return false;
+		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
+		for (int i = s.length - 1; i > -1; i--) {
+			if (s[i].getClass().isInstance(Script.class))
+				return true;
 		}
-		return name.startsWith(Script.class.getName());
+		return false;
 	}
 
 	public void checkAccept(String host, int port) {
@@ -39,6 +42,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkConnect(String host, int port) {
+		if (host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1"))
+			throw new SecurityException();
+
 		// ports other than HTTP (80), HTTPS (443) and unknown (-1) are automatically denied
 		if (!(port == -1 || port == 80 || port == 443)) {
 			throw new SecurityException();
@@ -47,32 +53,34 @@ public class RestrictedSecurityManager extends SecurityManager {
 		if (isCallerScript()) {
 			ArrayList<String> whitelist = new ArrayList<String>();
 
-			// NOTE: give an exact host name!
-			whitelist.add("imageshack.us");
-			whitelist.add("tinypic.com");
-			whitelist.add("imgur.com");
-			whitelist.add("powerbot.org");
-			whitelist.add("runescape.com");
+			// NOTE: if whitelist item starts with a dot "." then it is checked at the end of the host
+			whitelist.add(".imageshack.us");
+			whitelist.add(".tinypic.com");
+			whitelist.add(".photobucket.com");
+			whitelist.add(".imgur.com");
+			whitelist.add(".powerbot.org");
+			whitelist.add(".runescape.com");
 
 			whitelist.add("shadowscripting.org"); // iDungeon
 			whitelist.add("shadowscripting.wordpress.com"); // iDungeon
+			whitelist.add(".glorb.nl"); // SXForce - Swamp Lizzy Paid, Snake Killah
+			whitelist.add("scripts.johnkeech.com"); // MrSneaky - SneakyFarmerPro
 
-			if (isIpAddress(host)) {
-				try {
-					InetAddress addr = InetAddress.getByName(host);
-					host = addr.getHostName();
-				} catch (UnknownHostException e) {
-					throw new SecurityException();
-				}
-			}
+			// connecting to a raw IP address blocked because a fake reverse DNS is easy to set
+			if (isIpAddress(host))
+				throw new SecurityException();
 
 			boolean allowed = false;
 
 			for (String check : whitelist) {
-				if (host.equalsIgnoreCase(check)) {
+				if (check.startsWith(".")) {
+					if (host.endsWith(check) || check.equals("." + host))
+						allowed = true;
+				} else if (host.equals(check)) {
 					allowed = true;
-					break;
 				}
+				if (allowed = true)
+					break;
 			}
 
 			if (!allowed) {
@@ -110,11 +118,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkDelete(String file) {
-		if (isCallerScript()) {
-			throw new SecurityException();
-		} else {
-			super.checkDelete(file);
-		}
+		checkFilePath(file);
+		super.checkDelete(file);
 	}
 
 	public void checkExec(String cmd) {
@@ -195,10 +200,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkRead(String file, Object context) {
-		if (isCallerScript()) {
-			throw new SecurityException();
-		}
-		super.checkRead(file, context);
+		checkRead(file);
 	}
 
 	public void checkSecurityAccess(String target) {
@@ -225,9 +227,16 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkWrite(String file) {
-		if (isCallerScript()) {
-			throw new SecurityException();
-		}
+		checkFilePath(file);
 		super.checkWrite(file);
+	}
+
+	private void checkFilePath(String path) {
+		final File file = new File(path);
+		path = file.getAbsolutePath();
+		if (isCallerScript()) {
+			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory() + File.separator + getCallingClass()))
+				throw new SecurityException();
+		}
 	}
 }

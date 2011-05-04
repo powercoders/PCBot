@@ -136,6 +136,10 @@ public class GlobalConfiguration {
 			return Paths.getHomeDirectory() + File.separator + "Cache";
 		}
 
+		public static String getScriptCacheDirectory() {
+			return getCacheDirectory() + File.separator + "Scripts";
+		}
+
 		public static String getScriptsExtractedCache() {
 			return Paths.getCacheDirectory() + File.separator + "script.dat";
 		}
