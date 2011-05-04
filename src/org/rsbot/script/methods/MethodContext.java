@@ -177,9 +177,14 @@ public class MethodContext {
 	public final Trade trade = new Trade(this);
 
 	/**
-	 * The singleton of Trade
+	 * The singleton of Lobby
 	 */
 	public final Lobby lobby = new Lobby(this);
+	
+	/**
+	 * The singleton of Paint
+	 */
+	public final Paint paint = new Paint(this);
 
 	/**
 	 * The Bot's input manager
