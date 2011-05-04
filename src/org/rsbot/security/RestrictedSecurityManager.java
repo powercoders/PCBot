@@ -48,14 +48,14 @@ public class RestrictedSecurityManager extends SecurityManager {
 			ArrayList<String> whitelist = new ArrayList<String>();
 
 			// NOTE: prefix with '.' boundary because .example.com won't match on hacked-example.com
-			whitelist.add(".imageshack.us");
-			whitelist.add(".tinypic.com");
-			whitelist.add(".imgur.com");
-			whitelist.add(".powerbot.org");
-			whitelist.add(".runescape.com");
+			whitelist.add("imageshack.us");
+			whitelist.add("tinypic.com");
+			whitelist.add("imgur.com");
+			whitelist.add("powerbot.org");
+			whitelist.add("runescape.com");
 
-			whitelist.add(".shadowscripting.org"); // iDungeon
-			whitelist.add(".shadowscripting.wordpress.com"); // iDungeon
+			whitelist.add("shadowscripting.org"); // iDungeon
+			whitelist.add("shadowscripting.wordpress.com"); // iDungeon
 
 			if (isIpAddress(host)) {
 				try {
@@ -69,7 +69,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 			boolean allowed = false;
 
 			for (String check : whitelist) {
-				if (host.endsWith(check)) {
+				if (host.equalsIgnoreCase(check)) {
 					allowed = true;
 					break;
 				}
