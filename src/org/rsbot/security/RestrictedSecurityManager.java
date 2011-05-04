@@ -39,6 +39,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkConnect(String host, int port) {
+		if (host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1"))
+			throw new SecurityException();
+
 		// ports other than HTTP (80), HTTPS (443) and unknown (-1) are automatically denied
 		if (!(port == -1 || port == 80 || port == 443)) {
 			throw new SecurityException();
