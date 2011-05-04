@@ -47,7 +47,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		if (isCallerScript()) {
 			ArrayList<String> whitelist = new ArrayList<String>();
 
-			// NOTE: prefix with '.' boundary because .example.com won't match on hacked-example.com
+			// NOTE: give an exact host name!
 			whitelist.add("imageshack.us");
 			whitelist.add("tinypic.com");
 			whitelist.add("imgur.com");
