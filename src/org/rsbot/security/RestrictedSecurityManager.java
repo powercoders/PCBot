@@ -7,7 +7,6 @@ import org.rsbot.service.ScriptDeliveryNetwork;
 
 import java.io.FileDescriptor;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.security.Permission;
 import java.util.ArrayList;
 
@@ -60,14 +59,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 			whitelist.add("shadowscripting.org"); // iDungeon
 			whitelist.add("shadowscripting.wordpress.com"); // iDungeon
 
-			if (isIpAddress(host)) {
-				try {
-					InetAddress addr = InetAddress.getByName(host);
-					host = addr.getHostName();
-				} catch (UnknownHostException e) {
-					throw new SecurityException();
-				}
-			}
+			// connecting to a raw IP address blocked because a fake reverse DNS is easy to set
+			if (isIpAddress(host))
+				throw new SecurityException();
 
 			boolean allowed = false;
 
