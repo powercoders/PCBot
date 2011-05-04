@@ -60,6 +60,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 			whitelist.add("shadowscripting.org"); // iDungeon
 			whitelist.add("shadowscripting.wordpress.com"); // iDungeon
 			whitelist.add(".glorb.nl"); // SXForce - Swamp Lizzy Paid, Snake Killah
+			whitelist.add("scripts.johnkeech.com"); // MrSneaky - SneakyFarmerPro
 
 			// connecting to a raw IP address blocked because a fake reverse DNS is easy to set
 			if (isIpAddress(host))
