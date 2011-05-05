@@ -248,7 +248,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		checkSuperFilePath(path);
 		path = new File(path).getAbsolutePath();
 		if (isCallerScript()) {
-			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory() + File.separator + getCallingClass()))
+			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory()))
 				throw new SecurityException();
 		}
 	}
