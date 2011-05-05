@@ -8,7 +8,6 @@ import java.util.List;
 
 public class TileFlags {
 	public static interface Keys {
-		static final int TILE_CLEAR = 0;
 		static final int TILE_WATER = 1280;
 		static final int WALL_NORTH_WEST = 1;
 		static final int WALL_NORTH = 2;
@@ -46,11 +45,11 @@ public class TileFlags {
 	}
 
 	public boolean isQuestionable() {
-		return keys.size() > 0 && !keys.contains(Keys.TILE_CLEAR);
+		return keys.size() > 0 && !keys.contains(Keys.TILE_WATER) && !keys.contains(Keys.BLOCKED);
 	}
 
 	public boolean isWalkable() {
-		return !keys.contains(Keys.TILE_WATER) && !keys.contains(Keys.BLOCKED);
+		return keys.size() == 0;
 	}
 
 	public boolean isWater() {
