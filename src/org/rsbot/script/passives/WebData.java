@@ -28,6 +28,9 @@ public class WebData extends PassiveScript {
 			}
 			rs_map.clear();
 			sleep(5000);
+			if (!curr_base.equals(game.getMapBase())) {
+				return -1;
+			}
 			lb = curr_base;
 			Node t;
 			log("Analysing new region into your local web.");
