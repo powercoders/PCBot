@@ -23,6 +23,8 @@ public class WebLoader extends PassiveScript {
 	public int loop() {
 		if (!Web.loaded) {
 			try {
+				int badRemoved = 0;
+				int redundantRemoved = 0;
 				final long startLoad = System.currentTimeMillis();
 				BufferedReader br = new BufferedReader(new FileReader(GlobalConfiguration.Paths.getWebCache()));
 				String line;
@@ -44,20 +46,38 @@ public class WebLoader extends PassiveScript {
 										}
 									}
 								}
-								theFlagsList.put(tile, tileFlags);
+								if (tileFlags.containsKey(0)) {
+									WebQueue.Remove(line);//Line is redundant as of Thursday, May 5, 2011.
+									redundantRemoved++;
+								} else {
+									if (theFlagsList.containsKey(tile)) {
+										WebQueue.Remove(line);//Line is double, remove from file--bad collection.
+										badRemoved++;
+									} else {
+										theFlagsList.put(tile, tileFlags);
+									}
+								}
 							} catch (Exception e) {
 							}
 						} else {
 							WebQueue.Remove(line);//Line is bad, remove from file.
+							badRemoved++;
 						}
 					} else {
 						WebQueue.Remove(line);//Line is bad, remove from file.
+						badRemoved++;
 					}
 				}
 				Web.map.putAll(theFlagsList);
 				Web.loaded = true;
 				final long timeTook = System.currentTimeMillis() - startLoad;
 				log("Loaded " + Web.map.size() + " nodes in " + timeTook + "ms.");
+				if (badRemoved > 0) {
+					log("Removed " + badRemoved + " bad nodes.");
+				}
+				if (redundantRemoved > 0) {
+					log("Removed " + redundantRemoved + " redundant nodes.");
+				}
 			} catch (Exception e) {
 				log("Failed to load the web.. trying again.");
 			}

@@ -26,6 +26,7 @@ public class WebData extends PassiveScript {
 			if (lb != null && lb.equals(curr_base)) {
 				return -1;
 			}
+			rs_map.clear();
 			sleep(5000);
 			lb = curr_base;
 			Node t;
@@ -76,10 +77,7 @@ public class WebData extends PassiveScript {
 							tI.addKey(TileFlags.Keys.TILE_WATER);
 						}
 					}
-					if (!tI.isQuestionable()) {
-						tI.addKey(TileFlags.Keys.TILE_CLEAR);
-					}
-					if (!Web.map.containsKey(start) && f_y > 0 && f_x < 103) {
+					if (!Web.map.containsKey(start) && !tI.isWalkable() && f_y > 0 && f_x < 103) {
 						rs_map.put(start, tI);
 					} else {
 						try {

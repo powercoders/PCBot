@@ -31,9 +31,9 @@ public class WebQueue {
 
 	public static void Add(final HashMap<RSTile, TileFlags> theFlagsList) {
 		Web.map.putAll(theFlagsList);
+		final int count = theFlagsList.size();
 		new Thread() {
 			public void run() {
-				final int count = theFlagsList.size();
 				try {
 					String addedString = "";
 					final HashMap<RSTile, TileFlags> theFlagsList2 = new HashMap<RSTile, TileFlags>();

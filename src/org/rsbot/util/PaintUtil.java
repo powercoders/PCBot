@@ -772,7 +772,7 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 
-	public void drawWeb(final Color color, final boolean onScreen) {
+	/*public void drawWeb(final Color color, final boolean onScreen) {
 		WebTile[] tiles = new Web(ctx, null, null).map().getTiles();
 		for (WebTile tile : tiles) {
 			if (tile != null) {
@@ -814,5 +814,5 @@ public class PaintUtil {
 				}
 			}
 		}
-	}
+	}*/
 }
