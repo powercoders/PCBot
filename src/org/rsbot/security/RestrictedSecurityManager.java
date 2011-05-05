@@ -1,17 +1,17 @@
 package org.rsbot.security;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.net.InetAddress;
+import java.security.Permission;
+import java.util.ArrayList;
+
 import org.rsbot.Application;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.script.Script;
 import org.rsbot.service.ScriptDeliveryNetwork;
+import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
-
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.security.Permission;
-import java.util.ArrayList;
 
 /**
  * @author Paris
@@ -196,6 +196,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkRead(String file) {
+		checkSuperFilePath(file);
 		super.checkRead(file);
 	}
 
@@ -231,9 +232,21 @@ public class RestrictedSecurityManager extends SecurityManager {
 		super.checkWrite(file);
 	}
 
+	private void checkSuperFilePath(String path) {
+		path = new File(path).getAbsolutePath();
+		if (path.equalsIgnoreCase(new File(GlobalConfiguration.Paths.getAccountsFile()).getAbsolutePath())) {
+			for (StackTraceElement s : Thread.currentThread().getStackTrace()) {
+				final String name = s.getClassName();
+				if (name.equals(AccountStore.class.getName()))
+					return;
+			}
+			throw new SecurityException();
+		}
+	}
+
 	private void checkFilePath(String path) {
-		final File file = new File(path);
-		path = file.getAbsolutePath();
+		checkSuperFilePath(path);
+		path = new File(path).getAbsolutePath();
 		if (isCallerScript()) {
 			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory() + File.separator + getCallingClass()))
 				throw new SecurityException();
