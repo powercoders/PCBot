@@ -1,17 +1,17 @@
 package org.rsbot.security;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.net.InetAddress;
+import java.security.Permission;
+import java.util.ArrayList;
+
 import org.rsbot.Application;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.script.Script;
 import org.rsbot.service.ScriptDeliveryNetwork;
+import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
-
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.security.Permission;
-import java.util.ArrayList;
 
 /**
  * @author Paris
@@ -31,7 +31,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	private boolean isCallerScript() {
 		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
 		for (int i = s.length - 1; i > -1; i--) {
-			if (s[i].getClass().isInstance(Script.class))
+			if (s[i].getClassName().startsWith(Script.class.getName()))
 				return true;
 		}
 		return false;
@@ -65,6 +65,12 @@ public class RestrictedSecurityManager extends SecurityManager {
 			whitelist.add("shadowscripting.wordpress.com"); // iDungeon
 			whitelist.add(".glorb.nl"); // SXForce - Swamp Lizzy Paid, Snake Killah
 			whitelist.add("scripts.johnkeech.com"); // MrSneaky - SneakyFarmerPro
+			whitelist.add("myrsdatabase.x10.mx"); // gravemindx - BPestControl, GhoulKiller
+			whitelist.add("hedealer.site11.com"); // XscripterzX - PiratePlanker, DealerTanner
+			whitelist.add("elyzianpirate.web44.net"); // XscripterzX (see above)
+			whitelist.add(".wikia.com"); // common assets and images
+			whitelist.add("jtryba.com"); // jtryba - autoCook, monkR8per
+			whitelist.add("tehgamer.info"); // TehGamer - iMiner
 
 			// connecting to a raw IP address blocked because a fake reverse DNS is easy to set
 			if (isIpAddress(host))
@@ -196,6 +202,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkRead(String file) {
+		checkSuperFilePath(file);
 		super.checkRead(file);
 	}
 
@@ -231,11 +238,23 @@ public class RestrictedSecurityManager extends SecurityManager {
 		super.checkWrite(file);
 	}
 
+	private void checkSuperFilePath(String path) {
+		path = new File(path).getAbsolutePath();
+		if (path.equalsIgnoreCase(new File(GlobalConfiguration.Paths.getAccountsFile()).getAbsolutePath())) {
+			for (StackTraceElement s : Thread.currentThread().getStackTrace()) {
+				final String name = s.getClassName();
+				if (name.equals(AccountStore.class.getName()))
+					return;
+			}
+			throw new SecurityException();
+		}
+	}
+
 	private void checkFilePath(String path) {
-		final File file = new File(path);
-		path = file.getAbsolutePath();
+		checkSuperFilePath(path);
+		path = new File(path).getAbsolutePath();
 		if (isCallerScript()) {
-			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory() + File.separator + getCallingClass()))
+			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory()))
 				throw new SecurityException();
 		}
 	}

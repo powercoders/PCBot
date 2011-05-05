@@ -358,6 +358,9 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 	}
 	
 	public File getCacheDirectory() {
-		return new File(GlobalConfiguration.Paths.getScriptCacheDirectory(), getClass().getName());
+		final File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory(), getClass().getName());
+		if (!dir.exists())
+			dir.mkdirs();
+		return dir;
 	}
 }
