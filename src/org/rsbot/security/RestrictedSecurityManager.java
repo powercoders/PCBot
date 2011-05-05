@@ -69,6 +69,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 			whitelist.add("hedealer.site11.com"); // XscripterzX - PiratePlanker, DealerTanner
 			whitelist.add("elyzianpirate.web44.net"); // XscripterzX (see above)
 			whitelist.add(".wikia.com"); // common assets and images
+			whitelist.add("jtryba.com"); // jtryba - autoCook, monkR8per
 
 			// connecting to a raw IP address blocked because a fake reverse DNS is easy to set
 			if (isIpAddress(host))
