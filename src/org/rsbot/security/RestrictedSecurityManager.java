@@ -31,7 +31,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	private boolean isCallerScript() {
 		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
 		for (int i = s.length - 1; i > -1; i--) {
-			if (s[i].getClass().isInstance(Script.class))
+			if (s[i].getClassName().startsWith(Script.class.getName()))
 				return true;
 		}
 		return false;
