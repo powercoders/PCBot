@@ -85,7 +85,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 				} else if (host.equals(check)) {
 					allowed = true;
 				}
-				if (allowed = true)
+				if (allowed == true)
 					break;
 			}
 
