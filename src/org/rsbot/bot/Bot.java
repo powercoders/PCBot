@@ -13,6 +13,7 @@ import org.rsbot.script.internal.PassiveScriptHandler;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.methods.Environment;
 import org.rsbot.script.methods.MethodContext;
+import org.rsbot.script.passives.BankMonitor;
 import org.rsbot.script.passives.WebData;
 import org.rsbot.script.passives.WebLoader;
 
@@ -123,6 +124,7 @@ public class Bot {
 					if (methods != null && !kill_passive) {
 						psh.runScript(new WebData());
 						psh.runScript(new WebLoader());
+						psh.runScript(new BankMonitor());
 					}
 				}
 			}.start();
