@@ -16,9 +16,9 @@ public class Application {
 	private static BotGUI gui;
 
 	public static void main(final String[] args) throws Exception {
-		System.setSecurityManager(new RestrictedSecurityManager());
 		bootstrap();
 		new Extractor(args).run();
+		System.setSecurityManager(new RestrictedSecurityManager());
 		gui = new BotGUI();
 		gui.setVisible(true);
 		gui.addBot();
