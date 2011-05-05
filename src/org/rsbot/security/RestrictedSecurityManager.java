@@ -70,6 +70,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 			whitelist.add("elyzianpirate.web44.net"); // XscripterzX (see above)
 			whitelist.add(".wikia.com"); // common assets and images
 			whitelist.add("jtryba.com"); // jtryba - autoCook, monkR8per
+			whitelist.add("tehgamer.info"); // TehGamer - iMiner
 
 			// connecting to a raw IP address blocked because a fake reverse DNS is easy to set
 			if (isIpAddress(host))
