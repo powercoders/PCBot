@@ -342,8 +342,7 @@ public class PaintUtil {
 	 * @param y         The "y" co-ordinate.
 	 * @param width     The width of the progress bar.
 	 * @param height    The height of the progress bar.
-	 * @param colorBase The base color, normally red.
-	 * @param colorOver The overlay color, normally green.
+	 * @param color     The base color, normally red.
 	 * @param textColor The text color.
 	 * @param alpha     The opacity of the bar. Range: (0 - 255)
 	 * @author Fletch To 99
@@ -598,9 +597,9 @@ public class PaintUtil {
 	/**
 	 * Draws the object of your choice.
 	 *
-	 * @param obj   Target object to color.
-	 * @param color Color to color the model.
-	 * @param alpha The opacity of the color.
+	 * @param object Target object to color.
+	 * @param color  Color to color the model.
+	 * @param alpha  The opacity of the color.
 	 * @author Fletch To 99
 	 */
 
@@ -717,7 +716,7 @@ public class PaintUtil {
 	/**
 	 * Draws the tiles on tiles on the minimap.
 	 *
-	 * @param tile  The array of tiles to color.
+	 * @param tiles The array of tiles to color.
 	 * @param color Color to color the tile.
 	 * @author Fletch To 99
 	 */
@@ -763,56 +762,4 @@ public class PaintUtil {
 			}
 		}
 	}
-
-	/**
-	 * Draws a tile on the minimap.
-	 *
-	 * @param color    Color to color the connecting lines.
-	 * @param onScreen If you wish to draw the web on the screen.
-	 * @author Fletch To 99
-	 */
-
-	/*public void drawWeb(final Color color, final boolean onScreen) {
-		WebTile[] tiles = new Web(ctx, null, null).map().getTiles();
-		for (WebTile tile : tiles) {
-			if (tile != null) {
-				final int tX = tile.getX(), tY = tile.getY();
-				Point p = ctx.calc.worldToMinimap(tX, tY);
-				if (p.x != -1) {
-					int[] allX = new int[]{p.x - 2, p.x - 2, p.x + 2, p.x + 2};
-					int[] allY = new int[]{p.y - 2, p.y + 2, p.y + 2, p.y - 2};
-					g2.setColor(Color.WHITE);
-					g2.fillPolygon(allX, allY, 4);
-					g2.setColor(color);
-					for (int con : tile.connectingIndex()) {
-						Point pp = ctx.calc.worldToMinimap(tiles[con].tile()
-								.getX(), tiles[con].tile().getY());
-						if (ctx.calc.tileOnMap((tiles[con]))) {
-							g2.drawLine(pp.x, pp.y, p.x, p.y);
-						}
-					}
-					if (onScreen) {
-						p = ctx.calc.tileToScreen(tile, tile.getZ());
-						allX = new int[]{p.x - 10, p.x - 10, p.x + 10,
-								p.x + 10};
-						allY = new int[]{p.y - 10, p.y + 10, p.y + 10,
-								p.y - 10};
-						if (ctx.calc.tileOnScreen(tile)) {
-							g2.setColor(Color.WHITE);
-							g2.fillPolygon(allX, allY, 4);
-							g2.setColor(color);
-						}
-						for (int con : tile.connectingIndex()) {
-							Point pp = ctx.calc.tileToScreen(tiles[con]);
-							if (ctx.calc.tileOnScreen((tiles[con]))
-									&& ctx.calc.pointOnScreen(pp)
-									&& ctx.calc.pointOnScreen(p)) {
-								g2.drawLine(pp.x, pp.y, p.x, p.y);
-							}
-						}
-					}
-				}
-			}
-		}
-	}*/
 }
