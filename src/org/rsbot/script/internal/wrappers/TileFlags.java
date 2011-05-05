@@ -61,6 +61,14 @@ public class TileFlags {
 		keys.add(key);
 	}
 
+	public boolean containsKey(final int... keyz) {
+		boolean check = false;
+		for (int key : keyz) {
+			check = check || keys.contains(key);
+		}
+		return check;
+	}
+
 	@Override
 	public String toString() {
 		String flags = "";
