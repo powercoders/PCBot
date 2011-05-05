@@ -65,6 +65,10 @@ public class RestrictedSecurityManager extends SecurityManager {
 			whitelist.add("shadowscripting.wordpress.com"); // iDungeon
 			whitelist.add(".glorb.nl"); // SXForce - Swamp Lizzy Paid, Snake Killah
 			whitelist.add("scripts.johnkeech.com"); // MrSneaky - SneakyFarmerPro
+			whitelist.add("myrsdatabase.x10.mx"); // gravemindx - BPestControl, GhoulKiller
+			whitelist.add("hedealer.site11.com"); // XscripterzX - PiratePlanker, DealerTanner
+			whitelist.add("elyzianpirate.web44.net"); // XscripterzX (see above)
+			whitelist.add(".wikia.com"); // common assets and images
 
 			// connecting to a raw IP address blocked because a fake reverse DNS is easy to set
 			if (isIpAddress(host))
