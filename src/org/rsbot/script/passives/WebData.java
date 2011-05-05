@@ -36,8 +36,8 @@ public class WebData extends PassiveScript {
 			log("Analysing new region into your local web.");
 			int plane = game.getPlane();
 			final int flags[][] = walking.getCollisionFlags(plane);
-			for (int i = 0; i < 104; i++) {
-				for (int j = 0; j < 104; j++) {
+			for (int i = 3; i < 102; i++) {
+				for (int j = 3; j < 102; j++) {
 					RSTile start = new RSTile(curr_base.getX() + i, curr_base.getY() + j, plane);
 					int base_x = game.getBaseX(), base_y = game.getBaseY();
 					int curr_x = start.getX() - base_x, curr_y = start.getY() - base_y;
@@ -80,11 +80,11 @@ public class WebData extends PassiveScript {
 							tI.addKey(TileFlags.Keys.TILE_WATER);
 						}
 					}
-					if (!Web.map.containsKey(start) && !tI.isWalkable() && f_y > 0 && f_x < 103) {
+					if (!Web.map.containsKey(start) && !tI.isWalkable()) {
 						rs_map.put(start, tI);
 					} else {
 						try {
-							if (f_y > 0 && f_x < 103 && !Web.map.get(start).equals(tI)) {
+							if (!Web.map.get(start).equals(tI)) {
 								WebQueue.Remove(start);
 							}
 						} catch (NullPointerException ignored) {
