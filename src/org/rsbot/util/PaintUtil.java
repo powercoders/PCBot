@@ -356,7 +356,7 @@ public class PaintUtil {
 	/**
 	 * Draws a 3D progress bar using the co-ordinates, dimensions and skill
 	 * provided. This also displays current level in the skill, percent till the
-	 * next level & exp needed to reach the next level
+	 * next level & exp needed to reach the next level <<<<<<< HEAD
 	 * 
 	 * @param skill
 	 *            The number of the skill wanting to display. E.g Skills.MAGIC
@@ -375,7 +375,25 @@ public class PaintUtil {
 	 * @param textColor
 	 *            The text color.
 	 * @param alpha
-	 *            The opacity of the bar. Range: (0 - 255)
+	 *            The opacity of the bar. Range: (0 - 255) =======
+	 * 
+	 * @param skill
+	 *            The number of the skill wanting to display. E.g Skills.MAGIC
+	 * @param x
+	 *            The "x" co-ordinate.
+	 * @param y
+	 *            The "y" co-ordinate.
+	 * @param width
+	 *            The width of the progress bar.
+	 * @param height
+	 *            The height of the progress bar.
+	 * @param color
+	 *            The base color, normally red.
+	 * @param textColor
+	 *            The text color.
+	 * @param alpha
+	 *            The opacity of the bar. Range: (0 - 255) >>>>>>>
+	 *            refs/remotes/timerUpstream/web2
 	 * @author Fletch To 99
 	 */
 
@@ -645,14 +663,22 @@ public class PaintUtil {
 	}
 
 	/**
-	 * Draws the object of your choice.
+	 * Draws the object of your choice. <<<<<<< HEAD
 	 * 
 	 * @param obj
 	 *            Target object to color.
 	 * @param color
 	 *            Color to color the model.
 	 * @param alpha
-	 *            The opacity of the color.
+	 *            The opacity of the color. =======
+	 * 
+	 * @param object
+	 *            Target object to color.
+	 * @param color
+	 *            Color to color the model.
+	 * @param alpha
+	 *            The opacity of the color. >>>>>>>
+	 *            refs/remotes/timerUpstream/web2
 	 * @author Fletch To 99
 	 */
 
@@ -775,12 +801,18 @@ public class PaintUtil {
 	}
 
 	/**
-	 * Draws the tiles on tiles on the minimap.
+	 * Draws the tiles on tiles on the minimap. <<<<<<< HEAD
 	 * 
 	 * @param tile
 	 *            The array of tiles to color.
 	 * @param color
-	 *            Color to color the tile.
+	 *            Color to color the tile. =======
+	 * 
+	 * @param tiles
+	 *            The array of tiles to color.
+	 * @param color
+	 *            Color to color the tile. >>>>>>>
+	 *            refs/remotes/timerUpstream/web2
 	 * @author Fletch To 99
 	 */
 
