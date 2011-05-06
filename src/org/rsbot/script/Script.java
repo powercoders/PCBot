@@ -356,11 +356,12 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 	public Bot getBot() {
 		return ctx.bot;
 	}
-	
+
 	public File getCacheDirectory() {
 		final File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory(), getClass().getName());
-		if (!dir.exists())
+		if (!dir.exists()) {
 			dir.mkdirs();
+		}
 		return dir;
 	}
 }

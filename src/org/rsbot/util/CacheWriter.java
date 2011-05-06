@@ -25,6 +25,11 @@ public class CacheWriter {
 		writer.start();
 	}
 
+	/**
+	 * Adds to the writer queue.
+	 *
+	 * @param list The string.
+	 */
 	public void add(String list) {
 		if (list != null) {
 			String[] lines = list.split("\n");
@@ -36,10 +41,19 @@ public class CacheWriter {
 		list = null;
 	}
 
+	/**
+	 * Destroys the writer.
+	 */
 	public void destroy() {
 		writer.destroyWriter();
 	}
 
+	/**
+	 * Gets the queue size.
+	 *
+	 * @param id The id to grab.
+	 * @return The size of the queue.
+	 */
 	public int queueSize(final int id) {
 		switch (id) {
 			case 0:
@@ -52,6 +66,11 @@ public class CacheWriter {
 		return -1;
 	}
 
+	/**
+	 * The threaded writer class.
+	 *
+	 * @author Timer
+	 */
 	private class QueueWriter extends Thread { //For slow systems and reduced lag, let's make writing slow and threaded (lol at thread and reducing cpu usage..).
 		private boolean destroy = false;
 		private final File file, tmpFile;
@@ -73,6 +92,9 @@ public class CacheWriter {
 			}
 		}
 
+		/**
+		 * The main method...  doesn't stop till all data is written.
+		 */
 		public void run() {
 			List<String> outList = new ArrayList<String>();
 			while ((!destroy || queue.size() > 0 || WebQueue.weAreBuffering) && file.exists() && file.canWrite()) {
@@ -149,10 +171,20 @@ public class CacheWriter {
 		}
 	}
 
+	/**
+	 * Adds a string to remove to the queue.
+	 *
+	 * @param str The string to remove.
+	 */
 	public void remove(final String str) {
 		writer.remove(str);
 	}
 
+	/**
+	 * Checks if it's running.
+	 *
+	 * @return <tt>true</tt> if it's running.
+	 */
 	public static boolean IsRunning() {
 		return !stopped;
 	}

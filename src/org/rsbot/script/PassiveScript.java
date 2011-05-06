@@ -36,10 +36,18 @@ public abstract class PassiveScript extends Methods implements EventListener, Ru
 		onStart();
 	}
 
+	/**
+	 * Sets if it's enabled.
+	 *
+	 * @param enabled Enabled or not.
+	 */
 	public final void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
 
+	/**
+	 * Runs the passive script.
+	 */
 	public final void run() {
 		name = getClass().getAnnotation(PassiveScriptManifest.class).name();
 		ctx.bot.getEventManager().addListener(this);
@@ -67,6 +75,11 @@ public abstract class PassiveScript extends Methods implements EventListener, Ru
 		running = false;
 	}
 
+	/**
+	 * Removes the script.
+	 *
+	 * @param id The id to deactivate.
+	 */
 	public final void deactivate(int id) {
 		if (id != this.id) {
 			throw new IllegalStateException("Invalid id!");
@@ -74,6 +87,11 @@ public abstract class PassiveScript extends Methods implements EventListener, Ru
 		this.running = false;
 	}
 
+	/**
+	 * Gives the script an id.
+	 *
+	 * @param id The id.
+	 */
 	public final void setID(int id) {
 		if (this.id != -1) {
 			throw new IllegalStateException("Already added to pool!");
@@ -81,10 +99,20 @@ public abstract class PassiveScript extends Methods implements EventListener, Ru
 		this.id = id;
 	}
 
+	/**
+	 * Gets the id of the script.
+	 *
+	 * @return The ID.
+	 */
 	public final int getID() {
 		return id;
 	}
 
+	/**
+	 * Checks if the script is running.
+	 *
+	 * @return <tt>true</tt> if true.
+	 */
 	public final boolean isRunning() {
 		return running;
 	}

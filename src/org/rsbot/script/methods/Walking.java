@@ -1,6 +1,9 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.wrappers.*;
+import org.rsbot.script.wrappers.RSLocalPath;
+import org.rsbot.script.wrappers.RSPath;
+import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.RSTilePath;
 
 import java.awt.*;
 

@@ -10,7 +10,7 @@ public class Paint extends MethodProvider {
 
 	/**
 	 * Creates a new PaintUtil.
-	 * 
+	 *
 	 * @return New instance of PaintUtil.
 	 * @see PaintUtil
 	 */

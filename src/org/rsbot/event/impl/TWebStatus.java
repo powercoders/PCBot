@@ -9,12 +9,13 @@ import org.rsbot.util.StringUtil;
 
 import java.awt.*;
 
+/**
+ * Draws the web cache and cache writer information.
+ *
+ * @author Timer
+ */
 public class TWebStatus implements TextPaintListener {
-
-	private final Menu menu;
-
 	public TWebStatus(Bot bot) {
-		menu = bot.getMethodContext().menu;
 	}
 
 	public int drawLine(final Graphics render, int idx) {

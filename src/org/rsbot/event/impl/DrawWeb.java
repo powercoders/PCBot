@@ -12,10 +12,22 @@ import java.awt.*;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * Draws the web.
+ *
+ * @author Timer
+ */
 public class DrawWeb implements PaintListener {
 
 	private final MethodContext ctx;
 
+	/**
+	 * Calculates a point to the minimap.
+	 *
+	 * @param tile   The tile to calculate.
+	 * @param player Your player.
+	 * @return The point of the tile.
+	 */
 	private Point tileToMap(final RSTile tile, final RSPlayer player) {
 		double minimapAngle = -1 * Math.toRadians(ctx.camera.getAngle());
 		int x = (tile.getX() - player.getLocation().getX()) * 4 - 2;

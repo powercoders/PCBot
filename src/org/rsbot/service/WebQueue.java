@@ -19,7 +19,6 @@ import java.util.logging.Logger;
  */
 public class WebQueue {
 	private static CacheWriter cacheWriter = null;
-	private static final Logger log = Logger.getLogger("WebQueue");
 	public static boolean weAreBuffering = false;
 	public static boolean speedBuffer = false;
 	public static int bufferingCount = 0;
@@ -30,10 +29,20 @@ public class WebQueue {
 		}
 	}
 
+	/**
+	 * Gets the cache writer.
+	 *
+	 * @return The cache writer instance.
+	 */
 	public static CacheWriter getCacheWriter() {
 		return cacheWriter;
 	}
 
+	/**
+	 * Adds collected data to the queue.
+	 *
+	 * @param theFlagsList The data.
+	 */
 	public static void Add(final HashMap<RSTile, TileFlags> theFlagsList) {
 		Web.map.putAll(theFlagsList);
 		final int count = theFlagsList.size();
@@ -82,6 +91,11 @@ public class WebQueue {
 		}.start();
 	}
 
+	/**
+	 * Removes a tile from the database.
+	 *
+	 * @param tile The tile to remove.
+	 */
 	public static void Remove(final RSTile tile) {
 		new Thread() {
 			public void run() {
@@ -90,6 +104,11 @@ public class WebQueue {
 		}.start();
 	}
 
+	/**
+	 * Removes a string from the data base.
+	 *
+	 * @param str The string to remove.
+	 */
 	public static void Remove(final String str) {
 		new Thread() {
 			public void run() {
@@ -98,10 +117,18 @@ public class WebQueue {
 		}.start();
 	}
 
+	/**
+	 * Checks if the queue is running.
+	 *
+	 * @return <tt>true</tt> if it's running.
+	 */
 	public static boolean IsRunning() {
 		return cacheWriter.IsRunning();
 	}
 
+	/**
+	 * Destroys the cache writer.
+	 */
 	public static void Destroy() {
 		speedBuffer = true;
 		cacheWriter.destroy();
