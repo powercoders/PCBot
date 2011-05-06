@@ -3,10 +3,11 @@ package org.rsbot.script.internal.wrappers;
 import org.rsbot.script.wrappers.RSTile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class TileFlags {
+public class TileFlags extends RSTile {
 	public static interface Keys {
 		static final int TILE_WATER = 1280;
 		static final int WALL_NORTH_WEST = 1;
@@ -33,15 +34,19 @@ public class TileFlags {
 		public static final int WATER = 0x1280100;
 	}
 
-	private RSTile tile;
 	private List<Integer> keys = new ArrayList<Integer>();
 
 	public TileFlags(RSTile tile) {
-		this.tile = tile;
+		super(tile.getX(), tile.getY(), tile.getZ());
 	}
 
-	public RSTile getTile() {
-		return tile;
+	public Integer[] getKeys() {
+		return keys.toArray(new Integer[keys.size()]);
+	}
+
+	public TileFlags(RSTile tile, Integer[] keys) {
+		super(tile.getX(), tile.getY(), tile.getZ());
+		this.keys.addAll(Arrays.asList(keys));
 	}
 
 	public boolean isQuestionable() {
@@ -76,14 +81,14 @@ public class TileFlags {
 			int flag = keysIterator.next();
 			flags += flag + "=";
 		}
-		return tile.getX() + "," + tile.getY() + "," + tile.getZ() + "tile=data" + flags;
+		return getX() + "," + getY() + "," + getZ() + "tile=data" + flags;
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof TileFlags) {
 			TileFlags tileFlags = (TileFlags) o;
-			return getTile().equals(tileFlags.getTile()) && flagsEqual(tileFlags, this);
+			return flagsEqual(tileFlags, this);
 		}
 		return false;
 	}

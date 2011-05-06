@@ -39,7 +39,7 @@ public class DrawWeb implements PaintListener {
 		while (rs.hasNext()) {
 			TileFlags t = rs.next().getValue();
 			render.setColor(t.isQuestionable() ? Color.yellow : t.isWater() ? Color.cyan : Color.red);
-			Point p = tileToMap(t.getTile(), player);
+			Point p = tileToMap(t, player);
 			render.drawLine(p.x, p.y, p.x, p.y);
 		}
 	}

@@ -1,6 +1,7 @@
 package org.rsbot.script.methods;
 
 import org.rsbot.script.internal.wrappers.TileFlags;
+import org.rsbot.script.web.WebTile;
 import org.rsbot.script.wrappers.RSTile;
 
 import java.util.HashMap;
@@ -22,8 +23,8 @@ public class Web extends MethodProvider {
 		}
 		HashSet<Node> open = new HashSet<Node>();
 		HashSet<Node> closed = new HashSet<Node>();
-		Node curr = new Node(start.getX(), start.getY());
-		Node dest = new Node(end.getX(), end.getY());
+		Node curr = new Node(start.getX(), start.getY(), start.getZ());
+		Node dest = new Node(end.getX(), end.getY(), end.getZ());
 		curr.f = Heuristic(curr, dest);
 		open.add(curr);
 		while (!open.isEmpty()) {
@@ -59,14 +60,16 @@ public class Web extends MethodProvider {
 	 *
 	 * @author Jacmob
 	 */
-	private static class Node {
-		public int x, y;
+	private static class Node extends TileFlags {
+		public int x, y, z;
 		public Node prev;
 		public double g, f;
 
-		public Node(int x, int y) {
+		public Node(int x, int y, int z) {
+			super(new RSTile(x, y, z), getTileFlags(new RSTile(x, y, z)));
 			this.x = x;
 			this.y = y;
+			this.z = z;
 			g = f = 0;
 		}
 
@@ -89,8 +92,9 @@ public class Web extends MethodProvider {
 			return "(" + x + "," + y + ")";
 		}
 
-		public RSTile toRSTile() {
-			return new RSTile(x, y);
+		public WebTile toWebTile() {
+			WebTile t = new WebTile(new RSTile(x, y, z), getKeys());
+			return t;
 		}
 	}
 
@@ -124,58 +128,64 @@ public class Web extends MethodProvider {
 		return best;
 	}
 
-	private static RSTile[] Path(Node end) {
-		LinkedList<RSTile> path = new LinkedList<RSTile>();
+	private static WebTile[] Path(Node end) {
+		LinkedList<WebTile> path = new LinkedList<WebTile>();
 		Node p = end;
 		while (p != null) {
-			path.addFirst(p.toRSTile());
+			path.addFirst(p.toWebTile());
 			p = p.prev;
 		}
-		return path.toArray(new RSTile[path.size()]);
+		return path.toArray(new WebTile[path.size()]);
 	}
 
 	private static java.util.List<Node> Successors(Node t) {
 		LinkedList<Node> tiles = new LinkedList<Node>();
 		int x = t.x, y = t.y;
-		int f_x = x, f_y = y;
-		final RSTile here = t.toRSTile();
+		final WebTile here = t.toWebTile();
 		if (!Flag(here, TileFlags.Keys.WALL_SOUTH) && !Flag(new RSTile(here.getX(), here.getY() - 1), TileFlags.Keys.BLOCKED)) {
-			tiles.add(new Node(x, y - 1));
+			tiles.add(new Node(x, y - 1, 0));
 		}
 		if (!Flag(here, TileFlags.Keys.WALL_WEST) && !Flag(new RSTile(here.getX() - 1, here.getY()), TileFlags.Keys.BLOCKED)) {
-			tiles.add(new Node(x - 1, y));
+			tiles.add(new Node(x - 1, y, 0));
 		}
 		if (!Flag(here, TileFlags.Keys.WALL_NORTH) && !Flag(new RSTile(here.getX(), here.getY() + 1), TileFlags.Keys.BLOCKED)) {
-			tiles.add(new Node(x, y + 1));
+			tiles.add(new Node(x, y + 1, 0));
 		}
 		if (!Flag(here, TileFlags.Keys.WALL_EAST) && !Flag(new RSTile(here.getX() + 1, here.getY()), TileFlags.Keys.BLOCKED)) {
-			tiles.add(new Node(x + 1, y));
+			tiles.add(new Node(x + 1, y, 0));
 		}
 		if (!Flag(here, TileFlags.Keys.WALL_SOUTH_WEST, TileFlags.Keys.WALL_SOUTH, TileFlags.Keys.WALL_WEST) &&
 				!Flag(new RSTile(here.getX() - 1, here.getY() - 1), TileFlags.Keys.BLOCKED) &&
 				!Flag(new RSTile(here.getX(), here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_WEST) &&
 				!Flag(new RSTile(here.getX() - 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_SOUTH)) {
-			tiles.add(new Node(x - 1, y - 1));
+			tiles.add(new Node(x - 1, y - 1, 0));
 		}
 		if (!Flag(here, TileFlags.Keys.WALL_NORTH_WEST, TileFlags.Keys.WALL_NORTH, TileFlags.Keys.WALL_WEST) &&
 				!Flag(new RSTile(here.getX() - 1, here.getY() + 1), TileFlags.Keys.BLOCKED) &&
 				!Flag(new RSTile(here.getX(), here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_WEST) &&
 				!Flag(new RSTile(here.getX() - 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_NORTH)) {
-			tiles.add(new Node(x - 1, y + 1));
+			tiles.add(new Node(x - 1, y + 1, 0));
 		}
 		if (!Flag(here, TileFlags.Keys.WALL_SOUTH_EAST, TileFlags.Keys.WALL_SOUTH, TileFlags.Keys.WALL_EAST) &&
 				!Flag(new RSTile(here.getX() + 1, here.getY() - 1), TileFlags.Keys.BLOCKED) &&
 				!Flag(new RSTile(here.getX(), here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_EAST) &&
 				!Flag(new RSTile(here.getX() + 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_SOUTH)) {
-			tiles.add(new Node(x + 1, y - 1));
+			tiles.add(new Node(x + 1, y - 1, 0));
 		}
 		if (!Flag(here, TileFlags.Keys.WALL_NORTH_EAST, TileFlags.Keys.WALL_NORTH, TileFlags.Keys.WALL_EAST) &&
 				!Flag(new RSTile(here.getX() + 1, here.getY() + 1), TileFlags.Keys.BLOCKED) &&
 				!Flag(new RSTile(here.getX(), here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_EAST) &&
 				!Flag(new RSTile(here.getX() + 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_NORTH)) {
-			tiles.add(new Node(x + 1, y + 1));
+			tiles.add(new Node(x + 1, y + 1, 0));
 		}
 		return tiles;
+	}
+
+	private static Integer[] getTileFlags(final RSTile tile) {
+		if (Web.map.containsKey(tile)) {
+			return Web.map.get(tile).getKeys();
+		}
+		return new Integer[]{};
 	}
 
 	private static boolean Flag(final RSTile tile, final int... key) {
