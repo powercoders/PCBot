@@ -180,11 +180,15 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkPermission(Permission perm) {
-		//super.checkPermission(perm);
+		if (perm instanceof RuntimePermission) {
+			if (perm.getName().equals("setSecurityManager"))
+				throw new SecurityException();
+		}
+		// super.checkPermission(perm);
 	}
 
 	public void checkPermission(Permission perm, Object context) {
-		//super.checkPermission(perm, context);
+		checkPermission(perm);
 	}
 
 	public void checkPrintJobAccess() {
