@@ -12,6 +12,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
+/**
+ * The web queue class, passes data to Cache writer.
+ *
+ * @author Timer
+ */
 public class WebQueue {
 	private static CacheWriter cacheWriter = null;
 	private static final Logger log = Logger.getLogger("WebQueue");

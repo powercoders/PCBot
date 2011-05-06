@@ -5,11 +5,15 @@ import org.rsbot.script.methods.Methods;
 
 import java.util.EventListener;
 
+/**
+ * A passive script.
+ *
+ * @author Timer
+ */
 public abstract class PassiveScript extends Methods implements EventListener, Runnable {
 	protected String name = "";
 	private volatile boolean enabled = true;
 	private volatile boolean running = false;
-	private boolean runningL = false;
 	private int id = -1;
 
 	public abstract boolean activateCondition();
@@ -30,10 +34,6 @@ public abstract class PassiveScript extends Methods implements EventListener, Ru
 	public final void init(MethodContext ctx) {
 		super.init(ctx);
 		onStart();
-	}
-
-	public final boolean isEnabled() {
-		return enabled;
 	}
 
 	public final void setEnabled(boolean enabled) {

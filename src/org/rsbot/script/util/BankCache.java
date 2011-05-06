@@ -2,6 +2,11 @@ package org.rsbot.script.util;
 
 import org.rsbot.script.wrappers.RSItem;
 
+/**
+ * Bank cache class. Used for web.
+ *
+ * @author Timer
+ */
 public class BankCache {
 	/**
 	 * Saves a bank cache for a user.

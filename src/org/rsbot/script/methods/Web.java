@@ -9,6 +9,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+/**
+ * The web class.
+ *
+ * @author Timer
+ */
 public class Web extends MethodProvider {
 	public static final HashMap<RSTile, TileFlags> map = new HashMap<RSTile, TileFlags>();
 	public static boolean loaded = false;

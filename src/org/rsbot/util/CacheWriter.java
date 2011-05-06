@@ -9,6 +9,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * A threaded file writer to cache files.  Supports deletion.
+ *
+ * @author Timer
+ */
 public class CacheWriter {
 	private final List<String> queue = new ArrayList<String>(), removeQueue = new ArrayList<String>(), removeStack = new ArrayList<String>();
 	private final QueueWriter writer;
