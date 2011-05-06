@@ -201,7 +201,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	public void checkRead(FileDescriptor fd) {
 		if (isCallerScript()) {
-			throw new SecurityException();
+			//throw new SecurityException();
 		}
 		super.checkRead(fd);
 	}
@@ -233,7 +233,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	public void checkWrite(FileDescriptor fd) {
 		if (isCallerScript()) {
-			throw new SecurityException();
+			//throw new SecurityException();
 		}
 		super.checkWrite(fd);
 	}
