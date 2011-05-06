@@ -1,20 +1,41 @@
 package org.rsbot.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FilePermission;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.SocketPermission;
 import java.net.URL;
+import java.security.CodeSource;
+import java.security.PermissionCollection;
+import java.security.Permissions;
+import java.security.SecureClassLoader;
+
+import org.rsbot.util.GlobalConfiguration;
 
 /**
  * @author Jacmob
  */
-class ScriptClassLoader extends ClassLoader {
+class ScriptClassLoader extends SecureClassLoader {
 
 	private final URL base;
 
 	public ScriptClassLoader(URL url) {
 		this.base = url;
+	}
+
+	protected PermissionCollection getPermissions(CodeSource codesource) {
+		Permissions perms = new Permissions();
+		perms.add(new FilePermission("<<ALL FILES>>", ""));
+		perms.add(new FilePermission(GlobalConfiguration.Paths.getScriptCacheDirectory() + File.separator + "/-", "read,write,delete"));
+		perms.add(new SocketPermission("*.powerbot.org:80", "connect"));
+		perms.add(new SocketPermission("*.imageshack.us:80", "connect"));
+		perms.add(new SocketPermission("*.tinypic.com:80", "connect"));
+		perms.add(new SocketPermission("*.photobucket.com:80", "connect"));
+		perms.add(new SocketPermission("i.imgur.com:80", "connect"));
+		return perms;
 	}
 
 	@SuppressWarnings("rawtypes")

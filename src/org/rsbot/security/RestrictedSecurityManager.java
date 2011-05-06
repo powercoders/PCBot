@@ -37,6 +37,31 @@ public class RestrictedSecurityManager extends SecurityManager {
 		return false;
 	}
 
+	public ArrayList<String> getAllowedHosts() {
+		ArrayList<String> whitelist = new ArrayList<String>(32);
+
+		// NOTE: if whitelist item starts with a dot "." then it is checked at the end of the host
+		whitelist.add(".imageshack.us");
+		whitelist.add(".tinypic.com");
+		whitelist.add(".photobucket.com");
+		whitelist.add(".imgur.com");
+		whitelist.add(".powerbot.org");
+		whitelist.add(".runescape.com");
+
+		whitelist.add("shadowscripting.org"); // iDungeon
+		whitelist.add("shadowscripting.wordpress.com"); // iDungeon
+		whitelist.add(".glorb.nl"); // SXForce - Swamp Lizzy Paid, Snake Killah
+		whitelist.add("scripts.johnkeech.com"); // MrSneaky - SneakyFarmerPro
+		whitelist.add("myrsdatabase.x10.mx"); // gravemindx - BPestControl, GhoulKiller
+		whitelist.add("hedealer.site11.com"); // XscripterzX - PiratePlanker, DealerTanner
+		whitelist.add("elyzianpirate.web44.net"); // XscripterzX (see above)
+		whitelist.add(".wikia.com"); // common assets and images
+		whitelist.add("jtryba.com"); // jtryba - autoCook, monkR8per
+		whitelist.add("tehgamer.info"); // TehGamer - iMiner
+
+		return whitelist;
+	}
+
 	public void checkAccept(String host, int port) {
 		throw new SecurityException();
 	}
@@ -51,42 +76,21 @@ public class RestrictedSecurityManager extends SecurityManager {
 		}
 
 		if (isCallerScript()) {
-			ArrayList<String> whitelist = new ArrayList<String>();
-
-			// NOTE: if whitelist item starts with a dot "." then it is checked at the end of the host
-			whitelist.add(".imageshack.us");
-			whitelist.add(".tinypic.com");
-			whitelist.add(".photobucket.com");
-			whitelist.add(".imgur.com");
-			whitelist.add(".powerbot.org");
-			whitelist.add(".runescape.com");
-
-			whitelist.add("shadowscripting.org"); // iDungeon
-			whitelist.add("shadowscripting.wordpress.com"); // iDungeon
-			whitelist.add(".glorb.nl"); // SXForce - Swamp Lizzy Paid, Snake Killah
-			whitelist.add("scripts.johnkeech.com"); // MrSneaky - SneakyFarmerPro
-			whitelist.add("myrsdatabase.x10.mx"); // gravemindx - BPestControl, GhoulKiller
-			whitelist.add("hedealer.site11.com"); // XscripterzX - PiratePlanker, DealerTanner
-			whitelist.add("elyzianpirate.web44.net"); // XscripterzX (see above)
-			whitelist.add(".wikia.com"); // common assets and images
-			whitelist.add("jtryba.com"); // jtryba - autoCook, monkR8per
-			whitelist.add("tehgamer.info"); // TehGamer - iMiner
-
-			// connecting to a raw IP address blocked because a fake reverse DNS is easy to set
-			if (isIpAddress(host))
-				throw new SecurityException();
-
 			boolean allowed = false;
-
-			for (String check : whitelist) {
-				if (check.startsWith(".")) {
-					if (host.endsWith(check) || check.equals("." + host))
+			if (isIpAddress(host)) {
+				// NOTE: loophole in whitelist - temporarily allowed for round robin DNS without reverse host set
+				allowed = true;
+			} else {
+				for (String check : getAllowedHosts()) {
+					if (check.startsWith(".")) {
+						if (host.endsWith(check) || check.equals("." + host))
+							allowed = true;
+					} else if (host.equals(check)) {
 						allowed = true;
-				} else if (host.equals(check)) {
-					allowed = true;
+					}
+					if (allowed == true)
+						break;
 				}
-				if (allowed = true)
-					break;
 			}
 
 			if (!allowed) {
@@ -175,11 +179,15 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkPermission(Permission perm) {
-		//super.checkPermission(perm);
+		if (perm instanceof RuntimePermission) {
+			if (perm.getName().equals("setSecurityManager"))
+				throw new SecurityException();
+		}
+		// super.checkPermission(perm);
 	}
 
 	public void checkPermission(Permission perm, Object context) {
-		//super.checkPermission(perm, context);
+		checkPermission(perm);
 	}
 
 	public void checkPrintJobAccess() {
@@ -196,7 +204,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	public void checkRead(FileDescriptor fd) {
 		if (isCallerScript()) {
-			throw new SecurityException();
+			//throw new SecurityException();
 		}
 		super.checkRead(fd);
 	}
@@ -228,7 +236,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	public void checkWrite(FileDescriptor fd) {
 		if (isCallerScript()) {
-			throw new SecurityException();
+			//throw new SecurityException();
 		}
 		super.checkWrite(fd);
 	}
