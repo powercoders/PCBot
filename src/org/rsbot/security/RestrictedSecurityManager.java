@@ -94,7 +94,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 			}
 
 			if (!allowed) {
-				System.out.println(host);
 				throw new SecurityException();
 			}
 		}
