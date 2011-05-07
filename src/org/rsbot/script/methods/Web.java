@@ -40,7 +40,7 @@ public class Web extends MethodProvider {
 			}
 			open.remove(curr);
 			closed.add(curr);
-			for (Node next : Successors(curr)) {
+			for (Node next : Web.Successors(curr)) {
 				if (!closed.contains(next)) {
 					double t = curr.g + Dist(curr, next);
 					boolean use_t = false;
