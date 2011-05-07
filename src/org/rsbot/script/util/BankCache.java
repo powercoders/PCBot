@@ -1,10 +1,5 @@
 package org.rsbot.script.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.rsbot.script.wrappers.RSItem;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.IniParser;
@@ -14,7 +9,7 @@ import java.util.HashMap;
 
 /**
  * Bank cache class. Used for web.
- * 
+ *
  * @author Timer
  */
 public class BankCache {
@@ -24,11 +19,9 @@ public class BankCache {
 
 	/**
 	 * Saves a bank cache for a user.
-	 * 
-	 * @param name
-	 *            The name of the character.
-	 * @param items
-	 *            The array of items in the bank.
+	 *
+	 * @param name  The name of the character.
+	 * @param items The array of items in the bank.
 	 */
 	public static void Save(final String name, final RSItem[] items)
 			throws Exception {
@@ -54,11 +47,9 @@ public class BankCache {
 
 	/**
 	 * Checks the bank cache for an item.
-	 * 
-	 * @param name
-	 *            Character name.
-	 * @param o
-	 *            The object to look for.
+	 *
+	 * @param name Character name.
+	 * @param o    The object to look for.
 	 * @return <tt>true</tt> if the bank cache contains it.
 	 */
 	public static boolean Contains(final String name, final Object o) {

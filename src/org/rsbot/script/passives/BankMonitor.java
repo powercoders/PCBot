@@ -7,7 +7,7 @@ import org.rsbot.script.wrappers.RSItem;
 
 import java.util.HashMap;
 
-@PassiveScriptManifest(name = "Bank Monitor", authors = { "Timer" })
+@PassiveScriptManifest(name = "Bank Monitor", authors = {"Timer"})
 public class BankMonitor extends PassiveScript {
 	private final HashMap<String, Long> updateTimes = new HashMap<String, Long>();
 
