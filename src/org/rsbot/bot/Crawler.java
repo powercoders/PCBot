@@ -55,8 +55,9 @@ class Crawler {
 	private String downloadPage(final String url, final String referer) {
 		try {
 			HttpURLConnection con = GlobalConfiguration.getHttpConnection(new URL(url));
-			if (referer != null && !referer.isEmpty())
+			if (referer != null && !referer.isEmpty()) {
 				con.addRequestProperty("Referer", referer);
+			}
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			final StringBuilder buf = new StringBuilder();
 			String line;

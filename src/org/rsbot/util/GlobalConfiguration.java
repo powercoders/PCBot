@@ -136,6 +136,10 @@ public class GlobalConfiguration {
 			return Paths.getHomeDirectory() + File.separator + "Cache";
 		}
 
+		public static String getScriptCacheDirectory() {
+			return getCacheDirectory() + File.separator + "Scripts";
+		}
+
 		public static String getScriptsExtractedCache() {
 			return Paths.getCacheDirectory() + File.separator + "script.dat";
 		}
@@ -154,10 +158,6 @@ public class GlobalConfiguration {
 
 		public static String getWebCache() {
 			return Paths.getCacheDirectory() + File.separator + "web.dat";
-		}
-
-		public static String getHackCache() {
-			return Paths.getCacheDirectory() + File.separator + "hack.dat";
 		}
 
 		public static String getSettingsDirectory() {
@@ -283,13 +283,15 @@ public class GlobalConfiguration {
 	static String httpUserAgent = null;
 
 	public static String getHttpUserAgent() {
-		if (httpUserAgent != null)
+		if (httpUserAgent != null) {
 			return httpUserAgent;
+		}
 		String os = "Windows NT 6.1";
-		if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.MAC)
+		if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.MAC) {
 			os = "Macintosh; Intel Mac OS X 10_6_6";
-		else if (GlobalConfiguration.getCurrentOperatingSystem() != GlobalConfiguration.OperatingSystem.WINDOWS)
+		} else if (GlobalConfiguration.getCurrentOperatingSystem() != GlobalConfiguration.OperatingSystem.WINDOWS) {
 			os = "X11; Linux x86_64";
+		}
 		StringBuilder buf = new StringBuilder(125);
 		buf.append("Mozilla/5.0 (").append(os).append(")");
 		buf.append(" AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.60 Safari/534.24");

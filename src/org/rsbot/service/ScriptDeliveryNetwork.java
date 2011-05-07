@@ -1,7 +1,7 @@
 package org.rsbot.service;
 
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpAgent;
+import org.rsbot.util.HttpClient;
 import org.rsbot.util.IniParser;
 
 import java.io.BufferedReader;
@@ -42,14 +42,15 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 				init();
 			} catch (Exception e) {
 				e.printStackTrace();
-				log.severe("Could not download scripts from the network");
+				log.severe("Could not download scripts from the network!");
 			}
 		}
 	}
 
 	public static ScriptDeliveryNetwork getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new ScriptDeliveryNetwork();
+		}
 		return instance;
 	}
 
@@ -61,7 +62,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		try {
 			URL source = new URL(GlobalConfiguration.Paths.URLs.SDN_CONTROL);
 			final File cache = getChachedFile("control.txt");
-			HttpAgent.download(source, cache);
+			HttpClient.download(source, cache);
 			BufferedReader reader = new BufferedReader(new FileReader(cache));
 			keys = IniParser.deserialise(reader).get(IniParser.emptySection);
 			reader.close();
@@ -92,8 +93,9 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			}
 		}
 
-		if (base == null)
+		if (base == null) {
 			enabled = false;
+		}
 
 		if (!enabled) {
 			log.warning("Service disabled: " + error);
@@ -122,7 +124,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		HashMap<String, URL> scripts = new HashMap<String, URL>(64);
 
 		final File manifest = getChachedFile("manifest.txt");
-		final HttpURLConnection con = (HttpURLConnection) HttpAgent.download(base, manifest);
+		final HttpURLConnection con = (HttpURLConnection) HttpClient.download(base, manifest);
 		base = con.getURL();
 		br = new BufferedReader(new FileReader(manifest));
 
@@ -130,11 +132,13 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			final URL packUrl = new URL(base, line);
 			long mod = 0;
 			final File pack = getChachedFile("pack-" + getFileName(packUrl));
-			if (pack.exists())
+			if (pack.exists()) {
 				mod = pack.lastModified();
-			final HttpURLConnection packCon = (HttpURLConnection) HttpAgent.download(packUrl, pack);
-			if (pack.lastModified() == mod)
+			}
+			final HttpURLConnection packCon = (HttpURLConnection) HttpClient.download(packUrl, pack);
+			if (pack.lastModified() == mod) {
 				continue;
+			}
 			br1 = new BufferedReader(new FileReader(pack));
 			while ((line1 = br1.readLine()) != null) {
 				final URL scriptUrl = new URL(packCon.getURL(), line1);
@@ -145,25 +149,30 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 
 		br.close();
 
-		if (!scripts.isEmpty())
+		if (!scripts.isEmpty()) {
 			sync(scripts);
+		}
 	}
 
 	private void sync(final HashMap<String, URL> scripts) {
 		int n = 0;
-		for (String name : scripts.keySet())
-			if (!name.contains("$"))
+		for (String name : scripts.keySet()) {
+			if (!name.contains("$")) {
 				n++;
-		if (n > 0)
+			}
+		}
+		if (n > 0) {
 			log.info("Loading " + Integer.toString(n) + " scripts from the network");
+		}
 
 		int created = 0, deleted = 0, updated = 0;
 		final File dir = new File(GlobalConfiguration.Paths.getScriptsNetworkDirectory());
 		ArrayList<File> delete = new ArrayList<File>(64);
 
 		for (final File f : dir.listFiles()) {
-			if (f.getName().endsWith(".class"))
+			if (f.getName().endsWith(".class")) {
 				delete.add(f);
+			}
 		}
 
 		ArrayList<Callable<Collection<Object>>> tasks = new ArrayList<Callable<Collection<Object>>>();
@@ -171,16 +180,17 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		for (final Entry<String, URL> key : scripts.entrySet()) {
 			final File path = new File(dir, key.getKey());
 			if (!path.getName().contains("$")) {
-				if (delete.contains(path))
+				if (delete.contains(path)) {
 					updated++;
-				else
+				} else {
 					created++;
+				}
 			}
 			delete.remove(path);
 			tasks.add(new Callable<Collection<Object>>() {
 				public Collection<Object> call() throws Exception {
 					log.fine("Downloading: " + path.getName());
-					HttpAgent.download(key.getValue(), path);
+					HttpClient.download(key.getValue(), path);
 					return null;
 				}
 
@@ -200,8 +210,9 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			if (!f.delete()) {
 				f.deleteOnExit();
 			}
-			if (!f.getName().contains("$"))
+			if (!f.getName().contains("$")) {
 				deleted++;
+			}
 		}
 
 		log.fine(String.format("Downloaded %1$d new scripts, updated %2$d and deleted %3$d", created, deleted, updated));
