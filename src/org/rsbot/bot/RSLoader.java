@@ -5,7 +5,7 @@ import org.rsbot.client.Loader;
 import org.rsbot.loader.ClientLoader;
 import org.rsbot.loader.script.ParseException;
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpAgent;
+import org.rsbot.util.HttpClient;
 
 import java.applet.Applet;
 import java.awt.*;
@@ -104,7 +104,7 @@ public class RSLoader extends Applet implements Runnable, Loader {
 
 	public void load() {
 		try {
-			HttpAgent.download(new URL(GlobalConfiguration.Paths.URLs.WEB),
+			HttpClient.download(new URL(GlobalConfiguration.Paths.URLs.WEB),
 					new File(GlobalConfiguration.Paths.getWebCache()));
 		} catch (IOException wex) {
 			log.severe("Unable to load web matrix: " + wex.getMessage());

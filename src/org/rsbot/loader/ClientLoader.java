@@ -4,7 +4,7 @@ import org.rsbot.loader.asm.ClassReader;
 import org.rsbot.loader.script.ModScript;
 import org.rsbot.loader.script.ParseException;
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpAgent;
+import org.rsbot.util.HttpClient;
 
 import javax.swing.*;
 import java.io.*;
@@ -30,20 +30,22 @@ public class ClientLoader {
 	public void init(URL script, File cache) throws IOException, ParseException {
 		byte[] data = null;
 		FileInputStream fis = null;
-		
-		try{
-			HttpAgent.download(script, cache);
+
+		try {
+			HttpClient.download(script, cache);
 			fis = new FileInputStream(cache);
 			data = load(fis);
 		} catch (IOException ioe) {
 			log.severe("Could not load ModScript data");
 		} finally {
 			try {
-				if (fis != null)
+				if (fis != null) {
 					fis.close();
-			} catch (IOException ioe1) { }
+				}
+			} catch (IOException ioe1) {
+			}
 		}
-		
+
 		this.script = new ModScript(data);
 	}
 

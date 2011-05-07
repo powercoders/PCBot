@@ -140,6 +140,10 @@ public class Methods {
 	 * The singleton of Trade
 	 */
 	protected Trade trade;
+	/**
+	 * The singleton of Trade
+	 */
+	protected Paint paint;
 
 
 	/**
@@ -178,6 +182,7 @@ public class Methods {
 		this.prayer = ctx.prayer;
 		this.friendChat = ctx.friendChat;
 		this.trade = ctx.trade;
+		this.paint = ctx.paint;
 	}
 
 	/**

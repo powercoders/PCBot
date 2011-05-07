@@ -3,10 +3,15 @@ package org.rsbot.gui;
 import org.rsbot.script.methods.Environment;
 import org.rsbot.util.GlobalConfiguration;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class BotToolBar extends JToolBar {
 
@@ -19,14 +24,13 @@ public class BotToolBar extends JToolBar {
 	public static final ImageIcon ICON_HOME;
 	public static final ImageIcon ICON_BOT;
 
-	public static final Image IMAGE_CLOSE;
+	public static Image IMAGE_CLOSE;
 	public static final Image IMAGE_CLOSE_OVER;
 
 	static {
 		ICON_HOME = new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_HOME));
 		ICON_BOT = new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_BOT));
-		IMAGE_CLOSE = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CLOSE);
-		IMAGE_CLOSE_OVER = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CLOSE_OVER);
+		IMAGE_CLOSE_OVER = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CLOSE);
 	}
 
 	private JButton userInputButton;
@@ -38,6 +42,11 @@ public class BotToolBar extends JToolBar {
 	private boolean inputOverride = true;
 
 	public BotToolBar(ActionListener listener) {
+		try {
+			IMAGE_CLOSE = getTransparentImage(GlobalConfiguration.getResourceURL(GlobalConfiguration.Paths.Resources.ICON_CLOSE), 0.5f);
+		} catch (MalformedURLException e) {
+		}
+
 		this.listener = listener;
 
 		userInputButton = new JButton("Input", new ImageIcon(getInputImage(inputOverride, inputState)));
@@ -170,6 +179,20 @@ public class BotToolBar extends JToolBar {
 		}
 	}
 
+	private static Image getTransparentImage(final URL url, final float transparency) {
+		BufferedImage loaded = null;
+		try {
+			loaded = ImageIO.read(url);
+		} catch (final IOException e) {
+		}
+		BufferedImage aimg = new BufferedImage(loaded.getWidth(), loaded.getHeight(), BufferedImage.TRANSLUCENT);
+		Graphics2D g = aimg.createGraphics();
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+		g.drawImage(loaded, null, 0, 0);
+		g.dispose();
+		return aimg;
+	}
+
 	/**
 	 * @author Jacmob
 	 */
@@ -297,19 +320,25 @@ public class BotToolBar extends JToolBar {
 
 		private static final long serialVersionUID = 1L;
 
-		private static final Image ICON;
-		private static final Image ICON_OVER;
+		private static Image ICON;
+		private static Image ICON_OVER;
 		private static final Image ICON_DOWN;
 		private boolean hovered = false;
 		private boolean pressed = false;
 
 		static {
-			ICON = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_ADD);
-			ICON_OVER = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_ADD_OVER);
-			ICON_DOWN = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_ADD_DOWN);
+			ICON_DOWN = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_ADD);
 		}
 
 		public AddButton(final ActionListener listener) {
+			URL src = null;
+			try {
+				src = GlobalConfiguration.getResourceURL(GlobalConfiguration.Paths.Resources.ICON_ADD);
+			} catch (final MalformedURLException e) {
+			}
+			ICON = getTransparentImage(src, 0.3f);
+			ICON_OVER = getTransparentImage(src, 0.7f);
+
 			setPreferredSize(new Dimension(20, 20));
 			setMaximumSize(new Dimension(20, 20));
 			setFocusable(false);
