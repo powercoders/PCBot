@@ -48,7 +48,7 @@ public class WebData extends PassiveScript {
 					int x = t.x, y = t.y;
 					int f_x = x - off_x, f_y = y - off_y;
 					int here = flags[f_x][f_y];
-					TileFlags tI = new TileFlags(start);
+					TileFlags tI = new TileFlags(start, null);
 					if ((here & TileFlags.Flags.WALL_EAST) != 0) {
 						tI.addKey(TileFlags.Keys.WALL_EAST);
 					}

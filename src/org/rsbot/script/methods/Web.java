@@ -3,6 +3,7 @@ package org.rsbot.script.methods;
 import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.web.WebTile;
 import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.RSWeb;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,7 +23,7 @@ public class Web extends MethodProvider {
 		super(ctx);
 	}
 
-	public static final RSTile[] generateNodePath(final RSTile start, final RSTile end) {
+	public RSWeb generateNodePath(final RSTile start, final RSTile end) {
 		if (start.getZ() != end.getZ()) {
 			return null;
 		}
@@ -35,7 +36,7 @@ public class Web extends MethodProvider {
 		while (!open.isEmpty()) {
 			curr = Lowest_f(open);
 			if (curr.equals(dest)) {
-				return Path(curr);
+				return new RSWeb(methods, Path(curr));
 			}
 			open.remove(curr);
 			closed.add(curr);

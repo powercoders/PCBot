@@ -36,17 +36,15 @@ public class TileFlags extends RSTile {
 
 	private List<Integer> keys = new ArrayList<Integer>();
 
-	public TileFlags(RSTile tile) {
-		super(tile.getX(), tile.getY(), tile.getZ());
-	}
-
 	public Integer[] getKeys() {
 		return keys.toArray(new Integer[keys.size()]);
 	}
 
 	public TileFlags(RSTile tile, Integer[] keys) {
 		super(tile.getX(), tile.getY(), tile.getZ());
-		this.keys.addAll(Arrays.asList(keys));
+		if (keys != null) {
+			this.keys.addAll(Arrays.asList(keys));
+		}
 	}
 
 	public boolean isQuestionable() {

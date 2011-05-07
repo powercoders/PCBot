@@ -37,7 +37,7 @@ public class WebLoader extends PassiveScript {
 						if (tileData.length == 3) {
 							try {
 								RSTile tile = new RSTile(Integer.parseInt(tileData[0]), Integer.parseInt(tileData[1]), Integer.parseInt(tileData[2]));
-								TileFlags tileFlags = new TileFlags(tile);
+								TileFlags tileFlags = new TileFlags(tile, null);
 								for (String abb : abbData) {
 									if (abb.length() > 0) {
 										try {
