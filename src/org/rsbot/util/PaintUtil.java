@@ -3,6 +3,8 @@ package org.rsbot.util;
 import org.rsbot.script.methods.Game;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Skills;
+import org.rsbot.script.util.Filter;
+import org.rsbot.script.util.Timer;
 import org.rsbot.script.wrappers.*;
 
 import javax.imageio.ImageIO;
@@ -17,8 +19,8 @@ import java.util.LinkedList;
 import java.util.logging.Logger;
 
 /**
- * @author Fletch To 99
- * @version 1.0
+ * @author Fletch To 99, jtryba
+ * @version 1.01
  */
 public class PaintUtil {
 	public PaintUtil(MethodContext context, Graphics render) {
@@ -149,6 +151,23 @@ public class PaintUtil {
 	}
 
 	/**
+	 * Draws an RSModel
+	 *
+	 * @param model RSModel to draw
+	 * @param color Color to draw the RSModel
+	 * @param alpha The opacity of the color.
+	 * @author jtryba
+	 */
+	public void drawModel(final RSModel model, final Color color, final int alpha) {
+		if (model != null) {
+			g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
+			for (Polygon p1 : model.getTriangles()) {
+				g2.fillPolygon(p1);
+			}
+		}
+	}
+
+	/**
 	 * Gets a image of your choice from the internet.
 	 *
 	 * @param fileName What to save the image as, the file name.
@@ -157,7 +176,7 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public Image getImage(final String fileName, final boolean save, final String url) {
-		Logger log = Logger.getLogger(PaintUtil.class.getName());
+		Logger log = Logger.getLogger(this.getClass().getName());
 		if (save) {
 			try {
 				File f = new File(GlobalConfiguration.Paths.getScriptsDirectory() + "/Paint_Images/" + fileName);
@@ -198,17 +217,7 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public String getRuntime(final long startTime) {
-		try {
-			long millis = System.currentTimeMillis() - startTime;
-			long hours = millis / (1000 * 60 * 60);
-			millis -= hours * (1000 * 60 * 60);
-			long minutes = millis / (1000 * 60);
-			millis -= minutes * (1000 * 60);
-			long seconds = millis / 1000;
-			return ("" + (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds + "");
-		} catch (Exception e) {
-			return "";
-		}
+		return Timer.format(System.currentTimeMillis() - startTime);
 	}
 
 	/**
@@ -224,7 +233,7 @@ public class PaintUtil {
 	}
 
 	/**
-	 * Draws a simple paint over the inventory.
+	 * Draws a simple paint over the chat.
 	 *
 	 * @param skill     The number of the skill wanting to display. E.g Skills.MAGIC
 	 * @param startXP   The amount of xp the person started with related to the chosen
@@ -233,26 +242,92 @@ public class PaintUtil {
 	 * @param startTime The time the script started
 	 * @param textColor The color for the text in the script.
 	 * @param status    The current state the script is in. (E.X. Fletching: logs)
-	 * @author Fletch To 99
+	 * @author Fletch To 99, jtryba
 	 */
 	public void drawPaint(final int skill, final int startXP, final int amount, final long startTime, final Color textColor, final String status) {
-		g2.setFont(new Font("Arial", 1, 15));
-		g2.setColor(new Color(220, 202, 169));
-		g2.fillRect(6, 344, 507, 129);
-		g2.setColor(textColor);
-		g2.drawString("Time Running: " + getRuntime(startTime), 60, 372);
-		g2.drawString("Exp Gained: " + (ctx.skills.getCurrentExp(skill) - startXP), 60, 391);
-		g2.drawString("Exp/H: " + getHourly(ctx.skills.getCurrentExp(skill) - startXP, startTime), 60, 409);
-		g2.drawString("Done:  " + amount, 60, 426);
-		g2.drawString("Items/Hr:  " + ((int) (new Double(amount) / new Double(System.currentTimeMillis() - startTime) * new Double(60 * 60 * 1000))), 60, 444);
-		g2.drawString("Status:  " + status, 60, 466);
-		if (img == null) {
-			img = (BufferedImage) getImage(String.valueOf(skill), true, "http://dl.dropbox.com/u/23938245/Scripts/Paint%20Class/capes/" + skill + ".png");
-		} else {
-			g2.drawImage(img, 440, 330, null);
+		drawPaint(skill, startXP, amount, startTime, textColor, status, false, false);
+	}
+
+	/**
+	 * Draws a simple paint over the chat.
+	 *
+	 * @param skill              The number of the skill wanting to display. E.g Skills.MAGIC
+	 * @param startXP            The amount of xp the person started with related to the chosen
+	 *                           skill.
+	 * @param amount             The amount of the item. (E.X. Bows Fletched)
+	 * @param startTime          The time the script started
+	 * @param textColor          The color for the text in the script.
+	 * @param status             The current state the script is in. (E.X. Fletching: logs)
+	 * @param drawHideShowButton Draw a show/hide button?
+	 * @author Fletch To 99, jtryba
+	 */
+	public void drawPaint(final int skill, final int startXP, final int amount, final long startTime, final Color textColor, final String status, final boolean drawHideShowButton) {
+		drawPaint(skill, startXP, amount, startTime, textColor, status, drawHideShowButton, false);
+	}
+
+	/**
+	 * Draws a simple paint over the chat.
+	 *
+	 * @param skill              The number of the skill wanting to display. E.g Skills.MAGIC
+	 * @param startXP            The amount of xp the person started with related to the chosen
+	 *                           skill.
+	 * @param amount             The amount of the item. (E.X. Bows Fletched)
+	 * @param startTime          The time the script started
+	 * @param textColor          The color for the text in the script.
+	 * @param status             The current state the script is in. (E.X. Fletching: logs)
+	 * @param drawHideShowButton Draw a show/hide button?
+	 * @param isHidden           Draw main paint?
+	 * @author Fletch To 99, jtryba
+	 */
+	public void drawPaint(final int skill, final int startXP, final int amount, final long startTime, final Color textColor, final String status, final boolean drawHideShowButton, final boolean isHidden) {
+		if (!isHidden) {
+			g2.setFont(new Font("Arial", 1, 15));
+			g2.setColor(new Color(220, 202, 169));
+			g2.fillRect(6, 344, 507, 129);
+			g2.setColor(textColor);
+			g2.drawString("Time Running: " + getRuntime(startTime), 60, 372);
+			g2.drawString("Exp Gained: " + (ctx.skills.getCurrentExp(skill) - startXP), 60, 391);
+			g2.drawString("Exp/H: " + getHourly(ctx.skills.getCurrentExp(skill) - startXP, startTime), 60, 409);
+			g2.drawString("Done:  " + amount, 60, 426);
+			g2.drawString("Items/Hr:  " + getHourly(amount, startTime), 60, 444);
+			long ttl = ctx.skills.getTimeTillNextLevel(skill, startXP, System.currentTimeMillis() - startTime);
+			if (ttl != -1) {
+				g2.drawString("Estimated TTL: " + Timer.format(ttl), 10, 40);
+			} else {
+				g2.drawString("Estimated TTL: 00:00:00", 10, 40);
+			}
+			g2.drawString("Status:  " + status, 60, 466);
+			if (img == null) {
+				img = (BufferedImage) getImage(String.valueOf(skill) + ".png", true, "http://dl.dropbox.com/u/23938245/Scripts/Paint%20Class/capes/" + skill + ".png");
+			} else {
+				g2.drawImage(img, 440, 330, null);
+			}
+			drawProgressBar(skill, 4, 3, 512, 18, Color.RED, Color.GREEN, textColor, 127);
+			drawMouse(textColor, 10, true, 1500);
 		}
-		drawProgressBar(skill, 4, 3, 512, 18, Color.RED, Color.GREEN, textColor, 127);
-		drawMouse(textColor, 10, true, 1500);
+		if (drawHideShowButton) {
+			g2.setColor(getInverseColor(textColor));
+			if (isHidden) {
+				g2.fillRect(22, 344, 90, 14);
+			}
+			Rectangle HIDE = new Rectangle(6, 344, 14, 14);
+			g2.fillRect(HIDE.x, HIDE.y, HIDE.width, HIDE.height);
+			g2.setColor(Color.black);
+			g2.drawRect(HIDE.x, HIDE.y, HIDE.width, HIDE.height);
+			g2.setColor(textColor);
+			g2.setFont(new Font("Arial", 1, 15));
+			g2.drawString("Show/Hide", 23, 356);
+		}
+	}
+
+	/**
+	 * Gets an inverse color for the specific color.
+	 *
+	 * @param color The color to inverse.
+	 * @return The inversed color.
+	 */
+	public Color getInverseColor(Color color) {
+		return new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue());
 	}
 
 	/**
@@ -289,25 +364,16 @@ public class PaintUtil {
 	/**
 	 * Draws a 3D progress bar using the co-ordinates, dimensions and skill
 	 * provided. This also displays current level in the skill, percent till the
-	 * next level & exp needed to reach the next level <<<<<<< HEAD
+	 * next level & exp needed to reach the next level
 	 *
 	 * @param skill     The number of the skill wanting to display. E.g Skills.MAGIC
 	 * @param x         The "x" co-ordinate.
 	 * @param y         The "y" co-ordinate.
 	 * @param width     The width of the progress bar.
 	 * @param height    The height of the progress bar.
-	 * @param color     The base color, normally red.
+	 * @param color     The base color, normally r
 	 * @param textColor The text color.
-	 * @param alpha     The opacity of the bar. Range: (0 - 255) =======
-	 * @param skill     The number of the skill wanting to display. E.g Skills.MAGIC
-	 * @param x         The "x" co-ordinate.
-	 * @param y         The "y" co-ordinate.
-	 * @param width     The width of the progress bar.
-	 * @param height    The height of the progress bar.
-	 * @param color     The base color, normally red.
-	 * @param textColor The text color.
-	 * @param alpha     The opacity of the bar. Range: (0 - 255) >>>>>>>
-	 *                  refs/remotes/timerUpstream/web2
+	 * @param alpha     The opacity of the bar. Range: (0 - 255)
 	 * @author Fletch To 99
 	 */
 	public void draw3DProgressBar(final int skill, final int x, final int y, final int width, final int height, final Color color, final Color textColor, final int alpha) {
@@ -512,45 +578,108 @@ public class PaintUtil {
 	}
 
 	/**
-	 * Draws the object of your choice
+	 * Draws the object of your choice.
 	 *
 	 * @param object Target object to color.
 	 * @param color  Color to color the model.
 	 * @param alpha  The opacity of the color.
-	 * @author Fletch To 99
+	 * @author Fletch To 99, jtryba
 	 */
 	public void drawObject(final RSObject object, final Color color, final int alpha) {
 		if (object != null) {
-			RSModel model = object.getModel();
-			if (model != null) {
-				g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
-				for (Polygon p : model.getTriangles()) {
-					g2.fillPolygon(p);
-				}
+			drawModel(object.getModel(), color, alpha);
+			drawTileMM(object.getLocation(), color, alpha);
+		}
+	}
+
+	/**
+	 * Draws the object of your choice.
+	 *
+	 * @param object    Target object to color.
+	 * @param color     Color to color the model.
+	 * @param alpha     The opacity of the color.
+	 * @param drawModel True if you wish to draw the RSModel
+	 * @author Fletch To 99, jtryba
+	 */
+	public void drawObject(final RSObject object, final Color color, final int alpha, final boolean drawModel) {
+		if (object != null) {
+			if (drawModel) {
+				drawModel(object.getModel(), color, alpha);
+			} else {
+				drawTileOnScreen(object.getLocation(), color, alpha);
 			}
-			drawTile(object.getLocation(), color);
+			drawTileMM(object.getLocation(), color, alpha);
 		}
 	}
 
 	/**
 	 * Draws a npc of your choice.
 	 *
-	 * @param npc   Target NPC to color.
+	 * @param npc   Target NPC id to color.
 	 * @param color Color to color the model.
 	 * @param alpha The opacity of the color.
-	 * @author Fletch To 99
+	 * @author Fletch To 99, jtryba
 	 */
 	public void drawNpc(final int npc, final Color color, final int alpha) {
 		RSNPC NPC = ctx.npcs.getNearest(npc);
 		if (NPC != null) {
-			RSModel model = NPC.getModel();
-			if (model != null) {
-				g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
-				for (Polygon p1 : model.getTriangles()) {
-					g2.fillPolygon(p1);
-				}
+			drawModel(NPC.getModel(), color, alpha);
+			drawTileMM(NPC.getLocation(), color, alpha);
+		}
+	}
+
+	/**
+	 * Draws the nearest npc of your choice.
+	 *
+	 * @param npc   Target NPC id to color.
+	 * @param color Color to color the model.
+	 * @param alpha The opacity of the color.
+	 * @author Fletch To 99, jtryba
+	 */
+	public void drawNpc(final int npc, final Color color, final int alpha, final boolean drawModel) {
+		RSNPC NPC = ctx.npcs.getNearest(npc);
+		if (NPC != null) {
+			if (drawModel) {
+				drawModel(NPC.getModel(), color, alpha);
+			} else {
+				drawTileOnScreen(NPC.getLocation(), color, alpha);
 			}
-			drawTile(NPC.getLocation(), color);
+			drawTileMM(NPC.getLocation(), color, alpha);
+		}
+	}
+
+	/**
+	 * Draws a npc of your choice.
+	 *
+	 * @param NPC   Target NPC to color.
+	 * @param color Color to color the model.
+	 * @param alpha The opacity of the color.
+	 * @author Fletch To 99, jtryba
+	 */
+	public void drawNpc(final RSNPC NPC, final Color color, final int alpha) {
+		if (NPC != null) {
+			drawTileOnScreen(NPC.getLocation(), color, alpha);
+			drawTileMM(NPC.getLocation(), color, alpha);
+		}
+	}
+
+	/**
+	 * Draws a npc of your choice.
+	 *
+	 * @param NPC       Target NPC to color.
+	 * @param color     Color to color the model.
+	 * @param alpha     The opacity of the color.
+	 * @param drawModel True if you wish to draw the RSModel
+	 * @author Fletch To 99, jtryba
+	 */
+	public void drawNpc(final RSNPC NPC, final Color color, final int alpha, final boolean drawModel) {
+		if (NPC != null) {
+			if (drawModel) {
+				drawModel(NPC.getModel(), color, alpha);
+			} else {
+				drawTileOnScreen(NPC.getLocation(), color, alpha);
+			}
+			drawTileMM(NPC.getLocation(), color, alpha);
 		}
 	}
 
@@ -560,23 +689,38 @@ public class PaintUtil {
 	 * @param player Target player to color.
 	 * @param color  Color to color the model.
 	 * @param alpha  The opacity of the color.
-	 * @author Fletch To 99
+	 * @author Fletch To 99, jtryba
 	 */
+
 	public void drawPlayer(final RSPlayer player, final Color color, final int alpha) {
 		if (player != null) {
-			RSModel model = player.getModel();
-			if (model != null) {
-				g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
-				for (Polygon p1 : model.getTriangles()) {
-					g2.fillPolygon(p1);
-				}
-				drawTile(player.getLocation(), color);
-			}
+			drawModel(player.getModel(), color, alpha);
+			drawTileMM(player.getLocation(), color, alpha);
 		}
 	}
 
 	/**
-	 * Draws the items in the inventory.
+	 * Draws a player of your choice.
+	 *
+	 * @param player    Target player to color.
+	 * @param color     Color to color the model.
+	 * @param alpha     The opacity of the color.
+	 * @param drawModel True if you wish to draw the RSModel
+	 * @author Fletch To 99, jtryba
+	 */
+	public void drawPlayer(final RSPlayer player, final Color color, final int alpha, final boolean drawModel) {
+		if (player != null) {
+			if (drawModel) {
+				drawModel(player.getModel(), color, alpha);
+			} else {
+				drawTileOnScreen(player.getLocation(), color, alpha);
+			}
+			drawTileMM(player.getLocation(), color, alpha);
+		}
+	}
+
+	/**
+	 * Draws all items in the inventory.
 	 *
 	 * @param color Color to color the item.
 	 * @author Fletch To 99
@@ -619,16 +763,71 @@ public class PaintUtil {
 	}
 
 	/**
-	 * Draws the tiles on tiles on the minimap. <<<<<<< HEAD
+	 * Draws the neasrest GroundItem matching id
+	 *
+	 * @param id    id to draw
+	 * @param color Color to draw the item
+	 * @author jtryba
+	 */
+	public void drawNearestGroundItem(final int id, final Color color, final int alpha) {
+		RSGroundItem item = ctx.groundItems.getNearest(id);
+		if (item != null) {
+			drawTileOnScreen(item.getLocation(), color, alpha);
+			drawTileMM(item.getLocation(), color, alpha);
+		}
+	}
+
+	/**
+	 * Draws a specific RSGroundItem (screen and minimap)
+	 *
+	 * @param groundItem RSGroundItem to draw
+	 * @param color      Color to draw the RSGroundItem
+	 * @author jtryba
+	 */
+	public void drawGroundItem(final RSGroundItem groundItem, final Color color, final int alpha) {
+		if (groundItem != null) {
+			drawTileOnScreen(groundItem.getLocation(), color, alpha);
+			drawTileMM(groundItem.getLocation(), color, alpha);
+		}
+	}
+
+	/**
+	 * Draws RSGroundItems (screen and minimap)
+	 *
+	 * @param ids   array of ids to draw
+	 * @param color Color to draw groundItem
+	 * @author jtryba
+	 */
+	public void drawGroundItems(final int[] ids, final Color color, final int alpha) {
+		final Filter<RSGroundItem> filter = new Filter<RSGroundItem>() {
+			public boolean accept(RSGroundItem gi) {
+				return gi != null && gi.getItem() != null && idMatch(gi.getItem().getID());
+			}
+
+			public boolean idMatch(final int id) {
+				for (int i = 0; i < ids.length; i++) {
+					if (ids[i] == id) {
+						return true;
+					}
+				}
+				return false;
+			}
+		};
+		RSGroundItem[] items = ctx.groundItems.getAll(filter);
+		for (RSGroundItem item : items) {
+			drawTileOnScreen(item.getLocation(), color, alpha);
+			drawTileMM(item.getLocation(), color, alpha);
+		}
+	}
+
+	/**
+	 * Draws the RSTiles on tiles on the minimap.
 	 *
 	 * @param tiles The array of tiles to color.
-	 * @param color Color to color the tile. =======
-	 * @param tiles The array of tiles to color.
-	 * @param color Color to color the tile. >>>>>>>
-	 *              refs/remotes/timerUpstream/web2
+	 * @param color Color to color the tile.
 	 * @author Fletch To 99
 	 */
-	public void drawTiles(final RSTile[] tiles, final Color color) {
+	public void drawTilesMM(final RSTile[] tiles, final Color color) {
 		for (RSTile tile : tiles) {
 			if (tile != null) {
 				final int tX = tile.getX(), tY = tile.getY();
@@ -647,13 +846,13 @@ public class PaintUtil {
 	}
 
 	/**
-	 * Draws a tile on the minimap.
+	 * Draws an RSTile on the minimap.
 	 *
 	 * @param tile  The tile to color.
 	 * @param color Color to color the model.
 	 * @author Fletch To 99
 	 */
-	public void drawTile(final RSTile tile, final Color color) {
+	public void drawTileMM(final RSTile tile, final Color color, final int alpha) {
 		if (tile != null) {
 			final int tX = tile.getX(), tY = tile.getY();
 			Point p1 = ctx.calc.worldToMinimap(tX - 0.4, tY - 0.4);
@@ -663,9 +862,128 @@ public class PaintUtil {
 			if (p1.x != -1 && p2.x != -1 && p3.x != -1 && p4.x != -1) {
 				int[] allX = new int[]{p1.x, p2.x, p3.x, p4.x};
 				int[] allY = new int[]{p1.y, p2.y, p3.y, p4.y};
-				g2.setColor(color);
+				g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
 				g2.fillPolygon(allX, allY, 4);
 			}
 		}
 	}
+
+	/**
+	 * Draws an RSTile on the minimap
+	 *
+	 * @param tiles Tiles to draw
+	 * @param color Color to draw the tiles
+	 * @author jtryba
+	 */
+	public void drawTilesOnScreen(final RSTile[] tiles, final Color color, final int alpha) {
+		if (tiles != null) {
+			for (RSTile tile : tiles) {
+				drawTileOnScreen(tile, color, alpha);
+			}
+		}
+	}
+
+	/**
+	 * Draws an RSTile on the screen
+	 *
+	 * @param tile  Tile to draw
+	 * @param color Color to draw the tile
+	 * @author Fletch to 99, jtryba
+	 */
+	public void drawTileOnScreen(final RSTile tile, final Color color, final int alpha) {
+		Point southwest = ctx.calc.tileToScreen(tile, 0, 0, 0);
+		Point southeast = ctx.calc.tileToScreen(tile, 1, 0, 0);
+		Point northwest = ctx.calc.tileToScreen(tile, 0, 1, 0);
+		Point northeast = ctx.calc.tileToScreen(tile, 1, 1, 0);
+		if (ctx.calc.pointOnScreen(southwest) && ctx.calc.pointOnScreen(southeast) && ctx.calc.pointOnScreen(northwest) && ctx.calc.pointOnScreen(northeast)) {
+			g2.setColor(Color.BLACK);
+			g2.drawPolygon(new int[]{(int) northwest.getX(), (int) northeast.getX(), (int) southeast.getX(), (int) southwest.getX()}, new int[]{(int) northwest.getY(), (int) northeast.getY(), (int) southeast.getY(), (int) southwest.getY()}, 4);
+			g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
+			g2.fillPolygon(new int[]{(int) northwest.getX(), (int) northeast.getX(), (int) southeast.getX(), (int) southwest.getX()}, new int[]{(int) northwest.getY(), (int) northeast.getY(), (int) southeast.getY(), (int) southwest.getY()}, 4);
+		}
+	}
+
+	/**
+	 * Draws an RSArea on the screen
+	 *
+	 * @param area  RSArea to draw
+	 * @param color Color to draw the RSArea
+	 * @author jtryba
+	 */
+	public void drawRSAreaOnScreen(RSArea area, Color color, final int alpha) {
+		RSTile[] array = area.getTileArray();
+		for (final RSTile tile : array) {
+			if (tile == null) {
+				continue;
+			}
+			if (!ctx.calc.tileOnScreen(tile)) {
+				continue;
+			}
+			drawTileOnScreen(tile, color, alpha);
+		}
+	}
+
+	/**
+	 * Draws an RSArea on the minimap
+	 *
+	 * @param area  RSArea to draw
+	 * @param color Color to draw the RSArea
+	 * @author jtryba
+	 */
+	public void drawRSAreaMM(RSArea area, Color color, final int alpha) {
+		RSTile[] array = area.getTileArray();
+		for (final RSTile tile : array) {
+			if (tile == null) {
+				continue;
+			}
+			drawTileMM(tile, color, alpha);
+		}
+	}
+/* Ready for web 2.0 ;)
+	/**
+	 * Draws tiles on the minimap.
+	 * 
+	 * @param alpha
+	 *            The opacity of the color.
+	 * @author Fletch To 99
+	 
+	public void drawWebOnScreen(int alpha) {
+		Collection<TileFlags> tiles = Web.map.values();
+		for (TileFlags t : tiles) {
+			if (t != null) {
+				if (t.isWalkable()) {
+					drawTileOnScreen(t, Color.GREEN, alpha);
+				} else if (t.isQuestionable()) {
+					drawTileOnScreen(t, Color.YELLOW, alpha);
+				} else if (t.isWater()) {
+					drawTileOnScreen(t, Color.CYAN, alpha);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Draws tiles on the minimap.
+	 * 
+	 * @param alpha
+	 *            The opacity of the color.
+	 * @author Fletch To 99
+	 
+	public void drawWebMM(int alpha) {
+		Collection<TileFlags> tiles = Web.map.values();
+		for (TileFlags t : tiles) {
+			if (t != null) {
+				if (t.isWalkable()) {
+					drawTileMM(t, Color.GREEN, alpha);
+				} else if (t.isQuestionable()) {
+					drawTileMM(t, Color.YELLOW, alpha);
+				} else if (t.isWater()) {
+					drawTileMM(t, Color.CYAN, alpha);
+				} else if (!t.isWater() && !t.isWalkable() && !t.isQuestionable()) {
+					drawTileMM(t, Color.RED, alpha);
+				}
+			}
+		}
+	}
+	*/
 }
