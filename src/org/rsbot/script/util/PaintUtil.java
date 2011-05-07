@@ -1,13 +1,12 @@
-package org.rsbot.util;
+package org.rsbot.script.util;
 
 import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.methods.Game;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Skills;
 import org.rsbot.script.methods.Web;
-import org.rsbot.script.util.Filter;
-import org.rsbot.script.util.Timer;
 import org.rsbot.script.wrappers.*;
+import org.rsbot.util.GlobalConfiguration;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package org.rsbot.util;
+package org.rsbot.script.util;
 
 import java.awt.*;
 
