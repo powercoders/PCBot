@@ -7,7 +7,7 @@ import org.rsbot.script.wrappers.RSItem;
 
 import java.util.HashMap;
 
-@PassiveScriptManifest(name = "Bank Monitor", authors = {"Timer"})
+@PassiveScriptManifest(name = "Bank Monitor", authors = { "Timer" })
 public class BankMonitor extends PassiveScript {
 	private final HashMap<String, Long> updateTimes = new HashMap<String, Long>();
 
@@ -29,7 +29,10 @@ public class BankMonitor extends PassiveScript {
 		}
 		if (bank.isOpen()) {
 			RSItem[] rsItems = bank.getItems();
-			BankCache.Save(accountName, rsItems);
+			try {
+				BankCache.Save(accountName, rsItems);
+			} catch (Exception e) {
+			}
 			updateTimes.put(accountName, System.currentTimeMillis());
 		}
 		return -1;
