@@ -46,6 +46,10 @@ public class Environment extends MethodProvider {
 		ScreenshotUtil.saveScreenshot(methods.bot, hideUsername);
 	}
 
+	public void saveScreenshot(boolean hideUsername, String filename) {
+		ScreenshotUtil.saveScreenshot(methods.bot, hideUsername, filename);
+	}
+
 	/**
 	 * Takes a screenshot.
 	 *

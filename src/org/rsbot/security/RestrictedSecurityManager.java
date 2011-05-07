@@ -17,6 +17,7 @@ import java.util.ArrayList;
  * @author Paris
  */
 public class RestrictedSecurityManager extends SecurityManager {
+
 	private String getCallingClass() {
 		final String prefix = Application.class.getPackage().getName() + ".";
 		for (StackTraceElement s : Thread.currentThread().getStackTrace()) {
@@ -134,6 +135,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	public void checkDelete(String file) {
 		checkFilePath(file);
+
 		super.checkDelete(file);
 	}
 
@@ -248,7 +250,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkWrite(String file) {
-		checkFilePath(file, true);
+		checkFilePath(file);
 		super.checkWrite(file);
 	}
 
@@ -269,17 +271,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 		checkSuperFilePath(path);
 		path = new File(path).getAbsolutePath();
 		if (isCallerScript()) {
-			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())) {
-				throw new SecurityException();
-			}
-		}
-	}
-
-	private void checkFilePath(String path, boolean write) {
-		checkSuperFilePath(path);
-		path = new File(path).getAbsolutePath();
-		if (isCallerScript()) {
-			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory()) && (!write || path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory()))) {
+			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())
+					&& !path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory())) {
 				throw new SecurityException();
 			}
 		}
