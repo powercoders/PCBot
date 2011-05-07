@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 //import org.rsbot.script.internal.wrappers.TileFlags;
+import org.rsbot.script.Script;
 import org.rsbot.script.methods.Game;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Skills;
@@ -47,7 +48,7 @@ public class PaintUtil {
 		g2 = (Graphics2D) render;
 	}
 
-	public static final Rectangle HIDE = new Rectangle(6, 344, 14, 14);
+
 
 	private final LinkedList<MouseSquarePathPoint> mouseSquarePath = new LinkedList<MouseSquarePathPoint>();
 	private final LinkedList<MouseCirclePathPoint> mouseCirclePath = new LinkedList<MouseCirclePathPoint>();
@@ -211,8 +212,7 @@ public class PaintUtil {
 
 	public Image getImage(final String fileName, final boolean save,
 			final String url) {
-		Logger log = Logger.getLogger(Thread.currentThread().getStackTrace()
-				.getClass().getName());
+		Logger log = Logger.getLogger(this.getClass().getName());
 		if (save) {
 			try {
 				File f = new File(
@@ -370,17 +370,17 @@ public class PaintUtil {
 									- startXP, startTime), 60, 409);
 			g2.drawString("Done:  " + amount, 60, 426);
 			g2.drawString("Items/Hr:  " + getHourly(amount, startTime), 60, 444);
-			// long ttl = ctx.skills.getTimeTillNextLevel(skill, startXP,
-			// System.currentTimeMillis() - startTime);
-			// if (ttl != -1) {
-			// g2.drawString("Estimated TTL: " + Timer.format(ttl), 10, 40);
-			// } else {
-			// g2.drawString("Estimated TTL: 00:00:00", 10, 40);
-			// }
+			long ttl = ctx.skills.getTimeTillNextLevel(skill, startXP,
+			System.currentTimeMillis() - startTime);
+			if (ttl != -1) {
+			g2.drawString("Estimated TTL: " + Timer.format(ttl), 10, 40);
+			} else {
+			g2.drawString("Estimated TTL: 00:00:00", 10, 40);
+			}
 			g2.drawString("Status:  " + status, 60, 466);
 
 			if (img == null) {
-				img = (BufferedImage) getImage(String.valueOf(skill), true,
+				img = (BufferedImage) getImage(String.valueOf(skill) + ".png", true,
 						"http://dl.dropbox.com/u/23938245/Scripts/Paint%20Class/capes/"
 								+ skill + ".png");
 			} else {
@@ -396,6 +396,7 @@ public class PaintUtil {
 			if (isHidden) {
 				g2.fillRect(22, 344, 90, 14);
 			}
+			Rectangle HIDE = new Rectangle(6, 344, 14, 14);
 			g2.fillRect(HIDE.x, HIDE.y, HIDE.width, HIDE.height);
 			g2.setColor(Color.black);
 			g2.drawRect(HIDE.x, HIDE.y, HIDE.width, HIDE.height);
@@ -405,7 +406,7 @@ public class PaintUtil {
 		}
 	}
 
-	/**
+	/** Gets an inverse color for the specific color.
 	 * 
 	 * @param color
 	 *            The color to inverse.
