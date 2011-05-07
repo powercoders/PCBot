@@ -176,10 +176,21 @@ public class PaintUtil {
 	 */
 	public Image getImage(final String fileName, final boolean save, final String url) {
 		Logger log = Logger.getLogger(this.getClass().getName());
+		File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/image_io/");
+		try {
+			if (!dir.exists()) {
+				if (!dir.createNewFile()) {
+					return null;
+				}
+			}
+		} catch (Exception e) {
+			return null;
+		}
+		ImageIO.setCacheDirectory(dir);
 		if (save) {
 			try {
-				File f = new File(GlobalConfiguration.Paths.getScriptsDirectory() + "/Paint_Images/" + fileName);
-				File loc = new File(GlobalConfiguration.Paths.getScriptsDirectory() + "/Paint_Images/");
+				File f = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/" + fileName);
+				File loc = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/");
 				if (loc.exists()) {
 					if (f.exists()) {
 						log.info("Successfully loaded Image from scripts folder.");
