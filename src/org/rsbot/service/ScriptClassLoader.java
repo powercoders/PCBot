@@ -1,10 +1,8 @@
 package org.rsbot.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FilePermission;
-import java.io.IOException;
-import java.io.InputStream;
+import org.rsbot.util.GlobalConfiguration;
+
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.SocketPermission;
 import java.net.URL;
@@ -12,8 +10,6 @@ import java.security.CodeSource;
 import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.SecureClassLoader;
-
-import org.rsbot.util.GlobalConfiguration;
 
 /**
  * @author Jacmob

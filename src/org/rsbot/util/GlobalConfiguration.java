@@ -160,10 +160,6 @@ public class GlobalConfiguration {
 			return Paths.getCacheDirectory() + File.separator + "web.dat";
 		}
 
-		public static String getHackCache() {
-			return Paths.getCacheDirectory() + File.separator + "hack.dat";
-		}
-
 		public static String getSettingsDirectory() {
 			return Paths.getHomeDirectory() + File.separator + "Settings";
 		}
