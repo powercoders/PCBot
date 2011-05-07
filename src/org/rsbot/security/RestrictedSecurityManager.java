@@ -248,7 +248,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkWrite(String file) {
-		checkFilePath(file);
+		checkFilePath(file, true);
 		super.checkWrite(file);
 	}
 
@@ -270,6 +270,16 @@ public class RestrictedSecurityManager extends SecurityManager {
 		path = new File(path).getAbsolutePath();
 		if (isCallerScript()) {
 			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())) {
+				throw new SecurityException();
+			}
+		}
+	}
+
+	private void checkFilePath(String path, boolean write) {
+		checkSuperFilePath(path);
+		path = new File(path).getAbsolutePath();
+		if (isCallerScript()) {
+			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory()) && (!write || path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory()))) {
 				throw new SecurityException();
 			}
 		}
