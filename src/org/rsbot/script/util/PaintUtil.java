@@ -1,8 +1,10 @@
 package org.rsbot.util;
 
+import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.methods.Game;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Skills;
+import org.rsbot.script.methods.Web;
 import org.rsbot.script.util.Filter;
 import org.rsbot.script.util.Timer;
 import org.rsbot.script.wrappers.*;
@@ -15,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
@@ -939,14 +942,13 @@ public class PaintUtil {
 			drawTileMM(tile, color, alpha);
 		}
 	}
-/* Ready for web 2.0 ;)
+
 	/**
 	 * Draws tiles on the minimap.
-	 * 
-	 * @param alpha
-	 *            The opacity of the color.
+	 *
+	 * @param alpha The opacity of the color.
 	 * @author Fletch To 99
-	 
+	 */
 	public void drawWebOnScreen(int alpha) {
 		Collection<TileFlags> tiles = Web.map.values();
 		for (TileFlags t : tiles) {
@@ -964,11 +966,10 @@ public class PaintUtil {
 
 	/**
 	 * Draws tiles on the minimap.
-	 * 
-	 * @param alpha
-	 *            The opacity of the color.
+	 *
+	 * @param alpha The opacity of the color.
 	 * @author Fletch To 99
-	 
+	 */
 	public void drawWebMM(int alpha) {
 		Collection<TileFlags> tiles = Web.map.values();
 		for (TileFlags t : tiles) {
@@ -985,5 +986,4 @@ public class PaintUtil {
 			}
 		}
 	}
-	*/
 }
