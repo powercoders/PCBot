@@ -59,6 +59,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add(".wikia.com"); // common assets and images
 		whitelist.add("jtryba.com"); // jtryba - autoCook, monkR8per
 		whitelist.add("tehgamer.info"); // TehGamer - iMiner
+		whitelist.add("www.universalscripts.org"); // Fletch To 99 - UFletch
 
 		return whitelist;
 	}
