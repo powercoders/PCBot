@@ -59,6 +59,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add(".wikia.com"); // common assets and images
 		whitelist.add("jtryba.com"); // jtryba - autoCook, monkR8per
 		whitelist.add("tehgamer.info"); // TehGamer - iMiner
+		whitelist.add("www.universalscripts.org"); // Fletch To 99 - UFletch
 
 		return whitelist;
 	}
@@ -247,7 +248,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkWrite(String file) {
-		checkFilePath(file);
+		checkFilePath(file, true);
 		super.checkWrite(file);
 	}
 
@@ -269,6 +270,16 @@ public class RestrictedSecurityManager extends SecurityManager {
 		path = new File(path).getAbsolutePath();
 		if (isCallerScript()) {
 			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())) {
+				throw new SecurityException();
+			}
+		}
+	}
+
+	private void checkFilePath(String path, boolean write) {
+		checkSuperFilePath(path);
+		path = new File(path).getAbsolutePath();
+		if (isCallerScript()) {
+			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory()) && (!write || path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory()))) {
 				throw new SecurityException();
 			}
 		}
