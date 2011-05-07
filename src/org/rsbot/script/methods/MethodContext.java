@@ -180,7 +180,7 @@ public class MethodContext {
 	 * The singleton of Lobby
 	 */
 	public final Lobby lobby = new Lobby(this);
-	
+
 	/**
 	 * The singleton of Paint
 	 */

@@ -11,7 +11,7 @@ public class Paint extends MethodProvider {
 
 	/**
 	 * Creates a new PaintUtil.
-	 * 
+	 *
 	 * @return New instance of PaintUtil.
 	 * @see PaintUtil
 	 */
@@ -22,7 +22,7 @@ public class Paint extends MethodProvider {
 
 	/**
 	 * Creates a new PaintUIUtil.
-	 * 
+	 *
 	 * @return New instance of PaintUIUtil.
 	 * @see PaintUIUtil
 	 */

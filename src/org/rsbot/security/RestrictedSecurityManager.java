@@ -1,17 +1,17 @@
 package org.rsbot.security;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.net.InetAddress;
-import java.security.Permission;
-import java.util.ArrayList;
-
 import org.rsbot.Application;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.script.Script;
 import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
+
+import java.io.File;
+import java.io.FileDescriptor;
+import java.net.InetAddress;
+import java.security.Permission;
+import java.util.ArrayList;
 
 /**
  * @author Paris
@@ -31,8 +31,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 	private boolean isCallerScript() {
 		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
 		for (int i = s.length - 1; i > -1; i--) {
-			if (s[i].getClassName().startsWith(Script.class.getName()))
+			if (s[i].getClassName().startsWith(Script.class.getName())) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -67,8 +68,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkConnect(String host, int port) {
-		if (host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1"))
+		if (host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1")) {
 			throw new SecurityException();
+		}
 
 		// ports other than HTTP (80), HTTPS (443) and unknown (-1) are automatically denied
 		if (!(port == -1 || port == 80 || port == 443)) {
@@ -83,13 +85,15 @@ public class RestrictedSecurityManager extends SecurityManager {
 			} else {
 				for (String check : getAllowedHosts()) {
 					if (check.startsWith(".")) {
-						if (host.endsWith(check) || check.equals("." + host))
+						if (host.endsWith(check) || check.equals("." + host)) {
 							allowed = true;
+						}
 					} else if (host.equals(check)) {
 						allowed = true;
 					}
-					if (allowed == true)
+					if (allowed == true) {
 						break;
+					}
 				}
 			}
 
@@ -180,8 +184,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	public void checkPermission(Permission perm) {
 		if (perm instanceof RuntimePermission) {
-			if (perm.getName().equals("setSecurityManager"))
+			if (perm.getName().equals("setSecurityManager")) {
 				throw new SecurityException();
+			}
 		}
 		// super.checkPermission(perm);
 	}
@@ -251,8 +256,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 		if (path.equalsIgnoreCase(new File(GlobalConfiguration.Paths.getAccountsFile()).getAbsolutePath())) {
 			for (StackTraceElement s : Thread.currentThread().getStackTrace()) {
 				final String name = s.getClassName();
-				if (name.equals(AccountStore.class.getName()))
+				if (name.equals(AccountStore.class.getName())) {
 					return;
+				}
 			}
 			throw new SecurityException();
 		}
@@ -262,8 +268,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 		checkSuperFilePath(path);
 		path = new File(path).getAbsolutePath();
 		if (isCallerScript()) {
-			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory()))
+			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())) {
 				throw new SecurityException();
+			}
 		}
 	}
 }

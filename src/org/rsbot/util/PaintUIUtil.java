@@ -1,9 +1,6 @@
 package org.rsbot.util;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.*;
 
 public class PaintUIUtil {
 	private Graphics2D g2;
@@ -15,19 +12,15 @@ public class PaintUIUtil {
 
 	/**
 	 * Draws a check box for interactive paints
-	 * 
-	 * @param boxRect
-	 *            Rect to draw checkBox at
-	 * @param text
-	 *            Text to draw after checkBox
-	 * @param checked
-	 *            Is checkBox checked
-	 * @param textColor
-	 *            Text color
+	 *
+	 * @param boxRect   Rect to draw checkBox at
+	 * @param text      Text to draw after checkBox
+	 * @param checked   Is checkBox checked
+	 * @param textColor Text color
 	 * @author jtryba
 	 */
 	public void drawCheckBox(final Rectangle boxRect, final String text,
-			final Color textColor) {
+	                         final Color textColor) {
 		g2.setColor((checked ? Color.green : Color.red));
 		g2.fillRect(boxRect.x, boxRect.y, boxRect.width, boxRect.height);
 		g2.setColor(textColor);
@@ -41,5 +34,5 @@ public class PaintUIUtil {
 					boxRect.y + boxRect.height);
 		}
 		g2.drawRect(boxRect.x, boxRect.y, boxRect.width, boxRect.height);
-	}	
+	}
 }

@@ -99,8 +99,9 @@ public class Skills extends MethodProvider {
 	 */
 	public static int getIndex(final String statName) {
 		for (int i = 0; i < Skills.SKILL_NAMES.length; i++) {
-			if (Skills.SKILL_NAMES[i].equalsIgnoreCase(statName))
+			if (Skills.SKILL_NAMES[i].equalsIgnoreCase(statName)) {
 				return i;
+			}
 		}
 		return -1;
 	}
@@ -114,12 +115,13 @@ public class Skills extends MethodProvider {
 	 */
 	public static int getLevelAt(final int exp) {
 		for (int i = Skills.XP_TABLE.length - 1; i > 0; i--) {
-			if (exp > Skills.XP_TABLE[i])
+			if (exp > Skills.XP_TABLE[i]) {
 				return i;
+			}
 		}
 		return 1;
 	}
-	
+
 	/**
 	 * Gets the experience at the given level.
 	 *
@@ -127,11 +129,12 @@ public class Skills extends MethodProvider {
 	 * @return The level based on the experience given.
 	 */
 	public static int getExpAt(final int lvl) {
-		if (lvl > 120)
+		if (lvl > 120) {
 			return 1;
+		}
 		return Skills.XP_TABLE[lvl - 1];
 	}
-	
+
 	/**
 	 * Gets the experience required for the given level.
 	 *
@@ -139,11 +142,12 @@ public class Skills extends MethodProvider {
 	 * @return The level based on the experience given.
 	 */
 	public static int getExpRequired(final int lvl) {
-		if (lvl > 120)
+		if (lvl > 120) {
 			return 1;
+		}
 		return Skills.XP_TABLE[lvl];
 	}
-	
+
 	/**
 	 * Gets the skill name of an index.
 	 *
@@ -151,7 +155,9 @@ public class Skills extends MethodProvider {
 	 * @return The name of the skill for that index.
 	 */
 	public static String getSkillName(final int index) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return null;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return null;
+		}
 		return Skills.SKILL_NAMES[index];
 	}
 
@@ -166,11 +172,14 @@ public class Skills extends MethodProvider {
 	 * @return -1 if the skill is unavailable
 	 */
 	public int getCurrentExp(final int index) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		final int[] skills = methods.client.getSkillExperiences();
 
-		if (index > skills.length - 1)
+		if (index > skills.length - 1) {
 			return -1;
+		}
 
 		return methods.client.getSkillExperiences()[index];
 	}
@@ -183,7 +192,9 @@ public class Skills extends MethodProvider {
 	 * @return The current level of the given Skill.
 	 */
 	public int getCurrentLevel(final int index) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		return methods.client.getSkillLevels()[index];
 	}
 
@@ -196,7 +207,9 @@ public class Skills extends MethodProvider {
 	 * @see #getRealLevel(int)
 	 */
 	public int getRealLevel(final int index) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		return Skills.getLevelAt(getCurrentExp(index));
 	}
 
@@ -208,29 +221,35 @@ public class Skills extends MethodProvider {
 	 *         of skill is 99.
 	 */
 	public int getPercentToNextLevel(final int index) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		final int lvl = getRealLevel(index);
 		return getPercentToLevel(index, lvl + 1);
 	}
-	
+
 	/**
 	 * Gets the percentage to the a level in a given skill.
 	 *
-	 * @param index The index of the skill.
+	 * @param index  The index of the skill.
 	 * @param endLvl The level for the percent.
 	 * @return The percent to the level provided of the provided skill or 0 if level
 	 *         of skill is 99.
 	 */
 	public int getPercentToLevel(final int index, final int endLvl) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		final int lvl = getRealLevel(index);
-		if (index == Skills.DUNGEONEERING && (lvl == 120 || endLvl > 120))
+		if (index == Skills.DUNGEONEERING && (lvl == 120 || endLvl > 120)) {
 			return 0;
-		else if (lvl == 99 || endLvl > 99)
+		} else if (lvl == 99 || endLvl > 99) {
 			return 0;
+		}
 		final int xpTotal = Skills.XP_TABLE[endLvl] - Skills.XP_TABLE[lvl];
-		if (xpTotal == 0)
+		if (xpTotal == 0) {
 			return 0;
+		}
 		final int xpDone = getCurrentExp(index) - Skills.XP_TABLE[lvl];
 		return 100 * xpDone / xpTotal;
 	}
@@ -242,7 +261,9 @@ public class Skills extends MethodProvider {
 	 * @return The max level of the skill.
 	 */
 	public int getMaxLevel(final int index) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		return methods.client.getSkillLevelMaxes()[index];
 	}
 
@@ -253,7 +274,9 @@ public class Skills extends MethodProvider {
 	 * @return The max experience of the skill.
 	 */
 	public int getMaxExp(final int index) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		return methods.client.getSkillExperiencesMax()[index];
 	}
 
@@ -265,96 +288,110 @@ public class Skills extends MethodProvider {
 	 * @return The experience to the next level of the skill.
 	 */
 	public int getExpToNextLevel(final int index) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		final int lvl = getRealLevel(index);
 		return getExpToLevel(index, lvl + 1);
 	}
-	
+
 	/**
 	 * Gets the experience remaining until reaching the a level in a given
 	 * skill.
 	 *
-	 * @param index The index of the skill.
+	 * @param index  The index of the skill.
 	 * @param endLvl The level for the experience remaining.
 	 * @return The experience to the level provided of the skill.
 	 */
 	public int getExpToLevel(final int index, final int endLvl) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		final int lvl = getRealLevel(index);
-		if (index == Skills.DUNGEONEERING && (lvl == 120 || endLvl > 120))
+		if (index == Skills.DUNGEONEERING && (lvl == 120 || endLvl > 120)) {
 			return 0;
-		else if (lvl == 99 || endLvl > 99)
+		} else if (lvl == 99 || endLvl > 99) {
 			return 0;
+		}
 		return Skills.XP_TABLE[endLvl] - getCurrentExp(index);
 	}
-	
+
 	/**
 	 * Gets the time remaining until the next level.
-	 * 
+	 *
 	 * @param index The index of the skill.
-	 * @param exp The start Exp.
-	 * @param time The time the script has been running.
+	 * @param exp   The start Exp.
+	 * @param time  The time the script has been running.
 	 * @return The time till the next level of the skill.
 	 */
 	public long getTimeTillNextLevel(int index, int exp, long time) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		int level = getRealLevel(index);
 		return getTimeTillLevel(index, exp, level + 1, time);
 	}
-	
+
 	/**
 	 * Gets the time remaining until the level provided.
-	 * 
-	 * @param index The index of the skill.
-	 * @param exp The start Exp.
+	 *
+	 * @param index  The index of the skill.
+	 * @param exp    The start Exp.
 	 * @param endLvl The level to get the time till for.
-	 * @param time The time the script has been running.
+	 * @param time   The time the script has been running.
 	 * @return The time till the level provided of the skill.
 	 */
 	public long getTimeTillLevel(int index, int exp, int endLvl, long time) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		int level = getRealLevel(index);
 		int currentExp = getCurrentExp(index);
-		if (index == Skills.DUNGEONEERING && level == 120)
+		if (index == Skills.DUNGEONEERING && level == 120) {
 			return 0;
-		else if (level == 99)
+		} else if (level == 99) {
 			return 0;
+		}
 		try {
 			return ((time * getExpToLevel(index, endLvl)) / (currentExp - exp));
 		} catch (Exception e) {
 			return -1;
 		}
 	}
-	
+
 	/**
 	 * Gets the number of actions needed until the next level.
-	 * 
+	 *
 	 * @param index The index.
-	 * @param exp The exp each action gives.
+	 * @param exp   The exp each action gives.
 	 * @return How many you need to do until the next level.
 	 */
 	public int ammountTillNextLevel(final int index, final double exp) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		int level = getRealLevel(index);
 		return ammountTillLevel(index, exp, level + 1);
 	}
-	
+
 	/**
 	 * Gets the number of actions needed until the level provided.
-	 * 
+	 *
 	 * @param index The index.
-	 * @param exp The exp each action gives.
-	 * @param lvl The level to get the ammount till for.
+	 * @param exp   The exp each action gives.
+	 * @param lvl   The level to get the ammount till for.
 	 * @return How many you need to do until leveling to the level provided.
 	 */
 	public int ammountTillLevel(final int index, final double exp, final int lvl) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
-		return getExpToLevel(index,lvl) != -1 ? (int) (getExpToLevel(index,lvl) / exp) : 0;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
+		return getExpToLevel(index, lvl) != -1 ? (int) (getExpToLevel(index, lvl) / exp) : 0;
 	}
-	
+
 	/**
 	 * Gets the total/overall level.
-	 * 
+	 *
 	 * @return The total/overall level.
 	 */
 	public int getTotalLevel() {
@@ -364,63 +401,75 @@ public class Skills extends MethodProvider {
 		}
 		return total;
 	}
-	
+
 	/**
 	 * Gets the percent to max level in the specified skill index
-	 * 
+	 *
 	 * @param index Skill index.
 	 * @return Percent to level max level.
 	 */
 	public int getPercentToMaxLevel(final int index) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		int lvl = 99;
-		if (index == Skills.DUNGEONEERING)
-		lvl = 120;
+		if (index == Skills.DUNGEONEERING) {
+			lvl = 120;
+		}
 		return getPercentToLevel(index, lvl);
 	}
-	
+
 	/**
 	 * Gets the experience needed to the max level in the specified skill index
-	 * 
+	 *
 	 * @param index Skill index.
 	 * @return Experience to level max level.
 	 */
 	public int getExpToMaxLevel(final int index) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		int lvl = 99;
-		if (index == Skills.DUNGEONEERING)
+		if (index == Skills.DUNGEONEERING) {
 			lvl = 120;
+		}
 		return getExpToLevel(index, lvl);
 	}
-	
+
 	/**
 	 * Gets the time remaining until the max level.
-	 * 
+	 *
 	 * @param index The index of the skill.
-	 * @param exp The start Exp.
-	 * @param time The time the script has been running.
+	 * @param exp   The start Exp.
+	 * @param time  The time the script has been running.
 	 * @return The time till the max level of the skill.
 	 */
 	public long getTimeTillMaxLevel(int index, int exp, long time) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		int lvl = 99;
-		if (index == Skills.DUNGEONEERING)
+		if (index == Skills.DUNGEONEERING) {
 			lvl = 120;
+		}
 		return getTimeTillLevel(index, exp, lvl, time);
 	}
-	
+
 	/**
 	 * Gets the number of actions needed until the max level.
-	 * 
+	 *
 	 * @param index The index.
-	 * @param exp The exp each action gives.
+	 * @param exp   The exp each action gives.
 	 * @return How many you need to do until the max level.
 	 */
 	public int ammountTillMaxLevel(final int index, final double exp) {
-		if (index > Skills.SKILL_NAMES.length  - 1) return -1;
+		if (index > Skills.SKILL_NAMES.length - 1) {
+			return -1;
+		}
 		int lvl = 99;
-		if (index == Skills.DUNGEONEERING)
+		if (index == Skills.DUNGEONEERING) {
 			lvl = 120;
+		}
 		return ammountTillLevel(index, exp, lvl);
 	}
 
