@@ -1,7 +1,7 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.util.PaintUIUtil;
-import org.rsbot.util.PaintUtil;
+import org.rsbot.script.util.PaintUIUtil;
+import org.rsbot.script.util.PaintUtil;
 
 public class Paint extends MethodProvider {
 
