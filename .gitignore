@@ -17,3 +17,4 @@
 /lib/*.jar
 /scripts/*.class
 /temp.txt
+/javadoc

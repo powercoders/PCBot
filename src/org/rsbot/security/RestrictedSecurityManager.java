@@ -286,17 +286,11 @@ public class RestrictedSecurityManager extends SecurityManager {
 					final String check = new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
 					fail = !path.equals(check);
 				}
-				// allow screenshots directory
-				if (path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory())) {
-					fail = false;
-				}
-				if (path.startsWith(GlobalConfiguration.Paths.getScriptsDirectory())) {
-					fail = false;
-				}
-				if (path.equals(GlobalConfiguration.Paths.getWebCache())) {
-					fail = false;
-				}
-				if (path.contains("jre6\\bin") || path.contains("jre/lib")) {
+				//Also allow Settings Directory. Only check if has not failed yet.
+				if (!fail && (path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory()) || 
+					path.startsWith(GlobalConfiguration.Paths.getScriptsDirectory()) || path.equals(
+					GlobalConfiguration.Paths.getWebCache()) || path.contains("jre6\\bin") || path.contains(
+					"jre/lib") || path.startsWith(GlobalConfiguration.Paths.getSettingsDirectory()))) {
 					fail = false;
 				}
 				if (fail) {
