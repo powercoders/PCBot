@@ -1,24 +1,20 @@
 package org.rsbot.script.methods;
 
-import java.awt.Color;
+import org.rsbot.script.wrappers.*;
+import org.rsbot.util.GlobalConfiguration;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
-
-import org.rsbot.script.wrappers.RSGroundItem;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSPlayer;
-import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.util.GlobalConfiguration;
 
 
 /**
  * Provides access to methods that can be used by RSBot scripts.
  */
 public class Methods {
+	public MethodContext ctx;
 
 	/**
 	 * The logger instance
@@ -153,6 +149,11 @@ public class Methods {
 	 */
 	protected Paint paint;
 
+	/**
+	 * The singleton of Web
+	 */
+	protected Web web;
+
 
 	/**
 	 * For internal use only: initializes the method providers.
@@ -165,6 +166,7 @@ public class Methods {
 			cache.mkdirs();
 		}
 		ImageIO.setCacheDirectory(cache);
+		this.ctx = ctx;
 		skills = ctx.skills;
 		settings = ctx.settings;
 		magic = ctx.magic;
@@ -196,6 +198,7 @@ public class Methods {
 		friendChat = ctx.friendChat;
 		trade = ctx.trade;
 		paint = ctx.paint;
+		this.web = ctx.web;
 	}
 
 	/**

@@ -1,13 +1,9 @@
 package org.rsbot.script.methods;
 
-import java.awt.Point;
-import java.util.LinkedList;
+import org.rsbot.script.wrappers.*;
 
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSItemDef;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSTile;
+import java.awt.*;
+import java.util.LinkedList;
 
 /**
  * Inventory related operations.

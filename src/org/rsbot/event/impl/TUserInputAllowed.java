@@ -1,10 +1,10 @@
 package org.rsbot.event.impl;
 
-import java.awt.Graphics;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.TextPaintListener;
 import org.rsbot.util.StringUtil;
+
+import java.awt.*;
 
 public class TUserInputAllowed implements TextPaintListener {
 

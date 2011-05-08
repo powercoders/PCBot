@@ -1,10 +1,6 @@
 package org.rsbot.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Enumeration;
@@ -33,7 +29,6 @@ public class Extractor implements Runnable {
 		this.args = args;
 	}
 
-	@Override
 	public void run() {
 		final ClassLoader loader = getClass().getClassLoader();
 		final String root = GlobalConfiguration.Paths.Resources.ROOT + "/";
@@ -91,7 +86,6 @@ public class Extractor implements Runnable {
 						jarOld.deleteOnExit();
 					}
 				}
-				clearDirectory(new File(GlobalConfiguration.Paths.getCacheDirectory()), false);
 			}
 		}
 	}
