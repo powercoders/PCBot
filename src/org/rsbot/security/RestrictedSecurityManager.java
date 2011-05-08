@@ -243,9 +243,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkRead(final FileDescriptor fd) {
-		if (isCallerScript()) {
-			//throw new SecurityException();
-		}
 		super.checkRead(fd);
 	}
 
@@ -282,9 +279,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkWrite(final FileDescriptor fd) {
-		if (isCallerScript()) {
-			//throw new SecurityException();
-		}
 		super.checkWrite(fd);
 	}
 
