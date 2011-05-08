@@ -1,7 +1,7 @@
-package org.rsbot.script.passives;
+package org.rsbot.script.background;
 
-import org.rsbot.script.PassiveScript;
-import org.rsbot.script.PassiveScriptManifest;
+import org.rsbot.script.BackgroundScript;
+import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
@@ -9,8 +9,8 @@ import org.rsbot.service.WebQueue;
 
 import java.util.HashMap;
 
-@PassiveScriptManifest(name = "Web Data Collector", authors = {"Timer"})
-public class WebData extends PassiveScript {
+@ScriptManifest(name = "Web Data Collector", authors = {"Timer"})
+public class WebData extends BackgroundScript {
 	private RSTile lb = null;
 	public final HashMap<RSTile, TileFlags> rs_map = new HashMap<RSTile, TileFlags>();
 
