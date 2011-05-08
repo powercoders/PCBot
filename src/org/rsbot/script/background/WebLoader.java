@@ -25,7 +25,6 @@ public class WebLoader extends BackgroundScript {
 			try {
 				int badRemoved = 0;
 				int redundantRemoved = 0;
-				final long startLoad = System.currentTimeMillis();
 				BufferedReader br = new BufferedReader(new FileReader(GlobalConfiguration.Paths.getWebCache()));
 				String line;
 				final HashMap<RSTile, TileFlags> theFlagsList = new HashMap<RSTile, TileFlags>();
@@ -70,14 +69,6 @@ public class WebLoader extends BackgroundScript {
 				}
 				Web.map.putAll(theFlagsList);
 				Web.loaded = true;
-				final long timeTook = System.currentTimeMillis() - startLoad;
-				log("Loaded " + Web.map.size() + " nodes in " + timeTook + "ms.");
-				if (badRemoved > 0) {
-					log("Removed " + badRemoved + " bad nodes.");
-				}
-				if (redundantRemoved > 0) {
-					log("Removed " + redundantRemoved + " redundant nodes.");
-				}
 			} catch (Exception e) {
 				log("Failed to load the web.. trying again.");
 			}
