@@ -32,6 +32,7 @@ public class BankMonitor extends PassiveScript {
 			try {
 				BankCache.Save(accountName, rsItems);
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			updateTimes.put(accountName, System.currentTimeMillis());
 		}

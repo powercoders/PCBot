@@ -20,6 +20,7 @@ public class WebData extends PassiveScript {
 		return game.isLoggedIn() && (lb == null || !lb.equals(curr_base));
 	}
 
+	@Override
 	public int loop() {
 		try {
 			final RSTile curr_base = game.getMapBase();

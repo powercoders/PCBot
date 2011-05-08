@@ -13,8 +13,7 @@ import java.util.HashMap;
  * @author Timer
  */
 public class BankCache {
-	private final static File cacheFile = new File(
-			GlobalConfiguration.Paths.getBankCache());
+	private final static File cacheFile = new File(GlobalConfiguration.Paths.getBankCache());
 	private final static HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
 
 	/**
