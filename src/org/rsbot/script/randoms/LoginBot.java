@@ -72,8 +72,8 @@ public class LoginBot extends Random {
 				mouse.click(welcome_screen_button_play_1.getAbsoluteX(),
 						welcome_screen_button_play_1.getAbsoluteY(),
 						welcome_screen_button_play_2.getAbsoluteX()
-						+ welcome_screen_button_play_2.getWidth()
-						- welcome_screen_button_play_1.getAbsoluteX(),
+								+ welcome_screen_button_play_2.getWidth()
+								- welcome_screen_button_play_1.getAbsoluteX(),
 						welcome_screen_button_play_1.getHeight(), true);
 
 				for (int i = 0; i < 4 && game.getClientState() == 6; i++) {
@@ -127,8 +127,8 @@ public class LoginBot extends Random {
 							back_button1.getAbsoluteX(),
 							back_button1.getAbsoluteY(),
 							back_button2.getAbsoluteX()
-							+ back_button2.getWidth()
-							- back_button1.getAbsoluteX(),
+									+ back_button2.getWidth()
+									- back_button1.getAbsoluteX(),
 							back_button1.getHeight(), true);
 					interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(203).doClick();
 					stopScript(false);
