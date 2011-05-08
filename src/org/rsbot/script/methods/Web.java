@@ -23,6 +23,13 @@ public class Web extends MethodProvider {
 		super(ctx);
 	}
 
+	/**
+	 * Generates a path between two nodes.
+	 *
+	 * @param start The starting tile.
+	 * @param end   The ending tile.
+	 * @return The path.
+	 */
 	public RSTile[] generateNodePath(final RSTile start, final RSTile end) {
 		if (start.getZ() != end.getZ()) {
 			log.info("Different planes.");
@@ -109,6 +116,13 @@ public class Web extends MethodProvider {
 		}
 	}
 
+	/**
+	 * Gets the heuristic distance.
+	 *
+	 * @param start Start node.
+	 * @param end   End node.
+	 * @return The distance.
+	 */
 	private static double Heuristic(Node start, Node end) {
 		double dx = start.x - end.x;
 		double dy = start.y - end.y;
@@ -121,6 +135,13 @@ public class Web extends MethodProvider {
 		return dx < dy ? dy : dx;
 	}
 
+	/**
+	 * The distance between two tiles.
+	 *
+	 * @param start The start tile.
+	 * @param end   The end tile.
+	 * @return The distance.
+	 */
 	private static double Dist(Node start, Node end) {
 		if (start.x != end.x && start.y != end.y) {
 			return 1.41421356;
@@ -129,6 +150,12 @@ public class Web extends MethodProvider {
 		}
 	}
 
+	/**
+	 * Gets the lowest f score of a set.
+	 *
+	 * @param open The set.
+	 * @return The node that has the lowest f score.
+	 */
 	private static Node Lowest_f(Set<Node> open) {
 		Node best = null;
 		for (Node t : open) {
@@ -139,6 +166,12 @@ public class Web extends MethodProvider {
 		return best;
 	}
 
+	/**
+	 * Constructs a path from a node.
+	 *
+	 * @param end The end node.
+	 * @return The constructed path.
+	 */
 	private static RSTile[] Path(Node end) {
 		LinkedList<RSTile> path = new LinkedList<RSTile>();
 		Node p = end;
@@ -149,6 +182,12 @@ public class Web extends MethodProvider {
 		return path.toArray(new RSTile[path.size()]);
 	}
 
+	/**
+	 * Gets successors of a tile.
+	 *
+	 * @param t The node.
+	 * @return The nodes.
+	 */
 	private static java.util.List<Node> Successors(Node t) {
 		LinkedList<Node> tiles = new LinkedList<Node>();
 		int x = t.x, y = t.y;
@@ -192,7 +231,27 @@ public class Web extends MethodProvider {
 		return tiles;
 	}
 
-	private static boolean Flag(final RSTile tile, final int... key) {
+	/**
+	 * Gets the TileFlags of a tile.
+	 *
+	 * @param tile The tile.
+	 * @return The <code>TileFlags</code>.
+	 */
+	public static TileFlags getTileFlags(final RSTile tile) {
+		if (Web.map.containsKey(tile)) {
+			return Web.map.get(tile);
+		}
+		return null;
+	}
+
+	/**
+	 * Checks the flags of a tile.
+	 *
+	 * @param tile The tile to check.
+	 * @param key  Keys to look for.
+	 * @return <tt>true</tt> if the tile contains flags.
+	 */
+	public static boolean Flag(final RSTile tile, final int... key) {
 		if (Web.map.containsKey(tile)) {
 			TileFlags theTile = Web.map.get(tile);
 			return theTile.containsKey(key);
