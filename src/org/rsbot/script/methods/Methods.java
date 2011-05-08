@@ -160,7 +160,11 @@ public class Methods {
 	 * @param ctx The MethodContext.
 	 */
 	public void init(final MethodContext ctx) {
-		ImageIO.setCacheDirectory(new File(GlobalConfiguration.Paths.getScriptCacheDirectory()));
+		final File cache = new File(GlobalConfiguration.Paths.getScriptCacheDirectory());
+		if (!cache.exists()) {
+			cache.mkdirs();
+		}
+		ImageIO.setCacheDirectory(cache);
 		skills = ctx.skills;
 		settings = ctx.settings;
 		magic = ctx.magic;
