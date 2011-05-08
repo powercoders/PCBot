@@ -86,7 +86,6 @@ public class Extractor implements Runnable {
 						jarOld.deleteOnExit();
 					}
 				}
-				clearDirectory(new File(GlobalConfiguration.Paths.getCacheDirectory()), false);
 			}
 		}
 	}
