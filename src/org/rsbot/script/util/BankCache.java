@@ -27,8 +27,41 @@ public class BankCache {
 		Load();// For multiple bot instances.
 		FileWriter fw = new FileWriter(cacheFile, false);
 		BufferedWriter bw = new BufferedWriter(fw);
+		HashMap<String, String> newData = null;
+		newData = BankCache.genMap(name, items);
+		if (data.containsKey(name.toLowerCase())) {
+			data.get(name.toLowerCase()).putAll(newData);
+		} else {
+			data.put(name.toLowerCase(), newData);
+		}
 		IniParser.serialise(data, bw);
 		bw.close();
+	}
+
+	private static HashMap<String, String> genMap(final String name, final RSItem[] items) {
+		HashMap<String, String> newData = new HashMap<String, String>();
+		if (data.containsKey(name.toLowerCase())) {
+			HashMap<String, String> oldData = data.get(name.toLowerCase());
+			for (RSItem i : items) {
+				if (i != null) {
+					if (oldData.containsKey(i.getName())) {
+						if (!(Integer.parseInt(oldData.get(i.getName())) == i.getID())) {
+							data.get(name.toLowerCase()).remove(i.getName());
+							newData.put(i.getName(), i.getID() + "");
+						}
+					} else {
+						newData.put(i.getName(), i.getID() + "");
+					}
+				}
+			}
+		} else {
+			for (RSItem i : items) {
+				if (i != null) {
+					newData.put(i.getName(), i.getID() + "");
+				}
+			}
+		}
+		return newData;
 	}
 
 	public static void Load() throws Exception {
