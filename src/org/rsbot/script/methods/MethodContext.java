@@ -167,7 +167,7 @@ public class MethodContext {
 	public final Prayer prayer = new Prayer(this);
 
 	/**
-	 * The singleton of Friend Chat
+	 * The singleton of Prayer
 	 */
 	public final FriendChat friendChat = new FriendChat(this);
 
@@ -180,11 +180,6 @@ public class MethodContext {
 	 * The singleton of Lobby
 	 */
 	public final Lobby lobby = new Lobby(this);
-	
-	/**
-	* The singleton of SettingsManager
-	*/
-	public final SettingsManager sm = new SettingsManager(this);
 
 	/**
 	 * The singleton of Paint

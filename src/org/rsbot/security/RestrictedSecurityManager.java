@@ -7,7 +7,6 @@ import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.ScreenshotUtil;
-import org.rsbot.util.SettingsManager;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -49,16 +48,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 		}
 		return false;
 	}
-	
-	private boolean isCallerScriptSettingsManager() {
-		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
-		for (int i = s.length - 1; i > -1; i--) {
-			if (s[i].getClassName().startsWith(SettingsManager.class.getName())) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public ArrayList<String> getAllowedHosts() {
 		ArrayList<String> whitelist = new ArrayList<String>(32);
@@ -70,7 +59,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add(".imgur.com");
 		whitelist.add(".powerbot.org");
 		whitelist.add(".runescape.com");
-		
+
 		whitelist.add("shadowscripting.org"); // iDungeon
 		whitelist.add("shadowscripting.wordpress.com"); // iDungeon
 		whitelist.add(".glorb.nl"); // SXForce - Swamp Lizzy Paid, Snake Killah
@@ -155,7 +144,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkDelete(String file) {
-		if (!isCallerScriptScreenshot() && !isCallerScriptSettingsManager()) {
+		if (!isCallerScriptScreenshot()) {
 			checkFilePath(file);
 		}
 		super.checkDelete(file);
@@ -272,7 +261,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkWrite(String file) {
-		if (!isCallerScriptScreenshot() && !isCallerScriptSettingsManager()) {
+		if (!isCallerScriptScreenshot()) {
 			checkFilePath(file);
 		}
 		super.checkWrite(file);
