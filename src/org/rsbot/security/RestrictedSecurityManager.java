@@ -287,6 +287,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 				if (path.startsWith(GlobalConfiguration.Paths.getScriptsDirectory())) {
 					fail = false;
 				}
+				if (path.equals(GlobalConfiguration.Paths.getWebCache())) {
+					fail = false;
+				}
 				if (fail) {
 					throw new SecurityException();
 				}
