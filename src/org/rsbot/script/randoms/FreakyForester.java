@@ -12,7 +12,7 @@ import org.rsbot.script.wrappers.*;
 /**
  * @version 2.5 - 12/31/10 Fix by NoEffex (Models)
  */
-@ScriptManifest(authors = {"Pwnaz0r", "Taha", "zqqou", "Zach"}, name = "FreakyForester", version = 2.5)
+@ScriptManifest(authors = {"Pwnaz0r", "Taha", "zqqou", "Zach"}, name = "FreakyForester", version = 2.6)
 public class FreakyForester extends Random implements MessageListener {
 
 	private RSNPC forester;
@@ -31,13 +31,6 @@ public class FreakyForester extends Random implements MessageListener {
 	};
 
 	boolean done = false;
-
-	public void onFinish() {
-		forester = null;
-		unequip = false;
-		phe = new short[]{};
-		done = false;
-	}
 
 	static class Models {
 		static final short[] oneTail = {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2,
@@ -171,7 +164,7 @@ public class FreakyForester extends Random implements MessageListener {
 			return 1;
 		} else if (phe.length == 0) {
 			return 0;
-		} else if (inventory.contains(6178)) {
+		} else if (inventory.containsOneOf(6178,6179)) {
 			return 0;
 		} else if (phe.length > 0) {
 			return 2;
@@ -195,12 +188,12 @@ public class FreakyForester extends Random implements MessageListener {
 			done = searchText(241, "Thank you") || interfaces.getComponent(242, 4).containsText("leave");
 		}
 		/*
-				  if (inventory.contains(6179)) {
-					  phe = new short[]{};
-					  inventory.getItem(6179).doAction("Drop");
-					  return random(500, 900);
-				  }
-				  */
+		if (inventory.contains(6179)) {
+			phe = new short[]{};
+			inventory.getItem(6179).doAction("Drop");
+			return random(500, 900);
+		}
+		*/
 		if (unequip && (inventory.getCount(false) != 28)) {
 			if (game.getCurrentTab() != Game.TAB_EQUIPMENT) {
 				game.openTab(Game.TAB_EQUIPMENT);
@@ -293,13 +286,12 @@ public class FreakyForester extends Random implements MessageListener {
 					return random(800, 1200);
 				}
 				if (Portal.doAction("Enter")) {
-					return random(800, 1200);
+					return random(4000,5000);
 				}
 				return random(200, 500);
 		}
 		return random(1000, 1500);
 	}
-
 	public boolean searchText(final int interfac, final String text) {
 		final RSInterface talkFace = interfaces.get(interfac);
 		if (!talkFace.isValid()) {
