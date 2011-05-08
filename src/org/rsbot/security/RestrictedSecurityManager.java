@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 import org.rsbot.Application;
 import org.rsbot.gui.BotGUI;
-import org.rsbot.script.Script;
 import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
@@ -29,13 +28,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	private boolean isCallerScript() {
-		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
-		for (int i = s.length - 1; i > -1; i--) {
-			if (s[i].getClassName().startsWith(Script.class.getName())) {
-				return true;
-			}
-		}
-		return false;
+		return Thread.currentThread().getName().startsWith("Script-");
 	}
 
 	public ArrayList<String> getAllowedHosts() {
