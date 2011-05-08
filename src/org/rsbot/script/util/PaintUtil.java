@@ -813,7 +813,6 @@ public class PaintUtil {
 	 */
 	public void drawGroundItems(final int[] ids, final Color color, final int alpha) {
 		final Filter<RSGroundItem> filter = new Filter<RSGroundItem>() {
-			@Override
 			public boolean accept(final RSGroundItem gi) {
 				return gi != null && gi.getItem() != null && idMatch(gi.getItem().getID());
 			}
