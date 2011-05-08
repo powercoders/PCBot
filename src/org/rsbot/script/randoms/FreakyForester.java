@@ -32,6 +32,13 @@ public class FreakyForester extends Random implements MessageListener {
 
 	boolean done = false;
 
+	public void onFinish() {
+		forester = null;
+		unequip = false;
+		phe = new short[]{};
+		done = false;
+	}
+
 	static class Models {
 		static final short[] oneTail = {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2,
 				3, 3, 3, 4, 4, 4, 4, 5, 5, 6, 6, 6, 6, 7, 8, 8, 8, 8, 9, 9, 10,
@@ -164,7 +171,7 @@ public class FreakyForester extends Random implements MessageListener {
 			return 1;
 		} else if (phe.length == 0) {
 			return 0;
-		} else if (inventory.containsOneOf(6178,6179)) {
+		} else if (inventory.containsOneOf(6178, 6179)) {
 			return 0;
 		} else if (phe.length > 0) {
 			return 2;
@@ -286,12 +293,13 @@ public class FreakyForester extends Random implements MessageListener {
 					return random(800, 1200);
 				}
 				if (Portal.doAction("Enter")) {
-					return random(4000,5000);
+					return random(4000, 5000);
 				}
 				return random(200, 500);
 		}
 		return random(1000, 1500);
 	}
+
 	public boolean searchText(final int interfac, final String text) {
 		final RSInterface talkFace = interfaces.get(interfac);
 		if (!talkFace.isValid()) {
