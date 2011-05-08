@@ -12,7 +12,6 @@ import org.rsbot.script.Script;
 import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.ScreenshotUtil;
 
 /**
  * @author Paris
@@ -33,16 +32,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
 		for (int i = s.length - 1; i > -1; i--) {
 			if (s[i].getClassName().startsWith(Script.class.getName())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean isCallerScriptScreenshot() {
-		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
-		for (int i = s.length - 1; i > -1; i--) {
-			if (s[i].getClassName().startsWith(ScreenshotUtil.class.getName())) {
 				return true;
 			}
 		}
@@ -149,9 +138,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkDelete(final String file) {
-		if (!isCallerScriptScreenshot()) {
-			checkFilePath(file);
-		}
 		checkFilePath(file);
 		super.checkDelete(file);
 	}
@@ -285,9 +271,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 	@Override
 	public void checkWrite(final String file) {
 		checkFilePath(file);
-		if (!isCallerScriptScreenshot()) {
-			checkFilePath(file);
-		}
 		super.checkWrite(file);
 	}
 
