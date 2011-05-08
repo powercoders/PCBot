@@ -152,6 +152,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		if (!isCallerScriptScreenshot()) {
 			checkFilePath(file);
 		}
+		checkFilePath(file);
 		super.checkDelete(file);
 	}
 
@@ -250,7 +251,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkRead(final String file) {
-		checkSuperFilePath(file);
+		checkFilePath(file);
 		super.checkRead(file);
 	}
 
@@ -289,6 +290,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkWrite(final String file) {
+		checkFilePath(file);
 		if (!isCallerScriptScreenshot()) {
 			checkFilePath(file);
 		}
