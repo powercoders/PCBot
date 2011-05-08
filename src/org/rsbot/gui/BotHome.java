@@ -1,16 +1,11 @@
 package org.rsbot.gui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Image;
+import org.rsbot.bot.Bot;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
-
-import javax.swing.SwingUtilities;
-
-import org.rsbot.bot.Bot;
 
 /**
  * @author Jacmob

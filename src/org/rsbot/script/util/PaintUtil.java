@@ -1,37 +1,24 @@
 package org.rsbot.script.util;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
+import org.rsbot.script.internal.wrappers.TileFlags;
+import org.rsbot.script.methods.Game;
+import org.rsbot.script.methods.MethodContext;
+import org.rsbot.script.methods.Skills;
+import org.rsbot.script.methods.Web;
+import org.rsbot.script.wrappers.*;
+import org.rsbot.util.GlobalConfiguration;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
-
-import org.rsbot.script.methods.Game;
-import org.rsbot.script.methods.MethodContext;
-import org.rsbot.script.methods.Skills;
-import org.rsbot.script.wrappers.RSArea;
-import org.rsbot.script.wrappers.RSGroundItem;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSModel;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSPlayer;
-import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.util.GlobalConfiguration;
 
 /**
  * @author Fletch To 99, jtryba
@@ -826,7 +813,6 @@ public class PaintUtil {
 	 */
 	public void drawGroundItems(final int[] ids, final Color color, final int alpha) {
 		final Filter<RSGroundItem> filter = new Filter<RSGroundItem>() {
-			@Override
 			public boolean accept(final RSGroundItem gi) {
 				return gi != null && gi.getItem() != null && idMatch(gi.getItem().getID());
 			}
@@ -967,7 +953,12 @@ public class PaintUtil {
 		}
 	}
 
-	/*
+	/**
+	 * Draws tiles on the minimap.
+	 *
+	 * @param alpha The opacity of the color.
+	 * @author Fletch To 99
+	 */
 	public void drawWebOnScreen(int alpha) {
 		Collection<TileFlags> tiles = Web.map.values();
 		for (TileFlags t : tiles) {
@@ -983,6 +974,12 @@ public class PaintUtil {
 		}
 	}
 
+	/**
+	 * Draws tiles on the minimap.
+	 *
+	 * @param alpha The opacity of the color.
+	 * @author Fletch To 99
+	 */
 	public void drawWebMM(int alpha) {
 		Collection<TileFlags> tiles = Web.map.values();
 		for (TileFlags t : tiles) {
@@ -998,5 +995,5 @@ public class PaintUtil {
 				}
 			}
 		}
-	}*/
+	}
 }

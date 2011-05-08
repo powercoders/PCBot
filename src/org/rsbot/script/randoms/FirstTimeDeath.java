@@ -15,7 +15,7 @@ public class FirstTimeDeath extends Random {
 	@Override
 	public boolean activateCondition() {
 		return (reaper = npcs.getNearest(8869)) != null
-		|| (reaper = npcs.getNearest(8870)) != null;
+				|| (reaper = npcs.getNearest(8870)) != null;
 	}
 
 	@Override
@@ -38,31 +38,31 @@ public class FirstTimeDeath extends Random {
 			return random(200, 400);
 		}
 		switch (step) {
-		case 0:
-			final RSObject reaperChair = objects.getNearest(45802);
-			reaperChair.doAction("Talk-to");
-			sleep(random(1000, 1200));
-			if (!interfaces.canContinue()) {
-				walking.walkTileOnScreen(new RSTile(
-						reaper.getLocation().getX() + 2, reaper.getLocation()
-						.getY() + 1));
-				camera.turnTo(reaperChair);
-			}
-			break;
-
-		case 1:
-			final int portalID = 45803;
-			final RSObject portal = objects.getNearest(portalID);
-			final RSTile loc = getMyPlayer().getLocation();
-			portal.doAction("Enter");
-			sleep(random(1000, 1200));
-			if (calc.distanceTo(loc) < 10) {
-				camera.turnTo(portal);
-				if (!calc.tileOnScreen(portal.getLocation())) {
-					walking.walkTileOnScreen(portal.getLocation());
+			case 0:
+				final RSObject reaperChair = objects.getNearest(45802);
+				reaperChair.doAction("Talk-to");
+				sleep(random(1000, 1200));
+				if (!interfaces.canContinue()) {
+					walking.walkTileOnScreen(new RSTile(
+							reaper.getLocation().getX() + 2, reaper.getLocation()
+									.getY() + 1));
+					camera.turnTo(reaperChair);
 				}
-			}
-			break;
+				break;
+
+			case 1:
+				final int portalID = 45803;
+				final RSObject portal = objects.getNearest(portalID);
+				final RSTile loc = getMyPlayer().getLocation();
+				portal.doAction("Enter");
+				sleep(random(1000, 1200));
+				if (calc.distanceTo(loc) < 10) {
+					camera.turnTo(portal);
+					if (!calc.tileOnScreen(portal.getLocation())) {
+						walking.walkTileOnScreen(portal.getLocation());
+					}
+				}
+				break;
 		}
 		return random(200, 400);
 	}

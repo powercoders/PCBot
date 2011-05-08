@@ -16,8 +16,12 @@ import org.rsbot.event.EventManager;
 import org.rsbot.event.events.PaintEvent;
 import org.rsbot.event.events.TextPaintEvent;
 import org.rsbot.gui.AccountManager;
+import org.rsbot.script.background.BankMonitor;
+import org.rsbot.script.background.WebData;
+import org.rsbot.script.background.WebLoader;
 import org.rsbot.script.internal.BreakHandler;
 import org.rsbot.script.internal.InputManager;
+import org.rsbot.script.internal.BackgroundScriptHandler;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.methods.Environment;
 import org.rsbot.script.methods.MethodContext;
@@ -36,8 +40,10 @@ public class Bot {
 	private final InputManager im;
 	private RSLoader loader;
 	private final ScriptHandler sh;
+	private final BackgroundScriptHandler bsh;
 	private final BreakHandler bh;
 	private final Map<String, EventListener> listeners;
+	private boolean killBackground = false;
 
 	/**
 	 * Whether or not user input is allowed despite a script's preference.
@@ -75,7 +81,6 @@ public class Bot {
 		loader = new RSLoader();
 		final Dimension size = Application.getPanelSize();
 		loader.setCallback(new Runnable() {
-			@Override
 			public void run() {
 				try {
 					setClient((Client) loader.getClient());
@@ -86,6 +91,7 @@ public class Bot {
 			}
 		});
 		sh = new ScriptHandler(this);
+		bsh = new BackgroundScriptHandler(this);
 		bh = new BreakHandler(this);
 		backBuffer = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
 		image = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
@@ -109,15 +115,32 @@ public class Bot {
 			final ThreadGroup tg = new ThreadGroup("RSClient-" + hashCode());
 			final Thread thread = new Thread(tg, loader, "Loader");
 			thread.start();
-		} catch (final Exception ignored) {
+			new Thread() {
+				public void run() {
+					try {
+						while (methods == null && !killBackground) {
+							Thread.sleep(50);
+						}
+					} catch (InterruptedException ignored) {
+					}
+					if (methods != null && !killBackground) {
+						bsh.runScript(new WebData());
+						bsh.runScript(new WebLoader());
+						bsh.runScript(new BankMonitor());
+					}
+				}
+			}.start();
+		} catch (Exception ignored) {
 		}
 	}
 
 	public void stop() {
 		eventManager.killThread(false);
 		sh.stopScript();
+		bsh.stopScript();
 		loader.stop();
 		loader.destroy();
+		killBackground = true;
 		loader = null;
 	}
 
@@ -229,6 +252,10 @@ public class Bot {
 
 	public ScriptHandler getScriptHandler() {
 		return sh;
+	}
+
+	public BackgroundScriptHandler getBackgroundScriptHandler() {
+		return bsh;
 	}
 
 	private void setClient(final Client cl) {

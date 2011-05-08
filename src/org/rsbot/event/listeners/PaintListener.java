@@ -1,6 +1,6 @@
 package org.rsbot.event.listeners;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.EventListener;
 
 public interface PaintListener extends EventListener {

@@ -17,4 +17,7 @@
 /lib/*.jar
 /scripts/*.class
 /temp.txt
+/build.xml
+/manifest.mf
+/nbproject/
 /javadoc

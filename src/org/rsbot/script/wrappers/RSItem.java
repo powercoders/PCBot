@@ -114,11 +114,11 @@ public class RSItem extends MethodProvider {
 	 */
 	public String getName() {
 		if (component != null) {
-			return component.getComponentName();
+			return component.getComponentName().replaceAll("\\<.*?>", "");
 		} else {
 			final RSItemDef definition = getDefinition();
 			if (definition != null) {
-				return definition.getName();
+				return definition.getName().replaceAll("\\<.*?>", "");
 			}
 		}
 		return null;
