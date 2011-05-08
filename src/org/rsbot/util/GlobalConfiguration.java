@@ -71,14 +71,11 @@ public class GlobalConfiguration {
 		public static final String ROOT = new File(".").getAbsolutePath();
 
 		public static final String COMPILE_SCRIPTS_BAT = "Compile-Scripts.bat";
-		public static final String COMPILE_PASSIVESCRIPTS_BAT = "Compile-Passive-Scripts.bat";
 		public static final String COMPILE_SCRIPTS_SH = "compile-scripts.sh";
-		public static final String COMPILE_PASSIVESCRIPTS_SH = "compile-passive-scripts.sh";
 		public static final String COMPILE_FIND_JDK = "FindJDK.bat";
 
 		public static final String SCRIPTS_NAME_SRC = "scripts";
 		public static final String SCRIPTS_NAME_OUT = "Scripts";
-		public static final String PASSIVE_SCRIPTS_NAME_OUT = "PassiveScripts";
 
 		public static String getAccountsFile() {
 			final String path;
@@ -137,14 +134,6 @@ public class GlobalConfiguration {
 
 		public static String getScriptsPrecompiledDirectory() {
 			return Paths.getScriptsDirectory() + File.separator + "Precompiled";
-		}
-
-		public static String getPassiveScriptsDirectory() {
-			return Paths.getHomeDirectory() + File.separator + Paths.PASSIVE_SCRIPTS_NAME_OUT;
-		}
-
-		public static String getPassiveScriptsSourcesDirectory() {
-			return Paths.getPassiveScriptsDirectory() + File.separator + "Sources";
 		}
 
 		public static String getScriptsNetworkDirectory() {
@@ -235,8 +224,6 @@ public class GlobalConfiguration {
 			dirs.add(Paths.getScriptsDirectory());
 			dirs.add(Paths.getScriptsSourcesDirectory());
 			dirs.add(Paths.getScriptsPrecompiledDirectory());
-			dirs.add(Paths.getPassiveScriptsDirectory());
-			dirs.add(Paths.getPassiveScriptsSourcesDirectory());
 		}
 		for (final String name : dirs) {
 			final File dir = new File(name);
