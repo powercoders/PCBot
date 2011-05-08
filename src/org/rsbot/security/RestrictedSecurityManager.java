@@ -82,7 +82,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkConnect(final String host, final int port) {
-		if (host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1")) {
+		if (host.equalsIgnoreCase("localhost") || host.startsWith("127.") || host.startsWith("192.168.") || host.startsWith("10.")) {
 			throw new SecurityException();
 		}
 
