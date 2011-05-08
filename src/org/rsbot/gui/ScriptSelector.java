@@ -1,6 +1,7 @@
 package org.rsbot.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Insets;
@@ -122,7 +123,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		scripts.addAll(SRC_BUNDLED.list());
 		scripts.addAll(SRC_PRECOMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
-		model.search(search.getText());
+		model.search("");
 	}
 
 	private void init() {
@@ -180,10 +181,25 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		toolBar.setMargin(new Insets(1, 1, 1, 1));
 		toolBar.setFloatable(false);
 		search = new JTextField();
+		final Color searchDefaultColor = search.getForeground(), searchAltColor = Color.GRAY;
+		final String searchDefaultText = "Type to filter...";
+		search.setText(searchDefaultText);
+		search.setForeground(searchAltColor);
 		search.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(final FocusEvent e) {
+				if (search.getForeground() == searchAltColor) {
+					search.setText("");
+					search.setForeground(searchDefaultColor);
+				}
 				table.clearSelection();
+			}
+			@Override
+			public void focusLost(final FocusEvent e) {
+				if (search.getText().isEmpty()) {
+					search.setText(searchDefaultText);
+					search.setForeground(searchAltColor);
+				}
 			}
 		});
 		search.addKeyListener(new KeyAdapter() {
@@ -309,7 +325,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 		public void search(String substr) {
 			matches.clear();
-			if (substr.length() == 0) {
+			substr = substr.trim();
+			if (substr.isEmpty()) {
 				matches.addAll(scripts);
 			} else {
 				substr = substr.toLowerCase();

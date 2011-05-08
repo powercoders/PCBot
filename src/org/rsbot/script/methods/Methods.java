@@ -1,14 +1,18 @@
 package org.rsbot.script.methods;
 
 import java.awt.Color;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
 
 import org.rsbot.script.wrappers.RSGroundItem;
 import org.rsbot.script.wrappers.RSNPC;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSPlayer;
 import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.util.GlobalConfiguration;
 
 
 /**
@@ -156,6 +160,11 @@ public class Methods {
 	 * @param ctx The MethodContext.
 	 */
 	public void init(final MethodContext ctx) {
+		final File cache = new File(GlobalConfiguration.Paths.getScriptCacheDirectory());
+		if (!cache.exists()) {
+			cache.mkdirs();
+		}
+		ImageIO.setCacheDirectory(cache);
 		skills = ctx.skills;
 		settings = ctx.settings;
 		magic = ctx.magic;
