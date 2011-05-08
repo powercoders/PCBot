@@ -54,6 +54,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("jtryba.com"); // jtryba - autoCook, monkR8per
 		whitelist.add("tehgamer.info"); // TehGamer - iMiner
 		whitelist.add("www.universalscripts.org"); // Fletch To 99 - UFletch
+		whitelist.add("www.dunkscripts.freeiz.com"); // Dunnkers
 
 		return whitelist;
 	}
