@@ -470,7 +470,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					toolBar.setOverrideInput(false);
 					menuBar.setOverrideInput(false);
 					final String acct = bot.getAccountName();
-					toolBar.setTabLabel(bots.indexOf(bot) + 1, acct == null ? "RuneScape" : acct);
+					toolBar.setTabLabel(bots.indexOf(bot) + 2, acct == null ? "RuneScape" : acct);
 					toolBar.updateInputButton();
 					setTitle(acct);
 				}
@@ -489,7 +489,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			toolBar.setOverrideInput(false);
 			menuBar.setOverrideInput(false);
 			menuBar.setPauseScript(false);
-			toolBar.setTabLabel(bots.indexOf(bot) + 1, "RuneScape");
+			toolBar.setTabLabel(bots.indexOf(bot) + 2, "RuneScape");
 			toolBar.updateInputButton();
 			setTitle(null);
 		}
