@@ -328,8 +328,7 @@ public class Bank extends MethodProvider {
 		}
 		final RSItem item = getItemAt(slot);
 		if (item != null) {
-			Rectangle area = item.getComponent().getArea();
-			return new Point((int) random(area.getMinX(), area.getMaxX()), (int) random(area.getMinY(), area.getMaxY()));
+			return item.getComponent().getLocation();
 		}
 		return new Point(-1, -1);
 	}
