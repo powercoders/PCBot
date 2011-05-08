@@ -71,7 +71,9 @@ public class GlobalConfiguration {
 		public static final String ROOT = new File(".").getAbsolutePath();
 
 		public static final String COMPILE_SCRIPTS_BAT = "Compile-Scripts.bat";
+		public static final String COMPILE_PASSIVESCRIPTS_BAT = "Compile-Passive-Scripts.bat";
 		public static final String COMPILE_SCRIPTS_SH = "compile-scripts.sh";
+		public static final String COMPILE_PASSIVESCRIPTS_SH = "compile-passive-scripts.sh";
 		public static final String COMPILE_FIND_JDK = "FindJDK.bat";
 
 		public static final String SCRIPTS_NAME_SRC = "scripts";
@@ -142,7 +144,7 @@ public class GlobalConfiguration {
 		}
 
 		public static String getPassiveScriptsSourcesDirectory() {
-			return Paths.getScriptsDirectory() + File.separator + "Sources";
+			return Paths.getPassiveScriptsDirectory() + File.separator + "Sources";
 		}
 
 		public static String getScriptsNetworkDirectory() {
