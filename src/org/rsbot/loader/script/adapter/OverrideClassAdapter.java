@@ -1,21 +1,28 @@
 package org.rsbot.loader.script.adapter;
 
-import org.rsbot.loader.asm.*;
+import org.rsbot.loader.asm.AnnotationVisitor;
+import org.rsbot.loader.asm.Attribute;
+import org.rsbot.loader.asm.ClassAdapter;
+import org.rsbot.loader.asm.ClassVisitor;
+import org.rsbot.loader.asm.FieldVisitor;
+import org.rsbot.loader.asm.Label;
+import org.rsbot.loader.asm.MethodVisitor;
 
 /**
  * @author Liang
  */
 public class OverrideClassAdapter extends ClassAdapter {
 
-	private String old_clazz;
-	private String new_clazz;
+	private final String old_clazz;
+	private final String new_clazz;
 
-	public OverrideClassAdapter(ClassVisitor delegate, String old_clazz, String new_clazz) {
+	public OverrideClassAdapter(final ClassVisitor delegate, final String old_clazz, final String new_clazz) {
 		super(delegate);
 		this.old_clazz = old_clazz;
 		this.new_clazz = new_clazz;
 	}
 
+	@Override
 	public MethodVisitor visitMethod(
 			final int access,
 			final String name,
@@ -25,7 +32,8 @@ public class OverrideClassAdapter extends ClassAdapter {
 		return new MethodAdapter(cv.visitMethod(access, name, desc, signature, exceptions), old_clazz, new_clazz);
 	}
 
-	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
+	@Override
+	public FieldVisitor visitField(final int access, final String name, String desc, final String signature, final Object value) {
 		if (desc.equals("L" + old_clazz + ";")) {
 			desc = "L" + new_clazz + ";";
 		}
@@ -35,56 +43,66 @@ public class OverrideClassAdapter extends ClassAdapter {
 
 	static class MethodAdapter implements MethodVisitor {
 
-		private MethodVisitor mv;
-		private String old_clazz;
-		private String new_clazz;
+		private final MethodVisitor mv;
+		private final String old_clazz;
+		private final String new_clazz;
 
 		MethodAdapter(
-				MethodVisitor delegate,
-				String old_clazz,
-				String new_clazz) {
-			this.mv = delegate;
+				final MethodVisitor delegate,
+				final String old_clazz,
+				final String new_clazz) {
+			mv = delegate;
 			this.old_clazz = old_clazz;
 			this.new_clazz = new_clazz;
 		}
 
+		@Override
 		public AnnotationVisitor visitAnnotationDefault() {
 			return mv.visitAnnotationDefault();
 		}
 
-		public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+		@Override
+		public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
 			return mv.visitAnnotation(desc, visible);
 		}
 
-		public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+		@Override
+		public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc, final boolean visible) {
 			return mv.visitParameterAnnotation(parameter, desc, visible);
 		}
 
-		public void visitAttribute(Attribute attr) {
+		@Override
+		public void visitAttribute(final Attribute attr) {
 			mv.visitAttribute(attr);
 		}
 
+		@Override
 		public void visitCode() {
 			mv.visitCode();
 		}
 
-		public void visitFrame(int type, int nLocal, Object[] local, int nStack, Object[] stack) {
+		@Override
+		public void visitFrame(final int type, final int nLocal, final Object[] local, final int nStack, final Object[] stack) {
 
 		}
 
-		public void visitInsn(int opcode) {
+		@Override
+		public void visitInsn(final int opcode) {
 			mv.visitInsn(opcode);
 		}
 
-		public void visitIntInsn(int opcode, int operand) {
+		@Override
+		public void visitIntInsn(final int opcode, final int operand) {
 			mv.visitIntInsn(opcode, operand);
 		}
 
-		public void visitVarInsn(int opcode, int var) {
+		@Override
+		public void visitVarInsn(final int opcode, final int var) {
 			mv.visitVarInsn(opcode, var);
 		}
 
-		public void visitTypeInsn(int opcode, String type) {
+		@Override
+		public void visitTypeInsn(final int opcode, String type) {
 			if (type.equals(old_clazz)) {
 				type = new_clazz;
 			}
@@ -92,7 +110,8 @@ public class OverrideClassAdapter extends ClassAdapter {
 			mv.visitTypeInsn(opcode, type);
 		}
 
-		public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+		@Override
+		public void visitFieldInsn(final int opcode, final String owner, final String name, String desc) {
 			if (desc.contains(old_clazz)) {
 				desc = desc.replace("L" + old_clazz + ";", "L" + new_clazz + ";");
 			}
@@ -100,7 +119,8 @@ public class OverrideClassAdapter extends ClassAdapter {
 			mv.visitFieldInsn(opcode, owner, name, desc);
 		}
 
-		public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+		@Override
+		public void visitMethodInsn(final int opcode, String owner, final String name, String desc) {
 			if (owner.equals(old_clazz)) {
 				owner = new_clazz;
 				desc = desc.replace("L" + old_clazz + ";", "L" + new_clazz + ";");
@@ -108,50 +128,62 @@ public class OverrideClassAdapter extends ClassAdapter {
 			mv.visitMethodInsn(opcode, owner, name, desc);
 		}
 
-		public void visitJumpInsn(int opcode, Label label) {
+		@Override
+		public void visitJumpInsn(final int opcode, final Label label) {
 			mv.visitJumpInsn(opcode, label);
 		}
 
-		public void visitLabel(Label label) {
+		@Override
+		public void visitLabel(final Label label) {
 			mv.visitLabel(label);
 		}
 
-		public void visitLdcInsn(Object cst) {
+		@Override
+		public void visitLdcInsn(final Object cst) {
 			mv.visitLdcInsn(cst);
 		}
 
-		public void visitIincInsn(int var, int increment) {
+		@Override
+		public void visitIincInsn(final int var, final int increment) {
 			mv.visitIincInsn(var, increment);
 		}
 
-		public void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels) {
+		@Override
+		public void visitTableSwitchInsn(final int min, final int max, final Label dflt, final Label[] labels) {
 			mv.visitTableSwitchInsn(min, max, dflt, labels);
 		}
 
-		public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
+		@Override
+		public void visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels) {
 			mv.visitLookupSwitchInsn(dflt, keys, labels);
 		}
 
-		public void visitMultiANewArrayInsn(String desc, int dims) {
+		@Override
+		public void visitMultiANewArrayInsn(final String desc, final int dims) {
 			mv.visitMultiANewArrayInsn(desc, dims);
 		}
 
-		public void visitTryCatchBlock(Label start, Label end, Label handler, String type) {
+		@Override
+		public void visitTryCatchBlock(final Label start, final Label end, final Label handler, final String type) {
 			mv.visitTryCatchBlock(start, end, handler, type);
 		}
 
-		public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+		@Override
+		public void visitLocalVariable(final String name, final String desc, final String signature, final Label start, final Label end, final int index) {
 			mv.visitLocalVariable(name, desc, signature, start, end, index);
 		}
 
-		public void visitLineNumber(int line, Label start) {
+		@Override
+		public void visitLineNumber(final int line, final Label start) {
 
 		}
 
-		public void visitMaxs(int maxStack, int maxLocals) {
+		@Override
+		public void visitMaxs(final int maxStack, final int maxLocals) {
 			mv.visitMaxs(maxStack, maxLocals);
 		}
 
+		@Override
 		public void visitEnd() {
 			mv.visitEnd();
 		}

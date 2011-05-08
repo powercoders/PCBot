@@ -1,10 +1,19 @@
 package org.rsbot.script.wrappers;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.util.GlobalConfiguration;
-
-import java.io.*;
-import java.util.*;
 
 /**
  * The web generation and wrapper control.
@@ -37,8 +46,8 @@ public class Web extends WebSkeleton {
 	 */
 	public Web(final MethodContext ctx, final RSTile start, final RSTile end) {
 		super(ctx);
-		this.from = start;
-		this.to = end;
+		from = start;
+		to = end;
 		getPath();
 	}
 
@@ -56,30 +65,30 @@ public class Web extends WebSkeleton {
 	 */
 	public void setMap() {
 		try {
-			List<WebTile> teTiles = new ArrayList<WebTile>();
-			File mapData = new File(GlobalConfiguration.Paths.getWebCache());
+			final List<WebTile> teTiles = new ArrayList<WebTile>();
+			final File mapData = new File(GlobalConfiguration.Paths.getWebCache());
 			if (mapData.exists() && mapData.canRead()) {
 				final int xOff = 2045;
 				final int yOff = 4168;
-				FileInputStream fis = new FileInputStream(mapData);
-				DataInputStream dis = new DataInputStream(fis);
-				BufferedReader br = new BufferedReader(new InputStreamReader(dis));
+				final FileInputStream fis = new FileInputStream(mapData);
+				final DataInputStream dis = new DataInputStream(fis);
+				final BufferedReader br = new BufferedReader(new InputStreamReader(dis));
 				String strLine = "";
 				while ((strLine = br.readLine()) != null) {
 					try {
-						String[] strArr = strLine.split("=");
+						final String[] strArr = strLine.split("=");
 						if (strArr != null && strArr.length == 3) {
-							String[] spl = strArr[2].split(",");
-							int[] nA = new int[spl.length];
+							final String[] spl = strArr[2].split(",");
+							final int[] nA = new int[spl.length];
 							int i = 0;
-							for (String iSPL : spl) {
+							for (final String iSPL : spl) {
 								if (iSPL.length() > 0) {
 									nA[i] = Integer.parseInt(iSPL);
 									i++;
 								}
 							}
-							int[] nAA = new int[i];
-							for (int na : nA) {
+							final int[] nAA = new int[i];
+							for (final int na : nA) {
 								i--;
 								nAA[i] = na;
 								if (i == 0) {
@@ -90,17 +99,17 @@ public class Web extends WebSkeleton {
 									.parseInt(strArr[0]), yOff - Integer
 									.parseInt(strArr[1])), nAA, null));
 						} else if (strArr != null && strArr.length == 5) {
-							String[] spl = strArr[4].split(",");
-							int[] nA = new int[spl.length];
+							final String[] spl = strArr[4].split(",");
+							final int[] nA = new int[spl.length];
 							int i = 0;
-							for (String iSPL : spl) {
+							for (final String iSPL : spl) {
 								if (iSPL.length() > 0) {
 									nA[i] = Integer.parseInt(iSPL);
 									i++;
 								}
 							}
-							int[] nAA = new int[i];
-							for (int na : nA) {
+							final int[] nAA = new int[i];
+							for (final int na : nA) {
 								i--;
 								nAA[i] = na;
 								if (i == 0) {
@@ -111,7 +120,7 @@ public class Web extends WebSkeleton {
 									.parseInt(strArr[0]), yOff - Integer
 									.parseInt(strArr[1])), nAA, null));
 						}
-					} catch (Exception e) {
+					} catch (final Exception e) {
 						e.printStackTrace();
 						map = null;
 						return;
@@ -121,7 +130,7 @@ public class Web extends WebSkeleton {
 				br.close();
 				return;
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 		map = null;
@@ -133,7 +142,8 @@ public class Web extends WebSkeleton {
 	 * @param options The flags to take into account while traversing the path.
 	 * @return <tt>true</tt> if walked, otherwise false.
 	 */
-	public boolean traverse(EnumSet<TraversalOption> options) {
+	@Override
+	public boolean traverse(final EnumSet<TraversalOption> options) {
 		return path != null ? path.traverse(options) : false;
 	}
 
@@ -149,8 +159,8 @@ public class Web extends WebSkeleton {
 				path = null;
 				return;
 			}
-			WebTile start = map.getWebTile(from);
-			WebTile end = map.getWebTile(to);
+			final WebTile start = map.getWebTile(from);
+			final WebTile end = map.getWebTile(to);
 			if (start == null || end == null) {
 				path = null;
 				return;
@@ -159,10 +169,10 @@ public class Web extends WebSkeleton {
 				path = new WebPath(methods, new WebTile[]{end});
 				return;
 			}
-			HashSet<WebTile> open = new HashSet<WebTile>();
-			HashSet<WebTile> closed = new HashSet<WebTile>();
+			final HashSet<WebTile> open = new HashSet<WebTile>();
+			final HashSet<WebTile> closed = new HashSet<WebTile>();
 			WebTile curr = start;
-			WebTile dest = end;
+			final WebTile dest = end;
 			curr.f = map.heuristic(curr, dest);
 			open.add(curr);
 			while (!open.isEmpty()) {
@@ -173,15 +183,15 @@ public class Web extends WebSkeleton {
 				}
 				open.remove(curr);
 				closed.add(curr);
-				for (int iNext : curr.connectingIndex()) {
-					WebTile next = map.getWebTile(iNext);
+				for (final int iNext : curr.connectingIndex()) {
+					final WebTile next = map.getWebTile(iNext);
 					if (next.req != null) {
 						if (!next.req.canDo()) {
 							continue;
 						}
 					}
 					if (!closed.contains(next)) {
-						double t = curr.g + map.dist(curr, next);
+						final double t = curr.g + map.dist(curr, next);
 						boolean use_t = false;
 						if (!open.contains(next)) {
 							open.add(next);
@@ -199,7 +209,7 @@ public class Web extends WebSkeleton {
 			}
 			path = null;
 			return;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			path = null;
 			return;
@@ -212,9 +222,9 @@ public class Web extends WebSkeleton {
 	 * @param open The set of web tiles.
 	 * @return The lowest f score tile.
 	 */
-	private WebTile lowest_f(Set<WebTile> open) {
+	private WebTile lowest_f(final Set<WebTile> open) {
 		WebTile best = null;
-		for (WebTile t : open) {
+		for (final WebTile t : open) {
 			if (best == null || t.f < best.f) {
 				best = t;
 			}
@@ -249,8 +259,8 @@ public class Web extends WebSkeleton {
 	 * @param end The final web tile.
 	 * @return The path.
 	 */
-	private WebTile[] path(WebTile end) {
-		LinkedList<RSTile> path = new LinkedList<RSTile>();
+	private WebTile[] path(final WebTile end) {
+		final LinkedList<RSTile> path = new LinkedList<RSTile>();
 		WebTile p = end;
 		while (p != null) {
 			path.addFirst(p);
@@ -274,7 +284,7 @@ public class Web extends WebSkeleton {
 	 * @return The end tile.
 	 */
 	public RSTile getEnd() {
-		RSTile[] path = path();
+		final RSTile[] path = path();
 		return path != null && path.length > 0 ? path[path.length - 1] : null;
 	}
 

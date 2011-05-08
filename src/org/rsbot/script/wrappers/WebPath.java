@@ -1,9 +1,9 @@
 package org.rsbot.script.wrappers;
 
-import org.rsbot.script.methods.MethodContext;
-
 import java.util.EnumSet;
 import java.util.logging.Logger;
+
+import org.rsbot.script.methods.MethodContext;
 
 /**
  * A wrapper for traversing on a web path.
@@ -22,7 +22,7 @@ public class WebPath extends WebSkeleton {
 
 	public WebPath(final MethodContext ctx, final WebTile[] tiles) {
 		super(ctx);
-		this.web = tiles;
+		web = tiles;
 	}
 
 	/**
@@ -31,7 +31,8 @@ public class WebPath extends WebSkeleton {
 	 * @param options The flags to take into account while traversing the path.
 	 * @return <tt>True</tt> if walked, otherwise false.
 	 */
-	public boolean traverse(EnumSet<TraversalOption> options) {
+	@Override
+	public boolean traverse(final EnumSet<TraversalOption> options) {
 		if (options.contains(
 				TraversalOption.HANDLE_RUN) && !methods.walking.isRunEnabled() && methods.walking.getEnergy() > 40) {
 			methods.walking.setRun(true);
@@ -39,7 +40,7 @@ public class WebPath extends WebSkeleton {
 		}
 		if (options.contains(
 				TraversalOption.SPACE_ACTIONS) && methods.walking.getDestination() != null && methods.calc.distanceTo(
-				methods.walking.getDestination()) > random(2, 8)) {
+						methods.walking.getDestination()) > random(2, 8)) {
 			return true;
 		}
 		int nextTileIndex = getNextIndex();
@@ -47,7 +48,7 @@ public class WebPath extends WebSkeleton {
 			if (nextTileIndex < web.length - 1 && methods.walking.isLocal(web[nextTileIndex + 1])) {
 				nextTileIndex++;
 			}
-			RSLocalPath path = new RSLocalPath(methods, web[nextTileIndex]);
+			final RSLocalPath path = new RSLocalPath(methods, web[nextTileIndex]);
 			path.random(2, 2);
 			return path.traverse(null);
 		} else {

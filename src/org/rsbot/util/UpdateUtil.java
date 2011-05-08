@@ -1,11 +1,18 @@
 package org.rsbot.util;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
+import java.awt.Window;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
 
 /*
 Update utility by TheShadow
@@ -91,10 +98,10 @@ public class UpdateUtil {
 			is = new URL(GlobalConfiguration.Paths.URLs.VERSION).openConnection().getInputStream();
 			isr = new InputStreamReader(is);
 			reader = new BufferedReader(isr);
-			String s = reader.readLine().trim();
+			final String s = reader.readLine().trim();
 			latest = Integer.parseInt(s);
 			return latest;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 		} finally {
 			try {
 				if (is != null) {
@@ -106,7 +113,7 @@ public class UpdateUtil {
 				if (reader != null) {
 					reader.close();
 				}
-			} catch (IOException ioe) {
+			} catch (final IOException ioe) {
 			}
 		}
 		UpdateUtil.log.info("Unable to download latest version information.");
@@ -117,12 +124,12 @@ public class UpdateUtil {
 		UpdateUtil.log.info("Downloading update...");
 
 		final String jarNew = GlobalConfiguration.NAME + "-"
-				+ getLatestVersion() + ".jar";
+		+ getLatestVersion() + ".jar";
 
 		download(GlobalConfiguration.Paths.URLs.DOWNLOAD, jarNew);
 
 		final String jarOld = GlobalConfiguration.NAME + "-"
-				+ GlobalConfiguration.getVersion() + ".jar";
+		+ GlobalConfiguration.getVersion() + ".jar";
 
 		final Runtime run = Runtime.getRuntime();
 

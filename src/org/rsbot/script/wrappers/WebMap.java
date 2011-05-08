@@ -26,7 +26,7 @@ public class WebMap {
 	public WebTile getWebTile(final int index) {
 		try {
 			return tiles[index];
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return null;
 		}
 	}
@@ -49,11 +49,11 @@ public class WebMap {
 	public WebTile getWebTile(final RSTile tile) {
 		double maxDist = 999999.0;
 		WebTile webTile = null;
-		for (WebTile ctrl : tiles) {
+		for (final WebTile ctrl : tiles) {
 			if (maxDist == 0.0) {
 				break;
 			}
-			double sqrt = Math.sqrt((ctrl.getX() - tile.getX())
+			final double sqrt = Math.sqrt((ctrl.getX() - tile.getX())
 					* (ctrl.getX() - tile.getX())
 					+ (ctrl.getY() - tile.getY())
 					* (ctrl.getY() - tile.getY()));
@@ -72,7 +72,7 @@ public class WebMap {
 	 * @param end   The ending tile.
 	 * @return The heuristic.
 	 */
-	public double heuristic(WebTile start, WebTile end) {
+	public double heuristic(final WebTile start, final WebTile end) {
 		double dx = start.getX() - end.getX();
 		double dy = start.getY() - end.getY();
 		if (dx < 0) {
@@ -91,10 +91,10 @@ public class WebMap {
 	 * @param end   Ending web tile.
 	 * @return The dist.
 	 */
-	public double dist(WebTile start, WebTile end) {
+	public double dist(final WebTile start, final WebTile end) {
 		if (start.getX() != end.getX() && start.getY() != end.getY()) {
-			RSTile curr = start.tile();
-			RSTile dest = end.tile();
+			final RSTile curr = start.tile();
+			final RSTile dest = end.tile();
 			return Math.sqrt((curr.getX() - dest.getX())
 					* (curr.getX() - dest.getX())
 					+ (curr.getY() - dest.getY())

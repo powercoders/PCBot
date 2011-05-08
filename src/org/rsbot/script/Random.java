@@ -1,12 +1,14 @@
 package org.rsbot.script;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.util.logging.Level;
+
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Methods;
 import org.rsbot.service.Monitoring;
-
-import java.awt.*;
-import java.util.logging.Level;
 
 public abstract class Random extends Methods implements PaintListener {
 
@@ -22,10 +24,10 @@ public abstract class Random extends Methods implements PaintListener {
 
 	private final long timeout = random(240, 300);
 
-//	private Color[] fadeArray = {Color.red, Color.white, Color.green, new Color(128, 0, 128), Color.yellow,
-//	                             Color.black, Color.orange, Color.pink};
-//
-//	private int currentIndex = 0;
+	//	private Color[] fadeArray = {Color.red, Color.white, Color.green, new Color(128, 0, 128), Color.yellow,
+	//	                             Color.black, Color.orange, Color.pink};
+	//
+	//	private int currentIndex = 0;
 
 	/**
 	 * Detects whether or not this anti-random should
@@ -66,7 +68,7 @@ public abstract class Random extends Methods implements PaintListener {
 	}
 
 	@Override
-	public final void init(MethodContext ctx) {
+	public final void init(final MethodContext ctx) {
 		super.init(ctx);
 		onStart();
 	}
@@ -79,7 +81,7 @@ public abstract class Random extends Methods implements PaintListener {
 		return enabled;
 	}
 
-	public final void setEnabled(boolean enabled) {
+	public final void setEnabled(final boolean enabled) {
 		this.enabled = enabled;
 	}
 
@@ -90,15 +92,15 @@ public abstract class Random extends Methods implements PaintListener {
 	 * @param logout <tt>true</tt> if the player should be logged
 	 *               out before the script is stopped.
 	 */
-	protected void stopScript(boolean logout) {
+	protected void stopScript(final boolean logout) {
 		script.stopScript(logout);
 	}
 
-	public final void run(Script ctx) {
+	public final void run(final Script ctx) {
 		script = ctx;
 		name = getClass().getAnnotation(ScriptManifest.class).name();
 		ctx.ctx.bot.getEventManager().removeListener(ctx);
-		for (Script s : ctx.delegates) {
+		for (final Script s : ctx.delegates) {
 			ctx.ctx.bot.getEventManager().removeListener(s);
 		}
 		ctx.ctx.bot.getEventManager().addListener(this);
@@ -111,7 +113,7 @@ public abstract class Random extends Methods implements PaintListener {
 		}
 		while (ctx.isRunning()) {
 			try {
-				int wait = loop();
+				final int wait = loop();
 				if (wait == -1) {
 					break;
 				} else if (timeout > 0 && System.currentTimeMillis() >= timeout) {
@@ -121,7 +123,7 @@ public abstract class Random extends Methods implements PaintListener {
 				} else {
 					sleep(wait);
 				}
-			} catch (Exception ex) {
+			} catch (final Exception ex) {
 				log.log(Level.SEVERE, "Uncaught exception: ", ex);
 				break;
 			}
@@ -133,29 +135,30 @@ public abstract class Random extends Methods implements PaintListener {
 		ctx.ctx.bot.getEventManager().removeListener(this);
 		sleep(1000);
 		ctx.ctx.bot.getEventManager().addListener(ctx);
-		for (Script s : ctx.delegates) {
+		for (final Script s : ctx.delegates) {
 			ctx.ctx.bot.getEventManager().addListener(s);
 		}
 	}
 
-	public final void onRepaint(Graphics g) {
-		Point p = mouse.getLocation();
-		int w = game.getWidth(), h = game.getHeight();
+	@Override
+	public final void onRepaint(final Graphics g) {
+		final Point p = mouse.getLocation();
+		final int w = game.getWidth(), h = game.getHeight();
 		if (i >= 70 && !up) {
 			i--;
 		} else {
 			i++;
 			up = i < 130;
-//			if (!up) {
-//				currentIndex++;
-//				if (currentIndex >= fadeArray.length) {
-//					currentIndex = 0;
-//				}
-//			}
+			//			if (!up) {
+			//				currentIndex++;
+			//				if (currentIndex >= fadeArray.length) {
+			//					currentIndex = 0;
+			//				}
+			//			}
 		}
 		g.setColor(new Color(0, 255, 0, i));
-//		Color cur = fadeArray[currentIndex];
-//		g.setColor(new Color(cur.getRed(), cur.getBlue(), cur.getGreen(), i));
+		//		Color cur = fadeArray[currentIndex];
+		//		g.setColor(new Color(cur.getRed(), cur.getBlue(), cur.getGreen(), i));
 		g.fillRect(0, 0, p.x - 1, p.y - 1);
 		g.fillRect(p.x + 1, 0, w - (p.x + 1), p.y - 1);
 		g.fillRect(0, p.y + 1, p.x - 1, h - (p.y - 1));

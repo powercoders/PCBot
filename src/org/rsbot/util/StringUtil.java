@@ -1,6 +1,8 @@
 package org.rsbot.util;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -18,10 +20,10 @@ public class StringUtil {
 	public static String join(final String[] s) {
 		final int l = s.length;
 		switch (l) {
-			case 0:
-				return "";
-			case 1:
-				return s[0];
+		case 0:
+			return "";
+		case 1:
+			return s[0];
 		}
 		final String d = ", ";
 		final int x = d.length();
@@ -52,32 +54,32 @@ public class StringUtil {
 	 * @param row    The index where you want the text.
 	 * @param text   The text you want to render. Colours can be set like [red].
 	 */
-	public static void drawLine(Graphics render, int row, String text) {
-		FontMetrics metrics = render.getFontMetrics();
-		int height = metrics.getHeight() + 4; // height + gap
-		int y = row * height + 15 + 19;
-		String[] texts = text.split("\\[");
+	public static void drawLine(final Graphics render, final int row, final String text) {
+		final FontMetrics metrics = render.getFontMetrics();
+		final int height = metrics.getHeight() + 4; // height + gap
+		final int y = row * height + 15 + 19;
+		final String[] texts = text.split("\\[");
 		int xIdx = 7;
 		Color cur = Color.GREEN;
 		for (String t : texts) {
-			for (@SuppressWarnings("unused") String element : COLOURS_STR) {
+			for (@SuppressWarnings("unused") final String element : COLOURS_STR) {
 				// String element = COLOURS_STR[i];
 				// Don't search for a starting '[' cause it they don't exists.
 				// we split on that.
-				int endIdx = t.indexOf(']');
+				final int endIdx = t.indexOf(']');
 				if (endIdx != -1) {
-					String colorName = t.substring(0, endIdx);
+					final String colorName = t.substring(0, endIdx);
 					if (COLOR_MAP.containsKey(colorName)) {
 						cur = COLOR_MAP.get(colorName);
 					} else {
 						try {
-							Field f = Color.class.getField(colorName);
-							int mods = f.getModifiers();
+							final Field f = Color.class.getField(colorName);
+							final int mods = f.getModifiers();
 							if (Modifier.isPublic(mods) && Modifier.isStatic(mods) && Modifier.isFinal(mods)) {
 								cur = (Color) f.get(null);
 								COLOR_MAP.put(colorName, cur);
 							}
-						} catch (Exception ignored) {
+						} catch (final Exception ignored) {
 						}
 					}
 					t = t.replace(colorName + "]", "");
@@ -91,31 +93,31 @@ public class StringUtil {
 		}
 	}
 
-	public static String throwableToString(Throwable t) {
+	public static String throwableToString(final Throwable t) {
 		if (t != null) {
-			Writer exception = new StringWriter();
-			PrintWriter printWriter = new PrintWriter(exception);
+			final Writer exception = new StringWriter();
+			final PrintWriter printWriter = new PrintWriter(exception);
 			t.printStackTrace(printWriter);
 			return exception.toString();
 		}
 		return "";
 	}
 
-	public static byte[] getBytesUtf8(String string) {
+	public static byte[] getBytesUtf8(final String string) {
 		try {
 			return string.getBytes("UTF-8");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			throw new IllegalStateException(e);
 		}
 	}
 
-	public static String newStringUtf8(byte[] bytes) {
+	public static String newStringUtf8(final byte[] bytes) {
 		if (bytes == null) {
 			return null;
 		}
 		try {
 			return new String(bytes, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			throw new IllegalStateException(e);
 		}
 	}

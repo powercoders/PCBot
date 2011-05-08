@@ -1,8 +1,8 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.wrappers.RSComponent;
-
 import java.util.ArrayList;
+
+import org.rsbot.script.wrappers.RSComponent;
 
 /**
  * Methods for lobby interface
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 @SuppressWarnings("unused")
 public class Lobby extends MethodProvider {
 
-	public Lobby(MethodContext ctx) {
+	public Lobby(final MethodContext ctx) {
 		super(ctx);
 	}
 
@@ -84,7 +84,7 @@ public class Lobby extends MethodProvider {
 	 * @return <tt>true</tt> if tab successfully selected; otherwise
 	 *         <tt>false</tt>.
 	 */
-	public boolean open(int i) {
+	public boolean open(final int i) {
 		if (inLobby()) {
 			if (i == getCurrentTab()) {
 				return true;
@@ -109,11 +109,11 @@ public class Lobby extends MethodProvider {
 			open(TAB_WORLD_SELECT);
 		}
 		if (methods.interfaces.getComponent(WORLD_SELECT_INTERFACE, WORLD_SELECT_INTERFACE_CURRENT_WORLD).isValid()) {
-			String worldText = methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
+			final String worldText = methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 					WORLD_SELECT_INTERFACE_CURRENT_WORLD).getText().trim().substring(
-					methods.interfaces.getComponent(
-							WORLD_SELECT_INTERFACE, WORLD_SELECT_INTERFACE_CURRENT_WORLD).getText().trim().indexOf(
-							"World ") + 6);
+							methods.interfaces.getComponent(
+									WORLD_SELECT_INTERFACE, WORLD_SELECT_INTERFACE_CURRENT_WORLD).getText().trim().indexOf(
+									"World ") + 6);
 			return Integer.parseInt(worldText);
 		}
 		return -1;
@@ -125,8 +125,8 @@ public class Lobby extends MethodProvider {
 	 * @param includingFull If true it will include all full worlds when returned
 	 * @return All available worlds as a String arrat
 	 */
-	public String[] getAvailableWorlds(boolean includingFull) {
-		ArrayList<String> tempList = new ArrayList<String>();
+	public String[] getAvailableWorlds(final boolean includingFull) {
+		final ArrayList<String> tempList = new ArrayList<String>();
 		if (!inLobby()) {
 			return new String[0];
 		}
@@ -136,10 +136,10 @@ public class Lobby extends MethodProvider {
 		}
 		for (int i = 0; i < methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 				WORLD_SELECT_INTERFACE_WORLD_NAME).getComponents().length;
-		     i++) {
-			String amount = methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
+		i++) {
+			final String amount = methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 					WORLD_SELECT_INTERFACE_AMOUNT_OF_PLAYERS).getComponents()[i].getText();
-			String number = methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
+			final String number = methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 					WORLD_SELECT_INTERFACE_WORLD_NAME).getComponents()[i].getText();
 			if (!amount.contains("OFFLINE") && !amount.contains("0")) {
 				if (!includingFull) {
@@ -152,7 +152,7 @@ public class Lobby extends MethodProvider {
 			}
 		}
 		{
-			String[] temp = new String[tempList.size()];
+			final String[] temp = new String[tempList.size()];
 			tempList.toArray(temp);
 			return temp;
 		}
@@ -166,8 +166,8 @@ public class Lobby extends MethodProvider {
 	 * @param includeFull
 	 * @return <tt>true</tt> is available, else <tt>false</tt>
 	 */
-	public boolean isAvailable(int world, boolean includeFull) {
-		for (String s : getAvailableWorlds(includeFull)) {
+	public boolean isAvailable(final int world, final boolean includeFull) {
+		for (final String s : getAvailableWorlds(includeFull)) {
 			if (Integer.parseInt(s) == world) {
 				return true;
 			}
@@ -182,7 +182,7 @@ public class Lobby extends MethodProvider {
 	 * @return <tt>true</tt> If correctly entered the world else <tt>false</tt>
 	 * @see org.rsbot.script.methods.Game switchWorld(int world)
 	 */
-	public boolean switchWorlds(int world) {
+	public boolean switchWorlds(final int world) {
 		if (!inLobby()) {
 			return false;
 		}
@@ -194,7 +194,7 @@ public class Lobby extends MethodProvider {
 			methods.interfaces.getComponent(PLAYER_INFO_INTERFACE, PLAYER_INFO_INTERFACE_PLAY_BUTTON).doClick();
 		}
 		if (isAvailable(world, false)) {
-			RSComponent comp = getWorldComponent(world);
+			final RSComponent comp = getWorldComponent(world);
 			if (comp != null) {
 				methods.interfaces.scrollTo(comp, methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 						WORLD_SELECT_INTERFACE_SCROLL_AREA));
@@ -215,7 +215,7 @@ public class Lobby extends MethodProvider {
 	 * @param world
 	 * @return The component corresponding to the world.
 	 */
-	public RSComponent getWorldComponent(int world) {
+	public RSComponent getWorldComponent(final int world) {
 		if (!inLobby()) {
 			return null;
 		}
@@ -224,11 +224,11 @@ public class Lobby extends MethodProvider {
 		}
 		for (int i = 0; i < methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 				WORLD_SELECT_INTERFACE_WORLD_NAME).getComponents().length;
-		     i++) {
-			RSComponent comp = methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
+		i++) {
+			final RSComponent comp = methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 					WORLD_SELECT_INTERFACE_WORLD_NAME).getComponents()[i];
 			if (comp != null) {
-				String number = comp.getText();
+				final String number = comp.getText();
 				if (Integer.parseInt(number) == world) {
 					return methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 							WORLD_SELECT_INTERFACE_WORLD_LIST).getComponents()[i];

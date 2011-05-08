@@ -279,7 +279,7 @@ public class Label {
 			srcAndRefPositions = new int[6];
 		}
 		if (referenceCount >= srcAndRefPositions.length) {
-			int[] a = new int[srcAndRefPositions.length + 6];
+			final int[] a = new int[srcAndRefPositions.length + 6];
 			System.arraycopy(srcAndRefPositions,
 					0,
 					a,
@@ -315,26 +315,26 @@ public class Label {
 			final int position,
 			final byte[] data) {
 		boolean needUpdate = false;
-		this.status |= RESOLVED;
+		status |= RESOLVED;
 		this.position = position;
 		int i = 0;
 		while (i < referenceCount) {
-			int source = srcAndRefPositions[i++];
+			final int source = srcAndRefPositions[i++];
 			int reference = srcAndRefPositions[i++];
 			int offset;
 			if (source >= 0) {
 				offset = position - source;
 				if (offset < Short.MIN_VALUE || offset > Short.MAX_VALUE) {
 					/*
-																  * changes the opcode of the jump instruction, in order to
-																  * be able to find it later (see resizeInstructions in
-																  * MethodWriter). These temporary opcodes are similar to
-																  * jump instruction opcodes, except that the 2 bytes offset
-																  * is unsigned (and can therefore represent values from 0 to
-																  * 65535, which is sufficient since the size of a method is
-																  * limited to 65535 bytes).
-																  */
-					int opcode = data[reference - 1] & 0xFF;
+					 * changes the opcode of the jump instruction, in order to
+					 * be able to find it later (see resizeInstructions in
+					 * MethodWriter). These temporary opcodes are similar to
+					 * jump instruction opcodes, except that the 2 bytes offset
+					 * is unsigned (and can therefore represent values from 0 to
+					 * 65535, which is sufficient since the size of a method is
+					 * limited to 65535 bytes).
+					 */
+					final int opcode = data[reference - 1] & 0xFF;
 					if (opcode <= Opcodes.JSR) {
 						// changes IFEQ ... JSR to opcodes 202 to 217
 						data[reference - 1] = (byte) (opcode + 49);
@@ -435,7 +435,7 @@ public class Label {
 		Label stack = this;
 		while (stack != null) {
 			// removes a label l from the stack
-			Label l = stack;
+			final Label l = stack;
 			stack = l.next;
 			l.next = null;
 
@@ -447,7 +447,7 @@ public class Label {
 				// adds JSR to the successors of l, if it is a RET block
 				if ((l.status & RET) != 0) {
 					if (!l.inSameSubroutine(JSR)) {
-						Edge e = new Edge();
+						final Edge e = new Edge();
 						e.info = l.inputStackTop;
 						e.successor = JSR.successors.successor;
 						e.next = l.successors;
@@ -489,6 +489,7 @@ public class Label {
 	 *
 	 * @return a string representation of this label.
 	 */
+	@Override
 	public String toString() {
 		return "L" + System.identityHashCode(this);
 	}
