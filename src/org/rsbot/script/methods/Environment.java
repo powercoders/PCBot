@@ -1,10 +1,10 @@
 package org.rsbot.script.methods;
 
-import java.awt.image.BufferedImage;
-
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.util.ScreenshotUtil;
+
+import java.awt.image.BufferedImage;
 
 /**
  * Bot environment related operations.

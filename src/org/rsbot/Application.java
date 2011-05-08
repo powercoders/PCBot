@@ -1,16 +1,16 @@
 package org.rsbot;
 
-import java.awt.Dimension;
-import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.security.RestrictedSecurityManager;
 import org.rsbot.util.Extractor;
+
+import java.awt.*;
+import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Application {
 	private static BotGUI gui;

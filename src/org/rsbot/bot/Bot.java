@@ -23,6 +23,7 @@ import java.lang.reflect.Constructor;
 import java.util.EventListener;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 public class Bot {
 	private String account;
@@ -113,7 +114,6 @@ public class Bot {
 			final ThreadGroup tg = new ThreadGroup("RSClient-" + hashCode());
 			final Thread thread = new Thread(tg, loader, "Loader");
 			thread.start();
-		} catch (Exception ignored) {
 			new Thread() {
 				public void run() {
 					try {
@@ -129,6 +129,7 @@ public class Bot {
 					}
 				}
 			}.start();
+		} catch (Exception ignored) {
 		}
 	}
 

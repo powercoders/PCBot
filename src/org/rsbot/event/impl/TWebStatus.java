@@ -2,7 +2,6 @@ package org.rsbot.event.impl;
 
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.TextPaintListener;
-import org.rsbot.script.methods.Menu;
 import org.rsbot.service.WebQueue;
 import org.rsbot.util.CacheWriter;
 import org.rsbot.util.StringUtil;

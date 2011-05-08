@@ -1,8 +1,8 @@
 package org.rsbot.service;
 
-import java.util.List;
-
 import org.rsbot.script.Script;
+
+import java.util.List;
 
 /**
  * @author Jacmob

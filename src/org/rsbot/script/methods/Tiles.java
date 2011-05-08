@@ -1,8 +1,8 @@
 package org.rsbot.script.methods;
 
-import java.awt.Point;
-
 import org.rsbot.script.wrappers.RSTile;
+
+import java.awt.*;
 
 /**
  * Tile related operations.
@@ -28,12 +28,12 @@ public class Tiles extends MethodProvider {
 	 *         <tt>false</tt>.
 	 */
 	public boolean doAction(final RSTile tile, final double xd,
-			final double yd, final int h, final String action) {
+	                        final double yd, final int h, final String action) {
 		return methods.tiles.doAction(tile, xd, yd, h, action, null);
 	}
 
 	public boolean doAction(final RSTile tile, final double xd,
-			final double yd, final int h, final String action, final String option) {
+	                        final double yd, final int h, final String action, final String option) {
 		final Point location = methods.calc.tileToScreen(tile, xd, yd, h);
 		if (location.x != -1 && location.y != -1) {
 			methods.mouse.move(location, 3, 3);

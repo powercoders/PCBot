@@ -1,18 +1,11 @@
 package org.rsbot.util;
 
-import java.awt.Window;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import javax.swing.*;
+import java.awt.*;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
 
 /*
 Update utility by TheShadow
@@ -124,12 +117,12 @@ public class UpdateUtil {
 		UpdateUtil.log.info("Downloading update...");
 
 		final String jarNew = GlobalConfiguration.NAME + "-"
-		+ getLatestVersion() + ".jar";
+				+ getLatestVersion() + ".jar";
 
 		download(GlobalConfiguration.Paths.URLs.DOWNLOAD, jarNew);
 
 		final String jarOld = GlobalConfiguration.NAME + "-"
-		+ GlobalConfiguration.getVersion() + ".jar";
+				+ GlobalConfiguration.getVersion() + ".jar";
 
 		final Runtime run = Runtime.getRuntime();
 

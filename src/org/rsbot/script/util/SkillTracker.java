@@ -1,10 +1,10 @@
 package org.rsbot.script.util;
 
-import java.util.Arrays;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Skills;
+
+import java.util.Arrays;
 
 
 /**
@@ -87,7 +87,7 @@ public class SkillTracker {
 		final int size = skills.length;
 		if (index >= 0 && index <= size) {
 			currentExp[getArrayIndex(index, skills)] = context.skills
-			.getCurrentExp(index);
+					.getCurrentExp(index);
 		} else {
 			throw new IndexOutOfBoundsException();
 		}
