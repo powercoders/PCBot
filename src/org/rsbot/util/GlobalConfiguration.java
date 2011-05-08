@@ -80,6 +80,8 @@ public class GlobalConfiguration {
 			public static final String AD_INFO = BASE + "botad-info";
 		}
 
+		public static final String ROOT = new File(".").getAbsolutePath();
+
 		public static final String COMPILE_SCRIPTS_BAT = "Compile-Scripts.bat";
 		public static final String COMPILE_SCRIPTS_SH = "compile-scripts.sh";
 		public static final String COMPILE_FIND_JDK = "FindJDK.bat";

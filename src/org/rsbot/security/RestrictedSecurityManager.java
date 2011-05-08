@@ -2,6 +2,7 @@ package org.rsbot.security;
 
 import java.io.File;
 import java.io.FileDescriptor;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.security.Permission;
 import java.util.ArrayList;
@@ -274,7 +275,11 @@ public class RestrictedSecurityManager extends SecurityManager {
 				boolean fail = true;
 				if (!GlobalConfiguration.RUNNING_FROM_JAR) {
 					// allow project resource directory if not running from JAR (i.e. in eclipse)
-					final String check = new File(GlobalConfiguration.Paths.Resources.ROOT).getAbsolutePath();
+					String check = new File(GlobalConfiguration.Paths.ROOT).getAbsolutePath();
+					try {
+						check = new File(check).getCanonicalPath();
+					} catch (IOException ignored) {
+					}
 					fail = !path.startsWith(check);
 				} else {
 					final String check = new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
@@ -282,6 +287,15 @@ public class RestrictedSecurityManager extends SecurityManager {
 				}
 				// allow screenshots directory
 				if (path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory())) {
+					fail = false;
+				}
+				if (path.startsWith(GlobalConfiguration.Paths.getScriptsDirectory())) {
+					fail = false;
+				}
+				if (path.equals(GlobalConfiguration.Paths.getWebCache())) {
+					fail = false;
+				}
+				if (path.contains("jre6\\bin") || path.contains("jre/lib")) {
 					fail = false;
 				}
 				if (fail) {
