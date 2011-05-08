@@ -15,6 +15,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -133,6 +134,22 @@ public class BotMenuBar extends JMenuBar {
 		return debugItems.toArray(new String[debugItems.size()]);
 	}
 
+	private void constructItemIcons() {
+		final HashMap<String, String> map = new HashMap<String, String>(16);
+		map.put("New Bot", GlobalConfiguration.Paths.Resources.ICON_APPADD);
+		map.put("Close Bot", GlobalConfiguration.Paths.Resources.ICON_APPDELETE);
+		map.put("Save Screenshot", GlobalConfiguration.Paths.Resources.ICON_PHOTO);
+		map.put("Exit", GlobalConfiguration.Paths.Resources.ICON_CLOSE);
+		map.put("Accounts", GlobalConfiguration.Paths.Resources.ICON_REPORTKEY);
+		map.put("Site", GlobalConfiguration.Paths.Resources.ICON_WEBLINK);
+		map.put("Project", GlobalConfiguration.Paths.Resources.ICON_USEREDIT);
+		map.put("About", GlobalConfiguration.Paths.Resources.ICON_INFO);
+		for (Entry<String, String> item : map.entrySet()) {
+			final JMenuItem menu = commandMenuItem.get(item.getKey());
+			menu.setIcon(new ImageIcon(GlobalConfiguration.getImage(item.getValue())));
+		}
+	}
+
 	private final Map<String, JCheckBoxMenuItem> eventCheckMap = new HashMap<String, JCheckBoxMenuItem>();
 	private final Map<String, JCheckBoxMenuItem> commandCheckMap = new HashMap<String, JCheckBoxMenuItem>();
 	private final Map<String, JMenuItem> commandMenuItem = new HashMap<String, JMenuItem>();
@@ -145,6 +162,7 @@ public class BotMenuBar extends JMenuBar {
 			final String[] elems = ELEMENTS[i];
 			add(constructMenu(title, elems));
 		}
+		constructItemIcons();
 	}
 
 	public void setOverrideInput(final boolean force) {

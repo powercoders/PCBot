@@ -40,6 +40,8 @@ public class GlobalConfiguration {
 			public static final String SCRIPTS = Paths.SCRIPTS_NAME_SRC + "/";
 			public static final String ROOT_IMG = ROOT + "/images";
 			public static final String ICON = ROOT_IMG + "/icon.png";
+			public static final String ICON_APPADD = ROOT_IMG + "/application_add.png";
+			public static final String ICON_APPDELETE = ROOT_IMG + "/application_delete.png";
 			public static final String ICON_DELETE = ROOT_IMG + "/delete.png";
 			public static final String ICON_PLAY = ROOT_IMG + "/control_play_blue.png";
 			public static final String ICON_PAUSE = ROOT_IMG + "/control_pause.png";
@@ -50,6 +52,8 @@ public class GlobalConfiguration {
 			public static final String ICON_TICK = ROOT_IMG + "/tick.png";
 			public static final String ICON_MOUSE = ROOT_IMG + "/mouse.png";
 			public static final String ICON_PHOTO = ROOT_IMG + "/photo.png";
+			public static final String ICON_REPORTKEY = ROOT_IMG + "/report_key.png";
+			public static final String ICON_INFO = ROOT_IMG + "/information.png";
 			public static final String ICON_KEYBOARD = ROOT_IMG + "/keyboard.png";
 			public static final String ICON_CONNECT = ROOT_IMG + "/connect.png";
 			public static final String ICON_DISCONNECT = ROOT_IMG + "/disconnect.png";
@@ -58,6 +62,7 @@ public class GlobalConfiguration {
 			public static final String ICON_SCRIPT_DRM = ROOT_IMG + "/script_drm.png";
 			public static final String ICON_SCRIPT_PRE = ROOT_IMG + "/script_pre.png";
 			public static final String ICON_SCRIPT_SRC = ROOT_IMG + "/script_src.png";
+			public static final String ICON_USEREDIT = ROOT_IMG + "/user_edit.png";
 			public static final String ICON_WEBLINK = ROOT_IMG + "/world_link.png";
 
 			public static final String VERSION = ROOT + "/version.txt";
