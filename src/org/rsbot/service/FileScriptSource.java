@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
+import org.rsbot.util.GlobalConfiguration;
 
 /**
  * @author Jacmob
@@ -119,7 +120,9 @@ public class FileScriptSource implements ScriptSource {
 			def.website = manifest.website();
 			def.clazz = clazz;
 			def.source = this;
-			scripts.add(def);
+			if (manifest.requiresVersion() <= GlobalConfiguration.getVersion()) {
+				scripts.add(def);
+			}
 		}
 	}
 
