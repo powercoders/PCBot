@@ -284,6 +284,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 				if (path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory())) {
 					fail = false;
 				}
+				if (path.startsWith(GlobalConfiguration.Paths.getScriptsDirectory())) {
+					fail = false;
+				}
 				if (fail) {
 					throw new SecurityException();
 				}
