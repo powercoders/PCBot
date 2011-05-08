@@ -1,10 +1,10 @@
 package org.rsbot.script.methods;
 
+import java.util.ArrayList;
+
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
 import org.rsbot.script.wrappers.RSItem;
-
-import java.util.ArrayList;
 
 /**
  * Store related operations.

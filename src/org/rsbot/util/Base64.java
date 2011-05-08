@@ -121,11 +121,11 @@ public class Base64 {
 	 * http://svn.apache.org/repos/asf/webservices/commons/trunk/modules/util/
 	 */
 	private static final byte[] STANDARD_ENCODE_TABLE = {
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
+		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+		'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
 	};
 
 	/**
@@ -134,11 +134,11 @@ public class Base64 {
 	 * This table is only used when the Base64's mode is set to URL-SAFE.
 	 */
 	private static final byte[] URL_SAFE_ENCODE_TABLE = {
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'
+		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+		'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'
 	};
 
 	/**
@@ -153,13 +153,13 @@ public class Base64 {
 	 * http://svn.apache.org/repos/asf/webservices/commons/trunk/modules/util/
 	 */
 	private static final byte[] DECODE_TABLE = {
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, 62, -1, 63, 52, 53, 54,
-			55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4,
-			5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-			24, 25, -1, -1, -1, -1, 63, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-			35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51
+		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		-1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, 62, -1, 63, 52, 53, 54,
+		55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4,
+		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+		24, 25, -1, -1, -1, -1, 63, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+		35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51
 	};
 
 	/**
@@ -471,13 +471,13 @@ public class Base64 {
 	 */
 	protected static boolean isWhiteSpace(final byte byteToCheck) {
 		switch (byteToCheck) {
-			case ' ':
-			case '\n':
-			case '\r':
-			case '\t':
-				return true;
-			default:
-				return false;
+		case ' ':
+		case '\n':
+		case '\r':
+		case '\t':
+			return true;
+		default:
+			return false;
 		}
 	}
 
@@ -713,25 +713,25 @@ public class Base64 {
 			ensureBufferSize(encodeSize);
 			final int savedPos = pos;
 			switch (modulus) { // 0-2
-				case 1: // 8 bits = 6 + 2
-					buffer[pos++] = encodeTable[bitWorkArea >> 2 & MASK_6BITS]; // top 6 bits
-					buffer[pos++] = encodeTable[bitWorkArea << 4 & MASK_6BITS]; // remaining 2
-					// URL-SAFE skips the padding to further reduce size.
-					if (encodeTable == STANDARD_ENCODE_TABLE) {
-						buffer[pos++] = PAD;
-						buffer[pos++] = PAD;
-					}
-					break;
+			case 1: // 8 bits = 6 + 2
+				buffer[pos++] = encodeTable[bitWorkArea >> 2 & MASK_6BITS]; // top 6 bits
+				buffer[pos++] = encodeTable[bitWorkArea << 4 & MASK_6BITS]; // remaining 2
+				// URL-SAFE skips the padding to further reduce size.
+				if (encodeTable == STANDARD_ENCODE_TABLE) {
+					buffer[pos++] = PAD;
+					buffer[pos++] = PAD;
+				}
+				break;
 
-				case 2: // 16 bits = 6 + 6 + 4
-					buffer[pos++] = encodeTable[bitWorkArea >> 10 & MASK_6BITS];
-					buffer[pos++] = encodeTable[bitWorkArea >> 4 & MASK_6BITS];
-					buffer[pos++] = encodeTable[bitWorkArea << 2 & MASK_6BITS];
-					// URL-SAFE skips the padding to further reduce size.
-					if (encodeTable == STANDARD_ENCODE_TABLE) {
-						buffer[pos++] = PAD;
-					}
-					break;
+			case 2: // 16 bits = 6 + 6 + 4
+				buffer[pos++] = encodeTable[bitWorkArea >> 10 & MASK_6BITS];
+				buffer[pos++] = encodeTable[bitWorkArea >> 4 & MASK_6BITS];
+				buffer[pos++] = encodeTable[bitWorkArea << 2 & MASK_6BITS];
+				// URL-SAFE skips the padding to further reduce size.
+				if (encodeTable == STANDARD_ENCODE_TABLE) {
+					buffer[pos++] = PAD;
+				}
+				break;
 			}
 			currentLinePos += pos - savedPos; // keep track of current line position
 			// if currentPos == 0 we are at the start of a line, so don't add CRLF
@@ -823,17 +823,17 @@ public class Base64 {
 			// We have some spare bits remaining
 			// Output all whole multiples of 8 bits and ignore the rest
 			switch (modulus) {
-				//   case 1: // 6 bits - ignore entirely
-				//       break;
-				case 2: // 12 bits = 8 + 4
-					bitWorkArea = bitWorkArea >> 4; // dump the extra 4 bits
-					buffer[pos++] = (byte) (bitWorkArea & MASK_8BITS);
-					break;
-				case 3: // 18 bits = 8 + 8 + 2
-					bitWorkArea = bitWorkArea >> 2; // dump 2 bits
-					buffer[pos++] = (byte) (bitWorkArea >> 8 & MASK_8BITS);
-					buffer[pos++] = (byte) (bitWorkArea & MASK_8BITS);
-					break;
+			//   case 1: // 6 bits - ignore entirely
+			//       break;
+			case 2: // 12 bits = 8 + 4
+				bitWorkArea = bitWorkArea >> 4; // dump the extra 4 bits
+				buffer[pos++] = (byte) (bitWorkArea & MASK_8BITS);
+				break;
+			case 3: // 18 bits = 8 + 8 + 2
+				bitWorkArea = bitWorkArea >> 2; // dump 2 bits
+				buffer[pos++] = (byte) (bitWorkArea >> 8 & MASK_8BITS);
+				buffer[pos++] = (byte) (bitWorkArea & MASK_8BITS);
+				break;
 			}
 		}
 	}

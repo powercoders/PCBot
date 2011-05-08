@@ -1,8 +1,8 @@
 package org.rsbot.script.wrappers;
 
-import org.rsbot.script.methods.MethodContext;
-
 import java.lang.ref.SoftReference;
+
+import org.rsbot.script.methods.MethodContext;
 
 /**
  * Represents a non-player character.
@@ -78,7 +78,7 @@ public class RSNPC extends RSCharacter {
 			sb.setLength(sb.length() - 1);
 		}
 		return "NPC[" + getName() + "],actions=[" + sb.toString() + "]"
-				+ super.toString();
+		+ super.toString();
 	}
 
 	org.rsbot.client.RSNPCDef getDefInternal() {

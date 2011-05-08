@@ -1,8 +1,8 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.wrappers.RSTile;
+import java.awt.Point;
 
-import java.awt.*;
+import org.rsbot.script.wrappers.RSTile;
 
 /**
  * Tile related operations.

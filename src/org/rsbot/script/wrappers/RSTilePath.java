@@ -1,9 +1,9 @@
 package org.rsbot.script.wrappers;
 
-import org.rsbot.script.methods.MethodContext;
-
 import java.util.Arrays;
 import java.util.EnumSet;
+
+import org.rsbot.script.methods.MethodContext;
 
 /**
  * A path consisting of a list of tile waypoints.
@@ -63,7 +63,7 @@ public class RSTilePath extends RSPath {
 	@Override
 	public boolean isValid() {
 		return tiles.length > 0 && getNext() != null &&
-				!methods.players.getMyPlayer().getLocation().equals(getEnd());
+		!methods.players.getMyPlayer().getLocation().equals(getEnd());
 	}
 
 	/**

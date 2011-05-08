@@ -1,10 +1,10 @@
 package org.rsbot.event.events;
 
+import java.util.EventListener;
+
 import org.rsbot.event.EventMulticaster;
 import org.rsbot.event.listeners.CharacterMovedListener;
 import org.rsbot.script.methods.MethodContext;
-
-import java.util.EventListener;
 
 /**
  * A character moved event.
