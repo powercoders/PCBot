@@ -250,6 +250,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				toolBar.setInputState(curr.inputFlags);
 				toolBar.updateInputButton();
 			}
+		} else if (menu.equals("Screenshot")) {
+			menuBar.doClick("Save Screenshot");
 		} else if (menu.equals("Run")) {
 			final Bot current = getCurrentBot();
 			if (current != null) {
@@ -363,7 +365,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	private Bot getCurrentBot() {
-		final int idx = toolBar.getCurrentTab() - 1;
+		final int idx = toolBar.getCurrentTab() - 2;
 		if (idx >= 0) {
 			return bots.get(idx);
 		}

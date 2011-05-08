@@ -55,6 +55,7 @@ public class BotToolBar extends JToolBar {
 		IMAGE_CLOSE_OVER = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CLOSE);
 	}
 
+	private final JButton screenshotButton;
 	private final JButton userInputButton;
 	private final JButton runScriptButton;
 
@@ -70,6 +71,11 @@ public class BotToolBar extends JToolBar {
 		}
 
 		this.listener = listener;
+
+		screenshotButton = new JButton("Screenshot", new ImageIcon(
+				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PHOTO)));
+		screenshotButton.addActionListener(listener);
+		screenshotButton.setFocusable(false);
 
 		userInputButton = new JButton("Input", new ImageIcon(getInputImage(inputOverride, inputState)));
 		userInputButton.addActionListener(listener);
@@ -87,6 +93,7 @@ public class BotToolBar extends JToolBar {
 		add(home);
 		add(new AddButton(listener));
 		add(Box.createHorizontalGlue());
+		add(screenshotButton);
 		add(runScriptButton);
 		add(userInputButton);
 
