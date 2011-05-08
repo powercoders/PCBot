@@ -141,7 +141,11 @@ public class Methods {
 	 */
 	protected Trade trade;
 	/**
-	 * The singleton of Trade
+	* The singleton of SettingsManager
+	*/
+	protected SettingsManager sm;
+	/**
+	 * The singleton of Paint
 	 */
 	protected Paint paint;
 
@@ -183,6 +187,7 @@ public class Methods {
 		this.friendChat = ctx.friendChat;
 		this.trade = ctx.trade;
 		this.paint = ctx.paint;
+		this.sm = ctx.sm;
 	}
 
 	/**
