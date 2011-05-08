@@ -267,8 +267,25 @@ public class RestrictedSecurityManager extends SecurityManager {
 		super.checkWrite(file);
 	}
 
-	private void checkSuperFilePath(String path) {
+	private void checkFilePath(String path) {
 		path = new File(path).getAbsolutePath();
+		if (isCallerScript()) {
+			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())) {
+				boolean fail = true;
+				if (!GlobalConfiguration.RUNNING_FROM_JAR) {
+					// allow project resource directory if not running from JAR (i.e. in eclipse)
+					final String check = new File(GlobalConfiguration.Paths.Resources.ROOT).getAbsolutePath();
+					fail = !path.startsWith(check);
+				}
+				// allow screenshots directory
+				if (path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory())) {
+					fail = false;
+				}
+				if (fail) {
+					throw new SecurityException();
+				}
+			}
+		}
 		if (path.equalsIgnoreCase(new File(GlobalConfiguration.Paths.getAccountsFile()).getAbsolutePath())) {
 			for (final StackTraceElement s : Thread.currentThread().getStackTrace()) {
 				final String name = s.getClassName();
@@ -277,16 +294,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 				}
 			}
 			throw new SecurityException();
-		}
-	}
-
-	private void checkFilePath(String path) {
-		checkSuperFilePath(path);
-		path = new File(path).getAbsolutePath();
-		if (isCallerScript()) {
-			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())) {
-				throw new SecurityException();
-			}
 		}
 	}
 }
