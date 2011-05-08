@@ -9,9 +9,13 @@ import org.rsbot.event.events.TextPaintEvent;
 import org.rsbot.gui.AccountManager;
 import org.rsbot.script.internal.BreakHandler;
 import org.rsbot.script.internal.InputManager;
+import org.rsbot.script.internal.PassiveScriptHandler;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.methods.Environment;
 import org.rsbot.script.methods.MethodContext;
+import org.rsbot.script.passives.BankMonitor;
+import org.rsbot.script.passives.WebData;
+import org.rsbot.script.passives.WebLoader;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -34,8 +38,10 @@ public class Bot {
 	private final InputManager im;
 	private RSLoader loader;
 	private final ScriptHandler sh;
+	private final PassiveScriptHandler psh;
 	private final BreakHandler bh;
 	private final Map<String, EventListener> listeners;
+	private boolean kill_passive = false;
 
 	/**
 	 * Whether or not user input is allowed despite a script's preference.
@@ -83,6 +89,7 @@ public class Bot {
 			}
 		});
 		sh = new ScriptHandler(this);
+		psh = new PassiveScriptHandler(this);
 		bh = new BreakHandler(this);
 		backBuffer = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
 		image = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
@@ -106,6 +113,21 @@ public class Bot {
 			ThreadGroup tg = new ThreadGroup("RSClient-" + hashCode());
 			Thread thread = new Thread(tg, loader, "Loader");
 			thread.start();
+			new Thread() {
+				public void run() {
+					try {
+						while (methods == null && !kill_passive) {
+							Thread.sleep(50);
+						}
+					} catch (InterruptedException ignored) {
+					}
+					if (methods != null && !kill_passive) {
+						psh.runScript(new WebData());
+						psh.runScript(new WebLoader());
+						psh.runScript(new BankMonitor());
+					}
+				}
+			}.start();
 		} catch (Exception ignored) {
 		}
 	}
@@ -113,8 +135,10 @@ public class Bot {
 	public void stop() {
 		eventManager.killThread(false);
 		sh.stopScript();
+		psh.stopScript();
 		loader.stop();
 		loader.destroy();
+		kill_passive = true;
 		loader = null;
 	}
 
@@ -226,6 +250,10 @@ public class Bot {
 
 	public ScriptHandler getScriptHandler() {
 		return sh;
+	}
+
+	public PassiveScriptHandler getPassiveScriptHandler() {
+		return psh;
 	}
 
 	private void setClient(final Client cl) {

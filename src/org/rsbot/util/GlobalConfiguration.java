@@ -160,6 +160,10 @@ public class GlobalConfiguration {
 			return Paths.getCacheDirectory() + File.separator + "web.dat";
 		}
 
+		public static String getBankCache() {
+			return Paths.getCacheDirectory() + File.separator + "bank.dat";
+		}
+
 		public static String getSettingsDirectory() {
 			return Paths.getHomeDirectory() + File.separator + "Settings";
 		}

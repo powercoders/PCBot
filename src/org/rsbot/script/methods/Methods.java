@@ -11,6 +11,7 @@ import java.util.logging.Logger;
  * Provides access to methods that can be used by RSBot scripts.
  */
 public class Methods {
+	public MethodContext ctx;
 
 	/**
 	 * The logger instance
@@ -145,6 +146,11 @@ public class Methods {
 	 */
 	protected Paint paint;
 
+	/**
+	 * The singleton of Web
+	 */
+	protected Web web;
+
 
 	/**
 	 * For internal use only: initializes the method providers.
@@ -152,6 +158,7 @@ public class Methods {
 	 * @param ctx The MethodContext.
 	 */
 	public void init(MethodContext ctx) {
+		this.ctx = ctx;
 		this.skills = ctx.skills;
 		this.settings = ctx.settings;
 		this.magic = ctx.magic;
@@ -183,6 +190,7 @@ public class Methods {
 		this.friendChat = ctx.friendChat;
 		this.trade = ctx.trade;
 		this.paint = ctx.paint;
+		this.web = ctx.web;
 	}
 
 	/**
