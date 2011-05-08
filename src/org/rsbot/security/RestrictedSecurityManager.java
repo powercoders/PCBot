@@ -290,6 +290,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 				if (path.equals(GlobalConfiguration.Paths.getWebCache())) {
 					fail = false;
 				}
+				if (path.contains("jre6\\bin") || path.contains("jre/lib")) {
+					fail = false;
+				}
 				if (fail) {
 					throw new SecurityException();
 				}
