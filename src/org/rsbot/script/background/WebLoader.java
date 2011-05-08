@@ -1,5 +1,9 @@
 package org.rsbot.script.background;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.HashMap;
+
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.wrappers.TileFlags;
@@ -7,10 +11,6 @@ import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
 import org.rsbot.util.GlobalConfiguration;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.HashMap;
 
 @ScriptManifest(name = "Web Data Loader", authors = {"Timer"})
 public class WebLoader extends BackgroundScript {
@@ -25,23 +25,23 @@ public class WebLoader extends BackgroundScript {
 			try {
 				int badRemoved = 0;
 				int redundantRemoved = 0;
-				BufferedReader br = new BufferedReader(new FileReader(GlobalConfiguration.Paths.getWebCache()));
+				final BufferedReader br = new BufferedReader(new FileReader(GlobalConfiguration.Paths.getWebCache()));
 				String line;
 				final HashMap<RSTile, TileFlags> theFlagsList = new HashMap<RSTile, TileFlags>();
 				while ((line = br.readLine()) != null) {
-					String[] data = line.split("tile=data");
+					final String[] data = line.split("tile=data");
 					if (data.length == 2) {
-						String[] tileData = data[0].split(",");
-						String[] abbData = data[1].split("=");
+						final String[] tileData = data[0].split(",");
+						final String[] abbData = data[1].split("=");
 						if (tileData.length == 3) {
 							try {
-								RSTile tile = new RSTile(Integer.parseInt(tileData[0]), Integer.parseInt(tileData[1]), Integer.parseInt(tileData[2]));
-								TileFlags tileFlags = new TileFlags(tile, null);
-								for (String abb : abbData) {
+								final RSTile tile = new RSTile(Integer.parseInt(tileData[0]), Integer.parseInt(tileData[1]), Integer.parseInt(tileData[2]));
+								final TileFlags tileFlags = new TileFlags(tile, null);
+								for (final String abb : abbData) {
 									if (abb.length() > 0) {
 										try {
 											tileFlags.addKey(Integer.parseInt(abb));
-										} catch (Exception e) {
+										} catch (final Exception e) {
 										}
 									}
 								}
@@ -56,7 +56,7 @@ public class WebLoader extends BackgroundScript {
 										theFlagsList.put(tile, tileFlags);
 									}
 								}
-							} catch (Exception e) {
+							} catch (final Exception e) {
 							}
 						} else {
 							WebQueue.Remove(line);//Line is bad, remove from file.
@@ -69,7 +69,7 @@ public class WebLoader extends BackgroundScript {
 				}
 				Web.map.putAll(theFlagsList);
 				Web.loaded = true;
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				log("Failed to load the web.. trying again.");
 			}
 		}

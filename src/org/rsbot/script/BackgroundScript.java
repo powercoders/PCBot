@@ -1,9 +1,9 @@
 package org.rsbot.script;
 
+import java.util.EventListener;
+
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Methods;
-
-import java.util.EventListener;
 
 /**
  * A background script.
@@ -30,7 +30,7 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 	}
 
 	@Override
-	public final void init(MethodContext ctx) {
+	public final void init(final MethodContext ctx) {
 		super.init(ctx);
 		onStart();
 	}
@@ -38,6 +38,7 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 	/**
 	 * Runs the background script.
 	 */
+	@Override
 	public final void run() {
 		name = getClass().getAnnotation(ScriptManifest.class).name();
 		ctx.bot.getEventManager().addListener(this);
@@ -45,10 +46,10 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 		try {
 			while (running) {
 				if (activateCondition()) {
-					boolean start = onStart();
+					final boolean start = onStart();
 					if (start) {
 						while (running) {
-							int timeOut = loop();
+							final int timeOut = loop();
 							if (timeOut == -1) {
 								break;
 							}
@@ -59,7 +60,7 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 				}
 				Thread.sleep(iterationSleep());
 			}
-		} catch (Exception ignored) {
+		} catch (final Exception ignored) {
 		}
 		ctx.bot.getEventManager().removeListener(this);
 		running = false;
@@ -70,11 +71,11 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 	 *
 	 * @param id The id to deactivate.
 	 */
-	public final void deactivate(int id) {
+	public final void deactivate(final int id) {
 		if (id != this.id) {
 			throw new IllegalStateException("Invalid id!");
 		}
-		this.running = false;
+		running = false;
 	}
 
 	/**
@@ -82,7 +83,7 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 	 *
 	 * @param id The id.
 	 */
-	public final void setID(int id) {
+	public final void setID(final int id) {
 		if (this.id != -1) {
 			throw new IllegalStateException("Already added to pool!");
 		}

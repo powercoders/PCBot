@@ -1,8 +1,8 @@
 package org.rsbot.script.wrappers;
 
-import org.rsbot.script.methods.MethodContext;
-
 import java.util.EnumSet;
+
+import org.rsbot.script.methods.MethodContext;
 
 /**
  * A path consisting of a list of tile waypoints.
@@ -12,7 +12,7 @@ import java.util.EnumSet;
 public class RSWeb extends RSPath {
 	private final RSTile[] tiles;
 
-	public RSWeb(MethodContext ctx, RSTile[] tiles) {
+	public RSWeb(final MethodContext ctx, final RSTile[] tiles) {
 		super(ctx);
 		this.tiles = tiles;
 	}
@@ -22,7 +22,7 @@ public class RSWeb extends RSPath {
 	}
 
 	@Override
-	public boolean traverse(EnumSet<TraversalOption> options) {
+	public boolean traverse(final EnumSet<TraversalOption> options) {
 		return false;
 	}
 

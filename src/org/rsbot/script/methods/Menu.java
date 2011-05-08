@@ -1,5 +1,12 @@
 package org.rsbot.script.methods;
 
+import java.awt.Graphics;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.regex.Pattern;
+
 import org.rsbot.client.MenuGroupNode;
 import org.rsbot.client.MenuItemNode;
 import org.rsbot.event.EventMulticaster;
@@ -9,19 +16,13 @@ import org.rsbot.script.internal.wrappers.Queue;
 import org.rsbot.script.wrappers.RSItem;
 import org.rsbot.script.wrappers.RSItemDef;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.regex.Pattern;
-
 /**
  * Context menu related operations.
  */
 public class Menu extends MethodProvider {
 
 	private static final Pattern HTML_TAG = Pattern
-			.compile("(^[^<]+>|<[^>]+>|<[^>]+$)");
+	.compile("(^[^<]+>|<[^>]+>|<[^>]+$)");
 
 	private final Object menuCacheLock = new Object();
 
@@ -143,12 +144,12 @@ public class Menu extends MethodProvider {
 					methods.client.getCollapsedMenuItems());
 			int idx = 0, mainIdx = 0;
 			for (MenuGroupNode g = groups.getHead(); g != null; g = groups
-					.getNext(), ++mainIdx) {
+			.getNext(), ++mainIdx) {
 				final Queue<MenuItemNode> subItems = new Queue<MenuItemNode>(
 						g.getItems());
 				int subIdx = 0;
 				for (MenuItemNode item = subItems.getHead(); item != null; item = subItems
-						.getNext(), ++subIdx) {
+				.getNext(), ++subIdx) {
 					if (idx++ == i) {
 						if (subItems.size() == 1) {
 							return clickMain(items, mainIdx);
@@ -177,7 +178,7 @@ public class Menu extends MethodProvider {
 	}
 
 	private boolean clickSub(final String[] items, final int mIdx,
-	                         final int sIdx) {
+			final int sIdx) {
 		final Point menuLoc = getLocation();
 		int x = random(4, items[mIdx].length() * 4);
 		int y = 21 + 16 * mIdx + random(3, 12);
@@ -311,20 +312,20 @@ public class Menu extends MethodProvider {
 			final Queue<MenuGroupNode> menu = new Queue<MenuGroupNode>(
 					methods.client.getCollapsedMenuItems());
 			for (MenuGroupNode mgn = menu.getHead(); mgn != null; mgn = menu
-					.getNext()) {
+			.getNext()) {
 				final Queue<MenuItemNode> submenu = new Queue<MenuItemNode>(
 						mgn.getItems());
 				for (MenuItemNode min = submenu.getHead(); min != null; min = submenu
-						.getNext()) {
+				.getNext()) {
 					itemsList
-							.add(firstPart ? min.getAction() : min.getOption());
+					.add(firstPart ? min.getAction() : min.getOption());
 				}
 			}
 		} else {
 			final Deque<MenuItemNode> menu = new Deque<MenuItemNode>(
 					methods.client.getMenuItems());
 			for (MenuItemNode min = menu.getHead(); min != null; min = menu
-					.getNext()) {
+			.getNext()) {
 				itemsList.add(firstPart ? min.getAction() : min.getOption());
 			}
 		}

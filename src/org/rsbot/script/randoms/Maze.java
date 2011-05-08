@@ -1,13 +1,13 @@
 package org.rsbot.script.randoms;
 
+import java.awt.Point;
+import java.util.ArrayList;
+
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Objects;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSTile;
-
-import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Updated by Iscream Apr 07,11
@@ -210,14 +210,14 @@ public class Maze extends Random {
 			return random(330, 380);
 		}
 		switch (doorD) {
-			case 'n':
-				return random(330, 380);
-			case 's':
-				return random(155, 190);
-			case 'e':
-				return random(245, 290);
-			case 'w':
-				return random(65, 110);
+		case 'n':
+			return random(330, 380);
+		case 's':
+			return random(155, 190);
+		case 'e':
+			return random(245, 290);
+		case 'w':
+			return random(65, 110);
 		}
 		return random(330, 380);
 	}
@@ -233,14 +233,14 @@ public class Maze extends Random {
 			return new RSTile(1, 1);
 		}
 		switch (doorD) {
-			case 'n':
-				return new RSTile(walkToTile.getX(), walkToTile.getY() + 1);
-			case 'w':
-				return new RSTile(walkToTile.getX() - 1, walkToTile.getY());
-			case 'e':
-				return new RSTile(walkToTile.getX() + 1, walkToTile.getY());
-			case 's':
-				return new RSTile(walkToTile.getX(), walkToTile.getY() - 1);
+		case 'n':
+			return new RSTile(walkToTile.getX(), walkToTile.getY() + 1);
+		case 'w':
+			return new RSTile(walkToTile.getX() - 1, walkToTile.getY());
+		case 'e':
+			return new RSTile(walkToTile.getX() + 1, walkToTile.getY());
+		case 's':
+			return new RSTile(walkToTile.getX(), walkToTile.getY() - 1);
 		}
 		return new RSTile(1, 1);
 	}
@@ -302,24 +302,24 @@ public class Maze extends Random {
 		int x = location.getX(), y = location.getY();
 		boolean fail = false;
 		switch (direction) {
-			case 'N':
-			case 'n':
-				y++;
-				break;
-			case 'W':
-			case 'w':
-				x--;
-				break;
-			case 'E':
-			case 'e':
-				x++;
-				break;
-			case 'S':
-			case 's':
-				y--;
-				break;
-			default:
-				fail = true;
+		case 'N':
+		case 'n':
+			y++;
+			break;
+		case 'W':
+		case 'w':
+			x--;
+			break;
+		case 'E':
+		case 'e':
+			x++;
+			break;
+		case 'S':
+		case 's':
+			y--;
+			break;
+		default:
+			fail = true;
 		}
 		if (fail) {
 			throw new IllegalArgumentException();

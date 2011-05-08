@@ -19,9 +19,9 @@ import org.rsbot.gui.AccountManager;
 import org.rsbot.script.background.BankMonitor;
 import org.rsbot.script.background.WebData;
 import org.rsbot.script.background.WebLoader;
+import org.rsbot.script.internal.BackgroundScriptHandler;
 import org.rsbot.script.internal.BreakHandler;
 import org.rsbot.script.internal.InputManager;
-import org.rsbot.script.internal.BackgroundScriptHandler;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.methods.Environment;
 import org.rsbot.script.methods.MethodContext;
@@ -81,6 +81,7 @@ public class Bot {
 		loader = new RSLoader();
 		final Dimension size = Application.getPanelSize();
 		loader.setCallback(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					setClient((Client) loader.getClient());
@@ -116,12 +117,13 @@ public class Bot {
 			final Thread thread = new Thread(tg, loader, "Loader");
 			thread.start();
 			new Thread() {
+				@Override
 				public void run() {
 					try {
 						while (methods == null && !killBackground) {
 							Thread.sleep(50);
 						}
-					} catch (InterruptedException ignored) {
+					} catch (final InterruptedException ignored) {
 					}
 					if (methods != null && !killBackground) {
 						bsh.runScript(new WebData());
@@ -130,7 +132,7 @@ public class Bot {
 					}
 				}
 			}.start();
-		} catch (Exception ignored) {
+		} catch (final Exception ignored) {
 		}
 	}
 
