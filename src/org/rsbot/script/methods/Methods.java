@@ -1,5 +1,7 @@
 package org.rsbot.script.methods;
 
+import org.rsbot.Application;
+import org.rsbot.gui.BotTray;
 import org.rsbot.script.wrappers.*;
 
 import java.awt.*;
@@ -291,6 +293,10 @@ public class Methods {
 			e.printStackTrace();
 		}
 	}
+
+    public BotTray getTray() {
+        return Application.getTray();
+    }
 
 	/**
 	 * Prints to the RSBot log.

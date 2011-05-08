@@ -2,6 +2,7 @@ package org.rsbot;
 
 import org.rsbot.bot.Bot;
 import org.rsbot.gui.BotGUI;
+import org.rsbot.gui.BotTray;
 import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.security.RestrictedSecurityManager;
@@ -34,6 +35,10 @@ public class Application {
 	public static Bot getBot(Object o) {
 		return gui.getBot(o);
 	}
+
+    public static BotTray getTray() {
+        return gui.getTray();
+    }
 
 	/**
 	 * Returns the size of the panel that clients should be drawn into. For
