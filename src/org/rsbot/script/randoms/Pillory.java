@@ -1,13 +1,13 @@
 package org.rsbot.script.randoms;
 
+import java.awt.Point;
+
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSTile;
-
-import java.awt.*;
 
 /**
  * Last Updated 9-23-10 Arbiter
@@ -28,6 +28,7 @@ public class Pillory extends Random implements MessageListener {
 			new RSTile(3226, 3407), new RSTile(3228, 3407), new RSTile(3230, 3407),
 			new RSTile(2685, 3489), new RSTile(2683, 3489), new RSTile(2681, 3489)};
 
+	@Override
 	public void onFinish() {
 		fail = 0;
 		inCage = false;
@@ -39,18 +40,18 @@ public class Pillory extends Random implements MessageListener {
 		if (!game.isLoggedIn()) {
 			return false;
 		}
-		for (RSTile cagetile : cagetiles) {
+		for (final RSTile cagetile : cagetiles) {
 			if (getMyPlayer().getLocation().equals(cagetile)) {
 				return true;
 			}
 		}
 		if (!inCage) {
 			inCage = interfaces.getComponent(372, 3).getText().contains(
-					"Solve the pillory");
+			"Solve the pillory");
 		}
 		if (!inCage) {
 			inCage = interfaces.getComponent(372, 3).getText().contains(
-					"swinging");
+			"swinging");
 		}
 		return inCage;
 	}
@@ -64,7 +65,7 @@ public class Pillory extends Random implements MessageListener {
 			for (int y = 0; y < 104; y++) {
 				final RSObject[] objs = objects.getAllAt(new RSTile(x + game.getBaseX(), y + game.getBaseY()));
 				if (objs.length > 0) {
-					RSObject o = objs[0];
+					final RSObject o = objs[0];
 					boolean isObject = false;
 					for (final int id : ids) {
 						if (o.getID() == id) {
@@ -94,22 +95,22 @@ public class Pillory extends Random implements MessageListener {
 		int key = 0;
 		log.info("\tKey needed :");
 		switch (interfaces.get(GameInterface).getComponent(4).getModelID()) {
-			case 9753:
-				key = 9749;
-				log.info("\t   Diamond");
-				break;
-			case 9754:
-				key = 9750;
-				log.info("\t   Square");
-				break;
-			case 9755:
-				key = 9751;
-				log.info("\t   Circle");
-				break;
-			case 9756:
-				key = 9752;
-				log.info("\t   Triangle");
-				break;
+		case 9753:
+			key = 9749;
+			log.info("\t   Diamond");
+			break;
+		case 9754:
+			key = 9750;
+			log.info("\t   Square");
+			break;
+		case 9755:
+			key = 9751;
+			log.info("\t   Circle");
+			break;
+		case 9756:
+			key = 9752;
+			log.info("\t   Triangle");
+			break;
 		}
 		if (interfaces.get(GameInterface).getComponent(5).getModelID() == key) {
 			return 1;
@@ -161,37 +162,38 @@ public class Pillory extends Random implements MessageListener {
 			final int key = getKey();
 			log.info(String.valueOf(key));
 			switch (key) {
-				case 1:
-					mouse.click(
-							interfaces.get(GameInterface).getComponent(5).getArea().getLocation().x + random(10, 13),
-							interfaces.get(GameInterface).getComponent(5).getArea().getLocation().y + random(46, 65),
-							true);
-					break;
-				case 2:
-					mouse.click(
-							interfaces.get(GameInterface).getComponent(6).getArea().getLocation().x + random(10, 13),
-							interfaces.get(GameInterface).getComponent(6).getArea().getLocation().y + random(46, 65),
-							true);
-					break;
-				case 3:
-					mouse.click(
-							interfaces.get(GameInterface).getComponent(7).getArea().getLocation().x + random(10, 13),
-							interfaces.get(GameInterface).getComponent(7).getArea().getLocation().y + random(46, 65),
-							true);
-					break;
-				default:
-					log.info("Bad Combo?");
-					fail++;
-					break;
+			case 1:
+				mouse.click(
+						interfaces.get(GameInterface).getComponent(5).getArea().getLocation().x + random(10, 13),
+						interfaces.get(GameInterface).getComponent(5).getArea().getLocation().y + random(46, 65),
+						true);
+				break;
+			case 2:
+				mouse.click(
+						interfaces.get(GameInterface).getComponent(6).getArea().getLocation().x + random(10, 13),
+						interfaces.get(GameInterface).getComponent(6).getArea().getLocation().y + random(46, 65),
+						true);
+				break;
+			case 3:
+				mouse.click(
+						interfaces.get(GameInterface).getComponent(7).getArea().getLocation().x + random(10, 13),
+						interfaces.get(GameInterface).getComponent(7).getArea().getLocation().y + random(46, 65),
+						true);
+				break;
+			default:
+				log.info("Bad Combo?");
+				fail++;
+				break;
 			}
 			return random(1000, 1600);
 		}
 		return -1;
 	}
 
+	@Override
 	public void messageReceived(final MessageEvent e) {
 		final String str = e.getMessage();
-		String pilloryMessage = "Solve the Pillory";
+		final String pilloryMessage = "Solve the Pillory";
 		if (str != null && str.contains(pilloryMessage)) {
 			inCage = true;
 		}

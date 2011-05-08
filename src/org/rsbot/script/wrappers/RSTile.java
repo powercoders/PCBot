@@ -16,7 +16,7 @@ public class RSTile {
 	public RSTile(final int x, final int y) {
 		this.x = x;
 		this.y = y;
-		this.z = 0;
+		z = 0;
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class RSTile {
 		}
 		if (obj instanceof RSTile) {
 			final RSTile tile = (RSTile) obj;
-			return (tile.x == x) && (tile.y == y) && (tile.z == z);
+			return tile.x == x && tile.y == y && tile.z == z;
 		}
 		return false;
 	}

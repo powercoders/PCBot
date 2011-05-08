@@ -1,13 +1,13 @@
 package org.rsbot.script.randoms;
 
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+
 import org.rsbot.gui.AccountManager;
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
-
-import java.awt.*;
-import java.awt.event.KeyEvent;
 
 /**
  * @author Iscream, Aut0r, Doout, Pervy
@@ -45,14 +45,14 @@ public class LoginBot extends Random {
 
 	@Override
 	public boolean activateCondition() {
-		int idx = game.getClientState();
+		final int idx = game.getClientState();
 		return (idx == INDEX_LOGGED_OUT || idx == INDEX_LOBBY)
-				&& !switchingWorlds() && account.getName() != null;
+		&& !switchingWorlds() && account.getName() != null;
 	}
 
 	@Override
 	public int loop() {
-		String username = account.getName().toLowerCase().trim();
+		final String username = account.getName().toLowerCase().trim();
 		String returnText = interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_TEXT_RETURN).getText().toLowerCase();
 		int textlength;
 		if (game.getClientState() != INDEX_LOGGED_OUT) {
@@ -65,15 +65,15 @@ public class LoginBot extends Random {
 					sleep(700);
 				}
 
-				RSInterface welcome_screen = interfaces.get(INTERFACE_WELCOME_SCREEN);
-				RSComponent welcome_screen_button_play_1 = welcome_screen.getComponent(INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_1);
-				RSComponent welcome_screen_button_play_2 = welcome_screen.getComponent(INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_2);
+				final RSInterface welcome_screen = interfaces.get(INTERFACE_WELCOME_SCREEN);
+				final RSComponent welcome_screen_button_play_1 = welcome_screen.getComponent(INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_1);
+				final RSComponent welcome_screen_button_play_2 = welcome_screen.getComponent(INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_2);
 
 				mouse.click(welcome_screen_button_play_1.getAbsoluteX(),
 						welcome_screen_button_play_1.getAbsoluteY(),
 						welcome_screen_button_play_2.getAbsoluteX()
-								+ welcome_screen_button_play_2.getWidth()
-								- welcome_screen_button_play_1.getAbsoluteX(),
+						+ welcome_screen_button_play_2.getWidth()
+						- welcome_screen_button_play_1.getAbsoluteX(),
 						welcome_screen_button_play_1.getHeight(), true);
 
 				for (int i = 0; i < 4 && game.getClientState() == 6; i++) {
@@ -119,16 +119,16 @@ public class LoginBot extends Random {
 
 				if (returnText.contains("member")) {
 					log("Unable to login to a members world. Stopping script.");
-					RSComponent back_button1 = interfaces.get(
+					final RSComponent back_button1 = interfaces.get(
 							INTERFACE_WELCOME_SCREEN).getComponent(228);
-					RSComponent back_button2 = interfaces.get(
+					final RSComponent back_button2 = interfaces.get(
 							INTERFACE_WELCOME_SCREEN).getComponent(231);
 					mouse.click(
 							back_button1.getAbsoluteX(),
 							back_button1.getAbsoluteY(),
 							back_button2.getAbsoluteX()
-									+ back_button2.getWidth()
-									- back_button1.getAbsoluteX(),
+							+ back_button2.getWidth()
+							- back_button1.getAbsoluteX(),
 							back_button1.getHeight(), true);
 					interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(203).doClick();
 					stopScript(false);
@@ -243,7 +243,7 @@ public class LoginBot extends Random {
 				atLoginInterface(interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_USERNAME_WINDOW));
 				sleep(random(500, 700));
 				textlength = interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_USERNAME).getText().length()
-						+ random(3, 5);
+				+ random(3, 5);
 				for (int i = 0; i <= textlength + random(1, 5); i++) {
 					keyboard.sendText("\b", false);
 					if (random(0, 2) == 1) {
@@ -257,7 +257,7 @@ public class LoginBot extends Random {
 				atLoginInterface(interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_PASSWORD_WINDOW));
 				sleep(random(500, 700));
 				textlength = interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_PASSWORD).getText().length()
-						+ random(3, 5);
+				+ random(3, 5);
 				for (int i = 0; i <= textlength + random(1, 5); i++) {
 					keyboard.sendText("\b", false);
 					if (random(0, 2) == 1) {
@@ -272,22 +272,22 @@ public class LoginBot extends Random {
 
 	private boolean switchingWorlds() {
 		return interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_TEXT_RETURN).isValid()
-				&& interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_TEXT_RETURN).containsText("just left another world");
+		&& interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_TEXT_RETURN).containsText("just left another world");
 	}
 
 	// Clicks past all of the letters
-	private boolean atLoginInterface(RSComponent i) {
+	private boolean atLoginInterface(final RSComponent i) {
 		if (!i.isValid()) {
 			return false;
 		}
-		Rectangle pos = i.getArea();
+		final Rectangle pos = i.getArea();
 		if (pos.x == -1 || pos.y == -1 || pos.width == -1 || pos.height == -1) {
 			return false;
 		}
-		int dy = (int) (pos.getHeight() - 4) / 2;
-		int maxRandomX = (int) (pos.getMaxX() - pos.getCenterX());
-		int midx = (int) (pos.getCenterX());
-		int midy = (int) (pos.getMinY() + pos.getHeight() / 2);
+		final int dy = (int) (pos.getHeight() - 4) / 2;
+		final int maxRandomX = (int) (pos.getMaxX() - pos.getCenterX());
+		final int midx = (int) pos.getCenterX();
+		final int midy = (int) (pos.getMinY() + pos.getHeight() / 2);
 		if (i.getIndex() == INTERFACE_PASSWORD_WINDOW) {
 			mouse.click(minX(i), midy + random(-dy, dy), true);
 		} else {
@@ -301,11 +301,11 @@ public class LoginBot extends Random {
 	 * Returns x int based on the letters in a Child Only the password text is
 	 * needed as the username text cannot reach past the middle of the interface
 	 */
-	private int minX(RSComponent a) {
+	private int minX(final RSComponent a) {
 		int x = 0;
-		Rectangle pos = a.getArea();
-		int dx = (int) (pos.getWidth() - 4) / 2;
-		int midx = (int) (pos.getMinX() + pos.getWidth() / 2);
+		final Rectangle pos = a.getArea();
+		final int dx = (int) (pos.getWidth() - 4) / 2;
+		final int midx = (int) (pos.getMinX() + pos.getWidth() / 2);
 		if (pos.x == -1 || pos.y == -1 || pos.width == -1 || pos.height == -1) {
 			return 0;
 		}
@@ -324,12 +324,12 @@ public class LoginBot extends Random {
 	}
 
 	private boolean isUsernameFilled() {
-		String username = account.getName().toLowerCase().trim();
+		final String username = account.getName().toLowerCase().trim();
 		return interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_USERNAME).getText().toLowerCase().equalsIgnoreCase(username);
 	}
 
 	private boolean isPasswordFilled() {
-		String passWord = AccountManager.getPassword(account.getName());
+		final String passWord = AccountManager.getPassword(account.getName());
 		return interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_PASSWORD).getText().toLowerCase().length() == (passWord == null ? 0 : passWord.length());
 	}
 }

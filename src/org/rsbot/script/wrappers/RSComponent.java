@@ -1,11 +1,12 @@
 package org.rsbot.script.wrappers;
 
+import java.awt.Point;
+import java.awt.Rectangle;
+
 import org.rsbot.client.RSInterfaceNode;
 import org.rsbot.script.internal.wrappers.HashTable;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
-
-import java.awt.*;
 
 /**
  * Represents an interface component. An RSComponent may or
@@ -45,7 +46,7 @@ public class RSComponent extends MethodProvider {
 	 */
 	RSComponent(final MethodContext ctx, final RSInterface parent, final int index) {
 		super(ctx);
-		this.parInterface = parent;
+		parInterface = parent;
 		this.index = index;
 		this.parent = null;
 	}
@@ -88,13 +89,13 @@ public class RSComponent extends MethodProvider {
 		if (!isValid()) {
 			return false;
 		}
-		Rectangle rect = getArea();
+		final Rectangle rect = getArea();
 		if (rect.x == -1 || rect.y == -1 || rect.width == -1 || rect.height == -1) {
 			return false;
 		}
 		if (!rect.contains(methods.mouse.getLocation())) {
-			int min_x = rect.x + 1, min_y = rect.y + 1;
-			int max_x = min_x + rect.width - 2, max_y = min_y + rect.height - 2;
+			final int min_x = rect.x + 1, min_y = rect.y + 1;
+			final int max_x = min_x + rect.width - 2, max_y = min_y + rect.height - 2;
 
 			methods.mouse.move(random(min_x, max_x, rect.width / 3),
 					random(min_y, max_y, rect.height / 3));
@@ -119,12 +120,12 @@ public class RSComponent extends MethodProvider {
 	 *                  to right-click.
 	 * @return <tt>true</tt> if the component was clicked.
 	 */
-	public boolean doClick(boolean leftClick) {
+	public boolean doClick(final boolean leftClick) {
 		if (!isValid()) {
 			return false;
 		}
 
-		Rectangle rect = getArea();
+		final Rectangle rect = getArea();
 		if (rect.x == -1 || rect.y == -1 || rect.width == -1 || rect.height == -1) {
 			return false;
 		}
@@ -133,8 +134,8 @@ public class RSComponent extends MethodProvider {
 			return true;
 		}
 
-		int min_x = rect.x + 1, min_y = rect.y + 1;
-		int max_x = min_x + rect.width - 2, max_y = min_y + rect.height - 2;
+		final int min_x = rect.x + 1, min_y = rect.y + 1;
+		final int max_x = min_x + rect.width - 2, max_y = min_y + rect.height - 2;
 
 		methods.mouse.click(random(min_x, max_x, rect.width / 3),
 				random(min_y, max_y, rect.height / 3), leftClick);
@@ -152,7 +153,7 @@ public class RSComponent extends MethodProvider {
 			return false;
 		}
 
-		Rectangle rect = getArea();
+		final Rectangle rect = getArea();
 		if (rect.x == -1 || rect.y == -1 || rect.width == -1 || rect.height == -1) {
 			return false;
 		}
@@ -160,8 +161,8 @@ public class RSComponent extends MethodProvider {
 			return false;
 		}
 
-		int min_x = rect.x + 1, min_y = rect.y + 1;
-		int max_x = min_x + rect.width - 2, max_y = min_y + rect.height - 2;
+		final int min_x = rect.x + 1, min_y = rect.y + 1;
+		final int max_x = min_x + rect.width - 2, max_y = min_y + rect.height - 2;
 
 		methods.mouse.move(random(min_x, max_x, rect.width / 3),
 				random(min_y, max_y, rect.height / 3));
@@ -221,7 +222,7 @@ public class RSComponent extends MethodProvider {
 
 			// Get bounds array index
 			final int bi = inter.getBoundsArrayIndex();
-			if ((bi >= 0) && (bounds != null) && (bi < bounds.length) && (bounds[bi] != null)) {
+			if (bi >= 0 && bounds != null && bi < bounds.length && bounds[bi] != null) {
 				return bounds[bi].x; // Return x here, since it already contains
 			}
 			// our x!
@@ -236,7 +237,7 @@ public class RSComponent extends MethodProvider {
 		// Find scrollable area
 		if (inter.getParentID() != -1) {
 			inter = methods.interfaces.getComponent(inter.getParentID() >> 16,
-					inter.getParentID() & 0xFFFF).getInterfaceInternal();
+			inter.getParentID() & 0xFFFF).getInterfaceInternal();
 			if (inter.getHorizontalScrollBarSize() != 0) {
 				x -= inter.getHorizontalScrollBarThumbPosition();
 			}
@@ -273,7 +274,7 @@ public class RSComponent extends MethodProvider {
 
 			// Get bounds array index
 			final int bi = inter.getBoundsArrayIndex();
-			if ((bi >= 0) && (bounds != null) && (bi < bounds.length) && (bounds[bi] != null)) {
+			if (bi >= 0 && bounds != null && bi < bounds.length && bounds[bi] != null) {
 				return bounds[bi].y; // Return y here, since it already contains
 			}
 			// our y!
@@ -288,7 +289,7 @@ public class RSComponent extends MethodProvider {
 		// Find scrollable area
 		if (inter.getParentID() != -1) {
 			inter = methods.interfaces.getComponent(inter.getParentID() >> 16,
-					inter.getParentID() & 0xFFFF).getInterfaceInternal();
+			inter.getParentID() & 0xFFFF).getInterfaceInternal();
 			if (inter.getVerticalScrollBarSize() != 0) {
 				y -= inter.getVerticalScrollBarPosition();
 			}
@@ -367,7 +368,7 @@ public class RSComponent extends MethodProvider {
 	 */
 	public RSComponent[] getComponents() {
 		final org.rsbot.client.RSInterface inter = getInterfaceInternal();
-		if ((inter != null) && (inter.getComponents() != null)) {
+		if (inter != null && inter.getComponents() != null) {
 			final RSComponent[] components = new RSComponent[inter.getComponents().length];
 			for (int i = 0; i < components.length; i++) {
 				components[i] = new RSComponent(methods, parInterface, this, i);
@@ -383,8 +384,8 @@ public class RSComponent extends MethodProvider {
 	 * @param idx The child index
 	 * @return The child component, or null
 	 */
-	public RSComponent getComponent(int idx) {
-		RSComponent[] components = getComponents();
+	public RSComponent getComponent(final int idx) {
+		final RSComponent[] components = getComponents();
 		if (idx >= 0 && idx < components.length) {
 			return components[idx];
 		}
@@ -545,7 +546,7 @@ public class RSComponent extends MethodProvider {
 		final HashTable ncI = new HashTable(methods.client.getRSInterfaceNC());
 
 		for (RSInterfaceNode node = (RSInterfaceNode) ncI.getFirst(); node != null;
-		     node = (RSInterfaceNode) ncI.getNext()) {
+		node = (RSInterfaceNode) ncI.getNext()) {
 			if (mainID == node.getMainID()) {
 				return (int) node.getID();
 			}
@@ -671,18 +672,18 @@ public class RSComponent extends MethodProvider {
 
 	public boolean isInScrollableArea() {
 		//Check if we have a parent
-		if (this.getParentID() == -1) {
+		if (getParentID() == -1) {
 			return false;
 		}
 
 		//Find scrollable area
-		RSComponent scrollableArea = methods.interfaces.getComponent(this.getParentID());
-		while ((scrollableArea.getScrollableContentHeight() == 0) && (scrollableArea.getParentID() != -1)) {
+		RSComponent scrollableArea = methods.interfaces.getComponent(getParentID());
+		while (scrollableArea.getScrollableContentHeight() == 0 && scrollableArea.getParentID() != -1) {
 			scrollableArea = methods.interfaces.getComponent(scrollableArea.getParentID());
 		}
 
 		//Return if we are in a scrollable area
-		return (scrollableArea.getScrollableContentHeight() != 0);
+		return scrollableArea.getScrollableContentHeight() != 0;
 	}
 
 	/**
@@ -871,7 +872,7 @@ public class RSComponent extends MethodProvider {
 	 */
 	public boolean isVerticallyFlipped() {
 		final org.rsbot.client.RSInterface inter = getInterfaceInternal();
-		return (inter != null) && inter.isVerticallyFlipped();
+		return inter != null && inter.isVerticallyFlipped();
 	}
 
 	/**
@@ -882,7 +883,7 @@ public class RSComponent extends MethodProvider {
 	 */
 	public boolean isHorizontallyFlipped() {
 		final org.rsbot.client.RSInterface inter = getInterfaceInternal();
-		return (inter != null) && inter.isHorizontallyFlipped();
+		return inter != null && inter.isHorizontallyFlipped();
 	}
 
 	/**
@@ -892,7 +893,7 @@ public class RSComponent extends MethodProvider {
 	 */
 	public boolean isInventory() {
 		final org.rsbot.client.RSInterface inter = getInterfaceInternal();
-		return (inter != null) && inter.isInventoryRSInterface();
+		return inter != null && inter.isInventoryRSInterface();
 	}
 
 	/**
@@ -911,7 +912,7 @@ public class RSComponent extends MethodProvider {
 		}
 		if (obj instanceof RSComponent) {
 			final RSComponent child = (RSComponent) obj;
-			return (index == child.index) && child.parInterface.equals(parInterface);
+			return index == child.index && child.parInterface.equals(parInterface);
 		}
 		return false;
 	}
@@ -926,16 +927,16 @@ public class RSComponent extends MethodProvider {
 	 */
 	org.rsbot.client.RSInterface getInterfaceInternal() {
 		if (parent != null) {
-			org.rsbot.client.RSInterface p = parent.getInterfaceInternal();
+			final org.rsbot.client.RSInterface p = parent.getInterfaceInternal();
 			if (p != null) {
 				final org.rsbot.client.RSInterface[] components = p.getComponents();
-				if ((components != null) && (index >= 0) && (index < components.length)) {
+				if (components != null && index >= 0 && index < components.length) {
 					return components[index];
 				}
 			}
 		} else {
 			final org.rsbot.client.RSInterface[] children = parInterface.getChildrenInternal();
-			if ((children != null) && (index < children.length)) {
+			if (children != null && index < children.length) {
 				return children[index];
 			}
 		}

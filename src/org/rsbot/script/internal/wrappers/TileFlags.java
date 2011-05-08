@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * A class that handles flags of tiles.
+ *
+ * @author Timer
+ */
 public class TileFlags extends RSTile {
 	public static interface Keys {
 		static final int TILE_WATER = 1280;

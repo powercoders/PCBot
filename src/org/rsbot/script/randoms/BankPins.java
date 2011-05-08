@@ -8,6 +8,7 @@ import org.rsbot.script.wrappers.RSComponent;
 @ScriptManifest(authors = {"Holo", "Gnarly", "Salty_Fish", "Pervy Shuya", "Doout"}, name = "BankPin", version = 3.0)
 public class BankPins extends Random {
 
+	@Override
 	public boolean activateCondition() {
 		return interfaces.get(13).isValid() || interfaces.get(14).isValid();
 	}
@@ -28,7 +29,7 @@ public class BankPins extends Random {
 			return;
 		}
 		final RSComponent[] bankPin = interfaces.get(759).getComponents();
-		for (RSComponent aBankPin : bankPin) {
+		for (final RSComponent aBankPin : bankPin) {
 			if (aBankPin.containsText(pin.substring(state, state + 1))) {
 				aBankPin.doClick(true);
 				sleep(random(500, 1000));
@@ -43,8 +44,8 @@ public class BankPins extends Random {
 			interfaces.getComponent(14, 33).doClick();
 			sleep(300);
 		} else {
-			String pin = AccountManager.getPin(account.getName());
-			if ((pin == null) || (pin.length() != 4)) {
+			final String pin = AccountManager.getPin(account.getName());
+			if (pin == null || pin.length() != 4) {
 				log.severe("You must add a bank pin to your account.");
 				stopScript(false);
 			}

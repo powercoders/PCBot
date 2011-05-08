@@ -1,9 +1,9 @@
 package org.rsbot.script.methods;
 
+import java.util.logging.Logger;
+
 import org.rsbot.script.wrappers.RSInterface;
 import org.rsbot.script.wrappers.RSPlayer;
-
-import java.util.logging.Logger;
 
 /**
  * Trade handling.
@@ -32,7 +32,7 @@ public class Trade extends MethodProvider {
 	public static final int TRADE_TYPE_SECONDARY = 1;
 	public static final int TRADE_TYPE_NONE = 2;
 
-	Trade(MethodContext ctx) {
+	Trade(final MethodContext ctx) {
 		super(ctx);
 	}
 
@@ -42,7 +42,7 @@ public class Trade extends MethodProvider {
 	 * @return <tt>true</tt> if in first stage.
 	 */
 	public boolean inTradeMain() {
-		RSInterface tradeInterface = methods.interfaces.get(INTERFACE_TRADE_MAIN);
+		final RSInterface tradeInterface = methods.interfaces.get(INTERFACE_TRADE_MAIN);
 		return tradeInterface != null && tradeInterface.isValid();
 	}
 
@@ -52,7 +52,7 @@ public class Trade extends MethodProvider {
 	 * @return <tt>true</tt> if in second stage.
 	 */
 	public boolean inTradeSecond() {
-		RSInterface tradeInterface = methods.interfaces.get(INTERFACE_TRADE_SECOND);
+		final RSInterface tradeInterface = methods.interfaces.get(INTERFACE_TRADE_SECOND);
 		return tradeInterface != null && tradeInterface.isValid();
 	}
 
@@ -74,7 +74,7 @@ public class Trade extends MethodProvider {
 	 */
 	public boolean tradePlayer(final String playerName, final int tradeWait) {
 		if (!inTrade()) {
-			RSPlayer targetPlayer = methods.players.getNearest(playerName);
+			final RSPlayer targetPlayer = methods.players.getNearest(playerName);
 			if (targetPlayer != null) {
 				return targetPlayer.doAction("Trade with", targetPlayer.getName()) && waitForTrade(TRADE_TYPE_MAIN, tradeWait);
 			} else {
@@ -132,7 +132,7 @@ public class Trade extends MethodProvider {
 	public boolean acceptTrade() {
 		if (inTradeMain()) {
 			return methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_ACCEPT).doAction(
-					"Accept");
+			"Accept");
 		} else {
 			return inTradeSecond() && methods.interfaces.get(INTERFACE_TRADE_SECOND).getComponent(INTERFACE_TRADE_SECOND_ACCEPT).doAction("Accept");
 		}
@@ -146,7 +146,7 @@ public class Trade extends MethodProvider {
 	public boolean declineTrade() {
 		if (inTradeMain()) {
 			return methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_DECLINE).doAction(
-					"Decline");
+			"Decline");
 		} else {
 			return inTradeSecond() && methods.interfaces.get(INTERFACE_TRADE_SECOND).getComponent(INTERFACE_TRADE_SECOND_DECLINE).doAction("Decline");
 		}
@@ -160,24 +160,24 @@ public class Trade extends MethodProvider {
 	 * @return <tt>true</tt> if true, otherwise false.
 	 */
 	public boolean waitForTrade(final int tradeType, final long timeOut) {
-		long timeCounter = System.currentTimeMillis() + timeOut;
+		final long timeCounter = System.currentTimeMillis() + timeOut;
 		while (timeCounter - System.currentTimeMillis() > 0) {
 			switch (tradeType) {
-				case TRADE_TYPE_MAIN:
-					if (inTradeMain()) {
-						return true;
-					}
-					break;
-				case TRADE_TYPE_SECONDARY:
-					if (inTradeSecond()) {
-						return true;
-					}
-					break;
-				case TRADE_TYPE_NONE:
-					if (!inTrade()) {
-						return true;
-					}
-					break;
+			case TRADE_TYPE_MAIN:
+				if (inTradeMain()) {
+					return true;
+				}
+				break;
+			case TRADE_TYPE_SECONDARY:
+				if (inTradeSecond()) {
+					return true;
+				}
+				break;
+			case TRADE_TYPE_NONE:
+				if (!inTrade()) {
+					return true;
+				}
+				break;
 			}
 			sleep(5);
 		}
@@ -191,7 +191,7 @@ public class Trade extends MethodProvider {
 	 */
 	private String getTradingWith() {
 		if (inTradeMain()) {
-			String name = methods.interfaces.getComponent(INTERFACE_TRADE_MAIN, INTERFACE_TRADE_MAIN_NAME).getText();
+			final String name = methods.interfaces.getComponent(INTERFACE_TRADE_MAIN, INTERFACE_TRADE_MAIN_NAME).getText();
 			return name.substring(name.indexOf(": ") + 2);
 		} else if (inTradeSecond()) {
 			return methods.interfaces.getComponent(INTERFACE_TRADE_SECOND, INTERFACE_TRADE_SECOND_NAME).getText();
@@ -205,7 +205,7 @@ public class Trade extends MethodProvider {
 	 * @param name The person's name.
 	 * @return <tt>true</tt> if true; otherwise <tt>false</tt>.
 	 */
-	private boolean isTradingWith(String name) {
+	private boolean isTradingWith(final String name) {
 		return getTradingWith().equals(name);
 	}
 
@@ -237,7 +237,7 @@ public class Trade extends MethodProvider {
 			text = text.trim();
 			try {
 				return Integer.parseInt(text);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 			}
 		}
 		return 0;

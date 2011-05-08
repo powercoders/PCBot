@@ -1,12 +1,15 @@
 package org.rsbot.script.util;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 public class PaintUIUtil {
-	private Graphics2D g2;
+	private final Graphics2D g2;
 	boolean checked = false;
 
-	public PaintUIUtil(Graphics render) {
+	public PaintUIUtil(final Graphics render) {
 		g2 = (Graphics2D) render;
 	}
 

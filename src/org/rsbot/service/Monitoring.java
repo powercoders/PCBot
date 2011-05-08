@@ -17,7 +17,7 @@ public class Monitoring {
 		RaiseEvent(Event.Random, new String[]{name, Boolean.toString(passed)});
 	}
 
-	public static void RaiseEvent(final Event type, String[] params) {
+	public static void RaiseEvent(final Event type, final String[] params) {
 		//TODO Create the sending of an event.
 	}
 }

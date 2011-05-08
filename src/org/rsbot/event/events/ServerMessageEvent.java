@@ -1,9 +1,9 @@
 package org.rsbot.event.events;
 
+import java.util.EventListener;
+
 import org.rsbot.event.EventMulticaster;
 import org.rsbot.event.listeners.ServerMessageListener;
-
-import java.util.EventListener;
 
 /**
  * A server message event.
@@ -15,7 +15,7 @@ public class ServerMessageEvent extends RSEvent {
 
 	private final String message;
 
-	public ServerMessageEvent(String message) {
+	public ServerMessageEvent(final String message) {
 		this.message = message;
 	}
 

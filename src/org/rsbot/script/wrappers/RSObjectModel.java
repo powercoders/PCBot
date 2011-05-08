@@ -8,11 +8,12 @@ class RSObjectModel extends RSModel {
 
 	private final RSObject object;
 
-	RSObjectModel(MethodContext ctx, Model model, RSObject object) {
+	RSObjectModel(final MethodContext ctx, final Model model, final RSObject object) {
 		super(ctx, model);
 		this.object = object;
 	}
 
+	@Override
 	protected void update() {
 
 	}

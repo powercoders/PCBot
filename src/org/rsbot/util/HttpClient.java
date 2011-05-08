@@ -1,6 +1,11 @@
 package org.rsbot.util;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Logger;
@@ -13,7 +18,7 @@ public class HttpClient {
 	private static final Logger log = Logger.getLogger(HttpClient.class.getName());
 
 	public static HttpURLConnection download(final URL url, final File file) throws IOException {
-		HttpURLConnection con = GlobalConfiguration.getHttpConnection(url);
+		final HttpURLConnection con = GlobalConfiguration.getHttpConnection(url);
 		con.setUseCaches(true);
 
 		if (file.exists()) {
@@ -28,7 +33,7 @@ public class HttpClient {
 
 		log.fine("Downloading new " + file.getName());
 
-		DataInputStream di = new DataInputStream(con.getInputStream());
+		final DataInputStream di = new DataInputStream(con.getInputStream());
 		byte[] buffer = new byte[con.getContentLength()];
 		di.readFully(buffer);
 		di.close();
@@ -42,7 +47,7 @@ public class HttpClient {
 			file.setWritable(true);
 		}
 		if (file.exists() && file.canRead() && file.canWrite()) {
-			FileOutputStream fos = new FileOutputStream(file);
+			final FileOutputStream fos = new FileOutputStream(file);
 			fos.write(buffer);
 			fos.flush();
 			fos.close();
@@ -55,25 +60,25 @@ public class HttpClient {
 	}
 
 
-	private static byte[] ungzip(byte[] data) {
+	private static byte[] ungzip(final byte[] data) {
 		if (data.length < 2) {
 			return data;
 		}
 
-		int header = (data[0] | data[1] << 8) ^ 0xffff0000;
+		final int header = (data[0] | data[1] << 8) ^ 0xffff0000;
 		if (header != GZIPInputStream.GZIP_MAGIC) {
 			return data;
 		}
 
 		try {
-			ByteArrayInputStream b = new ByteArrayInputStream(data);
-			GZIPInputStream gzin = new GZIPInputStream(b);
-			ByteArrayOutputStream out = new ByteArrayOutputStream(data.length);
+			final ByteArrayInputStream b = new ByteArrayInputStream(data);
+			final GZIPInputStream gzin = new GZIPInputStream(b);
+			final ByteArrayOutputStream out = new ByteArrayOutputStream(data.length);
 			for (int c = gzin.read(); c != -1; c = gzin.read()) {
 				out.write(c);
 			}
 			return out.toByteArray();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return data;
 		}

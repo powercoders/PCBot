@@ -1,5 +1,14 @@
 package org.rsbot.bot;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Constructor;
+import java.util.EventListener;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.rsbot.Application;
 import org.rsbot.client.Client;
 import org.rsbot.client.input.Canvas;
@@ -16,13 +25,6 @@ import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.passives.BankMonitor;
 import org.rsbot.script.passives.WebData;
 import org.rsbot.script.passives.WebLoader;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.lang.reflect.Constructor;
-import java.util.EventListener;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class Bot {
 	private String account;
@@ -79,12 +81,13 @@ public class Bot {
 		loader = new RSLoader();
 		final Dimension size = Application.getPanelSize();
 		loader.setCallback(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					setClient((Client) loader.getClient());
 					resize(size.width, size.height);
 					methods.menu.setupListener();
-				} catch (Exception ignored) {
+				} catch (final Exception ignored) {
 				}
 			}
 		});
@@ -110,9 +113,10 @@ public class Bot {
 			loader.setStub(botStub);
 			eventManager.start();
 			botStub.setActive(true);
-			ThreadGroup tg = new ThreadGroup("RSClient-" + hashCode());
-			Thread thread = new Thread(tg, loader, "Loader");
+			final ThreadGroup tg = new ThreadGroup("RSClient-" + hashCode());
+			final Thread thread = new Thread(tg, loader, "Loader");
 			thread.start();
+		} catch (Exception ignored) {
 			new Thread() {
 				public void run() {
 					try {
@@ -142,13 +146,13 @@ public class Bot {
 		loader = null;
 	}
 
-	public void resize(int width, int height) {
+	public void resize(final int width, final int height) {
 		backBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		// client reads size of loader applet for drawing
 		loader.setSize(width, height);
 		// simulate loader repaint awt event dispatch
-		Graphics g = backBuffer.getGraphics();
+		final Graphics g = backBuffer.getGraphics();
 		loader.update(g);
 		if (!disableCanvas) {
 			loader.paint(g);
@@ -157,7 +161,7 @@ public class Bot {
 
 	public boolean setAccount(final String name) {
 		boolean exist = false;
-		for (String s : AccountManager.getAccountNames()) {
+		for (final String s : AccountManager.getAccountNames()) {
 			if (s.toLowerCase().equals(name.toLowerCase())) {
 				exist = true;
 			}
@@ -170,23 +174,23 @@ public class Bot {
 		return false;
 	}
 
-	public void setPanel(Component c) {
-		this.panel = c;
+	public void setPanel(final Component c) {
+		panel = c;
 	}
 
-	public void addListener(Class<?> clazz) {
-		EventListener el = instantiateListener(clazz);
+	public void addListener(final Class<?> clazz) {
+		final EventListener el = instantiateListener(clazz);
 		listeners.put(clazz.getName(), el);
 		eventManager.addListener(el);
 	}
 
-	public void removeListener(Class<?> clazz) {
-		EventListener el = listeners.get(clazz.getName());
+	public void removeListener(final Class<?> clazz) {
+		final EventListener el = listeners.get(clazz.getName());
 		listeners.remove(clazz.getName());
 		eventManager.removeListener(el);
 	}
 
-	public boolean hasListener(Class<?> clazz) {
+	public boolean hasListener(final Class<?> clazz) {
 		return clazz != null && listeners.get(clazz.getName()) != null;
 	}
 
@@ -206,7 +210,7 @@ public class Bot {
 	}
 
 	public Graphics getBufferGraphics() {
-		Graphics back = backBuffer.getGraphics();
+		final Graphics back = backBuffer.getGraphics();
 		paintEvent.graphics = back;
 		textPaintEvent.graphics = back;
 		textPaintEvent.idx = 0;
@@ -263,17 +267,17 @@ public class Bot {
 		sh.init();
 	}
 
-	private EventListener instantiateListener(Class<?> clazz) {
+	private EventListener instantiateListener(final Class<?> clazz) {
 		try {
 			EventListener listener;
 			try {
-				Constructor<?> constructor = clazz.getConstructor(Bot.class);
+				final Constructor<?> constructor = clazz.getConstructor(Bot.class);
 				listener = (EventListener) constructor.newInstance(this);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				listener = clazz.asSubclass(EventListener.class).newInstance();
 			}
 			return listener;
-		} catch (Exception ignored) {
+		} catch (final Exception ignored) {
 		}
 		return null;
 	}

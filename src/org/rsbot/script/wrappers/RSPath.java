@@ -1,9 +1,9 @@
 package org.rsbot.script.wrappers;
 
+import java.util.EnumSet;
+
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
-
-import java.util.EnumSet;
 
 /**
  * Represents a path to walk along in game.
@@ -19,7 +19,7 @@ public abstract class RSPath extends MethodProvider {
 		HANDLE_RUN, SPACE_ACTIONS
 	}
 
-	public RSPath(MethodContext ctx) {
+	public RSPath(final MethodContext ctx) {
 		super(ctx);
 	}
 

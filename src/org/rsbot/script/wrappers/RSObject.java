@@ -1,11 +1,11 @@
 package org.rsbot.script.wrappers;
 
+import java.awt.Point;
+
 import org.rsbot.client.Model;
 import org.rsbot.client.RSAnimable;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
-
-import java.awt.*;
 
 
 public class RSObject extends MethodProvider {
@@ -19,8 +19,8 @@ public class RSObject extends MethodProvider {
 	private final int plane;
 
 	public RSObject(final MethodContext ctx,
-	                final org.rsbot.client.RSObject obj, final Type type,
-	                final int plane) {
+			final org.rsbot.client.RSObject obj, final Type type,
+			final int plane) {
 		super(ctx);
 		this.obj = obj;
 		this.type = type;
@@ -47,14 +47,14 @@ public class RSObject extends MethodProvider {
 	 */
 	public RSArea getArea() {
 		if (obj instanceof RSAnimable) {
-			RSAnimable a = (RSAnimable) obj;
-			RSTile sw = new RSTile(methods.client.getBaseX() + a.getX1(),
+			final RSAnimable a = (RSAnimable) obj;
+			final RSTile sw = new RSTile(methods.client.getBaseX() + a.getX1(),
 					methods.client.getBaseY() + a.getY1());
-			RSTile ne = new RSTile(methods.client.getBaseX() + a.getX2(),
+			final RSTile ne = new RSTile(methods.client.getBaseX() + a.getX2(),
 					methods.client.getBaseY() + a.getY2());
 			return new RSArea(sw, ne, plane);
 		}
-		RSTile loc = getLocation();
+		final RSTile loc = getLocation();
 		return new RSArea(loc, loc, plane);
 	}
 
@@ -64,16 +64,16 @@ public class RSObject extends MethodProvider {
 	 * @return The RSObjectDef if available, otherwise <code>null</code>.
 	 */
 	public RSObjectDef getDef() {
-		org.rsbot.client.Node ref = methods.nodes.lookup(
+		final org.rsbot.client.Node ref = methods.nodes.lookup(
 				methods.client.getRSObjectDefLoader(), getID());
 		if (ref != null) {
 			if (ref instanceof org.rsbot.client.HardReference) {
 				return new RSObjectDef(
-						(org.rsbot.client.RSObjectDef) (((org.rsbot.client.HardReference) ref)
-								.get()));
+						(org.rsbot.client.RSObjectDef) ((org.rsbot.client.HardReference) ref)
+						.get());
 			} else if (ref instanceof org.rsbot.client.SoftReference) {
-				Object def = ((org.rsbot.client.SoftReference) ref)
-						.getReference().get();
+				final Object def = ((org.rsbot.client.SoftReference) ref)
+				.getReference().get();
 				if (def != null) {
 					return new RSObjectDef((org.rsbot.client.RSObjectDef) def);
 				}
@@ -107,7 +107,7 @@ public class RSObject extends MethodProvider {
 	 * @return The object name if the definition is available; otherwise "".
 	 */
 	public String getName() {
-		RSObjectDef objectDef = getDef();
+		final RSObjectDef objectDef = getDef();
 		return objectDef != null ? objectDef.getName() : "";
 	}
 
@@ -118,11 +118,11 @@ public class RSObject extends MethodProvider {
 	 */
 	public RSModel getModel() {
 		try {
-			Model model = obj.getModel();
+			final Model model = obj.getModel();
 			if (model != null && model.getXPoints() != null) {
 				return new RSObjectModel(methods, model, obj);
 			}
-		} catch (AbstractMethodError ignored) {
+		} catch (final AbstractMethodError ignored) {
 		}
 		return null;
 	}
@@ -133,7 +133,7 @@ public class RSObject extends MethodProvider {
 	 * @return <tt>true</tt> if the object is on screen.
 	 */
 	public boolean isOnScreen() {
-		RSModel model = getModel();
+		final RSModel model = getModel();
 		if (model == null) {
 			return methods.calc.tileOnScreen(getLocation());
 		} else {
@@ -170,7 +170,7 @@ public class RSObject extends MethodProvider {
 	 *         desired action
 	 */
 	public boolean doAction(final String action, final String option) {
-		RSModel model = this.getModel();
+		final RSModel model = getModel();
 		if (model != null) {
 			return model.doAction(action, option);
 		}
@@ -192,8 +192,8 @@ public class RSObject extends MethodProvider {
 	 * @param leftClick <tt>true</tt> to left-click; <tt>false</tt> to right-click.
 	 * @return <tt>true</tt> if clicked.
 	 */
-	public boolean doClick(boolean leftClick) {
-		RSModel model = this.getModel();
+	public boolean doClick(final boolean leftClick) {
+		final RSModel model = getModel();
 		if (model != null) {
 			return model.doClick(leftClick);
 		} else {
@@ -220,11 +220,11 @@ public class RSObject extends MethodProvider {
 	 * Moves the mouse over this object.
 	 */
 	public void doHover() {
-		RSModel model = getModel();
+		final RSModel model = getModel();
 		if (model != null) {
 			model.hover();
 		} else {
-			Point p = methods.calc.tileToScreen(getLocation());
+			final Point p = methods.calc.tileToScreen(getLocation());
 			if (methods.calc.pointOnScreen(p)) {
 				methods.mouse.move(p);
 			}
@@ -232,8 +232,8 @@ public class RSObject extends MethodProvider {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		return (o instanceof RSObject) && ((RSObject) o).obj == obj;
+	public boolean equals(final Object o) {
+		return o instanceof RSObject && ((RSObject) o).obj == obj;
 	}
 
 	@Override
