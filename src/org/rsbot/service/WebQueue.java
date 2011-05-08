@@ -123,7 +123,7 @@ public class WebQueue {
 	 * @return <tt>true</tt> if it's running.
 	 */
 	public static boolean IsRunning() {
-		return cacheWriter.IsRunning();
+		return CacheWriter.IsRunning();
 	}
 
 	/**
