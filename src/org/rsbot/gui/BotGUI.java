@@ -63,6 +63,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Pa
 	private boolean disableConfirmations = false;
 	private static final ScriptDeliveryNetwork sdn = ScriptDeliveryNetwork.getInstance();
 	private final List<Bot> noModificationBots = new ArrayList<Bot>();
+	private final int botsIndex = 2;
 
 	public BotGUI() {
 		init();
@@ -125,7 +126,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Pa
 		if (menu.equals("Close")) {
 			if (confirmRemoveBot()) {
 				final int idx = Integer.parseInt(option);
-				removeBot(bots.get(idx - 1));
+				removeBot(bots.get(idx - botsIndex));
 			}
 		} else if (menu.equals("File")) {
 			if (option.equals("New Bot")) {
@@ -345,7 +346,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Pa
 	public void removeBot(final Bot bot) {
 		final int idx = bots.indexOf(bot);
 		if (idx >= 0) {
-			toolBar.removeTab(idx + 1);
+			toolBar.removeTab(idx + botsIndex);
 		}
 		bots.remove(idx);
 		bot.getScriptHandler().stopAllScripts();
@@ -372,7 +373,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Pa
 	}
 
 	private Bot getCurrentBot() {
-		final int idx = toolBar.getCurrentTab() - 2;
+		final int idx = toolBar.getCurrentTab() - botsIndex;
 		if (idx >= 0) {
 			return bots.get(idx);
 		}
@@ -478,7 +479,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Pa
 					toolBar.setOverrideInput(false);
 					menuBar.setOverrideInput(false);
 					final String acct = bot.getAccountName();
-					toolBar.setTabLabel(bots.indexOf(bot) + 2, acct == null ? "RuneScape" : acct);
+					toolBar.setTabLabel(bots.indexOf(bot) + botsIndex, acct == null ? "RuneScape" : acct);
 					toolBar.updateInputButton();
 					setTitle(acct);
 				}
@@ -497,7 +498,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Pa
 			toolBar.setOverrideInput(false);
 			menuBar.setOverrideInput(false);
 			menuBar.setPauseScript(false);
-			toolBar.setTabLabel(bots.indexOf(bot) + 2, "RuneScape");
+			toolBar.setTabLabel(bots.indexOf(bot) + botsIndex, "RuneScape");
 			toolBar.updateInputButton();
 			setTitle(null);
 		}

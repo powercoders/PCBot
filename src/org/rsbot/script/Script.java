@@ -227,7 +227,6 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 		running = false;
 	}
 
-	@Override
 	public final void run() {
 		boolean start = false;
 		try {
