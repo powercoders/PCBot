@@ -83,7 +83,7 @@ public class Pinball extends Random {
 		} else {
 			Point p = calc.tileToScreen(pillar.getLocation());
 			if (calc.pointOnScreen(p)) {
-				mouse.click(p.x, p.y-25, 4, 20, true);
+				mouse.click(p.x, p.y - 25, 4, 20, true);
 			}
 			return;
 		}
