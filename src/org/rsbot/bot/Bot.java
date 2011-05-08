@@ -1,14 +1,5 @@
 package org.rsbot.bot;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.lang.reflect.Constructor;
-import java.util.EventListener;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.rsbot.Application;
 import org.rsbot.client.Client;
 import org.rsbot.client.input.Canvas;
@@ -25,6 +16,13 @@ import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.passives.BankMonitor;
 import org.rsbot.script.passives.WebData;
 import org.rsbot.script.passives.WebLoader;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Constructor;
+import java.util.EventListener;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Bot {
 	private String account;
@@ -81,7 +79,6 @@ public class Bot {
 		loader = new RSLoader();
 		final Dimension size = Application.getPanelSize();
 		loader.setCallback(new Runnable() {
-			@Override
 			public void run() {
 				try {
 					setClient((Client) loader.getClient());
@@ -132,7 +129,6 @@ public class Bot {
 					}
 				}
 			}.start();
-		} catch (Exception ignored) {
 		}
 	}
 
