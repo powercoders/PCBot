@@ -34,7 +34,6 @@ public class WebData extends BackgroundScript {
 			}
 			lb = curr_base;
 			Node t;
-			log("Analyzing new region into your local web.");
 			int plane = game.getPlane();
 			final int flags[][] = walking.getCollisionFlags(plane);
 			for (int i = 3; i < 102; i++) {
