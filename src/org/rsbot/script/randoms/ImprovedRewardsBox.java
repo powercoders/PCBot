@@ -1,12 +1,12 @@
 package org.rsbot.script.randoms;
 
+import java.awt.Rectangle;
+
 import org.rsbot.gui.AccountManager;
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSItem;
-
-import java.awt.*;
 
 @ScriptManifest(authors = {"Fred", "Arbiter"}, name = "Improved Rewards Box", version = 1.3)
 public class ImprovedRewardsBox extends Random {
@@ -60,7 +60,7 @@ public class ImprovedRewardsBox extends Random {
 	@Override
 	public boolean activateCondition() {
 		return game.isLoggedIn() && !getMyPlayer().isInCombat() && !bank.isOpen()
-				&& cachedInventoryContainedOneOf(BOX_ID, BOOK_KNOWLEDGE_ID, LAMP_ID, MYSTERY_BOX_ID);
+		&& cachedInventoryContainedOneOf(BOX_ID, BOOK_KNOWLEDGE_ID, LAMP_ID, MYSTERY_BOX_ID);
 	}
 
 	private boolean cachedInventoryContainedOneOf(final int... ids) {
@@ -77,7 +77,7 @@ public class ImprovedRewardsBox extends Random {
 	public int getActualY(final RSComponent Component) {
 		int boxYPos;
 		final RSComponent[] selection = interfaces.get(202).getComponent(15)
-				.getComponents();
+		.getComponents();
 		for (int end = 0; end < selection.length; end++) {
 			if (selection[end].containsText(":")) {
 				endofselection = end - 6;
@@ -91,20 +91,20 @@ public class ImprovedRewardsBox extends Random {
 		}
 		viewableScreenHeight = interfaces.get(202).getComponent(15).getHeight() - 11;
 		final int totalScreenHeight = selection[endofselection].getAbsoluteY()
-				+ selection[endofselection].getHeight() - selection[0]
-				.getAbsoluteY();
+		+ selection[endofselection].getHeight() - selection[0]
+		                                                    .getAbsoluteY();
 		hiddenScreenHeight = totalScreenHeight - viewableScreenHeight;
 		if (hiddenScreenHeight > 0) {
 			final RSComponent[] scrollbar = interfaces.get(202)
-					.getComponent(24).getComponents();
+			.getComponent(24).getComponents();
 			scrollbarTopLength = scrollbar[1].getAbsoluteY() - scrollbar[0]
-					.getAbsoluteY();
+			                                                             .getAbsoluteY();
 			final int scrollbarBottomLength = scrollbar[5].getAbsoluteY()
-					- scrollbar[3].getAbsoluteY() + scrollbar[3].getHeight() - 6;
+			- scrollbar[3].getAbsoluteY() + scrollbar[3].getHeight() - 6;
 			scrollbarTotalLength = scrollbarTopLength + scrollbarBottomLength;
 			final double difference = Double.parseDouble(Integer.toString(scrollbarTopLength))
-					/ Double.parseDouble(Integer.toString(scrollbarTotalLength)) * Double
-					.parseDouble(Integer.toString(hiddenScreenHeight));
+			/ Double.parseDouble(Integer.toString(scrollbarTotalLength)) * Double
+			.parseDouble(Integer.toString(hiddenScreenHeight));
 			boxYPos = Component.getAbsoluteY() - (int) difference;
 		} else {
 			boxYPos = Component.getAbsoluteY();
@@ -172,17 +172,17 @@ public class ImprovedRewardsBox extends Random {
 								.toString((getBoxArea(selection[optionSelected]).y
 										+ getBoxArea(selection[optionSelected]).height
 										- selection[0].getAbsoluteY() - viewableScreenHeight)))
-						/ Double.parseDouble(Integer
-						.toString(hiddenScreenHeight)) * Double
-						.parseDouble(Integer.toString(scrollbarTotalLength)));
+										/ Double.parseDouble(Integer
+												.toString(hiddenScreenHeight)) * Double
+												.parseDouble(Integer.toString(scrollbarTotalLength)));
 				if (toDragtoY - (int) mouse.getLocation().getY() > scrollbar[5]
-						.getAbsoluteY()
-						- scrollbar[3].getAbsoluteY()
-						+ scrollbar[3].getHeight() - 6) {
+				                                                             .getAbsoluteY()
+				                                                             - scrollbar[3].getAbsoluteY()
+				                                                             + scrollbar[3].getHeight() - 6) {
 					toDragtoY = (int) mouse.getLocation().getY()
-							+ scrollbar[5].getAbsoluteY()
-							- scrollbar[3].getAbsoluteY()
-							+ scrollbar[3].getHeight() - 6;
+					+ scrollbar[5].getAbsoluteY()
+					- scrollbar[3].getAbsoluteY()
+					+ scrollbar[3].getHeight() - 6;
 				}
 				mouse.drag((int) mouse.getLocation().getX(), toDragtoY);
 			}

@@ -1,6 +1,12 @@
 package org.rsbot.loader;
 
-import org.rsbot.loader.asm.*;
+import org.rsbot.loader.asm.AnnotationVisitor;
+import org.rsbot.loader.asm.Attribute;
+import org.rsbot.loader.asm.ClassVisitor;
+import org.rsbot.loader.asm.FieldVisitor;
+import org.rsbot.loader.asm.Label;
+import org.rsbot.loader.asm.MethodVisitor;
+import org.rsbot.loader.asm.Opcodes;
 
 /**
  * @author Jacmob

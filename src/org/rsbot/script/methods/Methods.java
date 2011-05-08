@@ -1,13 +1,18 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.wrappers.*;
-import org.rsbot.util.GlobalConfiguration;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+
+import org.rsbot.script.wrappers.RSGroundItem;
+import org.rsbot.script.wrappers.RSNPC;
+import org.rsbot.script.wrappers.RSObject;
+import org.rsbot.script.wrappers.RSPlayer;
+import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.util.GlobalConfiguration;
 
 
 /**
@@ -198,7 +203,7 @@ public class Methods {
 		friendChat = ctx.friendChat;
 		trade = ctx.trade;
 		paint = ctx.paint;
-		this.web = ctx.web;
+		web = ctx.web;
 	}
 
 	/**

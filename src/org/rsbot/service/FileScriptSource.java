@@ -1,8 +1,5 @@
 package org.rsbot.service;
 
-import org.rsbot.script.Script;
-import org.rsbot.script.ScriptManifest;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -12,6 +9,10 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
+
+import org.rsbot.script.Script;
+import org.rsbot.script.ScriptManifest;
+import org.rsbot.util.GlobalConfiguration;
 
 /**
  * @author Jacmob
@@ -119,7 +120,9 @@ public class FileScriptSource implements ScriptSource {
 			def.website = manifest.website();
 			def.clazz = clazz;
 			def.source = this;
-			scripts.add(def);
+			if (manifest.requiresVersion() <= GlobalConfiguration.getVersion()) {
+				scripts.add(def);
+			}
 		}
 	}
 

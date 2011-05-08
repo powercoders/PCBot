@@ -1,16 +1,12 @@
 package org.rsbot.gui;
 
-import org.rsbot.service.ScriptDeliveryNetwork;
-import org.rsbot.util.AccountStore;
-import org.rsbot.util.GlobalConfiguration;
-
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumnModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -20,6 +16,27 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumnModel;
+
+import org.rsbot.service.ScriptDeliveryNetwork;
+import org.rsbot.util.AccountStore;
+import org.rsbot.util.GlobalConfiguration;
 
 /**
  * @author Tekk
@@ -33,12 +50,12 @@ public class AccountManager extends JDialog implements ActionListener {
 	private static final String FILE_NAME = GlobalConfiguration.Paths.getAccountsFile();
 
 	private static final String[] RANDOM_REWARDS = {"Cash", "Runes", "Coal", "Essence", "Ore", "Bars", "Gems", "Herbs",
-			"Seeds", "Charms", "Surprise", "Emote", "Costume", "Attack",
-			"Defence", "Strength", "Constitution", "Range", "Prayer", "Magic",
-			"Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking",
-			"Crafting", "Smithing", "Mining", "Herblore", "Agility", "Thieving",
-			"Slayer", "Farming", "Runecrafting", "Hunter", "Construction",
-			"Summoning", "Dungeoneering"};
+		"Seeds", "Charms", "Surprise", "Emote", "Costume", "Attack",
+		"Defence", "Strength", "Constitution", "Range", "Prayer", "Magic",
+		"Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking",
+		"Crafting", "Smithing", "Mining", "Herblore", "Agility", "Thieving",
+		"Slayer", "Farming", "Runecrafting", "Hunter", "Construction",
+		"Summoning", "Dungeoneering"};
 
 	private static final String[] VALID_KEYS = {"pin", "reward", "member", "take_breaks"};
 

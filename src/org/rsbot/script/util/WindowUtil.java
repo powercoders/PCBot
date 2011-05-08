@@ -1,7 +1,10 @@
 package org.rsbot.script.util;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Frame;
+import java.awt.Point;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  * Main application window and dialog utilities.

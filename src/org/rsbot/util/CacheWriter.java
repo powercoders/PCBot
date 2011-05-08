@@ -1,13 +1,19 @@
 package org.rsbot.util;
 
-import org.rsbot.service.WebQueue;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
+
+import org.rsbot.service.WebQueue;
 
 /**
  * A threaded file writer to cache files.  Supports deletion.
@@ -56,12 +62,12 @@ public class CacheWriter {
 	 */
 	public int queueSize(final int id) {
 		switch (id) {
-			case 0:
-				return queue.size();
-			case 1:
-				return removeQueue.size();
-			case 2:
-				return removeStack.size();
+		case 0:
+			return queue.size();
+		case 1:
+			return removeQueue.size();
+		case 2:
+			return removeStack.size();
 		}
 		return -1;
 	}
@@ -86,7 +92,7 @@ public class CacheWriter {
 						file.setReadable(true);
 						file.setWritable(true);
 					}
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					destroy = true;
 				}
 			}
@@ -95,22 +101,23 @@ public class CacheWriter {
 		/**
 		 * The main method...  doesn't stop till all data is written.
 		 */
+		@Override
 		public void run() {
-			List<String> outList = new ArrayList<String>();
+			final List<String> outList = new ArrayList<String>();
 			while ((!destroy || queue.size() > 0 || WebQueue.weAreBuffering) && file.exists() && file.canWrite()) {
 				try {
 					if (removeQueue.size() > 0) {
 						removeStack.clear();
 						removeStack.addAll(removeQueue);
 						removeQueue.clear();
-						BufferedReader br = new BufferedReader(new FileReader(file));
-						PrintWriter pw = new PrintWriter(new FileWriter(tmpFile));
+						final BufferedReader br = new BufferedReader(new FileReader(file));
+						final PrintWriter pw = new PrintWriter(new FileWriter(tmpFile));
 						String line;
 						while ((line = br.readLine()) != null) {
 							boolean good = true;
-							Iterator<String> removeLines = removeStack.listIterator();
+							final Iterator<String> removeLines = removeStack.listIterator();
 							while (removeLines.hasNext()) {
-								String str = removeLines.next();
+								final String str = removeLines.next();
 								if (str != null && line.contains(str)) {
 									good = false;
 									break;
@@ -131,8 +138,8 @@ public class CacheWriter {
 						}
 						removeStack.clear();
 					}
-					FileWriter fileWriter = new FileWriter(file, true);
-					BufferedWriter out = new BufferedWriter(fileWriter);
+					final FileWriter fileWriter = new FileWriter(file, true);
+					final BufferedWriter out = new BufferedWriter(fileWriter);
 					if (queue.size() > 0) {
 						outList.clear();
 						if (queue.size() >= 1000 && !destroy) {
@@ -142,9 +149,9 @@ public class CacheWriter {
 							outList.addAll(queue);
 							queue.clear();
 						}
-						Iterator<String> outLines = outList.listIterator();
+						final Iterator<String> outLines = outList.listIterator();
 						while (outLines.hasNext()) {
-							String line = outLines.next();
+							final String line = outLines.next();
 							out.write(line + "\n");
 						}
 					}
@@ -154,9 +161,9 @@ public class CacheWriter {
 						if (!destroy) {
 							Thread.sleep(5000);
 						}
-					} catch (InterruptedException ignored) {
+					} catch (final InterruptedException ignored) {
 					}
-				} catch (IOException ignored) {
+				} catch (final IOException ignored) {
 				}
 			}
 			stopped = true;
