@@ -6,6 +6,7 @@ import org.rsbot.script.Script;
 import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.util.ScreenshotUtil;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -32,6 +33,16 @@ public class RestrictedSecurityManager extends SecurityManager {
 		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
 		for (int i = s.length - 1; i > -1; i--) {
 			if (s[i].getClassName().startsWith(Script.class.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isCallerScriptScreenshot() {
+		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
+		for (int i = s.length - 1; i > -1; i--) {
+			if (s[i].getClassName().startsWith(ScreenshotUtil.class.getName())) {
 				return true;
 			}
 		}
@@ -133,7 +144,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkDelete(String file) {
-		checkFilePath(file);
+		if (!isCallerScriptScreenshot()) {
+			checkFilePath(file);
+		}
 		super.checkDelete(file);
 	}
 
@@ -248,7 +261,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public void checkWrite(String file) {
-		checkFilePath(file);
+		if (!isCallerScriptScreenshot()) {
+			checkFilePath(file);
+		}
 		super.checkWrite(file);
 	}
 
@@ -269,7 +284,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		checkSuperFilePath(path);
 		path = new File(path).getAbsolutePath();
 		if (isCallerScript()) {
-			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory()) && !path.startsWith(GlobalConfiguration.Paths.getScreenshotDirectory()) && !path.startsWith(GlobalConfiguration.Paths.getSettingsDirectory())) {				
+			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())) {
 				throw new SecurityException();
 			}
 		}

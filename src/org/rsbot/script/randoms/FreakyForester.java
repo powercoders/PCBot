@@ -12,7 +12,7 @@ import org.rsbot.script.wrappers.*;
 /**
  * @version 2.5 - 12/31/10 Fix by NoEffex (Models)
  */
-@ScriptManifest(authors = {"Pwnaz0r", "Taha", "zqqou", "Zach"}, name = "FreakyForester", version = 2.5)
+@ScriptManifest(authors = {"Pwnaz0r", "Taha", "zqqou", "Zach"}, name = "FreakyForester", version = 2.6)
 public class FreakyForester extends Random implements MessageListener {
 
 	private RSNPC forester;
@@ -171,7 +171,7 @@ public class FreakyForester extends Random implements MessageListener {
 			return 1;
 		} else if (phe.length == 0) {
 			return 0;
-		} else if (inventory.contains(6178)) {
+		} else if (inventory.containsOneOf(6178, 6179)) {
 			return 0;
 		} else if (phe.length > 0) {
 			return 2;
@@ -195,12 +195,12 @@ public class FreakyForester extends Random implements MessageListener {
 			done = searchText(241, "Thank you") || interfaces.getComponent(242, 4).containsText("leave");
 		}
 		/*
-				  if (inventory.contains(6179)) {
-					  phe = new short[]{};
-					  inventory.getItem(6179).doAction("Drop");
-					  return random(500, 900);
-				  }
-				  */
+		if (inventory.contains(6179)) {
+			phe = new short[]{};
+			inventory.getItem(6179).doAction("Drop");
+			return random(500, 900);
+		}
+		*/
 		if (unequip && (inventory.getCount(false) != 28)) {
 			if (game.getCurrentTab() != Game.TAB_EQUIPMENT) {
 				game.openTab(Game.TAB_EQUIPMENT);
@@ -211,8 +211,13 @@ public class FreakyForester extends Random implements MessageListener {
 			return random(100, 500);
 		}
 		if (bank.isDepositOpen() || (inventory.getCount(false) == 28) && !inventory.containsAll(6178)) {
+			int r = random(21, 27);
 			if (bank.isDepositOpen() && bank.getBoxCount() == 28) {
-				interfaces.get(11).getComponent(17).getComponent(random(21, 27)).doAction("Deposit");
+				if (interfaces.get(11).getComponent(17).getComponent(r).getComponentStackSize() > 1) {
+					interfaces.get(11).getComponent(17).getComponent(r).doAction("Deposit-All");
+				} else {
+					interfaces.get(11).getComponent(17).getComponent(r).doAction("Deposit");
+				}
 				return random(1000, 1500);
 			} else if (bank.isDepositOpen()) {
 				bank.close();
@@ -293,7 +298,7 @@ public class FreakyForester extends Random implements MessageListener {
 					return random(800, 1200);
 				}
 				if (Portal.doAction("Enter")) {
-					return random(800, 1200);
+					return random(4000, 5000);
 				}
 				return random(200, 500);
 		}
