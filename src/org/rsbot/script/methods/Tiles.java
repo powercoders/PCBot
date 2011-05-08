@@ -27,13 +27,11 @@ public class Tiles extends MethodProvider {
 	 * @return <tt>true</tt> if no exceptions were thrown; otherwise
 	 *         <tt>false</tt>.
 	 */
-	public boolean doAction(final RSTile tile, final double xd,
-	                        final double yd, final int h, final String action) {
+	public boolean doAction(final RSTile tile, final double xd, final double yd, final int h, final String action) {
 		return methods.tiles.doAction(tile, xd, yd, h, action, null);
 	}
 
-	public boolean doAction(final RSTile tile, final double xd,
-	                        final double yd, final int h, final String action, final String option) {
+	public boolean doAction(final RSTile tile, final double xd, final double yd, final int h, final String action, final String option) {
 		final Point location = methods.calc.tileToScreen(tile, xd, yd, h);
 		if (location.x != -1 && location.y != -1) {
 			methods.mouse.move(location, 3, 3);
@@ -97,30 +95,13 @@ public class Tiles extends MethodProvider {
 		if (!methods.calc.pointOnScreen(p)) {
 			return null;
 		}
-		RSTile close = null;
-		for (int x = 0; x < 104; x++) {
-			for (int y = 0; y < 104; y++) {
-				final RSTile t = new RSTile(x + methods.client.getBaseX(), y
-						+ methods.client.getBaseY());
-				final Point s = methods.calc.tileToScreen(t);
-				if (s.x != -1 && s.y != -1) {
-					if (close == null) {
-						close = t;
-					}
-					if (methods.calc.tileToScreen(close).distance(p) > methods.calc
-							.tileToScreen(t).distance(p)) {
-						close = t;
-					}
-				}
-			}
-		}
-		return close;
+		return getTileUnderPoint(p);
 	}
 
 	/**
 	 * Gets the tile under a point.
 	 *
-	 * @param p
+	 * @param p The point.
 	 * @return RSTile at the point's location
 	 */
 	public RSTile getTileUnderPoint(final Point p) {
@@ -130,15 +111,13 @@ public class Tiles extends MethodProvider {
 		RSTile close = null;
 		for (int x = 0; x < 104; x++) {
 			for (int y = 0; y < 104; y++) {
-				final RSTile t = new RSTile(x + methods.client.getBaseX(), y
-						+ methods.client.getBaseY());
+				final RSTile t = new RSTile(x + methods.client.getBaseX(), y + methods.client.getBaseY());
 				final Point s = methods.calc.tileToScreen(t);
 				if (s.x != -1 && s.y != -1) {
 					if (close == null) {
 						close = t;
 					}
-					if (methods.calc.tileToScreen(close).distance(p) > methods.calc
-							.tileToScreen(t).distance(p)) {
+					if (methods.calc.tileToScreen(close).distance(p) > methods.calc.tileToScreen(t).distance(p)) {
 						close = t;
 					}
 				}
