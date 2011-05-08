@@ -40,6 +40,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add(".tinypic.com");
 		whitelist.add(".photobucket.com");
 		whitelist.add(".imgur.com");
+		whitelist.add(".deviantart.net");
 		whitelist.add(".powerbot.org");
 		whitelist.add(".runescape.com");
 
