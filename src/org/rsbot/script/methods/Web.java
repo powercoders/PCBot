@@ -101,7 +101,7 @@ public class Web extends MethodProvider {
 
 		@Override
 		public String toString() {
-			return "(" + x + "," + y + ")";
+			return "(" + x + "," + y + "," + z + ")";
 		}
 
 		public RSTile toRSTile() {
@@ -192,11 +192,11 @@ public class Web extends MethodProvider {
 		return tiles;
 	}
 
-	private static int[] getTileFlags(final RSTile tile) {
+	private TileFlags getTileFlags(final RSTile tile) {
 		if (Web.map.containsKey(tile)) {
-			return Web.map.get(tile).getKeys();
+			return Web.map.get(tile);
 		}
-		return new int[]{};
+		return null;
 	}
 
 	private static boolean Flag(final RSTile tile, final int... key) {

@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * The web queue class, passes data to Cache writer.
@@ -99,6 +98,7 @@ public class WebQueue {
 	public static void Remove(final RSTile tile) {
 		new Thread() {
 			public void run() {
+				Web.map.remove(tile);
 				cacheWriter.remove(tile.getX() + "," + tile.getY() + tile.getZ());
 			}
 		}.start();
