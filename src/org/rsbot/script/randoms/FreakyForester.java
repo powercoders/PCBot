@@ -211,8 +211,13 @@ public class FreakyForester extends Random implements MessageListener {
 			return random(100, 500);
 		}
 		if (bank.isDepositOpen() || (inventory.getCount(false) == 28) && !inventory.containsAll(6178)) {
+			int r = random(21, 27);
 			if (bank.isDepositOpen() && bank.getBoxCount() == 28) {
-				interfaces.get(11).getComponent(17).getComponent(random(21, 27)).doAction("Deposit");
+				if (interfaces.get(11).getComponent(17).getComponent(r).getComponentStackSize() > 1) {
+					interfaces.get(11).getComponent(17).getComponent(r).doAction("Deposit-All");
+				} else {
+					interfaces.get(11).getComponent(17).getComponent(r).doAction("Deposit");
+				}
 				return random(1000, 1500);
 			} else if (bank.isDepositOpen()) {
 				bank.close();

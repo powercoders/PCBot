@@ -179,10 +179,10 @@ public class PaintUtil {
 	 */
 	public Image getImage(final String fileName, final boolean save, final String url) {
 		Logger log = Logger.getLogger(this.getClass().getName());
-		File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/image_io/");
+		File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/image_io");
 		try {
 			if (!dir.exists()) {
-				if (!dir.createNewFile()) {
+				if (!dir.mkdir()) {
 					return null;
 				}
 			}
