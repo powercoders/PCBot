@@ -49,7 +49,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add(".glorb.nl"); // SXForce - Swamp Lizzy Paid, Snake Killah
 		whitelist.add("scripts.johnkeech.com"); // MrSneaky - SneakyFarmerPro
 		whitelist.add("myrsdatabase.x10.mx"); // gravemindx - BPestControl, GhoulKiller
-		whitelist.add("hedealer.site11.com"); // XscripterzX - PiratePlanker, DealerTanner
+		whitelist.add("thedealer.site11.com"); // XscripterzX - PiratePlanker, DealerTanner
 		whitelist.add("elyzianpirate.web44.net"); // XscripterzX (see above)
 		whitelist.add(".wikia.com"); // common assets and images
 		whitelist.add("jtryba.com"); // jtryba - autoCook, monkR8per
