@@ -76,6 +76,7 @@ public class GlobalConfiguration {
 
 		public static final String SCRIPTS_NAME_SRC = "scripts";
 		public static final String SCRIPTS_NAME_OUT = "Scripts";
+		public static final String PASSIVE_SCRIPTS_NAME_OUT = "PassiveScripts";
 
 		public static String getAccountsFile() {
 			final String path;
@@ -134,6 +135,14 @@ public class GlobalConfiguration {
 
 		public static String getScriptsPrecompiledDirectory() {
 			return Paths.getScriptsDirectory() + File.separator + "Precompiled";
+		}
+
+		public static String getPassiveScriptsDirectory() {
+			return Paths.getHomeDirectory() + File.separator + Paths.PASSIVE_SCRIPTS_NAME_OUT;
+		}
+
+		public static String getPassiveScriptsSourcesDirectory() {
+			return Paths.getScriptsDirectory() + File.separator + "Sources";
 		}
 
 		public static String getScriptsNetworkDirectory() {
@@ -224,6 +233,8 @@ public class GlobalConfiguration {
 			dirs.add(Paths.getScriptsDirectory());
 			dirs.add(Paths.getScriptsSourcesDirectory());
 			dirs.add(Paths.getScriptsPrecompiledDirectory());
+			dirs.add(Paths.getPassiveScriptsDirectory());
+			dirs.add(Paths.getPassiveScriptsSourcesDirectory());
 		}
 		for (final String name : dirs) {
 			final File dir = new File(name);

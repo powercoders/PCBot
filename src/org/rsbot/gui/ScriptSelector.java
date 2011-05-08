@@ -178,7 +178,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CONNECT)));
 		submit.setEnabled(false);
 		submit.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent evt) {
 				final ScriptDefinition def = model.getDefinition(table.getSelectedRow());
 				try {
@@ -194,7 +193,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		connect.setEnabled(GlobalConfiguration.SCRIPT_DRM ? true : false);
 		if (connect.isEnabled()) {
 			final ActionListener listenConnect = new ActionListener() {
-				@Override
 				public void actionPerformed(final ActionEvent e) {
 					final String icon = connected ? GlobalConfiguration.Paths.Resources.ICON_DISCONNECT :
 							GlobalConfiguration.Paths.Resources.ICON_CONNECT;
@@ -237,30 +235,24 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		}
 	}
 
-	@Override
 	public void scriptStarted(final ScriptHandler handler, final Script script) {
 		update();
 	}
 
-	@Override
 	public void scriptStopped(final ScriptHandler handler, final Script script) {
 		update();
 	}
 
-	@Override
 	public void scriptResumed(final ScriptHandler handler, final Script script) {
 	}
 
-	@Override
 	public void scriptPaused(final ScriptHandler handler, final Script script) {
 	}
 
-	@Override
 	public void inputChanged(final Bot bot, final int mask) {
 	}
 
 	private class TableSelectionListener implements ListSelectionListener {
-		@Override
 		public void valueChanged(final ListSelectionEvent evt) {
 			if (!evt.getValueIsAdjusting()) {
 				submit.setEnabled(table.getSelectedRow() != -1);
@@ -313,17 +305,14 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			return matches.get(rowIndex);
 		}
 
-		@Override
 		public int getRowCount() {
 			return matches.size();
 		}
 
-		@Override
 		public int getColumnCount() {
 			return COLUMN_NAMES.length;
 		}
 
-		@Override
 		public Object getValueAt(final int rowIndex, final int columnIndex) {
 			if (rowIndex >= 0 && rowIndex < matches.size()) {
 				final ScriptDefinition def = matches.get(rowIndex);
