@@ -33,7 +33,7 @@ public class WebData extends PassiveScript {
 			}
 			lb = curr_base;
 			Node t;
-			log("Analysing new region into your local web.");
+			log("Analyzing new region into your local web.");
 			int plane = game.getPlane();
 			final int flags[][] = walking.getCollisionFlags(plane);
 			for (int i = 3; i < 102; i++) {

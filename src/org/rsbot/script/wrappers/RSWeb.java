@@ -11,8 +11,15 @@ import java.util.EnumSet;
  * @author Timer
  */
 public class RSWeb extends RSPath {
+	private final WebTile[] tiles;
+
 	public RSWeb(MethodContext ctx, WebTile[] tiles) {
 		super(ctx);
+		this.tiles = tiles;
+	}
+
+	public WebTile[] getTiles() {
+		return tiles;
 	}
 
 	@Override
