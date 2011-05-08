@@ -1,29 +1,45 @@
 package org.rsbot.gui;
 
-import org.rsbot.script.methods.Environment;
-import org.rsbot.util.GlobalConfiguration;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.AlphaComposite;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import org.rsbot.script.methods.Environment;
+import org.rsbot.util.GlobalConfiguration;
 
 public class BotToolBar extends JToolBar {
 
 	private static final long serialVersionUID = -1861866523519184211L;
-
 	public static final int RUN_SCRIPT = 0;
 	public static final int PAUSE_SCRIPT = 1;
 	public static final int RESUME_SCRIPT = 2;
-
 	public static final ImageIcon ICON_HOME;
 	public static final ImageIcon ICON_BOT;
-
 	public static Image IMAGE_CLOSE;
 	public static final Image IMAGE_CLOSE_OVER;
 
@@ -32,10 +48,8 @@ public class BotToolBar extends JToolBar {
 		ICON_BOT = new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_BOT));
 		IMAGE_CLOSE_OVER = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CLOSE);
 	}
-
 	private JButton userInputButton;
 	private JButton runScriptButton;
-
 	private ActionListener listener;
 	private int idx;
 	private int inputState = Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE;
@@ -72,10 +86,10 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void addTab() {
-		int idx = getComponentCount() - 4;
-		add(new BotButton("RuneScape", ICON_BOT), idx);
+		int l_idx = getComponentCount() - 4;
+		add(new BotButton("RuneScape", ICON_BOT), l_idx);
 		validate();
-		setSelection(idx);
+		setSelection(l_idx);
 	}
 
 	public void removeTab(int idx) {
@@ -83,6 +97,8 @@ public class BotToolBar extends JToolBar {
 		revalidate();
 		repaint();
 		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
 			public void run() {
 				setSelection(0);
 			}
@@ -160,10 +176,10 @@ public class BotToolBar extends JToolBar {
 	}
 
 	private void updateSelection(boolean enabled) {
-		int idx = getCurrentTab();
-		if (idx >= 0) {
-			getComponent(idx).setEnabled(enabled);
-			getComponent(idx).repaint();
+		int l_idx = getCurrentTab();
+		if (l_idx >= 0) {
+			getComponent(l_idx).setEnabled(enabled);
+			getComponent(l_idx).repaint();
 		}
 	}
 
@@ -199,7 +215,6 @@ public class BotToolBar extends JToolBar {
 	private class HomeButton extends JPanel {
 
 		private static final long serialVersionUID = 938456324328L;
-
 		private Image image;
 		private boolean hovered;
 
@@ -211,15 +226,19 @@ public class BotToolBar extends JToolBar {
 			setMaximumSize(new Dimension(24, 22));
 			setFocusable(false);
 			addMouseListener(new MouseAdapter() {
+
+				@Override
 				public void mouseReleased(MouseEvent e) {
 					setSelection(getComponentIndex(HomeButton.this));
 				}
 
+				@Override
 				public void mouseEntered(MouseEvent e) {
 					hovered = true;
 					repaint();
 				}
 
+				@Override
 				public void mouseExited(MouseEvent e) {
 					hovered = false;
 					repaint();
@@ -227,6 +246,7 @@ public class BotToolBar extends JToolBar {
 			});
 		}
 
+		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -244,7 +264,6 @@ public class BotToolBar extends JToolBar {
 			}
 			g.drawImage(image, 3, 3, null);
 		}
-
 	}
 
 	/**
@@ -253,7 +272,6 @@ public class BotToolBar extends JToolBar {
 	private class BotButton extends JPanel {
 
 		private static final long serialVersionUID = 329845763420L;
-
 		private JLabel nameLabel;
 		private boolean hovered;
 		private boolean close;
@@ -271,6 +289,8 @@ public class BotToolBar extends JToolBar {
 			setMaximumSize(new Dimension(110, 22));
 			setFocusable(false);
 			addMouseListener(new MouseAdapter() {
+
+				@Override
 				public void mouseReleased(MouseEvent e) {
 					if (hovered && close) {
 						int idx = BotToolBar.this.getComponentIndex(BotButton.this);
@@ -281,17 +301,21 @@ public class BotToolBar extends JToolBar {
 					}
 				}
 
+				@Override
 				public void mouseEntered(MouseEvent e) {
 					hovered = true;
 					repaint();
 				}
 
+				@Override
 				public void mouseExited(MouseEvent e) {
 					hovered = false;
 					repaint();
 				}
 			});
 			addMouseMotionListener(new MouseMotionAdapter() {
+
+				@Override
 				public void mouseMoved(MouseEvent e) {
 					close = e.getX() > 95;
 					repaint();
@@ -303,6 +327,7 @@ public class BotToolBar extends JToolBar {
 			nameLabel.setText(label);
 		}
 
+		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -319,7 +344,6 @@ public class BotToolBar extends JToolBar {
 	private static class AddButton extends JComponent {
 
 		private static final long serialVersionUID = 1L;
-
 		private static Image ICON;
 		private static Image ICON_OVER;
 		private static final Image ICON_DOWN;
@@ -343,21 +367,26 @@ public class BotToolBar extends JToolBar {
 			setMaximumSize(new Dimension(20, 20));
 			setFocusable(false);
 			addMouseListener(new MouseAdapter() {
+
+				@Override
 				public void mouseEntered(MouseEvent e) {
 					hovered = true;
 					repaint();
 				}
 
+				@Override
 				public void mouseExited(MouseEvent e) {
 					hovered = false;
 					repaint();
 				}
 
+				@Override
 				public void mousePressed(MouseEvent e) {
 					pressed = true;
 					repaint();
 				}
 
+				@Override
 				public void mouseReleased(MouseEvent e) {
 					pressed = false;
 					repaint();
@@ -366,6 +395,7 @@ public class BotToolBar extends JToolBar {
 			});
 		}
 
+		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			if (pressed) {
@@ -376,7 +406,5 @@ public class BotToolBar extends JToolBar {
 				g.drawImage(ICON, 2, 2, null);
 			}
 		}
-
 	}
-
 }
