@@ -79,7 +79,6 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	/**
 	 * The run void of the loader
 	 */
-	@Override
 	public void run() {
 		try {
 			final Class<?> c = classLoader.loadClass("client");
@@ -99,30 +98,30 @@ public class RSLoader extends Applet implements Runnable, Loader {
 		}
 	}
 
-	@Override
 	public Applet getClient() {
 		return client;
 	}
 
 	public void load() {
 		try {
-			HttpClient.download(new URL(GlobalConfiguration.Paths.URLs.WEB),
-					new File(GlobalConfiguration.Paths.getWebCache()));
+			HttpClient.download(new URL(GlobalConfiguration.Paths.URLs.WEB), new File(GlobalConfiguration.Paths.getWebCache()));
 		} catch (final IOException wex) {
 			log.severe("Unable to load web matrix: " + wex.getMessage());
 		}
 		try {
 			final ClientLoader cl = new ClientLoader();
-			cl.init(new URL(GlobalConfiguration.Paths.URLs.UPDATE), new File(
-					GlobalConfiguration.Paths.getModScriptCache()));
-			cl.load(new File(GlobalConfiguration.Paths.getClientCache()),
-					new File(GlobalConfiguration.Paths.getVersionCache()));
+			cl.init(new URL(GlobalConfiguration.Paths.URLs.UPDATE), new File(GlobalConfiguration.Paths.getModScriptCache()));
+			cl.load(new File(GlobalConfiguration.Paths.getClientCache()), new File(GlobalConfiguration.Paths.getVersionCache()));
 			targetName = cl.getTargetName();
 			classLoader = new RSClassLoader(cl.getClasses(), new URL("http://" + targetName + ".com/"));
 		} catch (final IOException ex) {
 			log.severe("Unable to load client: " + ex.getMessage());
 		} catch (final ParseException ex) {
-			log.severe("Unable to load client: " + ex.toString());
+			log.severe("Unable to load client: " + ex.toString() + "\nPlease restart RSBot to see if it solves the issue.");
+			File ms = new File(GlobalConfiguration.Paths.getModScriptCache());
+			if (ms.exists()) {
+				ms.delete();
+			}
 		}
 	}
 
