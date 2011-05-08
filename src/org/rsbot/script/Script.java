@@ -65,7 +65,7 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 	}
 
 	/**
-	 * Called when a break is initiated, before the logout.
+	 * Called when a break is initiated, before the login.
 	 * Override it to implement in your script.
 	 */
 	public void onBreakFinish() {
