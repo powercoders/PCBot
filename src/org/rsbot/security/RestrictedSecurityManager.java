@@ -276,6 +276,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 					// allow project resource directory if not running from JAR (i.e. in eclipse)
 					final String check = new File(GlobalConfiguration.Paths.Resources.ROOT).getAbsolutePath();
 					fail = !path.startsWith(check);
+				} else {
+					final String check = new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
+					fail = !path.equals(check);
 				}
 				// allow screenshots directory
 				if (path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory())) {
