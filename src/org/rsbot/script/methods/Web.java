@@ -27,6 +27,9 @@ public class Web extends MethodProvider {
 		if (start.getZ() != end.getZ()) {
 			return null;
 		}
+		if (start.equals(end)) {
+			return new RSWeb(methods, new WebTile[]{});
+		}
 		HashSet<Node> open = new HashSet<Node>();
 		HashSet<Node> closed = new HashSet<Node>();
 		Node curr = new Node(start.getX(), start.getY(), start.getZ());
