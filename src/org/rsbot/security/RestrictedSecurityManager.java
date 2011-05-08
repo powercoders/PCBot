@@ -55,6 +55,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("tehgamer.info"); // TehGamer - iMiner
 		whitelist.add("www.universalscripts.org"); // Fletch To 99 - UFletch
 		whitelist.add("www.dunkscripts.freeiz.com"); // Dunnkers
+                whitelist.add("www.dlolpics.com"); //DlolPics
 
 		return whitelist;
 	}
