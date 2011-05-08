@@ -1,6 +1,6 @@
-package org.rsbot.script.passives;
+package org.rsbot.script.background;
 
-import org.rsbot.script.PassiveScript;
+import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.util.BankCache;
 import org.rsbot.script.wrappers.RSItem;
@@ -8,7 +8,7 @@ import org.rsbot.script.wrappers.RSItem;
 import java.util.HashMap;
 
 @ScriptManifest(name = "Bank Monitor", authors = {"Timer"})
-public class BankMonitor extends PassiveScript {
+public class BankMonitor extends BackgroundScript {
 	private final HashMap<String, Long> updateTimes = new HashMap<String, Long>();
 
 	@Override

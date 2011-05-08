@@ -1,33 +1,33 @@
 package org.rsbot.script.internal;
 
 import org.rsbot.bot.Bot;
-import org.rsbot.script.PassiveScript;
+import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.internal.event.PassiveScriptListener;
+import org.rsbot.script.internal.event.BackgroundScriptListener;
 
 import java.util.*;
 
-public class PassiveScriptHandler {
-	private final HashMap<Integer, PassiveScript> scripts = new HashMap<Integer, PassiveScript>();
+public class BackgroundScriptHandler {
+	private final HashMap<Integer, BackgroundScript> scripts = new HashMap<Integer, BackgroundScript>();
 	private final HashMap<Integer, Thread> scriptThreads = new HashMap<Integer, Thread>();
 
-	private final Set<PassiveScriptListener> listeners = Collections.synchronizedSet(new HashSet<PassiveScriptListener>());
+	private final Set<BackgroundScriptListener> listeners = Collections.synchronizedSet(new HashSet<BackgroundScriptListener>());
 
 	private final Bot bot;
 
-	public PassiveScriptHandler(Bot bot) {
+	public BackgroundScriptHandler(Bot bot) {
 		this.bot = bot;
 	}
 
-	public void addScriptListener(PassiveScriptListener l) {
+	public void addScriptListener(BackgroundScriptListener l) {
 		listeners.add(l);
 	}
 
-	public void removeScriptListener(PassiveScriptListener l) {
+	public void removeScriptListener(BackgroundScriptListener l) {
 		listeners.remove(l);
 	}
 
-	private void addScriptToPool(PassiveScript ss, Thread t) {
+	private void addScriptToPool(BackgroundScript ss, Thread t) {
 		for (int off = 0; off < scripts.size(); ++off) {
 			if (!scripts.containsKey(off)) {
 				scripts.put(off, ss);
@@ -45,29 +45,29 @@ public class PassiveScriptHandler {
 		return bot;
 	}
 
-	public Map<Integer, PassiveScript> getRunningScripts() {
+	public Map<Integer, BackgroundScript> getRunningScripts() {
 		return Collections.unmodifiableMap(scripts);
 	}
 
 	public void stopScript(int id) {
-		PassiveScript script = scripts.get(id);
+		BackgroundScript script = scripts.get(id);
 		if (script != null) {
 			script.deactivate(id);
 			scripts.remove(id);
 			scriptThreads.remove(id);
-			for (PassiveScriptListener l : listeners) {
+			for (BackgroundScriptListener l : listeners) {
 				l.scriptStopped(this, script);
 			}
 		}
 	}
 
-	public void runScript(PassiveScript script) {
+	public void runScript(BackgroundScript script) {
 		script.init(bot.getMethodContext());
-		for (PassiveScriptListener l : listeners) {
+		for (BackgroundScriptListener l : listeners) {
 			l.scriptStarted(this, script);
 		}
 		ScriptManifest prop = script.getClass().getAnnotation(ScriptManifest.class);
-		Thread t = new Thread(script, "PassiveScript-" + prop.name());
+		Thread t = new Thread(script, "BackgroundScript-" + prop.name());
 		addScriptToPool(script, t);
 		t.start();
 	}
@@ -88,7 +88,7 @@ public class PassiveScriptHandler {
 	public void stopScript() {
 		Thread curThread = Thread.currentThread();
 		for (int i = 0; i < scripts.size(); i++) {
-			PassiveScript script = scripts.get(i);
+			BackgroundScript script = scripts.get(i);
 			if (script != null && script.isRunning()) {
 				if (scriptThreads.get(i) == curThread) {
 					stopScript(i);

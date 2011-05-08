@@ -6,11 +6,11 @@ import org.rsbot.script.methods.Methods;
 import java.util.EventListener;
 
 /**
- * A passive script.
+ * A background script.
  *
  * @author Timer
  */
-public abstract class PassiveScript extends Methods implements EventListener, Runnable {
+public abstract class BackgroundScript extends Methods implements EventListener, Runnable {
 	protected String name = "";
 	private volatile boolean enabled = true;
 	private volatile boolean running = false;
@@ -46,7 +46,7 @@ public abstract class PassiveScript extends Methods implements EventListener, Ru
 	}
 
 	/**
-	 * Runs the passive script.
+	 * Runs the background script.
 	 */
 	public final void run() {
 		name = getClass().getAnnotation(ScriptManifest.class).name();
