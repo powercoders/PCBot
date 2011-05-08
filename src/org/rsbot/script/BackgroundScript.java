@@ -12,7 +12,6 @@ import java.util.EventListener;
  */
 public abstract class BackgroundScript extends Methods implements EventListener, Runnable {
 	protected String name = "";
-	private volatile boolean enabled = true;
 	private volatile boolean running = false;
 	private int id = -1;
 
@@ -34,15 +33,6 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 	public final void init(MethodContext ctx) {
 		super.init(ctx);
 		onStart();
-	}
-
-	/**
-	 * Sets if it's enabled.
-	 *
-	 * @param enabled Enabled or not.
-	 */
-	public final void setEnabled(boolean enabled) {
-		this.enabled = enabled;
 	}
 
 	/**

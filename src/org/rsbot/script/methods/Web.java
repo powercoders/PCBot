@@ -192,13 +192,6 @@ public class Web extends MethodProvider {
 		return tiles;
 	}
 
-	private TileFlags getTileFlags(final RSTile tile) {
-		if (Web.map.containsKey(tile)) {
-			return Web.map.get(tile);
-		}
-		return null;
-	}
-
 	private static boolean Flag(final RSTile tile, final int... key) {
 		if (Web.map.containsKey(tile)) {
 			TileFlags theTile = Web.map.get(tile);
