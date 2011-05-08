@@ -1,7 +1,7 @@
 package org.rsbot.script.passives;
 
 import org.rsbot.script.PassiveScript;
-import org.rsbot.script.PassiveScriptManifest;
+import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
@@ -12,7 +12,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashMap;
 
-@PassiveScriptManifest(name = "Web Data Loader", authors = {"Timer"})
+@ScriptManifest(name = "Web Data Loader", authors = {"Timer"})
 public class WebLoader extends PassiveScript {
 	@Override
 	public boolean activateCondition() {

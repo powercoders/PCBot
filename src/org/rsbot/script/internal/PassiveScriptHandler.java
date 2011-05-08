@@ -2,7 +2,7 @@ package org.rsbot.script.internal;
 
 import org.rsbot.bot.Bot;
 import org.rsbot.script.PassiveScript;
-import org.rsbot.script.PassiveScriptManifest;
+import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.event.PassiveScriptListener;
 
 import java.util.*;
@@ -66,7 +66,7 @@ public class PassiveScriptHandler {
 		for (PassiveScriptListener l : listeners) {
 			l.scriptStarted(this, script);
 		}
-		PassiveScriptManifest prop = script.getClass().getAnnotation(PassiveScriptManifest.class);
+		ScriptManifest prop = script.getClass().getAnnotation(ScriptManifest.class);
 		Thread t = new Thread(script, "PassiveScript-" + prop.name());
 		addScriptToPool(script, t);
 		t.start();

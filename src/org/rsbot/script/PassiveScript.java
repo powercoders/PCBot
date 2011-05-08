@@ -49,7 +49,7 @@ public abstract class PassiveScript extends Methods implements EventListener, Ru
 	 * Runs the passive script.
 	 */
 	public final void run() {
-		name = getClass().getAnnotation(PassiveScriptManifest.class).name();
+		name = getClass().getAnnotation(ScriptManifest.class).name();
 		ctx.bot.getEventManager().addListener(this);
 		running = true;
 		try {
