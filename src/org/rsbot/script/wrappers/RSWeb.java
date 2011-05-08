@@ -1,7 +1,6 @@
 package org.rsbot.script.wrappers;
 
 import org.rsbot.script.methods.MethodContext;
-import org.rsbot.script.web.WebTile;
 
 import java.util.EnumSet;
 
@@ -11,14 +10,14 @@ import java.util.EnumSet;
  * @author Timer
  */
 public class RSWeb extends RSPath {
-	private final WebTile[] tiles;
+	private final RSTile[] tiles;
 
-	public RSWeb(MethodContext ctx, WebTile[] tiles) {
+	public RSWeb(MethodContext ctx, RSTile[] tiles) {
 		super(ctx);
 		this.tiles = tiles;
 	}
 
-	public WebTile[] getTiles() {
+	public RSTile[] getTiles() {
 		return tiles;
 	}
 

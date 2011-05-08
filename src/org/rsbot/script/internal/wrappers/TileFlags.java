@@ -3,7 +3,6 @@ package org.rsbot.script.internal.wrappers;
 import org.rsbot.script.wrappers.RSTile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,14 +35,20 @@ public class TileFlags extends RSTile {
 
 	private List<Integer> keys = new ArrayList<Integer>();
 
-	public Integer[] getKeys() {
-		return keys.toArray(new Integer[keys.size()]);
+	public int[] getKeys() {
+		int[] iA = new int[keys.size()];
+		for (int i = 0; i < keys.size(); i++) {
+			iA[i] = keys.get(i).intValue();
+		}
+		return iA;
 	}
 
-	public TileFlags(RSTile tile, Integer[] keys) {
+	public TileFlags(RSTile tile, int[] keyz) {
 		super(tile.getX(), tile.getY(), tile.getZ());
-		if (keys != null) {
-			this.keys.addAll(Arrays.asList(keys));
+		if (keyz != null) {
+			for (int k : keyz) {
+				keys.add(k);
+			}
 		}
 	}
 

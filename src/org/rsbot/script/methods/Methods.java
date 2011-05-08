@@ -190,6 +190,7 @@ public class Methods {
 		this.friendChat = ctx.friendChat;
 		this.trade = ctx.trade;
 		this.paint = ctx.paint;
+		this.web = ctx.web;
 	}
 
 	/**
