@@ -377,7 +377,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			JOptionPane.showMessageDialog(this, "No accounts found! Please create one before using the bot.");
 			AccountManager.getInstance().showGUI();
 		} else if (bot.getMethodContext() == null) {
-			JOptionPane.showMessageDialog(this, "The client is not currently loaded!");
+			log.warning("The client is still loading");
 		} else {
 			new ScriptSelector(this, bot).showGUI();
 		}
