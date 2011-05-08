@@ -325,7 +325,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 		public void search(String substr) {
 			matches.clear();
-			if (substr.length() == 0) {
+			substr = substr.trim();
+			if (substr.isEmpty()) {
 				matches.addAll(scripts);
 			} else {
 				substr = substr.toLowerCase();
