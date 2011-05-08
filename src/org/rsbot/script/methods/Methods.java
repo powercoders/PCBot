@@ -231,7 +231,7 @@ public class Methods {
 	 * @return <tt>true</tt> if found.
 	 */
 	public boolean verify(final RSNPC npc) {
-		return npc != null;
+		return npc != null && (getModel() != null || verify(npc.getLocation()) );
 	}
 
 	/**
@@ -241,7 +241,7 @@ public class Methods {
 	 * @return <tt>true</tt> if found.
 	 */
 	public boolean verify(final RSObject o) {
-		return o != null;
+		return o != null && (o.getModel() != null || verify(o.getLocation()));
 	}
 
 	/**
@@ -251,7 +251,7 @@ public class Methods {
 	 * @return <tt>true</tt> if found.
 	 */
 	public boolean verify(final RSTile t) {
-		return t != null;
+		return t != null && t.getX() != -1 && t.getY() != -1;
 	}
 
 	/**
@@ -261,7 +261,7 @@ public class Methods {
 	 * @return <tt>true</tt> if found.
 	 */
 	public boolean verify(final RSGroundItem i) {
-		return i != null;
+		return i != null && (i.getModel() != null || verify(i.getLocation()));
 	}
 
 	/**
