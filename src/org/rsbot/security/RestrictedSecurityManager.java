@@ -254,7 +254,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkSystemClipboardAccess() {
-		throw new SecurityException();
+		if (isCallerScript()) {
+			throw new SecurityException();
+		}
 	}
 
 	@Override
