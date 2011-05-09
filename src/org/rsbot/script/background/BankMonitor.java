@@ -1,11 +1,11 @@
 package org.rsbot.script.background;
 
-import java.util.HashMap;
-
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.util.BankCache;
 import org.rsbot.script.wrappers.RSItem;
+
+import java.util.HashMap;
 
 @ScriptManifest(name = "Bank Monitor", authors = {"Timer"})
 public class BankMonitor extends BackgroundScript {
@@ -18,7 +18,8 @@ public class BankMonitor extends BackgroundScript {
 
 	@Override
 	public int loop() {
-		final String accountName = account.getName();
+		sleep(1500);
+		final String accountName = getMyPlayer().getName().trim();
 		if (updateTimes.keySet().contains(accountName.toLowerCase())) {
 			final long lastTime = updateTimes.get(accountName.toLowerCase());
 			if (System.currentTimeMillis() - lastTime < 30000) {

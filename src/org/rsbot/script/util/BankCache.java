@@ -1,15 +1,11 @@
 package org.rsbot.script.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.HashMap;
-
 import org.rsbot.script.wrappers.RSItem;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.IniParser;
+
+import java.io.*;
+import java.util.HashMap;
 
 /**
  * Bank cache class. Used for web.
@@ -26,13 +22,11 @@ public class BankCache {
 	 * @param name  The name of the character.
 	 * @param items The array of items in the bank.
 	 */
-	public static void Save(final String name, final RSItem[] items)
-	throws Exception {
+	public static void Save(final String name, final RSItem[] items) throws Exception {
 		Load();// For multiple bot instances.
 		final FileWriter fw = new FileWriter(cacheFile, false);
 		final BufferedWriter bw = new BufferedWriter(fw);
-		HashMap<String, String> newData = null;
-		newData = BankCache.genMap(name, items);
+		HashMap<String, String> newData = BankCache.genMap(name, items);
 		if (data.containsKey(name.toLowerCase())) {
 			data.get(name.toLowerCase()).putAll(newData);
 		} else {
@@ -69,7 +63,7 @@ public class BankCache {
 	}
 
 	public static void Load() throws Exception {
-		if (cacheFile.exists()) {
+		if (!cacheFile.exists()) {
 			if (!cacheFile.createNewFile()) {
 				return;
 			}
