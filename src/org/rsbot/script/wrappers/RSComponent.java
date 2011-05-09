@@ -582,7 +582,8 @@ public class RSComponent extends MethodProvider {
 	 * @return the absolute position or new Point(-1, -1) if null
 	 */
 	public Point getLocation() {
-		return new Point(getAbsoluteX(), getAbsoluteY());
+        int x = getAbsoluteX() + random(0, getWidth() + 1), y = getAbsoluteY() + random(0, getHeight() + 1);
+        return new Point(x, y);
 	}
 
 	/**
