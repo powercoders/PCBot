@@ -38,6 +38,7 @@ import org.rsbot.script.internal.event.BackgroundScriptListener;
 import org.rsbot.script.internal.event.ScriptListener;
 import org.rsbot.script.methods.Environment;
 import org.rsbot.script.util.WindowUtil;
+import org.rsbot.service.Monitoring;
 import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
@@ -95,6 +96,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 						ScriptDeliveryNetwork.getInstance().start();
 					}
 				}.start();
+				Monitoring.start();
 			}
 		});
 	}
@@ -600,6 +602,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		}
 		if (doExit) {
 			menuBar.savePrefs();
+			Monitoring.stop();
 			System.exit(0);
 		} else {
 			setVisible(true);
