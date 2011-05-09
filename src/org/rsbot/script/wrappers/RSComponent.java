@@ -1,12 +1,11 @@
 package org.rsbot.script.wrappers;
 
-import java.awt.Point;
-import java.awt.Rectangle;
-
 import org.rsbot.client.RSInterfaceNode;
 import org.rsbot.script.internal.wrappers.HashTable;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
+
+import java.awt.*;
 
 /**
  * Represents an interface component. An RSComponent may or
@@ -237,7 +236,7 @@ public class RSComponent extends MethodProvider {
 		// Find scrollable area
 		if (inter.getParentID() != -1) {
 			inter = methods.interfaces.getComponent(inter.getParentID() >> 16,
-			inter.getParentID() & 0xFFFF).getInterfaceInternal();
+					inter.getParentID() & 0xFFFF).getInterfaceInternal();
 			if (inter.getHorizontalScrollBarSize() != 0) {
 				x -= inter.getHorizontalScrollBarThumbPosition();
 			}
@@ -289,7 +288,7 @@ public class RSComponent extends MethodProvider {
 		// Find scrollable area
 		if (inter.getParentID() != -1) {
 			inter = methods.interfaces.getComponent(inter.getParentID() >> 16,
-			inter.getParentID() & 0xFFFF).getInterfaceInternal();
+					inter.getParentID() & 0xFFFF).getInterfaceInternal();
 			if (inter.getVerticalScrollBarSize() != 0) {
 				y -= inter.getVerticalScrollBarPosition();
 			}
@@ -546,7 +545,7 @@ public class RSComponent extends MethodProvider {
 		final HashTable ncI = new HashTable(methods.client.getRSInterfaceNC());
 
 		for (RSInterfaceNode node = (RSInterfaceNode) ncI.getFirst(); node != null;
-		node = (RSInterfaceNode) ncI.getNext()) {
+		     node = (RSInterfaceNode) ncI.getNext()) {
 			if (mainID == node.getMainID()) {
 				return (int) node.getID();
 			}

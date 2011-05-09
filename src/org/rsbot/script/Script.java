@@ -1,12 +1,5 @@
 package org.rsbot.script;
 
-import java.io.File;
-import java.util.EventListener;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.event.EventMulticaster;
 import org.rsbot.event.listeners.PaintListener;
@@ -17,6 +10,13 @@ import org.rsbot.script.methods.Methods;
 import org.rsbot.script.randoms.LoginBot;
 import org.rsbot.script.util.Timer;
 import org.rsbot.util.GlobalConfiguration;
+
+import java.io.File;
+import java.util.EventListener;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
 
 public abstract class Script extends Methods implements EventListener, Runnable {
 

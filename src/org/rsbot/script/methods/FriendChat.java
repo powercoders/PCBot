@@ -1,9 +1,9 @@
 package org.rsbot.script.methods;
 
+import org.rsbot.script.wrappers.RSComponent;
+
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-
-import org.rsbot.script.wrappers.RSComponent;
 
 /**
  * Friend chat related operations.
@@ -113,7 +113,7 @@ public class FriendChat extends MethodProvider {
 			lastCachedChannel = getChannelName();
 		}
 		return methods.interfaces.getComponent(INTERFACE_FRIEND_CHAT, INTERFACE_FRIEND_CHAT_JOIN_BUTTON).containsAction(
-		"Leave chat");
+				"Leave chat");
 	}
 
 	/**

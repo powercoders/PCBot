@@ -1,13 +1,13 @@
 package org.rsbot.script.randoms;
 
-import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-
 import org.rsbot.gui.AccountManager;
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
 
 /**
  * @author Iscream, Aut0r, Doout, Pervy
@@ -47,7 +47,7 @@ public class LoginBot extends Random {
 	public boolean activateCondition() {
 		final int idx = game.getClientState();
 		return (idx == INDEX_LOGGED_OUT || idx == INDEX_LOBBY)
-		&& !switchingWorlds() && account.getName() != null;
+				&& !switchingWorlds() && account.getName() != null;
 	}
 
 	@Override
@@ -72,8 +72,8 @@ public class LoginBot extends Random {
 				mouse.click(welcome_screen_button_play_1.getAbsoluteX(),
 						welcome_screen_button_play_1.getAbsoluteY(),
 						welcome_screen_button_play_2.getAbsoluteX()
-						+ welcome_screen_button_play_2.getWidth()
-						- welcome_screen_button_play_1.getAbsoluteX(),
+								+ welcome_screen_button_play_2.getWidth()
+								- welcome_screen_button_play_1.getAbsoluteX(),
 						welcome_screen_button_play_1.getHeight(), true);
 
 				for (int i = 0; i < 4 && game.getClientState() == 6; i++) {
@@ -127,8 +127,8 @@ public class LoginBot extends Random {
 							back_button1.getAbsoluteX(),
 							back_button1.getAbsoluteY(),
 							back_button2.getAbsoluteX()
-							+ back_button2.getWidth()
-							- back_button1.getAbsoluteX(),
+									+ back_button2.getWidth()
+									- back_button1.getAbsoluteX(),
 							back_button1.getHeight(), true);
 					interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(203).doClick();
 					stopScript(false);
@@ -243,7 +243,7 @@ public class LoginBot extends Random {
 				atLoginInterface(interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_USERNAME_WINDOW));
 				sleep(random(500, 700));
 				textlength = interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_USERNAME).getText().length()
-				+ random(3, 5);
+						+ random(3, 5);
 				for (int i = 0; i <= textlength + random(1, 5); i++) {
 					keyboard.sendText("\b", false);
 					if (random(0, 2) == 1) {
@@ -257,7 +257,7 @@ public class LoginBot extends Random {
 				atLoginInterface(interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_PASSWORD_WINDOW));
 				sleep(random(500, 700));
 				textlength = interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_PASSWORD).getText().length()
-				+ random(3, 5);
+						+ random(3, 5);
 				for (int i = 0; i <= textlength + random(1, 5); i++) {
 					keyboard.sendText("\b", false);
 					if (random(0, 2) == 1) {
@@ -272,7 +272,7 @@ public class LoginBot extends Random {
 
 	private boolean switchingWorlds() {
 		return interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_TEXT_RETURN).isValid()
-		&& interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_TEXT_RETURN).containsText("just left another world");
+				&& interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_TEXT_RETURN).containsText("just left another world");
 	}
 
 	// Clicks past all of the letters

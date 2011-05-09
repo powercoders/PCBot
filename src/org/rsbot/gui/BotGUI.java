@@ -1,32 +1,5 @@
 package org.rsbot.gui;
 
-import java.awt.AWTKeyStroke;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.log.TextAreaLogHandler;
 import org.rsbot.script.BackgroundScript;
@@ -44,6 +17,16 @@ import org.rsbot.service.WebQueue;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.ScreenshotUtil;
 import org.rsbot.util.UpdateUtil;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * @author Jacmob
@@ -431,12 +414,12 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 			@Override
 			public void windowStateChanged(final WindowEvent arg0) {
 				switch (arg0.getID()) {
-				case WindowEvent.WINDOW_ICONIFIED:
-					lessCpu(true);
-					break;
-				case WindowEvent.WINDOW_DEICONIFIED:
-					lessCpu(false);
-					break;
+					case WindowEvent.WINDOW_ICONIFIED:
+						lessCpu(true);
+						break;
+					case WindowEvent.WINDOW_DEICONIFIED:
+						lessCpu(false);
+						break;
 				}
 			}
 		});

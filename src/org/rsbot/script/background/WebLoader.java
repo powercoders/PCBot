@@ -1,9 +1,5 @@
 package org.rsbot.script.background;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.HashMap;
-
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.wrappers.TileFlags;
@@ -11,6 +7,10 @@ import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
 import org.rsbot.util.GlobalConfiguration;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.HashMap;
 
 @ScriptManifest(name = "Web Data Loader", authors = {"Timer"})
 public class WebLoader extends BackgroundScript {

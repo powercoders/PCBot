@@ -1,11 +1,11 @@
 package org.rsbot.script.randoms;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSComponent;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**

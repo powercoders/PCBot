@@ -1,8 +1,8 @@
 package org.rsbot.script.wrappers;
 
-import java.util.EnumSet;
-
 import org.rsbot.script.methods.MethodContext;
+
+import java.util.EnumSet;
 
 /**
  * A path consisting of a list of tile waypoints.

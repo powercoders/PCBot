@@ -1,8 +1,8 @@
 package org.rsbot.script.internal;
 
-import java.util.Random;
-
 import org.rsbot.bot.Bot;
+
+import java.util.Random;
 
 public class BreakHandler {
 
@@ -21,7 +21,7 @@ public class BreakHandler {
 
 	public boolean isBreaking() {
 		return ticks > 50 && nextBreak > 0 && nextBreak < System.currentTimeMillis()
-		&& breakEnd > System.currentTimeMillis() && can();
+				&& breakEnd > System.currentTimeMillis() && can();
 	}
 
 	private boolean can() {

@@ -1,10 +1,10 @@
 package org.rsbot.script.internal.wrappers;
 
+import org.rsbot.script.wrappers.RSTile;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.rsbot.script.wrappers.RSTile;
 
 /**
  * A class that handles flags of tiles.

@@ -1,54 +1,21 @@
 package org.rsbot.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.WindowConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.script.Script;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
-import org.rsbot.service.FileScriptSource;
-import org.rsbot.service.ScriptDefinition;
-import org.rsbot.service.ScriptDeliveryNetwork;
-import org.rsbot.service.ScriptSource;
-import org.rsbot.service.ServiceException;
+import org.rsbot.service.*;
 import org.rsbot.util.GlobalConfiguration;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Jacmob
@@ -230,7 +197,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				@Override
 				public void actionPerformed(final ActionEvent e) {
 					final String icon = connected ? GlobalConfiguration.Paths.Resources.ICON_DISCONNECT :
-						GlobalConfiguration.Paths.Resources.ICON_CONNECT;
+							GlobalConfiguration.Paths.Resources.ICON_CONNECT;
 					connect.setIcon(new ImageIcon(GlobalConfiguration.getImage(icon)));
 					connect.repaint();
 					connected = !connected;

@@ -39,28 +39,28 @@ class GameGUI extends MethodProvider {
 		// Get GUI interface
 		final RSInterface[] gui = ind_GUI != -1 ? methods.client
 				.getRSInterfaceCache()[ind_GUI] : null;
-				if (gui == null) {
-					return null;
-				}
+		if (gui == null) {
+			return null;
+		}
 
-				// Check if we need to find a new compass index
-				if (ind_Compass == -1) {
-					for (int i = 0; i < gui.length; i++) {
-						if (gui[i] != null && gui[i].getActions() != null
-								&& gui[i].getActions().length == 1
-								&& gui[i].getActions()[0].equals("Face North")) {
-							ind_Compass = i;
-							break;
-						}
-					}
+		// Check if we need to find a new compass index
+		if (ind_Compass == -1) {
+			for (int i = 0; i < gui.length; i++) {
+				if (gui[i] != null && gui[i].getActions() != null
+						&& gui[i].getActions().length == 1
+						&& gui[i].getActions()[0].equals("Face North")) {
+					ind_Compass = i;
+					break;
 				}
+			}
+		}
 
-				// Return the compass interface
-				if (ind_Compass != -1) {
-					return gui[ind_Compass];
-				}
+		// Return the compass interface
+		if (ind_Compass != -1) {
+			return gui[ind_Compass];
+		}
 
-				return null;
+		return null;
 	}
 
 	/**
@@ -73,26 +73,26 @@ class GameGUI extends MethodProvider {
 		// Get the GUI interface
 		final RSInterface[] gui = ind_GUI != -1 ? methods.client
 				.getRSInterfaceCache()[ind_GUI] : null;
-				if (gui == null) {
-					return null;
-				}
+		if (gui == null) {
+			return null;
+		}
 
-				// Check if we need to find the new minimap index
-				if (ind_Minimap == -1) {
-					for (int i = 0; i < gui.length; i++) {
-						if (gui[i] != null && gui[i].getSpecialType() == 1338) {
-							ind_Minimap = i;
-							break;
-						}
-					}
+		// Check if we need to find the new minimap index
+		if (ind_Minimap == -1) {
+			for (int i = 0; i < gui.length; i++) {
+				if (gui[i] != null && gui[i].getSpecialType() == 1338) {
+					ind_Minimap = i;
+					break;
 				}
+			}
+		}
 
-				// Return minimap interface
-				if (ind_Minimap != -1) {
-					return gui[ind_Minimap];
-				}
+		// Return minimap interface
+		if (ind_Minimap != -1) {
+			return gui[ind_Minimap];
+		}
 
-				return null;
+		return null;
 	}
 
 	/**
@@ -111,28 +111,28 @@ class GameGUI extends MethodProvider {
 		// Get GUI interface
 		final RSInterface[] gui = ind_GUI != -1 ? methods.client
 				.getRSInterfaceCache()[ind_GUI] : null;
-				if (gui == null) {
-					return null;
-				}
+		if (gui == null) {
+			return null;
+		}
 
-				// Check if we need to find a new tab index
-				if (ind_Tabs[id] == -1) {
-					for (int i = 0; i < gui.length; i++) {
-						if (gui[i] != null && gui[i].getActions() != null
-								&& gui[i].getActions().length > 0
-								&& gui[i].getActions()[0].equals(Game.TAB_NAMES[id])) {
-							ind_Tabs[id] = i;
-							break;
-						}
-					}
+		// Check if we need to find a new tab index
+		if (ind_Tabs[id] == -1) {
+			for (int i = 0; i < gui.length; i++) {
+				if (gui[i] != null && gui[i].getActions() != null
+						&& gui[i].getActions().length > 0
+						&& gui[i].getActions()[0].equals(Game.TAB_NAMES[id])) {
+					ind_Tabs[id] = i;
+					break;
 				}
+			}
+		}
 
-				// Return the tab interface
-				if (ind_Tabs[id] != -1) {
-					return gui[ind_Tabs[id]];
-				}
+		// Return the tab interface
+		if (ind_Tabs[id] != -1) {
+			return gui[ind_Tabs[id]];
+		}
 
-				return null;
+		return null;
 	}
 
 	/**

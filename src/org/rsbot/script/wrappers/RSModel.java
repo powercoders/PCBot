@@ -1,15 +1,14 @@
 package org.rsbot.script.wrappers;
 
-import java.awt.Point;
-import java.awt.Polygon;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-
 import org.rsbot.client.Model;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
 import org.rsbot.script.util.Filter;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 /**
  * A screen space model.
@@ -290,9 +289,9 @@ public abstract class RSModel extends MethodProvider {
 		if (o instanceof RSModel) {
 			final RSModel m = (RSModel) o;
 			return Arrays.equals(indices1, m.indices1)
-			&& Arrays.equals(xPoints, m.xPoints)
-			&& Arrays.equals(yPoints, m.yPoints)
-			&& Arrays.equals(zPoints, m.zPoints);
+					&& Arrays.equals(xPoints, m.xPoints)
+					&& Arrays.equals(yPoints, m.yPoints)
+					&& Arrays.equals(zPoints, m.zPoints);
 		}
 		return false;
 	}

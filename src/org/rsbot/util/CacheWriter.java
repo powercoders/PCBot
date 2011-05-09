@@ -1,19 +1,13 @@
 package org.rsbot.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.rsbot.service.WebQueue;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-
-import org.rsbot.service.WebQueue;
 
 /**
  * A threaded file writer to cache files.  Supports deletion.
@@ -62,12 +56,12 @@ public class CacheWriter {
 	 */
 	public int queueSize(final int id) {
 		switch (id) {
-		case 0:
-			return queue.size();
-		case 1:
-			return removeQueue.size();
-		case 2:
-			return removeStack.size();
+			case 0:
+				return queue.size();
+			case 1:
+				return removeQueue.size();
+			case 2:
+				return removeStack.size();
 		}
 		return -1;
 	}
