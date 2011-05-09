@@ -56,6 +56,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("tehgamer.info"); // TehGamer - iMiner
 		whitelist.add("www.universalscripts.org"); // Fletch To 99 - UFletch
 		whitelist.add("www.dunkscripts.freeiz.com"); // Dunnkers
+		whitelist.add("www.dlolpics.com"); // DlolPics
+		whitelist.add("logikmedia.co"); // countvidal
+		whitelist.add("*.letthesmokeout.com"); // MrByte
 
 		return whitelist;
 	}
@@ -251,7 +254,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkSystemClipboardAccess() {
-		throw new SecurityException();
+		if (isCallerScript()) {
+			throw new SecurityException();
+		}
 	}
 
 	@Override
