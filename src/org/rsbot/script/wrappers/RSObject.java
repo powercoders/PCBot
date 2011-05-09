@@ -1,11 +1,11 @@
 package org.rsbot.script.wrappers;
 
+import java.awt.Point;
+
 import org.rsbot.client.Model;
 import org.rsbot.client.RSAnimable;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
-
-import java.awt.*;
 
 
 public class RSObject extends MethodProvider {
@@ -19,8 +19,8 @@ public class RSObject extends MethodProvider {
 	private final int plane;
 
 	public RSObject(final MethodContext ctx,
-	                final org.rsbot.client.RSObject obj, final Type type,
-	                final int plane) {
+			final org.rsbot.client.RSObject obj, final Type type,
+			final int plane) {
 		super(ctx);
 		this.obj = obj;
 		this.type = type;
@@ -70,10 +70,10 @@ public class RSObject extends MethodProvider {
 			if (ref instanceof org.rsbot.client.HardReference) {
 				return new RSObjectDef(
 						(org.rsbot.client.RSObjectDef) ((org.rsbot.client.HardReference) ref)
-								.get());
+						.get());
 			} else if (ref instanceof org.rsbot.client.SoftReference) {
 				final Object def = ((org.rsbot.client.SoftReference) ref)
-						.getReference().get();
+				.getReference().get();
 				if (def != null) {
 					return new RSObjectDef((org.rsbot.client.RSObjectDef) def);
 				}

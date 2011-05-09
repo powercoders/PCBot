@@ -27,7 +27,7 @@ public class Nodes extends MethodProvider {
 
 			final Node n = nc.getBuckets()[(int) (id & nc.getBuckets().length - 1)];
 			for (Node node = n.getPrevious(); node != n; node = node
-					.getPrevious()) {
+			.getPrevious()) {
 				if (node.getID() == id) {
 					return node;
 				}

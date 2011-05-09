@@ -1,13 +1,25 @@
 package org.rsbot.event;
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EventListener;
+import java.util.EventObject;
+import java.util.List;
+
 import org.rsbot.event.events.RSEvent;
 import org.rsbot.event.listeners.CharacterMovedListener;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.event.listeners.TextPaintListener;
-
-import java.awt.event.*;
-import java.util.*;
 
 public class EventMulticaster implements EventListener {
 
@@ -80,39 +92,39 @@ public class EventMulticaster implements EventListener {
 		if (e instanceof MouseEvent) {
 			final MouseEvent me = (MouseEvent) e;
 			switch (me.getID()) {
-				case MouseEvent.MOUSE_PRESSED:
-				case MouseEvent.MOUSE_RELEASED:
-				case MouseEvent.MOUSE_CLICKED:
-				case MouseEvent.MOUSE_ENTERED:
-				case MouseEvent.MOUSE_EXITED:
-					mask |= EventMulticaster.MOUSE_EVENT;
-					break;
+			case MouseEvent.MOUSE_PRESSED:
+			case MouseEvent.MOUSE_RELEASED:
+			case MouseEvent.MOUSE_CLICKED:
+			case MouseEvent.MOUSE_ENTERED:
+			case MouseEvent.MOUSE_EXITED:
+				mask |= EventMulticaster.MOUSE_EVENT;
+				break;
 
-				case MouseEvent.MOUSE_MOVED:
-				case MouseEvent.MOUSE_DRAGGED:
-					mask |= EventMulticaster.MOUSE_MOTION_EVENT;
-					break;
+			case MouseEvent.MOUSE_MOVED:
+			case MouseEvent.MOUSE_DRAGGED:
+				mask |= EventMulticaster.MOUSE_MOTION_EVENT;
+				break;
 
-				case MouseEvent.MOUSE_WHEEL:
-					mask |= EventMulticaster.MOUSE_WHEEL_EVENT;
-					break;
+			case MouseEvent.MOUSE_WHEEL:
+				mask |= EventMulticaster.MOUSE_WHEEL_EVENT;
+				break;
 			}
 		} else if (e instanceof FocusEvent) {
 			final FocusEvent fe = (FocusEvent) e;
 			switch (fe.getID()) {
-				case FocusEvent.FOCUS_GAINED:
-				case FocusEvent.FOCUS_LOST:
-					mask |= EventMulticaster.FOCUS_EVENT;
-					break;
+			case FocusEvent.FOCUS_GAINED:
+			case FocusEvent.FOCUS_LOST:
+				mask |= EventMulticaster.FOCUS_EVENT;
+				break;
 			}
 		} else if (e instanceof KeyEvent) {
 			final KeyEvent ke = (KeyEvent) e;
 			switch (ke.getID()) {
-				case KeyEvent.KEY_TYPED:
-				case KeyEvent.KEY_PRESSED:
-				case KeyEvent.KEY_RELEASED:
-					mask |= EventMulticaster.KEY_EVENT;
-					break;
+			case KeyEvent.KEY_TYPED:
+			case KeyEvent.KEY_PRESSED:
+			case KeyEvent.KEY_RELEASED:
+				mask |= EventMulticaster.KEY_EVENT;
+				break;
 			}
 		} else if (e instanceof RSEvent) {
 			final RSEvent rse = (RSEvent) e;
@@ -234,53 +246,53 @@ public class EventMulticaster implements EventListener {
 				if (e instanceof MouseEvent) {
 					final MouseEvent me = (MouseEvent) e;
 					switch (me.getID()) {
-						case MouseEvent.MOUSE_PRESSED:
-							((MouseListener) el).mousePressed(me);
-							break;
-						case MouseEvent.MOUSE_RELEASED:
-							((MouseListener) el).mouseReleased(me);
-							break;
-						case MouseEvent.MOUSE_CLICKED:
-							((MouseListener) el).mouseClicked(me);
-							break;
-						case MouseEvent.MOUSE_ENTERED:
-							((MouseListener) el).mouseEntered(me);
-							break;
-						case MouseEvent.MOUSE_EXITED:
-							((MouseListener) el).mouseExited(me);
-							break;
-						case MouseEvent.MOUSE_MOVED:
-							((MouseMotionListener) el).mouseMoved(me);
-							break;
-						case MouseEvent.MOUSE_DRAGGED:
-							((MouseMotionListener) el).mouseDragged(me);
-							break;
-						case MouseEvent.MOUSE_WHEEL:
-							((MouseWheelListener) el).mouseWheelMoved((MouseWheelEvent) me);
-							break;
+					case MouseEvent.MOUSE_PRESSED:
+						((MouseListener) el).mousePressed(me);
+						break;
+					case MouseEvent.MOUSE_RELEASED:
+						((MouseListener) el).mouseReleased(me);
+						break;
+					case MouseEvent.MOUSE_CLICKED:
+						((MouseListener) el).mouseClicked(me);
+						break;
+					case MouseEvent.MOUSE_ENTERED:
+						((MouseListener) el).mouseEntered(me);
+						break;
+					case MouseEvent.MOUSE_EXITED:
+						((MouseListener) el).mouseExited(me);
+						break;
+					case MouseEvent.MOUSE_MOVED:
+						((MouseMotionListener) el).mouseMoved(me);
+						break;
+					case MouseEvent.MOUSE_DRAGGED:
+						((MouseMotionListener) el).mouseDragged(me);
+						break;
+					case MouseEvent.MOUSE_WHEEL:
+						((MouseWheelListener) el).mouseWheelMoved((MouseWheelEvent) me);
+						break;
 					}
 				} else if (e instanceof FocusEvent) {
 					final FocusEvent fe = (FocusEvent) e;
 					switch (fe.getID()) {
-						case FocusEvent.FOCUS_GAINED:
-							((FocusListener) el).focusGained(fe);
-							break;
-						case FocusEvent.FOCUS_LOST:
-							((FocusListener) el).focusLost(fe);
-							break;
+					case FocusEvent.FOCUS_GAINED:
+						((FocusListener) el).focusGained(fe);
+						break;
+					case FocusEvent.FOCUS_LOST:
+						((FocusListener) el).focusLost(fe);
+						break;
 					}
 				} else if (e instanceof KeyEvent) {
 					final KeyEvent ke = (KeyEvent) e;
 					switch (ke.getID()) {
-						case KeyEvent.KEY_TYPED:
-							((KeyListener) el).keyTyped(ke);
-							break;
-						case KeyEvent.KEY_PRESSED:
-							((KeyListener) el).keyPressed(ke);
-							break;
-						case KeyEvent.KEY_RELEASED:
-							((KeyListener) el).keyReleased(ke);
-							break;
+					case KeyEvent.KEY_TYPED:
+						((KeyListener) el).keyTyped(ke);
+						break;
+					case KeyEvent.KEY_PRESSED:
+						((KeyListener) el).keyPressed(ke);
+						break;
+					case KeyEvent.KEY_RELEASED:
+						((KeyListener) el).keyReleased(ke);
+						break;
 					}
 				} else if (e instanceof RSEvent) {
 					final RSEvent rse = (RSEvent) e;

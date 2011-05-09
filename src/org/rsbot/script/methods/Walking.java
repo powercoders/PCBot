@@ -1,11 +1,11 @@
 package org.rsbot.script.methods;
 
+import java.awt.Point;
+
 import org.rsbot.script.wrappers.RSLocalPath;
 import org.rsbot.script.wrappers.RSPath;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.script.wrappers.RSTilePath;
-
-import java.awt.*;
 
 /**
  * Walking related operations.
@@ -329,7 +329,7 @@ public class Walking extends MethodProvider {
 	 */
 	public RSTile getCollisionOffset(final int plane) {
 		final org.rsbot.client.RSGroundData data = methods.client
-				.getRSGroundDataArray()[plane];
+		.getRSGroundDataArray()[plane];
 		return new RSTile(data.getX(), data.getY());
 	}
 
@@ -348,7 +348,7 @@ public class Walking extends MethodProvider {
 	 */
 	@Deprecated
 	public RSTile randomizeTile(final RSTile tile, final int maxXDeviation,
-	                            final int maxYDeviation) {
+			final int maxYDeviation) {
 		return randomize(tile, maxXDeviation, maxYDeviation);
 	}
 
@@ -527,7 +527,7 @@ public class Walking extends MethodProvider {
 	 */
 	@Deprecated
 	public RSTile[] randomizePath(final RSTile[] path, final int maxXDeviation,
-	                              final int maxYDeviation) {
+			final int maxYDeviation) {
 		final RSTile[] rez = new RSTile[path.length];
 		for (int i = 0; i < path.length; i++) {
 			rez[i] = randomize(path[i], maxXDeviation, maxYDeviation);

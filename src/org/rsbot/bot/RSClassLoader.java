@@ -1,7 +1,12 @@
 package org.rsbot.bot;
 
-import java.awt.*;
-import java.io.*;
+import java.awt.AWTPermission;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FilePermission;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.SocketPermission;
 import java.net.URL;
 import java.security.CodeSigner;
