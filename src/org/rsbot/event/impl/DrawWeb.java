@@ -1,11 +1,5 @@
 package org.rsbot.event.impl;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.internal.wrappers.TileFlags;
@@ -13,6 +7,10 @@ import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSPlayer;
 import org.rsbot.script.wrappers.RSTile;
+
+import java.awt.*;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Draws the web.
@@ -41,7 +39,6 @@ public class DrawWeb implements PaintListener {
 		ctx = bot.getMethodContext();
 	}
 
-	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;
@@ -50,12 +47,15 @@ public class DrawWeb implements PaintListener {
 		if (player == null) {
 			return;
 		}
+		final int plane = ctx.game.getPlane();
 		final Iterator<Map.Entry<RSTile, TileFlags>> rs = Web.map.entrySet().iterator();
 		while (rs.hasNext()) {
 			final TileFlags t = rs.next().getValue();
-			render.setColor(t.isQuestionable() ? Color.yellow : t.isWater() ? Color.cyan : Color.red);
-			final Point p = tileToMap(t, player);
-			render.drawLine(p.x, p.y, p.x, p.y);
+			if (t.getZ() == plane) {
+				render.setColor(t.isQuestionable() ? Color.yellow : t.isWater() ? Color.cyan : Color.red);
+				final Point p = tileToMap(t, player);
+				render.drawLine(p.x, p.y, p.x, p.y);
+			}
 		}
 	}
 }
