@@ -1,19 +1,12 @@
 package org.rsbot.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.rsbot.service.WebQueue;
+
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-
-import org.rsbot.service.WebQueue;
 
 /**
  * A threaded file writer to cache files.  Supports deletion.
@@ -24,7 +17,7 @@ public class CacheWriter {
 	private final List<String> queue = new ArrayList<String>(), removeQueue = new ArrayList<String>(), removeStack = new ArrayList<String>();
 	private final QueueWriter writer;
 	private static boolean stopped = false;
-	private static final Logger log = Logger.getLogger("CacheWriter");
+	private static final Logger log = Logger.getLogger(CacheWriter.class.getName());
 
 	public CacheWriter(final String fileName) {
 		writer = new QueueWriter(fileName);
@@ -36,15 +29,8 @@ public class CacheWriter {
 	 *
 	 * @param list The string.
 	 */
-	public void add(String list) {
-		if (list != null) {
-			String[] lines = list.split("\n");
-			if (lines != null) {
-				queue.addAll(Arrays.asList(lines));
-			}
-			lines = null;
-		}
-		list = null;
+	public void add(final String list) {
+		queue.add(list);
 	}
 
 	/**
@@ -62,12 +48,12 @@ public class CacheWriter {
 	 */
 	public int queueSize(final int id) {
 		switch (id) {
-		case 0:
-			return queue.size();
-		case 1:
-			return removeQueue.size();
-		case 2:
-			return removeStack.size();
+			case 0:
+				return queue.size();
+			case 1:
+				return removeQueue.size();
+			case 2:
+				return removeStack.size();
 		}
 		return -1;
 	}
@@ -77,7 +63,7 @@ public class CacheWriter {
 	 *
 	 * @author Timer
 	 */
-	private class QueueWriter extends Thread { //For slow systems and reduced lag, let's make writing slow and threaded (lol at thread and reducing cpu usage..).
+	private class QueueWriter extends Thread {
 		private boolean destroy = false;
 		private final File file, tmpFile;
 
@@ -85,7 +71,7 @@ public class CacheWriter {
 			file = new File(fileName);
 			tmpFile = new File(fileName + ".tmp");
 			if (!file.exists()) {
-				log.info("File not created, creating: " + fileName);
+				log.fine("File not created, creating: " + fileName);
 				try {
 					if (file.createNewFile()) {
 						file.setExecutable(false);
@@ -99,7 +85,7 @@ public class CacheWriter {
 		}
 
 		/**
-		 * The main method...  doesn't stop till all data is written.
+		 * The main method...  doesn't stop until all data is written.
 		 */
 		@Override
 		public void run() {
@@ -138,25 +124,20 @@ public class CacheWriter {
 						}
 						removeStack.clear();
 					}
-					final FileWriter fileWriter = new FileWriter(file, true);
-					final BufferedWriter out = new BufferedWriter(fileWriter);
 					if (queue.size() > 0) {
+						final FileWriter fileWriter = new FileWriter(file, true);
+						final BufferedWriter out = new BufferedWriter(fileWriter);
 						outList.clear();
-						if (queue.size() >= 1000 && !destroy) {
-							outList.addAll(queue.subList(0, 999));
-							queue.removeAll(outList);
-						} else {
-							outList.addAll(queue);
-							queue.clear();
-						}
+						outList.addAll(queue);
+						queue.clear();
 						final Iterator<String> outLines = outList.listIterator();
 						while (outLines.hasNext()) {
 							final String line = outLines.next();
 							out.write(line + "\n");
 						}
+						out.flush();
+						out.close();
 					}
-					out.flush();
-					out.close();
 					try {
 						if (!destroy) {
 							Thread.sleep(5000);
