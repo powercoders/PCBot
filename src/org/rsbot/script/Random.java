@@ -105,7 +105,6 @@ public abstract class Random extends Methods implements PaintListener {
 		}
 		ctx.ctx.bot.getEventManager().addListener(this);
 		log("Random event started: " + name);
-		Monitoring.RandomStarted(name);
 		long timeout = getTimeout();
 		if (timeout > 0) {
 			timeout *= 1000;
@@ -118,7 +117,6 @@ public abstract class Random extends Methods implements PaintListener {
 					break;
 				} else if (timeout > 0 && System.currentTimeMillis() >= timeout) {
 					log.warning("Time limit reached for " + name + ".");
-					Monitoring.RandomFinished(name, false);
 					ctx.stopScript();
 				} else {
 					sleep(wait);
@@ -131,7 +129,6 @@ public abstract class Random extends Methods implements PaintListener {
 		script = null;
 		onFinish();
 		log("Random event finished: " + name);
-		Monitoring.RandomFinished(name, true);
 		ctx.ctx.bot.getEventManager().removeListener(this);
 		sleep(1000);
 		ctx.ctx.bot.getEventManager().addListener(ctx);

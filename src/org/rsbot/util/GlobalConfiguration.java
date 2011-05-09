@@ -177,6 +177,10 @@ public class GlobalConfiguration {
 			return Paths.getCacheDirectory() + File.separator + "client.dat";
 		}
 
+		public static String getEventsLog() {
+			return Paths.getCacheDirectory() + File.separator + "events.log";
+		}
+
 		public static String getWebCache() {
 			return Paths.getCacheDirectory() + File.separator + "web.dat";
 		}
