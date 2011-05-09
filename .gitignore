@@ -13,10 +13,10 @@
 /.jagex_cache_32
 /.project
 /.settings
-/bin
+/bin/
 /lib/*.jar
 /scripts/*.class
-/temp/*
+/temp
 /temp.txt
 /build.xml
 /manifest.mf
