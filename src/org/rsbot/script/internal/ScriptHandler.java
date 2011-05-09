@@ -1,12 +1,43 @@
 package org.rsbot.script.internal;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.rsbot.bot.Bot;
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.event.ScriptListener;
-import org.rsbot.script.randoms.*;
-
-import java.util.*;
+import org.rsbot.script.randoms.BankPins;
+import org.rsbot.script.randoms.BeehiveSolver;
+import org.rsbot.script.randoms.CapnArnav;
+import org.rsbot.script.randoms.Certer;
+import org.rsbot.script.randoms.CloseAllInterface;
+import org.rsbot.script.randoms.DrillDemon;
+import org.rsbot.script.randoms.Exam;
+import org.rsbot.script.randoms.FirstTimeDeath;
+import org.rsbot.script.randoms.FreakyForester;
+import org.rsbot.script.randoms.FrogCave;
+import org.rsbot.script.randoms.GraveDigger;
+import org.rsbot.script.randoms.ImprovedRewardsBox;
+import org.rsbot.script.randoms.LeaveSafeArea;
+import org.rsbot.script.randoms.LoginBot;
+import org.rsbot.script.randoms.LostAndFound;
+import org.rsbot.script.randoms.Maze;
+import org.rsbot.script.randoms.Mime;
+import org.rsbot.script.randoms.Molly;
+import org.rsbot.script.randoms.Pillory;
+import org.rsbot.script.randoms.Pinball;
+import org.rsbot.script.randoms.Prison;
+import org.rsbot.script.randoms.QuizSolver;
+import org.rsbot.script.randoms.SandwhichLady;
+import org.rsbot.script.randoms.ScapeRuneIsland;
+import org.rsbot.script.randoms.SystemUpdate;
+import org.rsbot.script.randoms.TeleotherCloser;
 
 public class ScriptHandler {
 

@@ -1,8 +1,14 @@
 package org.rsbot.util;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
@@ -13,8 +19,7 @@ public class HttpClient {
 	private static final Logger log = Logger.getLogger(HttpClient.class.getName());
 
 	public static HttpURLConnection download(final URL url, final File file) throws IOException {
-		final HttpURLConnection con = GlobalConfiguration.getHttpConnection(url);
-		con.setUseCaches(true);
+		final HttpURLConnection con = getConnection(url);
 
 		if (file.exists()) {
 			con.setIfModifiedSince(file.lastModified());
@@ -28,11 +33,7 @@ public class HttpClient {
 
 		log.fine("Downloading new " + file.getName());
 
-		final DataInputStream di = new DataInputStream(con.getInputStream());
-		byte[] buffer = new byte[con.getContentLength()];
-		di.readFully(buffer);
-		di.close();
-		buffer = ungzip(buffer);
+		final byte[] buffer = downloadBinary(con);
 
 		if (!file.exists()) {
 			file.createNewFile();
@@ -54,6 +55,39 @@ public class HttpClient {
 		return con;
 	}
 
+	public static String downloadAsString(final URL url) throws IOException {
+		final HttpURLConnection con = getConnection(url);
+		final byte[] buffer = downloadBinary(con);
+		return new String(buffer);
+	}
+
+	private static HttpURLConnection getConnection(final URL url) throws IOException {
+		final HttpURLConnection con = GlobalConfiguration.getHttpConnection(url);
+		con.setUseCaches(true);
+		return con;
+	}
+
+	private static byte[] downloadBinary(final URLConnection con) throws IOException {
+		final DataInputStream di = new DataInputStream(con.getInputStream());
+		byte[] buffer = null;
+		final int len = con.getContentLength();
+		if (len == -1) {
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			int b;
+			while ((b = di.read()) != -1) {
+				out.write(b);
+			}
+			buffer = out.toByteArray();
+		} else {
+			buffer = new byte[con.getContentLength()];
+			di.readFully(buffer);
+		}
+		di.close();
+		if (buffer != null) {
+			buffer = ungzip(buffer);
+		}
+		return buffer;
+	}
 
 	private static byte[] ungzip(final byte[] data) {
 		if (data.length < 2) {

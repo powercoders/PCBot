@@ -1,12 +1,18 @@
 package org.rsbot.util;
 
-import org.rsbot.log.LogFormatter;
-import org.rsbot.log.SystemConsoleHandler;
-import org.rsbot.log.TextAreaLogHandler;
-
-import javax.swing.filechooser.FileSystemView;
-import java.awt.*;
-import java.io.*;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,6 +21,12 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
+
+import javax.swing.filechooser.FileSystemView;
+
+import org.rsbot.log.LogFormatter;
+import org.rsbot.log.SystemConsoleHandler;
+import org.rsbot.log.TextAreaLogHandler;
 
 public class GlobalConfiguration {
 
@@ -46,6 +58,7 @@ public class GlobalConfiguration {
 			public static final String ICON_CONNECT = ROOT_IMG + "/connect.png";
 			public static final String ICON_DISCONNECT = ROOT_IMG + "/disconnect.png";
 			public static final String ICON_START = ROOT_IMG + "/control_play.png";
+			public static final String ICON_SCRIPT_ADD = ROOT_IMG + "/script_add.png";
 			public static final String ICON_SCRIPT_BDL = ROOT_IMG + "/script_bdl.png";
 			public static final String ICON_SCRIPT_DRM = ROOT_IMG + "/script_drm.png";
 			public static final String ICON_SCRIPT_PRE = ROOT_IMG + "/script_pre.png";
@@ -81,10 +94,10 @@ public class GlobalConfiguration {
 			final String path;
 			if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
 				path = System.getenv("APPDATA") + File.separator
-						+ GlobalConfiguration.NAME + "_Accounts.ini";
+				+ GlobalConfiguration.NAME + "_Accounts.ini";
 			} else {
 				path = Paths.getUnixHome() + File.separator + "."
-						+ GlobalConfiguration.NAME_LOWERCASE + "acct";
+				+ GlobalConfiguration.NAME_LOWERCASE + "acct";
 			}
 			return path;
 		}
@@ -94,7 +107,7 @@ public class GlobalConfiguration {
 			if (env == null || env.isEmpty()) {
 				return (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS ?
 						FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath() :
-						Paths.getUnixHome()) + File.separator + GlobalConfiguration.NAME;
+							Paths.getUnixHome()) + File.separator + GlobalConfiguration.NAME;
 			} else {
 				return env;
 			}
@@ -162,6 +175,10 @@ public class GlobalConfiguration {
 
 		public static String getClientCache() {
 			return Paths.getCacheDirectory() + File.separator + "client.dat";
+		}
+
+		public static String getEventsLog() {
+			return Paths.getCacheDirectory() + File.separator + "events.log";
 		}
 
 		public static String getWebCache() {

@@ -1,10 +1,10 @@
 package org.rsbot.script.wrappers;
 
+import java.awt.Point;
+import java.lang.ref.SoftReference;
+
 import org.rsbot.client.RSPlayerComposite;
 import org.rsbot.script.methods.MethodContext;
-
-import java.awt.*;
-import java.lang.ref.SoftReference;
 
 /**
  * Represents a player.

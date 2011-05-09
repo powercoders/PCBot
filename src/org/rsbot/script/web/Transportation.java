@@ -5,7 +5,7 @@ package org.rsbot.script.web;
  *
  * @author Timer
  */
-public interface Activity {
+public interface Transportation {
 	boolean isApplicable();
 
 	boolean preform();

@@ -1,14 +1,17 @@
 package org.rsbot.event.impl;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.rsbot.bot.Bot;
 import org.rsbot.client.Client;
 import org.rsbot.client.input.Mouse;
 import org.rsbot.event.listeners.PaintListener;
-
-import java.awt.*;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 public class DrawMouse implements PaintListener {
 	private final Client client;
