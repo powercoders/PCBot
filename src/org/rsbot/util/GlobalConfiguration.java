@@ -79,6 +79,7 @@ public class GlobalConfiguration {
 			public static final String SITE = BASE + "site";
 			public static final String SDN_CONTROL = BASE + "sdn-control";
 			public static final String AD_INFO = BASE + "botad-info";
+			public static final String MONITORING_CONTROL = BASE + "monitoring";
 		}
 
 		public static final String ROOT = new File(".").getAbsolutePath();
