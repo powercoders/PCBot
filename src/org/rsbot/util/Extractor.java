@@ -33,7 +33,6 @@ public class Extractor implements Runnable {
 		this.args = args;
 	}
 
-	@Override
 	public void run() {
 		final ClassLoader loader = getClass().getClassLoader();
 		final String root = GlobalConfiguration.Paths.Resources.ROOT + "/";
