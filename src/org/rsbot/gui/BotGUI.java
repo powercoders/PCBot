@@ -592,7 +592,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		while (WebQueue.IsRunning()) {
 			try {
 				Thread.sleep(50);
-			} catch (final Exception e) {
+			} catch (final InterruptedException ignored) {
 			}
 		}
 		if (doExit) {
