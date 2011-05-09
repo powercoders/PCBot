@@ -18,6 +18,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -172,9 +174,12 @@ public class BotToolBar extends JToolBar {
 		} else {
 			throw new IllegalArgumentException("Illegal button state: " + state + "!");
 		}
-
+		Image image = GlobalConfiguration.getImage(pathResource);
+		while (image == null) {
+			image = GlobalConfiguration.getImage(pathResource);
+		}
 		runScriptButton.setText(text);
-		runScriptButton.setIcon(new ImageIcon(GlobalConfiguration.getImage(pathResource)));
+		runScriptButton.setIcon(new ImageIcon(image));
 		revalidate();
 	}
 

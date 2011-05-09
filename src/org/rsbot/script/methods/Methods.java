@@ -236,7 +236,7 @@ public class Methods {
 	 * @return <tt>true</tt> if found.
 	 */
 	public boolean verify(final RSNPC npc) {
-		return npc != null && (getModel() != null || verify(npc.getLocation()) );
+		return npc != null;// && (getModel() != null || verify(npc.getLocation()) );
 	}
 
 	/**
