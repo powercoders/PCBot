@@ -140,6 +140,9 @@ public class BotMenuBar extends JMenuBar {
 		final HashMap<String, String> map = new HashMap<String, String>(16);
 		map.put("New Bot", GlobalConfiguration.Paths.Resources.ICON_APPADD);
 		map.put("Close Bot", GlobalConfiguration.Paths.Resources.ICON_APPDELETE);
+		map.put("Run Script", GlobalConfiguration.Paths.Resources.ICON_PLAY);
+		map.put("Stop Script", GlobalConfiguration.Paths.Resources.ICON_DELETE);
+		map.put("Pause Script", GlobalConfiguration.Paths.Resources.ICON_PAUSE);
 		map.put("Save Screenshot", GlobalConfiguration.Paths.Resources.ICON_PHOTO);
 		map.put("Exit", GlobalConfiguration.Paths.Resources.ICON_CLOSE);
 		map.put("Accounts", GlobalConfiguration.Paths.Resources.ICON_REPORTKEY);
