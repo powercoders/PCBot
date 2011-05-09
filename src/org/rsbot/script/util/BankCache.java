@@ -26,8 +26,7 @@ public class BankCache {
 		Load();// For multiple bot instances.
 		final FileWriter fw = new FileWriter(cacheFile, false);
 		final BufferedWriter bw = new BufferedWriter(fw);
-		HashMap<String, String> newData = null;
-		newData = BankCache.genMap(name, items);
+		HashMap<String, String> newData = BankCache.genMap(name, items);
 		if (data.containsKey(name.toLowerCase())) {
 			data.get(name.toLowerCase()).putAll(newData);
 		} else {
