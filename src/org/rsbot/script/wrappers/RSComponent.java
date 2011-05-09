@@ -585,15 +585,6 @@ public class RSComponent extends MethodProvider {
 		return new Point(getAbsoluteX(), getAbsoluteY());
 	}
 
-    /**
-     * Gets a random point on the area of this interface. For clicking or hovering use doClick()/doHover().
-     *
-     * @return A random point on the area of this interface
-     */
-    public Point getRandomLocation() {
-        return new Point(getAbsoluteX() + random(0, getWidth() + 1), getAbsoluteY() + random(0, getHeight() + 1));
-    }
-
 	/**
 	 * Returns the center point of this interface
 	 *

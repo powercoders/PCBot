@@ -20,6 +20,4 @@
 /temp.txt
 /build.xml
 /manifest.mf
-/nbproject
-/javadoc
-/.idea
+/nbproject/
