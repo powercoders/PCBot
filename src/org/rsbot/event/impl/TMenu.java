@@ -11,11 +11,12 @@ public class TMenu implements TextPaintListener {
 
 	private final Client client;
 
-	public TMenu(Bot bot) {
+	public TMenu(final Bot bot) {
 		client = bot.getClient();
 	}
 
-	public int drawLine(Graphics render, int idx) {
+	@Override
+	public int drawLine(final Graphics render, int idx) {
 		StringUtil.drawLine(render, idx++, "Menu " + (client.isMenuOpen() ? "Open" : "Closed") +
 				" & " + (client.isMenuCollapsed() ? "Collapsed" : "Expanded"));
 		StringUtil.drawLine(render, idx++, "Menu Location: (" +

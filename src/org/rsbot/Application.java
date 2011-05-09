@@ -31,7 +31,7 @@ public class Application {
 	 * @param o Any object from within the client.
 	 * @return The Bot for the client.
 	 */
-	public static Bot getBot(Object o) {
+	public static Bot getBot(final Object o) {
 		return gui.getBot(o);
 	}
 
@@ -51,6 +51,7 @@ public class Application {
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			private final Logger log = Logger.getLogger("EXCEPTION");
 
+			@Override
 			public void uncaughtException(final Thread t, final Throwable e) {
 				log.logp(Level.SEVERE, "EXCEPTION", "", "Unhandled exception in thread " + t.getName() + ": ", e);
 			}

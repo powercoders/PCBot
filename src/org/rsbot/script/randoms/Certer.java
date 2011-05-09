@@ -24,6 +24,7 @@ public class Certer extends Random {
 	private boolean readyToLeave = false;
 	private int failCount = 0;
 
+	@Override
 	public void onFinish() {
 		failCount = 0;
 		readyToLeave = false;
@@ -55,7 +56,7 @@ public class Certer extends Random {
 		}
 
 		if (readyToLeave) {
-			int PORTAL_ID = 11368;
+			final int PORTAL_ID = 11368;
 			final RSObject portal = objects.getNearest(PORTAL_ID);
 			if (portal != null) {
 				final RSTile portalLocation = portal.getLocation();

@@ -20,7 +20,7 @@ public class TwitterUpdates {
 		final Level level = Level.INFO;
 		final Object[] param = new Object[]{new Color(0x1d, 0x83, 0xae)};
 
-		StringBuilder url = new StringBuilder();
+		final StringBuilder url = new StringBuilder();
 		url.append("http://api.twitter.com/1/statuses/user_timeline.xml?screen_name=");
 		url.append(GlobalConfiguration.Twitter.NAME);
 		url.append("&count=");
@@ -60,7 +60,7 @@ public class TwitterUpdates {
 					break;
 				}
 			}
-		} catch (IOException ioe) {
+		} catch (final IOException ioe) {
 		} finally {
 			try {
 				if (reader != null) {
@@ -69,7 +69,7 @@ public class TwitterUpdates {
 				if (stream != null) {
 					stream.close();
 				}
-			} catch (IOException ioe1) {
+			} catch (final IOException ioe1) {
 			}
 		}
 	}

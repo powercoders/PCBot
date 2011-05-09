@@ -11,10 +11,11 @@ public class TMenuActions implements TextPaintListener {
 
 	private final Menu menu;
 
-	public TMenuActions(Bot bot) {
+	public TMenuActions(final Bot bot) {
 		menu = bot.getMethodContext().menu;
 	}
 
+	@Override
 	public int drawLine(final Graphics render, int idx) {
 		final String[] items = menu.getItems();
 		int i = 0;

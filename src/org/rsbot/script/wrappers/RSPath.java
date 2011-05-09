@@ -19,7 +19,7 @@ public abstract class RSPath extends MethodProvider {
 		HANDLE_RUN, SPACE_ACTIONS
 	}
 
-	public RSPath(MethodContext ctx) {
+	public RSPath(final MethodContext ctx) {
 		super(ctx);
 	}
 

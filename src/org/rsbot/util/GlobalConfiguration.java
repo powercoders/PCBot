@@ -28,6 +28,8 @@ public class GlobalConfiguration {
 			public static final String SCRIPTS = Paths.SCRIPTS_NAME_SRC + "/";
 			public static final String ROOT_IMG = ROOT + "/images";
 			public static final String ICON = ROOT_IMG + "/icon.png";
+			public static final String ICON_APPADD = ROOT_IMG + "/application_add.png";
+			public static final String ICON_APPDELETE = ROOT_IMG + "/application_delete.png";
 			public static final String ICON_DELETE = ROOT_IMG + "/delete.png";
 			public static final String ICON_PLAY = ROOT_IMG + "/control_play_blue.png";
 			public static final String ICON_PAUSE = ROOT_IMG + "/control_pause.png";
@@ -37,6 +39,9 @@ public class GlobalConfiguration {
 			public static final String ICON_CLOSE = ROOT_IMG + "/close.png";
 			public static final String ICON_TICK = ROOT_IMG + "/tick.png";
 			public static final String ICON_MOUSE = ROOT_IMG + "/mouse.png";
+			public static final String ICON_PHOTO = ROOT_IMG + "/photo.png";
+			public static final String ICON_REPORTKEY = ROOT_IMG + "/report_key.png";
+			public static final String ICON_INFO = ROOT_IMG + "/information.png";
 			public static final String ICON_KEYBOARD = ROOT_IMG + "/keyboard.png";
 			public static final String ICON_CONNECT = ROOT_IMG + "/connect.png";
 			public static final String ICON_DISCONNECT = ROOT_IMG + "/disconnect.png";
@@ -45,6 +50,7 @@ public class GlobalConfiguration {
 			public static final String ICON_SCRIPT_DRM = ROOT_IMG + "/script_drm.png";
 			public static final String ICON_SCRIPT_PRE = ROOT_IMG + "/script_pre.png";
 			public static final String ICON_SCRIPT_SRC = ROOT_IMG + "/script_src.png";
+			public static final String ICON_USEREDIT = ROOT_IMG + "/user_edit.png";
 			public static final String ICON_WEBLINK = ROOT_IMG + "/world_link.png";
 
 			public static final String VERSION = ROOT + "/version.txt";
@@ -61,6 +67,8 @@ public class GlobalConfiguration {
 			public static final String SDN_CONTROL = BASE + "sdn-control";
 			public static final String AD_INFO = BASE + "botad-info";
 		}
+
+		public static final String ROOT = new File(".").getAbsolutePath();
 
 		public static final String COMPILE_SCRIPTS_BAT = "Compile-Scripts.bat";
 		public static final String COMPILE_SCRIPTS_SH = "compile-scripts.sh";
@@ -83,7 +91,7 @@ public class GlobalConfiguration {
 
 		public static String getHomeDirectory() {
 			final String env = System.getenv(GlobalConfiguration.NAME.toUpperCase() + "_HOME");
-			if ((env == null) || env.isEmpty()) {
+			if (env == null || env.isEmpty()) {
 				return (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS ?
 						FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath() :
 						Paths.getUnixHome()) + File.separator + GlobalConfiguration.NAME;
@@ -160,8 +168,8 @@ public class GlobalConfiguration {
 			return Paths.getCacheDirectory() + File.separator + "web.dat";
 		}
 
-		public static String getHackCache() {
-			return Paths.getCacheDirectory() + File.separator + "hack.dat";
+		public static String getBankCache() {
+			return Paths.getCacheDirectory() + File.separator + "bank.dat";
 		}
 
 		public static String getSettingsDirectory() {
@@ -223,9 +231,9 @@ public class GlobalConfiguration {
 				dir.mkdirs();
 			}
 		}
-		Properties logging = new Properties();
-		String logFormatter = LogFormatter.class.getCanonicalName();
-		String fileHandler = FileHandler.class.getCanonicalName();
+		final Properties logging = new Properties();
+		final String logFormatter = LogFormatter.class.getCanonicalName();
+		final String fileHandler = FileHandler.class.getCanonicalName();
 		logging.setProperty("handlers", TextAreaLogHandler.class.getCanonicalName() + "," + fileHandler);
 		logging.setProperty(".level", "INFO");
 		logging.setProperty(SystemConsoleHandler.class.getCanonicalName() + ".formatter", logFormatter);
@@ -258,7 +266,7 @@ public class GlobalConfiguration {
 						pathfile.delete();
 					}
 					pathfile.createNewFile();
-					Writer out = new BufferedWriter(new FileWriter(Paths.getPathCache()));
+					final Writer out = new BufferedWriter(new FileWriter(Paths.getPathCache()));
 					out.write(path);
 					out.close();
 				} catch (final Exception e) {
@@ -272,10 +280,10 @@ public class GlobalConfiguration {
 		return RUNNING_FROM_JAR ? GlobalConfiguration.class.getResource("/" + path) : new File(path).toURI().toURL();
 	}
 
-	public static Image getImage(String resource) {
+	public static Image getImage(final String resource) {
 		try {
 			return Toolkit.getDefaultToolkit().getImage(getResourceURL(resource));
-		} catch (Exception e) {
+		} catch (final Exception e) {
 		}
 		return null;
 	}
@@ -296,7 +304,7 @@ public class GlobalConfiguration {
 		} else if (GlobalConfiguration.getCurrentOperatingSystem() != GlobalConfiguration.OperatingSystem.WINDOWS) {
 			os = "X11; Linux x86_64";
 		}
-		StringBuilder buf = new StringBuilder(125);
+		final StringBuilder buf = new StringBuilder(125);
 		buf.append("Mozilla/5.0 (").append(os).append(")");
 		buf.append(" AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.60 Safari/534.24");
 		httpUserAgent = buf.toString();
@@ -323,9 +331,9 @@ public class GlobalConfiguration {
 					GlobalConfiguration.class.getClassLoader().getResourceAsStream(
 							Paths.Resources.VERSION) : new FileInputStream(Paths.Resources.VERSION));
 			reader = new BufferedReader(is);
-			String s = reader.readLine().trim();
+			final String s = reader.readLine().trim();
 			return Integer.parseInt(s);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 		} finally {
 			try {
 				if (is != null) {
@@ -334,7 +342,7 @@ public class GlobalConfiguration {
 				if (reader != null) {
 					reader.close();
 				}
-			} catch (IOException ioe) {
+			} catch (final IOException ioe) {
 			}
 		}
 		return -1;

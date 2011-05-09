@@ -22,7 +22,7 @@ public class InputManager {
 	 */
 	private int side = random(1, 5);
 
-	public InputManager(Bot bot) {
+	public InputManager(final Bot bot) {
 		this.bot = bot;
 	}
 
@@ -70,7 +70,7 @@ public class InputManager {
 	}
 
 	private char getKeyChar(final char c) {
-		if ((c >= 36) && (c <= 40)) {
+		if (c >= 36 && c <= 40) {
 			return KeyEvent.VK_UNDEFINED;
 		} else {
 			return c;
@@ -144,7 +144,7 @@ public class InputManager {
 			final MouseEvent me = new MouseEvent(getTarget(), MouseEvent.MOUSE_EXITED, System.currentTimeMillis(), 0, x,
 					y, 0, false);
 			getClient().getMouse().sendEvent(me);
-			int w = bot.getCanvas().getWidth(), h = bot.getCanvas().getHeight(), d = 50;
+			final int w = bot.getCanvas().getWidth(), h = bot.getCanvas().getHeight(), d = 50;
 			if (x < d) {
 				if (y < d) {
 					side = 4; // top
@@ -258,13 +258,13 @@ public class InputManager {
 	private void sendKey(final char ch, final int delay) {
 		boolean shift = false;
 		int code = ch;
-		if ((ch >= 'a') && (ch <= 'z')) {
+		if (ch >= 'a' && ch <= 'z') {
 			code -= 32;
-		} else if ((ch >= 'A') && (ch <= 'Z')) {
+		} else if (ch >= 'A' && ch <= 'Z') {
 			shift = true;
 		}
 		KeyEvent ke;
-		if ((code == KeyEvent.VK_LEFT) || (code == KeyEvent.VK_UP) || (code == KeyEvent.VK_DOWN)) {
+		if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_UP || code == KeyEvent.VK_DOWN) {
 			ke = new KeyEvent(getTarget(), KeyEvent.KEY_PRESSED, System.currentTimeMillis() + delay, 0, code,
 					getKeyChar(ch), KeyEvent.KEY_LOCATION_STANDARD);
 			getClient().getKeyboard()._keyPressed(ke);

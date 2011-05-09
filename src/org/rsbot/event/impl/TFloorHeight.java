@@ -11,10 +11,11 @@ public class TFloorHeight implements TextPaintListener {
 
 	private final Game game;
 
-	public TFloorHeight(Bot bot) {
+	public TFloorHeight(final Bot bot) {
 		game = bot.getMethodContext().game;
 	}
 
+	@Override
 	public int drawLine(final Graphics render, int idx) {
 		final int floor = game.getPlane();
 		StringUtil.drawLine(render, idx++, "Floor " + floor);

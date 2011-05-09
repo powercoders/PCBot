@@ -13,18 +13,19 @@ public class DrawNPCs implements PaintListener {
 
 	private final MethodContext ctx;
 
-	public DrawNPCs(Bot bot) {
+	public DrawNPCs(final Bot bot) {
 		ctx = bot.getMethodContext();
 	}
 
+	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;
 		}
 
 		final FontMetrics metrics = render.getFontMetrics();
-		for (int element : ctx.client.getRSNPCIndexArray()) {
-			Node node = ctx.nodes.lookup(ctx.client.getRSNPCNC(), element);
+		for (final int element : ctx.client.getRSNPCIndexArray()) {
+			final Node node = ctx.nodes.lookup(ctx.client.getRSNPCNC(), element);
 			if (node == null || !(node instanceof RSNPCNode)) {
 				continue;
 			}

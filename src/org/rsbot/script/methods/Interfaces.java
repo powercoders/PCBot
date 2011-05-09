@@ -116,7 +116,7 @@ public class Interfaces extends MethodProvider {
 	 *         <tt>false</tt>.
 	 */
 	public boolean clickContinue() {
-		RSComponent cont = getContinueComponent();
+		final RSComponent cont = getContinueComponent();
 		return cont != null && cont.isValid() && cont.doClick(true);
 	}
 
@@ -128,12 +128,12 @@ public class Interfaces extends MethodProvider {
 		if (methods.client.getRSInterfaceCache() == null) {
 			return null;
 		}
-		RSInterface[] valid = getAll();
-		for (RSInterface iface : valid) {
+		final RSInterface[] valid = getAll();
+		for (final RSInterface iface : valid) {
 			if (iface.getIndex() != 137) {
-				int len = iface.getChildCount();
+				final int len = iface.getChildCount();
 				for (int i = 0; i < len; i++) {
-					RSComponent child = iface.getComponent(i);
+					final RSComponent child = iface.getComponent(i);
 					if (child.containsText("Click here to continue")
 							&& child.isValid() && child.getAbsoluteX() > 10
 							&& child.getAbsoluteY() > 300) {
@@ -157,13 +157,13 @@ public class Interfaces extends MethodProvider {
 		if (!c.isValid()) {
 			return false;
 		}
-		Rectangle rect = c.getArea();
+		final Rectangle rect = c.getArea();
 		if (rect.x == -1) {
 			return false;
 		}
 		// 1 pixel is not enough for all components
-		int minX = rect.x + 2, minY = rect.y + 2, width = rect.width - 4, height = rect.height - 4;
-		Rectangle actual = new Rectangle(minX, minY, width, height);
+		final int minX = rect.x + 2, minY = rect.y + 2, width = rect.width - 4, height = rect.height - 4;
+		final Rectangle actual = new Rectangle(minX, minY, width, height);
 		// Check if the menu already contains the action otherwise reposition
 		// before clicking
 		if (actual.contains(methods.mouse.getLocation())
@@ -190,7 +190,7 @@ public class Interfaces extends MethodProvider {
 		// Just grab the interface and the text you want to click.
 		if (inter.isValid()) {
 			option = option.toLowerCase();
-			for (RSComponent c : inter.getComponents()) {
+			for (final RSComponent c : inter.getComponents()) {
 				if (c.getText().toLowerCase().contains(option)) {
 					return c.doClick();
 				}
@@ -204,9 +204,9 @@ public class Interfaces extends MethodProvider {
 	 * @return <tt>RSInterface</tt> array of the interfaces containing specified
 	 *         text.
 	 */
-	public RSInterface[] getAllContaining(String text) {
-		java.util.List<RSInterface> results = new LinkedList<RSInterface>();
-		for (RSInterface iface : getAll()) {
+	public RSInterface[] getAllContaining(final String text) {
+		final java.util.List<RSInterface> results = new LinkedList<RSInterface>();
+		for (final RSInterface iface : getAll()) {
 			if (iface.getText().toLowerCase().contains(text.toLowerCase())) {
 				results.add(iface);
 			}
@@ -221,8 +221,8 @@ public class Interfaces extends MethodProvider {
 	 * @param scrollBarID scrollbar to scroll with
 	 * @return true when scrolled successfully
 	 */
-	public boolean scrollTo(RSComponent component, int scrollBarID) {
-		RSComponent scrollBar = getComponent(scrollBarID);
+	public boolean scrollTo(final RSComponent component, final int scrollBarID) {
+		final RSComponent scrollBar = getComponent(scrollBarID);
 
 		return scrollTo(component, scrollBar);
 	}
@@ -234,7 +234,7 @@ public class Interfaces extends MethodProvider {
 	 * @param scrollBar scrollbar to scroll with
 	 * @return true when scrolled successfully
 	 */
-	public boolean scrollTo(RSComponent component, RSComponent scrollBar) {
+	public boolean scrollTo(final RSComponent component, final RSComponent scrollBar) {
 		// Check arguments
 		if (component == null || scrollBar == null || !component.isValid()) {
 			return false;
@@ -246,8 +246,8 @@ public class Interfaces extends MethodProvider {
 
 		// Find scrollable area
 		RSComponent scrollableArea = component;
-		while ((scrollableArea.getScrollableContentHeight() == 0)
-				&& (scrollableArea.getParentID() != -1)) {
+		while (scrollableArea.getScrollableContentHeight() == 0
+				&& scrollableArea.getParentID() != -1) {
 			scrollableArea = getComponent(scrollableArea.getParentID());
 		}
 
@@ -257,19 +257,19 @@ public class Interfaces extends MethodProvider {
 		}
 
 		// Get scrollable area height
-		int areaY = scrollableArea.getAbsoluteY();
-		int areaHeight = scrollableArea.getRealHeight();
+		final int areaY = scrollableArea.getAbsoluteY();
+		final int areaHeight = scrollableArea.getRealHeight();
 
 		// Check if the component is already visible
-		if ((component.getAbsoluteY() >= areaY)
-				&& (component.getAbsoluteY() <= areaY + areaHeight
-				- component.getRealHeight())) {
+		if (component.getAbsoluteY() >= areaY
+				&& component.getAbsoluteY() <= areaY + areaHeight
+				- component.getRealHeight()) {
 			return true;
 		}
 
 		// Calculate scroll bar position to click
-		RSComponent scrollBarArea = scrollBar.getComponent(0);
-		int contentHeight = scrollableArea.getScrollableContentHeight();
+		final RSComponent scrollBarArea = scrollBar.getComponent(0);
+		final int contentHeight = scrollableArea.getScrollableContentHeight();
 
 		int pos = (int) ((float) scrollBarArea.getRealHeight() / contentHeight * (component
 				.getRelativeY() + random(-areaHeight / 2, areaHeight / 2
@@ -292,18 +292,18 @@ public class Interfaces extends MethodProvider {
 
 		// Scroll to it if we missed it
 		while (component.getAbsoluteY() < areaY
-				|| component.getAbsoluteY() > (areaY + areaHeight - component
-				.getRealHeight())) {
-			boolean scrollUp = component.getAbsoluteY() < areaY;
+				|| component.getAbsoluteY() > areaY + areaHeight - component
+				.getRealHeight()) {
+			final boolean scrollUp = component.getAbsoluteY() < areaY;
 			scrollBar.getComponent(scrollUp ? 4 : 5).doAction("");
 
 			sleep(random(100, 200));
 		}
 
 		// Return whether or not the component is visible now.
-		return (component.getAbsoluteY() >= areaY)
-				&& (component.getAbsoluteY() <= areaY + areaHeight
-				- component.getRealHeight());
+		return component.getAbsoluteY() >= areaY
+				&& component.getAbsoluteY() <= areaY + areaHeight
+				- component.getRealHeight();
 	}
 
 	/**
@@ -312,7 +312,7 @@ public class Interfaces extends MethodProvider {
 	private synchronized void enlargeCache() {
 		final org.rsbot.client.RSInterface[][] inters = methods.client
 				.getRSInterfaceCache();
-		if ((inters != null) && (mainCache.length < inters.length)) { // enlarge
+		if (inters != null && mainCache.length < inters.length) { // enlarge
 			// cache
 			mainCache = Arrays.copyOf(mainCache, inters.length);
 			for (int i = mainCache.length; i < mainCache.length; i++) {
@@ -333,7 +333,7 @@ public class Interfaces extends MethodProvider {
 	 * @param timer Milliseconds to wait for the interface to open/close.
 	 * @return <tt>true</tt> if the interface was successfully closed/opened.
 	 */
-	public boolean waitFor(RSInterface iface, boolean valid, int timer) {
+	public boolean waitFor(final RSInterface iface, final boolean valid, final int timer) {
 		for (int w = 0; w < timer && iface.isValid() == valid ? true : false; w++) {
 			sleep(1);
 		}

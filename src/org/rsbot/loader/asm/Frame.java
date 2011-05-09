@@ -159,8 +159,8 @@ final class Frame {
 	 */
 	static {
 		int i;
-		int[] b = new int[202];
-		String s = "EFFFFFFFFGGFFFGGFFFEEFGFGFEEEEEEEEEEEEEEEEEEEEDEDEDDDDD"
+		final int[] b = new int[202];
+		final String s = "EFFFFFFFFGGFFFGGFFFEEFGFGFEEEEEEEEEEEEEEEEEEEEDEDEDDDDD"
 				+ "CDCDEEEEEEEEEEEEEEEEEEEEBABABBBBDCFFFGGGEDCDCDCDCDCDCDCDCD"
 				+ "CDCEEEEDDDDDDDCDCDCEFEFDDEEFFDEDEEEBDDBBDDDDDDCCCCCCCCEFED"
 				+ "DDCDCDEEEEEEEEEEFEEEEEEDDEEDDEE";
@@ -263,9 +263,9 @@ final class Frame {
 		if (outputLocals == null) {
 			outputLocals = new int[10];
 		}
-		int n = outputLocals.length;
+		final int n = outputLocals.length;
 		if (local >= n) {
-			int[] t = new int[Math.max(local + 1, 2 * n)];
+			final int[] t = new int[Math.max(local + 1, 2 * n)];
 			System.arraycopy(outputLocals, 0, t, 0, n);
 			outputLocals = t;
 		}
@@ -283,16 +283,16 @@ final class Frame {
 		if (outputStack == null) {
 			outputStack = new int[10];
 		}
-		int n = outputStack.length;
+		final int n = outputStack.length;
 		if (outputStackTop >= n) {
-			int[] t = new int[Math.max(outputStackTop + 1, 2 * n)];
+			final int[] t = new int[Math.max(outputStackTop + 1, 2 * n)];
 			System.arraycopy(outputStack, 0, t, 0, n);
 			outputStack = t;
 		}
 		// pushes the type on the output stack
 		outputStack[outputStackTop++] = type;
 		// updates the maximun height reached by the output stack, if needed
-		int top = owner.inputStackTop + outputStackTop;
+		final int top = owner.inputStackTop + outputStackTop;
 		if (top > owner.outputStackMax) {
 			owner.outputStackMax = top;
 		}
@@ -307,7 +307,7 @@ final class Frame {
 	 *             the output frame stack).
 	 */
 	private void push(final ClassWriter cw, final String desc) {
-		int type = type(cw, desc);
+		final int type = type(cw, desc);
 		if (type != 0) {
 			push(type);
 			if (type == LONG || type == DOUBLE) {
@@ -325,7 +325,7 @@ final class Frame {
 	 */
 	private static int type(final ClassWriter cw, final String desc) {
 		String t;
-		int index = desc.charAt(0) == '(' ? desc.indexOf(')') + 1 : 0;
+		final int index = desc.charAt(0) == '(' ? desc.indexOf(')') + 1 : 0;
 		switch (desc.charAt(index)) {
 			case 'V':
 				return 0;
@@ -384,7 +384,7 @@ final class Frame {
 						t = desc.substring(dims + 1, desc.length() - 1);
 						data = OBJECT | cw.addType(t);
 				}
-				return (dims - index) << 28 | data;
+				return dims - index << 28 | data;
 		}
 	}
 
@@ -394,11 +394,12 @@ final class Frame {
 	 * @return the type that has been popped from the output frame stack.
 	 */
 	private int pop() {
+		owner.inputStackTop--;
 		if (outputStackTop > 0) {
-			return outputStack[--outputStackTop];
+			return outputStack[outputStackTop];
 		} else {
 			// if the output frame stack is empty, pops from the input stack
-			return STACK | -(--owner.inputStackTop);
+			return STACK | -owner.inputStackTop;
 		}
 	}
 
@@ -427,7 +428,7 @@ final class Frame {
 	 *             to the method arguments).
 	 */
 	private void pop(final String desc) {
-		char c = desc.charAt(0);
+		final char c = desc.charAt(0);
 		if (c == '(') {
 			pop((Type.getArgumentsAndReturnSizes(desc) >> 2) - 1);
 		} else if (c == 'J' || c == 'D') {
@@ -448,9 +449,9 @@ final class Frame {
 		if (initializations == null) {
 			initializations = new int[2];
 		}
-		int n = initializations.length;
+		final int n = initializations.length;
 		if (initializationCount >= n) {
-			int[] t = new int[Math.max(initializationCount + 1, 2 * n)];
+			final int[] t = new int[Math.max(initializationCount + 1, 2 * n)];
 			System.arraycopy(initializations, 0, t, 0, n);
 			initializations = t;
 		}
@@ -472,15 +473,15 @@ final class Frame {
 		if (t == UNINITIALIZED_THIS) {
 			s = OBJECT | cw.addType(cw.thisName);
 		} else if ((t & (DIM | BASE_KIND)) == UNINITIALIZED) {
-			String type = cw.typeTable[t & BASE_VALUE].strVal1;
+			final String type = cw.typeTable[t & BASE_VALUE].strVal1;
 			s = OBJECT | cw.addType(type);
 		} else {
 			return t;
 		}
 		for (int j = 0; j < initializationCount; ++j) {
 			int u = initializations[j];
-			int dim = u & DIM;
-			int kind = u & KIND;
+			final int dim = u & DIM;
+			final int kind = u & KIND;
 			if (kind == LOCAL) {
 				u = dim + inputLocals[u & VALUE];
 			} else if (kind == STACK) {
@@ -518,7 +519,7 @@ final class Frame {
 			}
 		}
 		for (int j = 0; j < args.length; ++j) {
-			int t = type(cw, args[j].getDescriptor());
+			final int t = type(cw, args[j].getDescriptor());
 			inputLocals[i++] = t;
 			if (t == LONG || t == DOUBLE) {
 				inputLocals[i++] = TOP;
@@ -972,8 +973,8 @@ final class Frame {
 		boolean changed = false;
 		int i, s, dim, kind, t;
 
-		int nLocal = inputLocals.length;
-		int nStack = inputStack.length;
+		final int nLocal = inputLocals.length;
+		final int nStack = inputStack.length;
 		if (frame.inputLocals == null) {
 			frame.inputLocals = new int[nLocal];
 			changed = true;
@@ -1022,7 +1023,7 @@ final class Frame {
 			return changed;
 		}
 
-		int nInputStack = inputStack.length + owner.inputStackTop;
+		final int nInputStack = inputStack.length + owner.inputStackTop;
 		if (frame.inputStack == null) {
 			frame.inputStack = new int[nInputStack + outputStackTop];
 			changed = true;
@@ -1076,7 +1077,7 @@ final class Frame {
 			int t,
 			final int[] types,
 			final int index) {
-		int u = types[index];
+		final int u = types[index];
 		if (u == t) {
 			// if the types are equal, merge(u,t)=u, so there is no change
 			return false;
@@ -1103,7 +1104,7 @@ final class Frame {
 					// if t is also a reference type, and if u and t have the
 					// same dimension merge(u,t) = dim(t) | common parent of the
 					// element types of u and t
-					v = (t & DIM) | OBJECT
+					v = t & DIM | OBJECT
 							| cw.getMergedType(t & BASE_VALUE, u & BASE_VALUE);
 				} else {
 					// if u and t are array types, but not with the same element

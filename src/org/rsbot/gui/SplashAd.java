@@ -35,7 +35,7 @@ public class SplashAd extends JDialog implements MouseListener {
 	private String text;
 	private int display = 5000;
 
-	public SplashAd(JFrame owner) {
+	public SplashAd(final JFrame owner) {
 		super(owner);
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -48,10 +48,10 @@ public class SplashAd extends JDialog implements MouseListener {
 			return;
 		}
 
-		File file = new File(GlobalConfiguration.Paths.getCacheDirectory(), CACHED_IMAGE);
+		final File file = new File(GlobalConfiguration.Paths.getCacheDirectory(), CACHED_IMAGE);
 		try {
 			HttpClient.download(image, file);
-		} catch (IOException ignored) {
+		} catch (final IOException ignored) {
 			dispose();
 			return;
 		}
@@ -61,12 +61,12 @@ public class SplashAd extends JDialog implements MouseListener {
 		}
 
 		try {
-			BufferedImage img = ImageIO.read(file);
+			final BufferedImage img = ImageIO.read(file);
 			setSize(img.getWidth(), img.getHeight());
-			JLabel label = new JLabel();
+			final JLabel label = new JLabel();
 			label.setIcon(new ImageIcon(img));
 			add(label);
-		} catch (IOException ignored) {
+		} catch (final IOException ignored) {
 			dispose();
 			return;
 		}
@@ -78,13 +78,13 @@ public class SplashAd extends JDialog implements MouseListener {
 		HashMap<String, String> keys = null;
 
 		try {
-			URL source = new URL(GlobalConfiguration.Paths.URLs.AD_INFO);
+			final URL source = new URL(GlobalConfiguration.Paths.URLs.AD_INFO);
 			final File cache = new File(GlobalConfiguration.Paths.getCacheDirectory(), "ads.txt");
 			HttpClient.download(source, cache);
-			BufferedReader reader = new BufferedReader(new FileReader(cache));
+			final BufferedReader reader = new BufferedReader(new FileReader(cache));
 			keys = IniParser.deserialise(reader).get(IniParser.emptySection);
 			reader.close();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return false;
 		}
 
@@ -101,7 +101,7 @@ public class SplashAd extends JDialog implements MouseListener {
 		} else {
 			try {
 				image = new URL(keys.get("image"));
-			} catch (MalformedURLException e) {
+			} catch (final MalformedURLException e) {
 				return false;
 			}
 		}
@@ -115,7 +115,7 @@ public class SplashAd extends JDialog implements MouseListener {
 		return true;
 	}
 
-	private boolean parseBool(String mode) {
+	private boolean parseBool(final String mode) {
 		return mode.equals("1") || mode.equalsIgnoreCase("true") || mode.equalsIgnoreCase("yes");
 	}
 
@@ -123,29 +123,35 @@ public class SplashAd extends JDialog implements MouseListener {
 		setLocationRelativeTo(getOwner());
 		setVisible(true);
 
-		Timer timer = new Timer();
+		final Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
+			@Override
 			public void run() {
 				dispose();
 			}
 		}, display);
 	}
 
-	public void mouseClicked(MouseEvent e) {
+	@Override
+	public void mouseClicked(final MouseEvent e) {
 	}
 
-	public void mousePressed(MouseEvent e) {
+	@Override
+	public void mousePressed(final MouseEvent e) {
 	}
 
-	public void mouseReleased(MouseEvent e) {
+	@Override
+	public void mouseReleased(final MouseEvent e) {
 		BotGUI.openURL(link);
 		dispose();
 	}
 
-	public void mouseEntered(MouseEvent e) {
+	@Override
+	public void mouseEntered(final MouseEvent e) {
 	}
 
-	public void mouseExited(MouseEvent e) {
+	@Override
+	public void mouseExited(final MouseEvent e) {
 	}
 
 }

@@ -25,9 +25,20 @@ public class ScreenshotUtil {
 		}
 	}
 
+	public static void saveScreenshot(final Bot bot, final boolean hideUsername, String filename) {
+		if (!filename.endsWith(".png")) {
+			filename = filename.concat(".png");
+		}
+
+		final File dir = new File(GlobalConfiguration.Paths.getScreenshotsDirectory());
+		if (dir.isDirectory() || dir.mkdirs()) {
+			ScreenshotUtil.saveScreenshot(bot, new File(dir, filename), "png", hideUsername);
+		}
+	}
+
 	private static void saveScreenshot(final Bot bot, final File file, final String type, final boolean hideUsername) {
 		try {
-			BufferedImage image = takeScreenshot(bot, hideUsername);
+			final BufferedImage image = takeScreenshot(bot, hideUsername);
 
 			ImageIO.write(image, type, file);
 			ScreenshotUtil.log.info("Screenshot saved to: " + file.getPath());
@@ -57,5 +68,4 @@ public class ScreenshotUtil {
 		}
 		return source;
 	}
-
 }

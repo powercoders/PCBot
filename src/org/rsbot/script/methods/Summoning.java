@@ -146,14 +146,14 @@ public class Summoning extends MethodProvider {
 		private final int bobSpace;
 		private RSNPC npcObject;
 
-		Familiar(String name, int requiredLevel, int time, int sp,
-		         String scrollName, int space) {
+		Familiar(final String name, final int requiredLevel, final int time, final int sp,
+		         final String scrollName, final int space) {
 			this.name = name;
 			this.requiredLevel = requiredLevel;
 			this.time = time;
-			this.requiredSpecialPoints = sp;
+			requiredSpecialPoints = sp;
 			this.scrollName = scrollName;
-			this.bobSpace = space;
+			bobSpace = space;
 		}
 
 		public int getRequiredLevel() {
@@ -184,8 +184,8 @@ public class Summoning extends MethodProvider {
 			return bobSpace != 0;
 		}
 
-		public void setNPCObject(RSNPC npc) {
-			this.npcObject = npc;
+		public void setNPCObject(final RSNPC npc) {
+			npcObject = npc;
 		}
 
 		public RSNPC getNPC() {
@@ -232,7 +232,7 @@ public class Summoning extends MethodProvider {
 	 *
 	 * @return <tt>true</tt> if action is performed.
 	 */
-	public boolean doAction(String act) {
+	public boolean doAction(final String act) {
 		return methods.interfaces.get(INTERFACE_TAB_SUMMONING)
 				.getComponent(INTERFACE_TAB_SUMMONING_CHILD).isValid()
 				&& methods.interfaces.get(INTERFACE_TAB_SUMMONING)
@@ -362,11 +362,11 @@ public class Summoning extends MethodProvider {
 	 * @param action the action string
 	 * @return <tt>true</tt> if action is performed.
 	 */
-	public boolean setLeftClickOption(String action) {
-		RSInterface optionInterface = methods.interfaces.get(INTERFACE_OPTIONS);
+	public boolean setLeftClickOption(final String action) {
+		final RSInterface optionInterface = methods.interfaces.get(INTERFACE_OPTIONS);
 		int index = -1;
 
-		for (RSComponent option : optionInterface.getComponents()) {
+		for (final RSComponent option : optionInterface.getComponents()) {
 			if (option != null && option.getText() != null) {
 				if (option.containsAction(action)
 						|| option.containsText(action)) {
@@ -384,7 +384,7 @@ public class Summoning extends MethodProvider {
 	 * @param option the option index
 	 * @return <tt>true</tt> if action is performed.
 	 */
-	public boolean setLeftClickOption(int option) {
+	public boolean setLeftClickOption(final int option) {
 		methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING,
 				INTERFACE_TAB_SUMMONING_CHILD).doAction(
 				"Select left-click option");
@@ -401,17 +401,17 @@ public class Summoning extends MethodProvider {
 	 * @return your current Familiar
 	 */
 	public Familiar getFamiliar() {
-		for (int element : methods.client.getRSNPCIndexArray()) {
-			Node node = methods.nodes.lookup(methods.client.getRSNPCNC(),
+		for (final int element : methods.client.getRSNPCIndexArray()) {
+			final Node node = methods.nodes.lookup(methods.client.getRSNPCNC(),
 					element);
 			if (node == null || !(node instanceof RSNPCNode)) {
 				continue;
 			}
-			RSNPC npc = new RSNPC(methods, ((RSNPCNode) node).getRSNPC());
+			final RSNPC npc = new RSNPC(methods, ((RSNPCNode) node).getRSNPC());
 			if (npc.getInteracting() != null
 					&& npc.getInteracting().equals(
 					methods.players.getMyPlayer())) {
-				for (Familiar f : Familiar.values()) {
+				for (final Familiar f : Familiar.values()) {
 					if (f != null && npc.getName().equals(f.getName())) {
 						f.setNPCObject(npc);
 						return f;

@@ -51,9 +51,9 @@ public class Mouse extends MethodProvider {
 		/* Start the maximum distance at maxDistance */
 		double distance = maxDistance;
 		/* Get the current location of the cursor */
-		Point p = getLocation();
+		final Point p = getLocation();
 		/* Calculate the x coordinate if the mouse moved the maximum distance */
-		int maxX = (int) Math.round(xvec * distance + p.x);
+		final int maxX = (int) Math.round(xvec * distance + p.x);
 		/*
 		 * If the maximum x is offscreen, subtract that distance/xvec from the
 		 * maximum distance so the maximum distance will give a valid X
@@ -63,7 +63,7 @@ public class Mouse extends MethodProvider {
 				Math.min(methods.game.getWidth(), maxX)))
 				/ xvec);
 		/* Do the same thing with the Y coordinate */
-		int maxY = (int) Math.round(yvec * distance + p.y);
+		final int maxY = (int) Math.round(yvec * distance + p.y);
 		distance -= Math.abs((maxY - Math.max(0,
 				Math.min(methods.game.getHeight(), maxY)))
 				/ yvec);
@@ -143,7 +143,7 @@ public class Mouse extends MethodProvider {
 		methods.inputManager.clickMouse(leftClick);
 		if (moveAfterDist > 0) {
 			sleep(random(50, 350));
-			Point pos = getLocation();
+			final Point pos = getLocation();
 			move(pos.x - moveAfterDist, pos.y - moveAfterDist,
 					moveAfterDist * 2, moveAfterDist * 2);
 		}
@@ -231,7 +231,7 @@ public class Mouse extends MethodProvider {
 	 * Moves the mouse slightly depending on where it currently is and clicks.
 	 */
 	public void clickSlightly() {
-		Point p = new Point(
+		final Point p = new Point(
 				(int) (getLocation().getX() + (Math.random() * 50 > 25 ? 1 : -1)
 						* (30 + Math.random() * 90)), (int) (getLocation()
 						.getY() + (Math.random() * 50 > 25 ? 1 : -1)
@@ -330,7 +330,7 @@ public class Mouse extends MethodProvider {
 			methods.inputManager.moveMouse(speed, x, y, randX, randY);
 			if (afterOffset > 0) {
 				sleep(random(60, 300));
-				Point pos = getLocation();
+				final Point pos = getLocation();
 				move(pos.x - afterOffset, pos.y - afterOffset, afterOffset * 2,
 						afterOffset * 2);
 			}
@@ -422,7 +422,7 @@ public class Mouse extends MethodProvider {
 	 * Moves the mouse slightly depending on where it currently is.
 	 */
 	public void moveSlightly() {
-		Point p = new Point(
+		final Point p = new Point(
 				(int) (getLocation().getX() + (Math.random() * 50 > 25 ? 1 : -1)
 						* (30 + Math.random() * 90)), (int) (getLocation()
 						.getY() + (Math.random() * 50 > 25 ? 1 : -1)
@@ -440,14 +440,14 @@ public class Mouse extends MethodProvider {
 	 *         distance outwards.
 	 */
 	public int getRandomX(final int maxDistance) {
-		Point p = getLocation();
+		final Point p = getLocation();
 		if (p.x < 0 || maxDistance <= 0) {
 			return -1;
 		}
 		if (random(0, 2) == 0) {
 			return p.x - random(0, p.x < maxDistance ? p.x : maxDistance);
 		} else {
-			int dist = methods.game.getWidth() - p.x;
+			final int dist = methods.game.getWidth() - p.x;
 			return p.x
 					+ random(1, dist < maxDistance && dist > 0 ? dist
 					: maxDistance);
@@ -460,14 +460,14 @@ public class Mouse extends MethodProvider {
 	 *         distance outwards.
 	 */
 	public int getRandomY(final int maxDistance) {
-		Point p = getLocation();
+		final Point p = getLocation();
 		if (p.y < 0 || maxDistance <= 0) {
 			return -1;
 		}
 		if (random(0, 2) == 0) {
 			return p.y - random(0, p.y < maxDistance ? p.y : maxDistance);
 		} else {
-			int dist = methods.game.getHeight() - p.y;
+			final int dist = methods.game.getHeight() - p.y;
 			return p.y
 					+ random(1, dist < maxDistance && dist > 0 ? dist
 					: maxDistance);
@@ -480,7 +480,7 @@ public class Mouse extends MethodProvider {
 	 * @return A <tt>Point</tt> containing the bot's mouse's x & y coordinates.
 	 */
 	public Point getLocation() {
-		org.rsbot.client.input.Mouse m = methods.client.getMouse();
+		final org.rsbot.client.input.Mouse m = methods.client.getMouse();
 		return new Point(m.getX(), m.getY());
 	}
 
@@ -488,7 +488,7 @@ public class Mouse extends MethodProvider {
 	 * @return The <tt>Point</tt> at which the bot's mouse was last clicked.
 	 */
 	public Point getPressLocation() {
-		org.rsbot.client.input.Mouse m = methods.client.getMouse();
+		final org.rsbot.client.input.Mouse m = methods.client.getMouse();
 		return new Point(m.getPressX(), m.getPressY());
 	}
 
@@ -496,7 +496,7 @@ public class Mouse extends MethodProvider {
 	 * @return The system time when the bot's mouse was last pressed.
 	 */
 	public long getPressTime() {
-		org.rsbot.client.input.Mouse mouse = methods.client.getMouse();
+		final org.rsbot.client.input.Mouse mouse = methods.client.getMouse();
 		return mouse == null ? 0 : mouse.getPressTime();
 	}
 
@@ -504,7 +504,7 @@ public class Mouse extends MethodProvider {
 	 * @return <tt>true</tt> if the bot's mouse is present.
 	 */
 	public boolean isPresent() {
-		org.rsbot.client.input.Mouse mouse = methods.client.getMouse();
+		final org.rsbot.client.input.Mouse mouse = methods.client.getMouse();
 		return mouse != null && mouse.isPresent();
 	}
 
@@ -512,7 +512,7 @@ public class Mouse extends MethodProvider {
 	 * @return <tt>true</tt> if the bot's mouse is pressed.
 	 */
 	public boolean isPressed() {
-		org.rsbot.client.input.Mouse mouse = methods.client.getMouse();
+		final org.rsbot.client.input.Mouse mouse = methods.client.getMouse();
 		return mouse != null && mouse.isPressed();
 	}
 

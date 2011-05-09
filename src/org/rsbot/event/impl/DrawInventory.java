@@ -12,10 +12,11 @@ public class DrawInventory implements PaintListener {
 
 	private final MethodContext ctx;
 
-	public DrawInventory(Bot bot) {
+	public DrawInventory(final Bot bot) {
 		ctx = bot.getMethodContext();
 	}
 
+	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;
@@ -28,7 +29,7 @@ public class DrawInventory implements PaintListener {
 		render.setColor(Color.WHITE);
 		final RSItem[] inventoryItems = ctx.inventory.getItems();
 
-		for (RSItem inventoryItem : inventoryItems) {
+		for (final RSItem inventoryItem : inventoryItems) {
 			if (inventoryItem.getID() != -1) {
 				final Point location = inventoryItem.getComponent().getCenter();
 				render.drawString("" + inventoryItem.getID(), location.x, location.y);

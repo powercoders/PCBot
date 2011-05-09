@@ -17,15 +17,15 @@ public class RSArea {
 	 * @param tiles An Array containing of <b>RSTiles</b> forming a polygon shape.
 	 * @param plane The plane of the <b>RSArea</b>.
 	 */
-	public RSArea(RSTile[] tiles, int plane) {
-		this.area = tileArrayToPolygon(tiles);
+	public RSArea(final RSTile[] tiles, final int plane) {
+		area = tileArrayToPolygon(tiles);
 		this.plane = plane;
 	}
 
 	/**
 	 * @param tiles An Array containing of <b>RSTiles</b> forming a polygon shape.
 	 */
-	public RSArea(RSTile[] tiles) {
+	public RSArea(final RSTile[] tiles) {
 		this(tiles, 0);
 	}
 
@@ -34,7 +34,7 @@ public class RSArea {
 	 * @param ne    The <i>North East</i> <b>RSTile</b> of the <b>RSArea</b>
 	 * @param plane The plane of the <b>RSArea</b>.
 	 */
-	public RSArea(RSTile sw, RSTile ne, int plane) {
+	public RSArea(final RSTile sw, final RSTile ne, final int plane) {
 		this(new RSTile[]{sw, new RSTile(ne.getX() + 1, sw.getY()),
 				new RSTile(ne.getX() + 1, ne.getY() + 1),
 				new RSTile(sw.getX(), ne.getY() + 1)}, plane);
@@ -44,7 +44,7 @@ public class RSArea {
 	 * @param sw The <i>South West</i> <b>RSTile</b> of the <b>RSArea</b>
 	 * @param ne The <i>North East</i> <b>RSTile</b> of the <b>RSArea</b>
 	 */
-	public RSArea(RSTile sw, RSTile ne) {
+	public RSArea(final RSTile sw, final RSTile ne) {
 		this(sw, ne, 0);
 	}
 
@@ -58,7 +58,7 @@ public class RSArea {
 	 * @param neY The Y axle of the <i>North East</i> <b>RSTile</b> of the
 	 *            <b>RSArea</b>
 	 */
-	public RSArea(int swX, int swY, int neX, int neY) {
+	public RSArea(final int swX, final int swY, final int neX, final int neY) {
 		this(new RSTile(swX, swY), new RSTile(neX, neY), 0);
 	}
 
@@ -67,7 +67,7 @@ public class RSArea {
 	 * @param y The y location of the <b>RSTile</b> that will be checked.
 	 * @return True if the <b>RSArea</b> contains the given <b>RSTile</b>.
 	 */
-	public boolean contains(int x, int y) {
+	public boolean contains(final int x, final int y) {
 		return this.contains(new RSTile(x, y));
 	}
 
@@ -76,7 +76,7 @@ public class RSArea {
 	 * @param tiles The <b>RSTile(s)</b> that will be checked.
 	 * @return True if the <b>RSArea</b> contains the given <b>RSTile(s)</b>.
 	 */
-	public boolean contains(int plane, RSTile... tiles) {
+	public boolean contains(final int plane, final RSTile... tiles) {
 		return this.plane == plane && this.contains(tiles);
 	}
 
@@ -84,10 +84,10 @@ public class RSArea {
 	 * @param tiles The <b>RSTile(s)</b> that will be checked.
 	 * @return True if the <b>RSArea</b> contains the given <b>RSTile(s)</b>.
 	 */
-	public boolean contains(RSTile... tiles) {
-		RSTile[] areaTiles = this.getTileArray();
-		for (RSTile check : tiles) {
-			for (RSTile space : areaTiles) {
+	public boolean contains(final RSTile... tiles) {
+		final RSTile[] areaTiles = getTileArray();
+		for (final RSTile check : tiles) {
+			for (final RSTile space : areaTiles) {
 				if (check.equals(space)) {
 					return true;
 				}
@@ -117,12 +117,12 @@ public class RSArea {
 	 * @return The nearest <b>RSTile</b> in the <b>RSArea</b>
 	 *         to the given <b>RSTile</b>.
 	 */
-	public RSTile getNearestTile(RSTile base) {
-		RSTile[] tiles = this.getTileArray();
+	public RSTile getNearestTile(final RSTile base) {
+		final RSTile[] tiles = getTileArray();
 		RSTile cur = null;
 		double dist = -1;
-		for (RSTile tile : tiles) {
-			double distTmp = distanceBetween(tile, base);
+		for (final RSTile tile : tiles) {
+			final double distTmp = distanceBetween(tile, base);
 			if (cur == null) {
 				dist = distTmp;
 				cur = tile;
@@ -138,15 +138,15 @@ public class RSArea {
 	 * @return The <b>RSTiles</b> the <b>RSArea</b> contains.
 	 */
 	public RSTile[] getTileArray() {
-		ArrayList<RSTile> list = new ArrayList<RSTile>();
-		for (int x = this.getX(); x <= (this.getX() + this.getWidth()); x++) {
-			for (int y = this.getY(); y <= (this.getY() + this.getHeight()); y++) {
-				if (this.area.contains(x, y)) {
+		final ArrayList<RSTile> list = new ArrayList<RSTile>();
+		for (int x = getX(); x <= getX() + getWidth(); x++) {
+			for (int y = getY(); y <= getY() + getHeight(); y++) {
+				if (area.contains(x, y)) {
 					list.add(new RSTile(x, y));
 				}
 			}
 		}
-		RSTile[] tiles = new RSTile[list.size()];
+		final RSTile[] tiles = new RSTile[list.size()];
 		for (int i = 0; i < list.size(); i++) {
 			tiles[i] = list.get(i);
 		}
@@ -157,11 +157,11 @@ public class RSArea {
 	 * @return The <b>RSTiles</b> the <b>RSArea</b> contains.
 	 */
 	public RSTile[][] getTiles() {
-		RSTile[][] tiles = new RSTile[this.getWidth()][this.getHeight()];
-		for (int i = 0; i < this.getWidth(); ++i) {
-			for (int j = 0; j < this.getHeight(); ++j) {
-				if (this.area.contains(this.getX() + i, this.getY() + j)) {
-					tiles[i][j] = new RSTile(this.getX() + i, this.getY() + j);
+		final RSTile[][] tiles = new RSTile[getWidth()][getHeight()];
+		for (int i = 0; i < getWidth(); ++i) {
+			for (int j = 0; j < getHeight(); ++j) {
+				if (area.contains(getX() + i, getY() + j)) {
+					tiles[i][j] = new RSTile(getX() + i, getY() + j);
 				}
 			}
 		}
@@ -173,7 +173,7 @@ public class RSArea {
 	 *         <i>East</i> and the <b>RSTile</b> that's most <i>West</i>.
 	 */
 	public int getWidth() {
-		return this.area.getBounds().width;
+		return area.getBounds().width;
 	}
 
 	/**
@@ -181,21 +181,21 @@ public class RSArea {
 	 *         <i>South</i> and the <b>RSTile</b> that's most <i>North</i>.
 	 */
 	public int getHeight() {
-		return this.area.getBounds().height;
+		return area.getBounds().height;
 	}
 
 	/**
 	 * @return The X axle of the <b>RSTile</b> that's most <i>West</i>.
 	 */
 	public int getX() {
-		return this.area.getBounds().x;
+		return area.getBounds().x;
 	}
 
 	/**
 	 * @return The Y axle of the <b>RSTile</b> that's most <i>South</i>.
 	 */
 	public int getY() {
-		return this.area.getBounds().y;
+		return area.getBounds().y;
 	}
 
 	/**
@@ -209,8 +209,8 @@ public class RSArea {
 	 * @return The bounding box of the <b>RSArea</b>.
 	 */
 	public Rectangle getBounds() {
-		return new Rectangle(this.area.getBounds().x + 1,
-				this.area.getBounds().y + 1, this.getWidth(), this.getHeight());
+		return new Rectangle(area.getBounds().x + 1,
+				area.getBounds().y + 1, getWidth(), getHeight());
 	}
 
 	/**
@@ -219,9 +219,9 @@ public class RSArea {
 	 * @param tiles The <b>RSTile</b> of the Polygon.
 	 * @return The Polygon of the <b>RSTile</b>.
 	 */
-	private Polygon tileArrayToPolygon(RSTile[] tiles) {
-		Polygon poly = new Polygon();
-		for (RSTile t : tiles) {
+	private Polygon tileArrayToPolygon(final RSTile[] tiles) {
+		final Polygon poly = new Polygon();
+		for (final RSTile t : tiles) {
 			poly.addPoint(t.getX(), t.getY());
 		}
 		return poly;
@@ -232,7 +232,7 @@ public class RSArea {
 	 * @param dest second <b>RSTile</b>
 	 * @return the distance between the first and the second rstile
 	 */
-	private double distanceBetween(RSTile curr, RSTile dest) {
+	private double distanceBetween(final RSTile curr, final RSTile dest) {
 		return Math.sqrt((curr.getX() - dest.getX())
 				* (curr.getX() - dest.getX()) + (curr.getY() - dest.getY())
 				* (curr.getY() - dest.getY()));

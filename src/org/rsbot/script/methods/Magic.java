@@ -20,7 +20,7 @@ public class Magic extends MethodProvider {
 
 		private final int id;
 
-		Book(int id) {
+		Book(final int id) {
 			this.id = id;
 		}
 
@@ -225,9 +225,9 @@ public class Magic extends MethodProvider {
 			sleep(random(150, 250));
 		}
 		if (methods.game.getCurrentTab() == Game.TAB_MAGIC) {
-			RSInterface inter = getInterface();
+			final RSInterface inter = getInterface();
 			if (inter != null) {
-				RSComponent comp = inter.getComponent(spell);
+				final RSComponent comp = inter.getComponent(spell);
 				return comp != null && comp.doAction("Cast");
 			}
 		}
@@ -254,9 +254,9 @@ public class Magic extends MethodProvider {
 			sleep(random(150, 250));
 		}
 		if (methods.game.getCurrentTab() == Game.TAB_MAGIC) {
-			RSInterface inter = getInterface();
+			final RSInterface inter = getInterface();
 			if (inter != null) {
-				RSComponent comp = inter.getComponent(spell);
+				final RSComponent comp = inter.getComponent(spell);
 				return comp != null && comp.doHover();
 			}
 		}
@@ -276,9 +276,9 @@ public class Magic extends MethodProvider {
 				methods.game.openTab(Game.TAB_MAGIC);
 				sleep(random(150, 250));
 			}
-			RSInterface inter = getInterface();
+			final RSInterface inter = getInterface();
 			if (inter != null) {
-				RSComponent comp = inter.getComponent(spell);
+				final RSComponent comp = inter.getComponent(spell);
 				return comp != null && comp.doAction("Autocast");
 			}
 		}

@@ -57,14 +57,15 @@ public class ImprovedRewardsBox extends Random {
 
 	public Random Rand;
 
+	@Override
 	public boolean activateCondition() {
 		return game.isLoggedIn() && !getMyPlayer().isInCombat() && !bank.isOpen()
 				&& cachedInventoryContainedOneOf(BOX_ID, BOOK_KNOWLEDGE_ID, LAMP_ID, MYSTERY_BOX_ID);
 	}
 
-	private boolean cachedInventoryContainedOneOf(int... ids) {
-		for (RSItem item : inventory.getCachedItems()) {
-			for (int id : ids) {
+	private boolean cachedInventoryContainedOneOf(final int... ids) {
+		for (final RSItem item : inventory.getCachedItems()) {
+			for (final int id : ids) {
 				if (item.getID() == id) {
 					return true;
 				}
@@ -79,32 +80,32 @@ public class ImprovedRewardsBox extends Random {
 				.getComponents();
 		for (int end = 0; end < selection.length; end++) {
 			if (selection[end].containsText(":")) {
-				endofselection = (end - 6);
+				endofselection = end - 6;
 			}
 			if (selection[end].containsText("emote")) {
-				endofselection = (end - 6);
+				endofselection = end - 6;
 			}
 			if (selection[end].containsText("costume")) {
-				endofselection = (end - 6);
+				endofselection = end - 6;
 			}
 		}
-		viewableScreenHeight = (interfaces.get(202).getComponent(15).getHeight() - 11);
-		int totalScreenHeight = (selection[endofselection].getAbsoluteY()
+		viewableScreenHeight = interfaces.get(202).getComponent(15).getHeight() - 11;
+		final int totalScreenHeight = selection[endofselection].getAbsoluteY()
 				+ selection[endofselection].getHeight() - selection[0]
-				.getAbsoluteY());
-		hiddenScreenHeight = (totalScreenHeight - viewableScreenHeight);
+				.getAbsoluteY();
+		hiddenScreenHeight = totalScreenHeight - viewableScreenHeight;
 		if (hiddenScreenHeight > 0) {
 			final RSComponent[] scrollbar = interfaces.get(202)
 					.getComponent(24).getComponents();
-			scrollbarTopLength = (scrollbar[1].getAbsoluteY() - scrollbar[0]
-					.getAbsoluteY());
-			int scrollbarBottomLength = (scrollbar[5].getAbsoluteY()
-					- scrollbar[3].getAbsoluteY() + scrollbar[3].getHeight() - 6);
+			scrollbarTopLength = scrollbar[1].getAbsoluteY() - scrollbar[0]
+					.getAbsoluteY();
+			final int scrollbarBottomLength = scrollbar[5].getAbsoluteY()
+					- scrollbar[3].getAbsoluteY() + scrollbar[3].getHeight() - 6;
 			scrollbarTotalLength = scrollbarTopLength + scrollbarBottomLength;
-			double difference = (Double.parseDouble(Integer.toString(scrollbarTopLength))
+			final double difference = Double.parseDouble(Integer.toString(scrollbarTopLength))
 					/ Double.parseDouble(Integer.toString(scrollbarTotalLength)) * Double
-					.parseDouble(Integer.toString(hiddenScreenHeight)));
-			boxYPos = (Component.getAbsoluteY() - (int) difference);
+					.parseDouble(Integer.toString(hiddenScreenHeight));
+			boxYPos = Component.getAbsoluteY() - (int) difference;
 		} else {
 			boxYPos = Component.getAbsoluteY();
 		}
@@ -116,13 +117,14 @@ public class ImprovedRewardsBox extends Random {
 				Component.getWidth(), Component.getHeight());
 	}
 
+	@Override
 	public int loop() {
 		if (getMyPlayer().isInCombat()) {
 			return -1;
 		}
-		String[] choices = getChoices();
+		final String[] choices = getChoices();
 		if (interfaces.get(BOX_IF).isValid()) {
-			for (RSComponent child : interfaces.get(137).getComponents()) {
+			for (final RSComponent child : interfaces.get(137).getComponents()) {
 				if (choices[choices.length - 1].equals("Emote")) {
 					break;
 				}
@@ -155,7 +157,7 @@ public class ImprovedRewardsBox extends Random {
 			if (optionSelected == 999) {
 				optionSelected = 0;
 			}
-			RSComponent[] scrollbar = interfaces.get(BOX_IF).getComponent(BOX_SCROLLBAR_IF).getComponents();
+			final RSComponent[] scrollbar = interfaces.get(BOX_IF).getComponent(BOX_SCROLLBAR_IF).getComponents();
 			if (scrollbarTopLength > 0) {
 				mouse.move(scrollbar[1].getAbsoluteX() + random(1, 7),
 						scrollbar[1].getAbsoluteY() + random(0, 20));
@@ -165,32 +167,32 @@ public class ImprovedRewardsBox extends Random {
 			if (getBoxArea(selection[optionSelected]).y > 278) {
 				mouse.move(scrollbar[1].getAbsoluteX() + random(1, 7),
 						scrollbar[1].getAbsoluteY() + random(20, 30));
-				int toDragtoY = (int) (mouse.getLocation().getY() + (Double
+				int toDragtoY = (int) (mouse.getLocation().getY() + Double
 						.parseDouble(Integer
 								.toString((getBoxArea(selection[optionSelected]).y
 										+ getBoxArea(selection[optionSelected]).height
 										- selection[0].getAbsoluteY() - viewableScreenHeight)))
 						/ Double.parseDouble(Integer
 						.toString(hiddenScreenHeight)) * Double
-						.parseDouble(Integer.toString(scrollbarTotalLength))));
-				if ((toDragtoY - (int) mouse.getLocation().getY()) > (scrollbar[5]
+						.parseDouble(Integer.toString(scrollbarTotalLength)));
+				if (toDragtoY - (int) mouse.getLocation().getY() > scrollbar[5]
 						.getAbsoluteY()
 						- scrollbar[3].getAbsoluteY()
-						+ scrollbar[3].getHeight() - 6)) {
+						+ scrollbar[3].getHeight() - 6) {
 					toDragtoY = (int) mouse.getLocation().getY()
-							+ (scrollbar[5].getAbsoluteY()
+							+ scrollbar[5].getAbsoluteY()
 							- scrollbar[3].getAbsoluteY()
-							+ scrollbar[3].getHeight() - 6);
+							+ scrollbar[3].getHeight() - 6;
 				}
 				mouse.drag((int) mouse.getLocation().getX(), toDragtoY);
 			}
 			sleep(random(3000, 4000));
 			selection = interfaces.get(BOX_IF).getComponent(BOX_SELECTION_IF).getComponents();
 			if (selection.length > optionSelected) {
-				int boxX = getBoxArea(selection[optionSelected]).x + 15;
-				int boxY = getBoxArea(selection[optionSelected]).y + 15;
-				int boxWidth = getBoxArea(selection[optionSelected]).width - 30;
-				int boxHeight = getBoxArea(selection[optionSelected]).height - 30;
+				final int boxX = getBoxArea(selection[optionSelected]).x + 15;
+				final int boxY = getBoxArea(selection[optionSelected]).y + 15;
+				final int boxWidth = getBoxArea(selection[optionSelected]).width - 30;
+				final int boxHeight = getBoxArea(selection[optionSelected]).height - 30;
 				mouse.move(random(boxX, boxX + boxWidth),
 						random(boxY, boxY + boxHeight));
 				mouse.click(true);
@@ -223,11 +225,11 @@ public class ImprovedRewardsBox extends Random {
 	}
 
 	private String[] getChoices() {
-		String[] choices = new String[2];
+		final String[] choices = new String[2];
 		choices[0] = "XP Item";
 		choices[1] = "Cash";
 
-		String a = account.getName() == null ? null : AccountManager.getReward(account.getName());
+		final String a = account.getName() == null ? null : AccountManager.getReward(account.getName());
 		if (a.equals("Attack")) {
 			XPSelection = ATT_ID;
 		} else if (a.equals("Strength")) {

@@ -51,7 +51,7 @@ public class Calculations extends MethodProvider {
 	 *         <tt>false</tt>.
 	 * @see #tileToMinimap(RSTile)
 	 */
-	public boolean tileOnMap(RSTile t) {
+	public boolean tileOnMap(final RSTile t) {
 		// Point p = tileToMinimap(t);
 		// return p != null && p.x != -1 && p.y != -1;
 		return distanceTo(t) < 15;
@@ -64,7 +64,7 @@ public class Calculations extends MethodProvider {
 	 * @return <tt>true</tt> if the RSTile is on the screen; otherwise
 	 *         <tt>false</tt>.
 	 */
-	public boolean tileOnScreen(RSTile t) {
+	public boolean tileOnScreen(final RSTile t) {
 		return pointOnScreen(tileToScreen(t, 0.5, 0.5, 0));
 	}
 
@@ -75,7 +75,7 @@ public class Calculations extends MethodProvider {
 	 * @return <tt>Point</tt> within minimap; otherwise
 	 *         <tt>new Point(-1, -1)</tt>.
 	 */
-	public Point tileToMinimap(RSTile t) {
+	public Point tileToMinimap(final RSTile t) {
 		return worldToMinimap(t.getX(), t.getY());
 	}
 
@@ -90,8 +90,8 @@ public class Calculations extends MethodProvider {
 	 * @return <tt>true</tt> if the point is within the rectangle; otherwise
 	 *         <tt>false</tt>.
 	 */
-	public boolean pointOnScreen(Point check) {
-		int x = check.x, y = check.y;
+	public boolean pointOnScreen(final Point check) {
+		final int x = check.x, y = check.y;
 		if (methods.game.isFixed()) {
 			return x > 4 && x < methods.game.getWidth() - 253 && y > 4 && y < methods.game.getHeight() - 169;
 		} else {
@@ -107,8 +107,8 @@ public class Calculations extends MethodProvider {
 	 * @return The distance between the two points, using the distance formula.
 	 * @see #distanceBetween(RSTile, RSTile)
 	 */
-	public double distanceBetween(Point curr, Point dest) {
-		return Math.sqrt(((curr.x - dest.x) * (curr.x - dest.x)) + ((curr.y - dest.y) * (curr.y - dest.y)));
+	public double distanceBetween(final Point curr, final Point dest) {
+		return Math.sqrt((curr.x - dest.x) * (curr.x - dest.x) + (curr.y - dest.y) * (curr.y - dest.y));
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class Calculations extends MethodProvider {
 	 * @return The random <code>double</code> generated.
 	 */
 	@Override
-	public double random(double min, double max) {
+	public double random(final double min, final double max) {
 		return Math.min(min, max) + methods.random.nextDouble()
 				* Math.abs(max - min);
 	}
@@ -130,20 +130,20 @@ public class Calculations extends MethodProvider {
 	 * @param tile Tile you want to get to.
 	 * @return <code>RSTile</code> that is onScreen.
 	 */
-	public RSTile getTileOnScreen(RSTile tile) {
+	public RSTile getTileOnScreen(final RSTile tile) {
 		try {
 			if (tileOnScreen(tile)) {
 				return tile;
 			} else {
-				RSTile loc = methods.players.getMyPlayer().getLocation();
-				RSTile halfWayTile = new RSTile((tile.getX() + loc.getX()) / 2, (tile.getY() + loc.getY()) / 2);
+				final RSTile loc = methods.players.getMyPlayer().getLocation();
+				final RSTile halfWayTile = new RSTile((tile.getX() + loc.getX()) / 2, (tile.getY() + loc.getY()) / 2);
 				if (tileOnScreen(halfWayTile)) {
 					return halfWayTile;
 				} else {
 					return getTileOnScreen(halfWayTile);
 				}
 			}
-		} catch (StackOverflowError soe) {
+		} catch (final StackOverflowError soe) {
 			return null;
 		}
 	}
@@ -155,9 +155,9 @@ public class Calculations extends MethodProvider {
 	 * @param t The target tile
 	 * @return The angle in degrees
 	 */
-	public int angleToTile(RSTile t) {
-		RSTile me = methods.players.getMyPlayer().getLocation();
-		int angle = (int) Math.toDegrees(Math.atan2(t.getY() - me.getY(), t.getX() - me.getX()));
+	public int angleToTile(final RSTile t) {
+		final RSTile me = methods.players.getMyPlayer().getLocation();
+		final int angle = (int) Math.toDegrees(Math.atan2(t.getY() - me.getY(), t.getX() - me.getX()));
 		return angle >= 0 ? angle : 360 + angle;
 	}
 
@@ -213,7 +213,7 @@ public class Calculations extends MethodProvider {
 	 * @return Distance to <code>RSCharacter</code>.
 	 * @see #distanceTo(RSTile)
 	 */
-	public int distanceTo(RSCharacter c) {
+	public int distanceTo(final RSCharacter c) {
 		return c == null ? -1 : distanceTo(c.getLocation());
 	}
 
@@ -224,7 +224,7 @@ public class Calculations extends MethodProvider {
 	 * @return Distance to <code>RSObject</code>.
 	 * @see #distanceTo(RSTile)
 	 */
-	public int distanceTo(RSObject o) {
+	public int distanceTo(final RSObject o) {
 		return o == null ? -1 : distanceTo(o.getLocation());
 	}
 
@@ -234,7 +234,7 @@ public class Calculations extends MethodProvider {
 	 * @param t The destination tile.
 	 * @return Distance to <code>RSTile</code>.
 	 */
-	public int distanceTo(RSTile t) {
+	public int distanceTo(final RSTile t) {
 		return t == null ? -1 : (int) distanceBetween(methods.players.getMyPlayer().getLocation(), t);
 	}
 
@@ -246,7 +246,7 @@ public class Calculations extends MethodProvider {
 	 * @return The diagonal distance between the two <code>RSTile</code>s.
 	 * @see #distanceBetween(Point, Point)
 	 */
-	public double distanceBetween(RSTile curr, RSTile dest) {
+	public double distanceBetween(final RSTile curr, final RSTile dest) {
 		return Math.sqrt((curr.getX() - dest.getX()) * (curr.getX() - dest.getX()) + (curr.getY() - dest.getY()) *
 				(curr.getY() - dest.getY()));
 	}
@@ -260,8 +260,8 @@ public class Calculations extends MethodProvider {
 	 * @return <tt>true</tt> if reaching any tile adjacent to the destination
 	 *         should be accepted.
 	 */
-	public int pathLengthTo(RSTile dest, boolean isObject) {
-		RSTile curPos = methods.players.getMyPlayer().getLocation();
+	public int pathLengthTo(final RSTile dest, final boolean isObject) {
+		final RSTile curPos = methods.players.getMyPlayer().getLocation();
 		return pathLengthBetween(curPos, dest, isObject);
 	}
 
@@ -275,7 +275,7 @@ public class Calculations extends MethodProvider {
 	 * @return <tt>true</tt> if reaching any tile adjacent to the destination
 	 *         should be accepted.
 	 */
-	public int pathLengthBetween(RSTile start, RSTile dest, boolean isObject) {
+	public int pathLengthBetween(final RSTile start, final RSTile dest, final boolean isObject) {
 		return dijkstraDist(start.getX() - methods.client.getBaseX(), // startX
 				start.getY() - methods.client.getBaseY(), // startY
 				dest.getX() - methods.client.getBaseX(), // destX
@@ -291,7 +291,7 @@ public class Calculations extends MethodProvider {
 	 * @return <tt>true</tt> if player can reach specified Object; otherwise
 	 *         <tt>false</tt>.
 	 */
-	public boolean canReach(RSTile dest, boolean isObject) {
+	public boolean canReach(final RSTile dest, final boolean isObject) {
 		return pathLengthTo(dest, isObject) != -1;
 	}
 
@@ -363,11 +363,11 @@ public class Calculations extends MethodProvider {
 	 *         <code>new Point(-1, -1)</code>.
 	 */
 	public Point groundToScreen(final int x, final int y, final int height) {
-		if ((methods.client.getGroundByteArray() == null) || (methods.client.getTileData() == null) || (x < 512) ||
-				(y < 512) || (x > 52224) || (y > 52224)) {
+		if (methods.client.getGroundByteArray() == null || methods.client.getTileData() == null || x < 512 ||
+				y < 512 || x > 52224 || y > 52224) {
 			return new Point(-1, -1);
 		}
-		int z = tileHeight(x, y) + height;
+		final int z = tileHeight(x, y) + height;
 		return worldToScreen(x, y, z);
 	}
 
@@ -381,21 +381,21 @@ public class Calculations extends MethodProvider {
 	 */
 	public int tileHeight(final int x, final int y) {
 		int p = methods.client.getPlane();
-		int x1 = x >> 9;
-		int y1 = y >> 9;
-		byte[][][] settings = methods.client.getGroundByteArray();
-		if ((settings != null) && (x1 >= 0) && (x1 < 104) && (y1 >= 0) && (y1 < 104)) {
-			if ((p <= 3) && ((settings[1][x1][y1] & 2) != 0)) {
+		final int x1 = x >> 9;
+		final int y1 = y >> 9;
+		final byte[][][] settings = methods.client.getGroundByteArray();
+		if (settings != null && x1 >= 0 && x1 < 104 && y1 >= 0 && y1 < 104) {
+			if (p <= 3 && (settings[1][x1][y1] & 2) != 0) {
 				++p;
 			}
-			TileData[] planes = methods.client.getTileData();
+			final TileData[] planes = methods.client.getTileData();
 			if (planes != null && p < planes.length && planes[p] != null) {
-				int[][] heights = planes[p].getHeights();
+				final int[][] heights = planes[p].getHeights();
 				if (heights != null) {
-					int x2 = x & 512 - 1;
-					int y2 = y & 512 - 1;
-					int start_h = (heights[x1][y1] * (512 - x2) + heights[x1 + 1][y1] * x2) >> 9;
-					int end_h = (heights[x1][1 + y1] * (512 - x2) + heights[x1 + 1][y1 + 1] * x2) >> 9;
+					final int x2 = x & 512 - 1;
+					final int y2 = y & 512 - 1;
+					final int start_h = heights[x1][y1] * (512 - x2) + heights[x1 + 1][y1] * x2 >> 9;
+					final int end_h = heights[x1][1 + y1] * (512 - x2) + heights[x1 + 1][y1 + 1] * x2 >> 9;
 					return start_h * (512 - y2) + end_h * y2 >> 9;
 				}
 			}
@@ -412,23 +412,23 @@ public class Calculations extends MethodProvider {
 	 * @return <code>Point</code> based on screen; otherwise
 	 *         <code>new Point(-1, -1)</code>.
 	 */
-	public Point worldToScreen(int x, int y, int z) {
+	public Point worldToScreen(final int x, final int y, final int z) {
 		// perspective projection: hooked viewport values are calculated in
 		// client based on camera state
 		// (so no need to project using camera values and sin/cos)
 		// old developers named these fields very poorly
-		float _z = (renderData.zOff + ((int) (renderData.zX * x + renderData.zY * z + renderData.zZ * y)));
-		if ((_z >= render.zNear) && (_z <= render.zFar)) {
-			int _x = (int) (render.xMultiplier * ((int) renderData.xOff + ((int) (renderData.xX * x + renderData.xY
-					* z + renderData.xZ * y))) / _z);
-			int _y = (int) (render.yMultiplier * ((int) renderData.yOff + ((int) (renderData.yX * x + renderData.yY
-					* z + renderData.yZ * y))) / _z);
-			if ((_x >= render.absoluteX1) && (_x <= render.absoluteX2) && (_y >= render.absoluteY1) && (_y <=
-					render.absoluteY2)) {
+		final float _z = renderData.zOff + (int) (renderData.zX * x + renderData.zY * z + renderData.zZ * y);
+		if (_z >= render.zNear && _z <= render.zFar) {
+			final int _x = (int) (render.xMultiplier * ((int) renderData.xOff + (int) (renderData.xX * x + renderData.xY
+					* z + renderData.xZ * y)) / _z);
+			final int _y = (int) (render.yMultiplier * ((int) renderData.yOff + (int) (renderData.yX * x + renderData.yY
+					* z + renderData.yZ * y)) / _z);
+			if (_x >= render.absoluteX1 && _x <= render.absoluteX2 && _y >= render.absoluteY1 && _y <=
+					render.absoluteY2) {
 				if (methods.game.isFixed()) {
 					return new Point((int) (_x - render.absoluteX1) + 4, (int) (_y - render.absoluteY1) + 4);
 				} else {
-					int sx = (int) (_x - render.absoluteX1), sy = (int) (_y - render.absoluteY1);
+					final int sx = (int) (_x - render.absoluteX1), sy = (int) (_y - render.absoluteY1);
 					return new Point(sx, sy);
 				}
 			}
@@ -445,7 +445,7 @@ public class Calculations extends MethodProvider {
 	 * @param rd The client viewport.
 	 */
 	public void updateRenderInfo(final org.rsbot.client.Render r, final org.rsbot.client.RenderData rd) {
-		if ((r == null) || (rd == null)) {
+		if (r == null || rd == null) {
 			return;
 		}
 		render.absoluteX1 = r.getAbsoluteX1();
@@ -512,7 +512,7 @@ public class Calculations extends MethodProvider {
 			step_ptr = (step_ptr + 1) % pathLength;
 			final int cost = dist[curr_x][curr_y] + 1;
 			// south
-			if ((curr_y > 0) && (prev[curr_x][curr_y - 1] == 0) && ((blocks[curr_x + 1][curr_y] & 0x1280102) == 0)) {
+			if (curr_y > 0 && prev[curr_x][curr_y - 1] == 0 && (blocks[curr_x + 1][curr_y] & 0x1280102) == 0) {
 				path_x[path_ptr] = curr_x;
 				path_y[path_ptr] = curr_y - 1;
 				path_ptr = (path_ptr + 1) % pathLength;
@@ -520,7 +520,7 @@ public class Calculations extends MethodProvider {
 				dist[curr_x][curr_y - 1] = cost;
 			}
 			// west
-			if ((curr_x > 0) && (prev[curr_x - 1][curr_y] == 0) && ((blocks[curr_x][curr_y + 1] & 0x1280108) == 0)) {
+			if (curr_x > 0 && prev[curr_x - 1][curr_y] == 0 && (blocks[curr_x][curr_y + 1] & 0x1280108) == 0) {
 				path_x[path_ptr] = curr_x - 1;
 				path_y[path_ptr] = curr_y;
 				path_ptr = (path_ptr + 1) % pathLength;
@@ -528,8 +528,8 @@ public class Calculations extends MethodProvider {
 				dist[curr_x - 1][curr_y] = cost;
 			}
 			// north
-			if ((curr_y < 104 - 1) && (prev[curr_x][curr_y + 1] == 0) && ((blocks[curr_x + 1][curr_y + 2] &
-					0x1280120) == 0)) {
+			if (curr_y < 104 - 1 && prev[curr_x][curr_y + 1] == 0 && (blocks[curr_x + 1][curr_y + 2] &
+					0x1280120) == 0) {
 				path_x[path_ptr] = curr_x;
 				path_y[path_ptr] = curr_y + 1;
 				path_ptr = (path_ptr + 1) % pathLength;
@@ -537,8 +537,8 @@ public class Calculations extends MethodProvider {
 				dist[curr_x][curr_y + 1] = cost;
 			}
 			// east
-			if ((curr_x < 104 - 1) && (prev[curr_x + 1][curr_y] == 0) && ((blocks[curr_x + 2][curr_y + 1] &
-					0x1280180) == 0)) {
+			if (curr_x < 104 - 1 && prev[curr_x + 1][curr_y] == 0 && (blocks[curr_x + 2][curr_y + 1] &
+					0x1280180) == 0) {
 				path_x[path_ptr] = curr_x + 1;
 				path_y[path_ptr] = curr_y;
 				path_ptr = (path_ptr + 1) % pathLength;
@@ -546,9 +546,9 @@ public class Calculations extends MethodProvider {
 				dist[curr_x + 1][curr_y] = cost;
 			}
 			// south west
-			if ((curr_x > 0) && (curr_y > 0) && (prev[curr_x - 1][curr_y - 1] == 0) && ((blocks[curr_x][curr_y] &
-					0x128010e) == 0) && ((blocks[curr_x][curr_y + 1] & 0x1280108) == 0) && ((blocks[curr_x +
-					1][curr_y] & 0x1280102) == 0)) {
+			if (curr_x > 0 && curr_y > 0 && prev[curr_x - 1][curr_y - 1] == 0 && (blocks[curr_x][curr_y] &
+					0x128010e) == 0 && (blocks[curr_x][curr_y + 1] & 0x1280108) == 0 && (blocks[curr_x +
+					1][curr_y] & 0x1280102) == 0) {
 				path_x[path_ptr] = curr_x - 1;
 				path_y[path_ptr] = curr_y - 1;
 				path_ptr = (path_ptr + 1) % pathLength;
@@ -556,9 +556,8 @@ public class Calculations extends MethodProvider {
 				dist[curr_x - 1][curr_y - 1] = cost;
 			}
 			// north west
-			if ((curr_x > 0) && (curr_y < 104 - 1) && (prev[curr_x - 1][curr_y + 1] == 0) && (
-					(blocks[curr_x][curr_y + 2] & 0x1280138) == 0) && ((blocks[curr_x][curr_y + 1] & 0x1280108) ==
-					0) && ((blocks[curr_x + 1][curr_y + 2] & 0x1280120) == 0)) {
+			if (curr_x > 0 && curr_y < 104 - 1 && prev[curr_x - 1][curr_y + 1] == 0 && (blocks[curr_x][curr_y + 2] & 0x1280138) == 0 && (blocks[curr_x][curr_y + 1] & 0x1280108) ==
+					0 && (blocks[curr_x + 1][curr_y + 2] & 0x1280120) == 0) {
 				path_x[path_ptr] = curr_x - 1;
 				path_y[path_ptr] = curr_y + 1;
 				path_ptr = (path_ptr + 1) % pathLength;
@@ -566,9 +565,8 @@ public class Calculations extends MethodProvider {
 				dist[curr_x - 1][curr_y + 1] = cost;
 			}
 			// south east
-			if ((curr_x < 104 - 1) && (curr_y > 0) && (prev[curr_x + 1][curr_y - 1] == 0) && ((blocks[curr_x +
-					2][curr_y] & 0x1280183) == 0) && ((blocks[curr_x + 2][curr_y + 1] & 0x1280180) == 0) && (
-					(blocks[curr_x + 1][curr_y] & 0x1280102) == 0)) {
+			if (curr_x < 104 - 1 && curr_y > 0 && prev[curr_x + 1][curr_y - 1] == 0 && (blocks[curr_x +
+					2][curr_y] & 0x1280183) == 0 && (blocks[curr_x + 2][curr_y + 1] & 0x1280180) == 0 && (blocks[curr_x + 1][curr_y] & 0x1280102) == 0) {
 				path_x[path_ptr] = curr_x + 1;
 				path_y[path_ptr] = curr_y - 1;
 				path_ptr = (path_ptr + 1) % pathLength;
@@ -576,9 +574,8 @@ public class Calculations extends MethodProvider {
 				dist[curr_x + 1][curr_y - 1] = cost;
 			}
 			// north east
-			if ((curr_x < 104 - 1) && (curr_y < 104 - 1) && (prev[curr_x + 1][curr_y + 1] == 0) && ((blocks[curr_x
-					+ 2][curr_y + 2] & 0x12801e0) == 0) && ((blocks[curr_x + 2][curr_y + 1] & 0x1280180) == 0) && (
-					(blocks[curr_x + 1][curr_y + 2] & 0x1280120) == 0)) {
+			if (curr_x < 104 - 1 && curr_y < 104 - 1 && prev[curr_x + 1][curr_y + 1] == 0 && (blocks[curr_x
+					+ 2][curr_y + 2] & 0x12801e0) == 0 && (blocks[curr_x + 2][curr_y + 1] & 0x1280180) == 0 && (blocks[curr_x + 1][curr_y + 2] & 0x1280120) == 0) {
 				path_x[path_ptr] = curr_x + 1;
 				path_y[path_ptr] = curr_y + 1;
 				path_ptr = (path_ptr + 1) % pathLength;

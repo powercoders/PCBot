@@ -20,7 +20,7 @@ public class CloseAllInterface extends Random {
 		final int child;
 		final boolean text;
 
-		public ComponentDef(int parent, int child, boolean text) {
+		public ComponentDef(final int parent, final int child, final boolean text) {
 			this.parent = parent;
 			this.child = child;
 			this.text = text;
@@ -52,11 +52,11 @@ public class CloseAllInterface extends Random {
 		addChild(1107, 174); // Clan Vexillum
 	}
 
-	private void addChild(int parent, int idx) {
+	private void addChild(final int parent, final int idx) {
 		components.add(new ComponentDef(parent, idx, false));
 	}
 
-	private void addChild(int parent, int idx, boolean text) {
+	private void addChild(final int parent, final int idx, final boolean text) {
 		components.add(new ComponentDef(parent, idx, text));
 	}
 
@@ -68,8 +68,8 @@ public class CloseAllInterface extends Random {
 					return true;
 				}
 			}
-			for (ComponentDef c : components) {
-				RSComponent comp = interfaces.getComponent(c.parent, c.child);
+			for (final ComponentDef c : components) {
+				final RSComponent comp = interfaces.getComponent(c.parent, c.child);
 				if (comp.isValid() && !(c.text && (comp.getText() == null || comp.getText().isEmpty()))) {
 					return true;
 				}
@@ -81,11 +81,11 @@ public class CloseAllInterface extends Random {
 	@Override
 	public int loop() {
 		sleep(random(500, 900));
-		if (interfaces.get(755).isValid() && (interfaces.getComponent(755, 0).getComponents().length > 0)) {
+		if (interfaces.get(755).isValid() && interfaces.getComponent(755, 0).getComponents().length > 0) {
 			interfaces.getComponent(755, 44).doClick();
 			return random(500, 900);
 		}
-		for (ComponentDef c : components) {
+		for (final ComponentDef c : components) {
 			if (interfaces.getComponent(c.parent, c.child).isValid()) {
 				interfaces.getComponent(c.parent, c.child).doClick();
 				sleep(random(500, 900));

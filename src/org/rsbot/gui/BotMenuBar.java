@@ -32,6 +32,7 @@ public class BotMenuBar extends JMenuBar {
 		DEBUG_MAP.put("Menu Actions", TMenuActions.class);
 		DEBUG_MAP.put("Menu", TMenu.class);
 		DEBUG_MAP.put("FPS", TFPS.class);
+		DEBUG_MAP.put("Web Status", TWebStatus.class);
 
 		// Paint
 		DEBUG_MAP.put("Players", DrawPlayers.class);
@@ -63,33 +64,33 @@ public class BotMenuBar extends JMenuBar {
 	}
 
 	private static String[] constructDebugs() {
-		List<String> debugItems = new ArrayList<String>();
+		final List<String> debugItems = new ArrayList<String>();
 		debugItems.add("Hide Toolbar");
 		debugItems.add("Hide Log Window");
 		debugItems.add("All Debugging");
 		debugItems.add("-");
-		for (String key : DEBUG_MAP.keySet()) {
-			Class<?> el = DEBUG_MAP.get(key);
+		for (final String key : DEBUG_MAP.keySet()) {
+			final Class<?> el = DEBUG_MAP.get(key);
 			if (PaintListener.class.isAssignableFrom(el)) {
 				debugItems.add(key);
 			}
 		}
 		debugItems.add("-");
-		for (String key : DEBUG_MAP.keySet()) {
+		for (final String key : DEBUG_MAP.keySet()) {
 			final Class<?> el = DEBUG_MAP.get(key);
 			if (TextPaintListener.class.isAssignableFrom(el)) {
 				debugItems.add(key);
 			}
 		}
 		debugItems.add("-");
-		for (String key : DEBUG_MAP.keySet()) {
-			Class<?> el = DEBUG_MAP.get(key);
-			if (!(TextPaintListener.class.isAssignableFrom(el)) && !(PaintListener.class.isAssignableFrom(el))) {
+		for (final String key : DEBUG_MAP.keySet()) {
+			final Class<?> el = DEBUG_MAP.get(key);
+			if (!TextPaintListener.class.isAssignableFrom(el) && !PaintListener.class.isAssignableFrom(el)) {
 				debugItems.add(key);
 			}
 		}
-		for (ListIterator<String> it = debugItems.listIterator(); it.hasNext();) {
-			String s = it.next();
+		for (final ListIterator<String> it = debugItems.listIterator(); it.hasNext();) {
+			final String s = it.next();
 			if (!s.equals("-")) {
 				it.set("ToggleF " + s);
 			}
@@ -97,36 +98,53 @@ public class BotMenuBar extends JMenuBar {
 		return debugItems.toArray(new String[debugItems.size()]);
 	}
 
+	private void constructItemIcons() {
+		final HashMap<String, String> map = new HashMap<String, String>(16);
+		map.put("New Bot", GlobalConfiguration.Paths.Resources.ICON_APPADD);
+		map.put("Close Bot", GlobalConfiguration.Paths.Resources.ICON_APPDELETE);
+		map.put("Save Screenshot", GlobalConfiguration.Paths.Resources.ICON_PHOTO);
+		map.put("Exit", GlobalConfiguration.Paths.Resources.ICON_CLOSE);
+		map.put("Accounts", GlobalConfiguration.Paths.Resources.ICON_REPORTKEY);
+		map.put("Site", GlobalConfiguration.Paths.Resources.ICON_WEBLINK);
+		map.put("Project", GlobalConfiguration.Paths.Resources.ICON_USEREDIT);
+		map.put("About", GlobalConfiguration.Paths.Resources.ICON_INFO);
+		for (final Entry<String, String> item : map.entrySet()) {
+			final JMenuItem menu = commandMenuItem.get(item.getKey());
+			menu.setIcon(new ImageIcon(GlobalConfiguration.getImage(item.getValue())));
+		}
+	}
+
 	private final Map<String, JCheckBoxMenuItem> eventCheckMap = new HashMap<String, JCheckBoxMenuItem>();
 	private final Map<String, JCheckBoxMenuItem> commandCheckMap = new HashMap<String, JCheckBoxMenuItem>();
 	private final Map<String, JMenuItem> commandMenuItem = new HashMap<String, JMenuItem>();
 	private final ActionListener listener;
 
-	public BotMenuBar(ActionListener listener) {
+	public BotMenuBar(final ActionListener listener) {
 		this.listener = listener;
 		for (int i = 0; i < TITLES.length; i++) {
-			String title = TITLES[i];
-			String[] elems = ELEMENTS[i];
+			final String title = TITLES[i];
+			final String[] elems = ELEMENTS[i];
 			add(constructMenu(title, elems));
 		}
+		constructItemIcons();
 	}
 
-	public void setOverrideInput(boolean force) {
+	public void setOverrideInput(final boolean force) {
 		commandCheckMap.get("Force Input").setSelected(force);
 	}
 
-	public void setPauseScript(boolean pause) {
+	public void setPauseScript(final boolean pause) {
 		commandMenuItem.get("Pause Script").setText(pause ? "Resume Script" : "Pause Script");
 	}
 
-	public void setBot(Bot bot) {
+	public void setBot(final Bot bot) {
 		if (bot == null) {
 			commandMenuItem.get("Close Bot").setEnabled(false);
 			commandMenuItem.get("Run Script").setEnabled(false);
 			commandMenuItem.get("Stop Script").setEnabled(false);
 			commandMenuItem.get("Pause Script").setEnabled(false);
 			commandMenuItem.get("Save Screenshot").setEnabled(false);
-			for (JCheckBoxMenuItem item : eventCheckMap.values()) {
+			for (final JCheckBoxMenuItem item : eventCheckMap.values()) {
 				item.setSelected(false);
 				item.setEnabled(false);
 			}
@@ -138,9 +156,9 @@ public class BotMenuBar extends JMenuBar {
 			commandMenuItem.get("Pause Script").setEnabled(true);
 			commandMenuItem.get("Save Screenshot").setEnabled(true);
 			int selections = 0;
-			for (Map.Entry<String, JCheckBoxMenuItem> entry : eventCheckMap.entrySet()) {
+			for (final Map.Entry<String, JCheckBoxMenuItem> entry : eventCheckMap.entrySet()) {
 				entry.getValue().setEnabled(true);
-				boolean selected = bot.hasListener(DEBUG_MAP.get(entry.getKey()));
+				final boolean selected = bot.hasListener(DEBUG_MAP.get(entry.getKey()));
 				entry.getValue().setSelected(selected);
 				if (selected) {
 					++selections;
@@ -155,24 +173,28 @@ public class BotMenuBar extends JMenuBar {
 		}
 	}
 
-	public JCheckBoxMenuItem getCheckBox(String key) {
+	public JCheckBoxMenuItem getCheckBox(final String key) {
 		return commandCheckMap.get(key);
 	}
 
-	private void disable(String... items) {
-		for (String item : items) {
+	private void disable(final String... items) {
+		for (final String item : items) {
 			commandCheckMap.get(item).setSelected(false);
 			commandCheckMap.get(item).setEnabled(false);
 		}
 	}
 
-	public void enable(String item, boolean selected) {
+	public void enable(final String item, final boolean selected) {
 		commandCheckMap.get(item).setSelected(selected);
 		commandCheckMap.get(item).setEnabled(true);
 	}
 
+	public void doClick(final String item) {
+		commandMenuItem.get(item).doClick();
+	}
+
 	public void loadPrefs() {
-		String path = GlobalConfiguration.Paths.getMenuBarPrefs();
+		final String path = GlobalConfiguration.Paths.getMenuBarPrefs();
 		if (!new File(path).exists()) {
 			return;
 		}
@@ -188,7 +210,7 @@ public class BotMenuBar extends JMenuBar {
 					commandCheckMap.get(line).doClick();
 				}
 			}
-		} catch (IOException ioe) {
+		} catch (final IOException ioe) {
 			try {
 				if (in != null) {
 					in.close();
@@ -196,31 +218,31 @@ public class BotMenuBar extends JMenuBar {
 				if (freader != null) {
 					freader.close();
 				}
-			} catch (IOException ioe1) {
+			} catch (final IOException ioe1) {
 			}
 		}
 	}
 
 	public void savePrefs() {
-		String path = GlobalConfiguration.Paths.getMenuBarPrefs();
+		final String path = GlobalConfiguration.Paths.getMenuBarPrefs();
 		FileWriter fstream = null;
 		BufferedWriter out = null;
 		try {
-			File f = new File(path);
+			final File f = new File(path);
 			if (f.exists()) {
 				f.delete();
 			}
 			fstream = new FileWriter(path);
 			out = new BufferedWriter(fstream);
-			for (Entry<String, JCheckBoxMenuItem> item : commandCheckMap.entrySet()) {
-				boolean checked = item.getValue().isSelected();
+			for (final Entry<String, JCheckBoxMenuItem> item : commandCheckMap.entrySet()) {
+				final boolean checked = item.getValue().isSelected();
 				if (!checked) {
 					continue;
 				}
 				out.write(item.getKey());
 				out.newLine();
 			}
-		} catch (IOException ioe) {
+		} catch (final IOException ioe) {
 		} finally {
 			try {
 				if (out != null) {
@@ -229,13 +251,13 @@ public class BotMenuBar extends JMenuBar {
 				if (fstream != null) {
 					fstream.close();
 				}
-			} catch (IOException ioe1) {
+			} catch (final IOException ioe1) {
 			}
 		}
 	}
 
-	private JMenu constructMenu(String title, String[] elems) {
-		JMenu menu = new JMenu(title);
+	private JMenu constructMenu(final String title, final String[] elems) {
+		final JMenu menu = new JMenu(title);
 		for (String e : elems) {
 			if (e.equals("-")) {
 				menu.add(new JSeparator());
@@ -243,17 +265,17 @@ public class BotMenuBar extends JMenuBar {
 				JMenuItem jmi;
 				if (e.startsWith("Toggle")) {
 					e = e.substring("Toggle".length());
-					char state = e.charAt(0);
+					final char state = e.charAt(0);
 					e = e.substring(2);
 					jmi = new JCheckBoxMenuItem(e);
-					if ((state == 't') || (state == 'T')) {
+					if (state == 't' || state == 'T') {
 						jmi.setSelected(true);
 					}
 					if (DEBUG_MAP.containsKey(e)) {
-						JCheckBoxMenuItem ji = (JCheckBoxMenuItem) jmi;
+						final JCheckBoxMenuItem ji = (JCheckBoxMenuItem) jmi;
 						eventCheckMap.put(e, ji);
 					}
-					JCheckBoxMenuItem ji = (JCheckBoxMenuItem) jmi;
+					final JCheckBoxMenuItem ji = (JCheckBoxMenuItem) jmi;
 					commandCheckMap.put(e, ji);
 				} else {
 					jmi = new JMenuItem(e);

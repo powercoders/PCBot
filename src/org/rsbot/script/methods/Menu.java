@@ -42,7 +42,7 @@ public class Menu extends MethodProvider {
 	 * @return <tt>true</tt> if the menu item was clicked; otherwise
 	 *         <tt>false</tt>.
 	 */
-	public boolean doAction(String action) {
+	public boolean doAction(final String action) {
 		return doAction(action, null);
 	}
 
@@ -113,9 +113,9 @@ public class Menu extends MethodProvider {
 		if (item == null) {
 			return false;
 		}
-		RSItemDef itemDef = item.getDefinition();
+		final RSItemDef itemDef = item.getDefinition();
 		if (itemDef != null) {
-			for (String a : itemDef.getActions()) {
+			for (final String a : itemDef.getActions()) {
 				if (a.equalsIgnoreCase(action)) {
 					return true;
 				}
@@ -134,17 +134,17 @@ public class Menu extends MethodProvider {
 		if (!isOpen()) {
 			return false;
 		}
-		String[] items = getItems();
+		final String[] items = getItems();
 		if (items.length <= i) {
 			return false;
 		}
 		if (isCollapsed()) {
-			Queue<MenuGroupNode> groups = new Queue<MenuGroupNode>(
+			final Queue<MenuGroupNode> groups = new Queue<MenuGroupNode>(
 					methods.client.getCollapsedMenuItems());
 			int idx = 0, mainIdx = 0;
 			for (MenuGroupNode g = groups.getHead(); g != null; g = groups
 					.getNext(), ++mainIdx) {
-				Queue<MenuItemNode> subItems = new Queue<MenuItemNode>(
+				final Queue<MenuItemNode> subItems = new Queue<MenuItemNode>(
 						g.getItems());
 				int subIdx = 0;
 				for (MenuItemNode item = subItems.getHead(); item != null; item = subItems
@@ -165,9 +165,9 @@ public class Menu extends MethodProvider {
 	}
 
 	private boolean clickMain(final String[] items, final int i) {
-		Point menu = getLocation();
-		int xOff = random(4, items[i].length() * 4);
-		int yOff = 21 + 16 * i + random(3, 12);
+		final Point menu = getLocation();
+		final int xOff = random(4, items[i].length() * 4);
+		final int yOff = 21 + 16 * i + random(3, 12);
 		methods.mouse.move(menu.x + xOff, menu.y + yOff, 2, 2);
 		if (isOpen()) {
 			methods.mouse.click(true);
@@ -178,14 +178,14 @@ public class Menu extends MethodProvider {
 
 	private boolean clickSub(final String[] items, final int mIdx,
 	                         final int sIdx) {
-		Point menuLoc = getLocation();
+		final Point menuLoc = getLocation();
 		int x = random(4, items[mIdx].length() * 4);
 		int y = 21 + 16 * mIdx + random(3, 12);
 		methods.mouse.move(menuLoc.x + x, menuLoc.y + y, 2, 2);
 		sleep(random(125, 150));
 
 		if (isOpen()) {
-			Point subLoc = getSubMenuLocation();
+			final Point subLoc = getSubMenuLocation();
 			x = random(4, items[sIdx].length() * 4);
 			methods.mouse.move(subLoc.x + x, methods.mouse.getLocation().y, 2,
 					0);
@@ -223,7 +223,7 @@ public class Menu extends MethodProvider {
 	 */
 	public int getIndex(String action) {
 		action = action.toLowerCase();
-		String[] items = getItems();
+		final String[] items = getItems();
 		for (int i = 0; i < items.length; i++) {
 			if (items[i].toLowerCase().contains(action)) {
 				return i;
@@ -247,8 +247,8 @@ public class Menu extends MethodProvider {
 		}
 		action = action.toLowerCase();
 		option = option.toLowerCase();
-		String[] actions = getActions();
-		String[] options = getOptions();
+		final String[] actions = getActions();
+		final String[] options = getOptions();
 		/* Throw exception if lenghts unequal? */
 		for (int i = 0; i < Math.min(actions.length, options.length); i++) {
 			if (actions[i].toLowerCase().contains(action) &&
@@ -273,14 +273,14 @@ public class Menu extends MethodProvider {
 			actions = menuActionsCache;
 		}
 
-		ArrayList<String> output = new ArrayList<String>();
+		final ArrayList<String> output = new ArrayList<String>();
 
-		int len = Math.min(options.length, actions.length);
+		final int len = Math.min(options.length, actions.length);
 		for (int i = 0; i < len; i++) {
-			String option = options[i];
-			String action = actions[i];
+			final String option = options[i];
+			final String action = actions[i];
 			if (option != null && action != null) {
-				String text = action + " " + option;
+				final String text = action + " " + option;
 				output.add(text.trim());
 			}
 		}
@@ -306,13 +306,13 @@ public class Menu extends MethodProvider {
 	}
 
 	private String[] getMenuItemPart(final boolean firstPart) {
-		LinkedList<String> itemsList = new LinkedList<String>();
+		final LinkedList<String> itemsList = new LinkedList<String>();
 		if (isCollapsed()) {
-			Queue<MenuGroupNode> menu = new Queue<MenuGroupNode>(
+			final Queue<MenuGroupNode> menu = new Queue<MenuGroupNode>(
 					methods.client.getCollapsedMenuItems());
 			for (MenuGroupNode mgn = menu.getHead(); mgn != null; mgn = menu
 					.getNext()) {
-				Queue<MenuItemNode> submenu = new Queue<MenuItemNode>(
+				final Queue<MenuItemNode> submenu = new Queue<MenuItemNode>(
 						mgn.getItems());
 				for (MenuItemNode min = submenu.getHead(); min != null; min = submenu
 						.getNext()) {
@@ -321,22 +321,22 @@ public class Menu extends MethodProvider {
 				}
 			}
 		} else {
-			Deque<MenuItemNode> menu = new Deque<MenuItemNode>(
+			final Deque<MenuItemNode> menu = new Deque<MenuItemNode>(
 					methods.client.getMenuItems());
 			for (MenuItemNode min = menu.getHead(); min != null; min = menu
 					.getNext()) {
 				itemsList.add(firstPart ? min.getAction() : min.getOption());
 			}
 		}
-		String[] items = itemsList.toArray(new String[itemsList.size()]);
-		LinkedList<String> output = new LinkedList<String>();
+		final String[] items = itemsList.toArray(new String[itemsList.size()]);
+		final LinkedList<String> output = new LinkedList<String>();
 		if (isCollapsed()) {
-			for (String item : items) {
+			for (final String item : items) {
 				output.add(item == null ? "" : stripFormatting(item));
 			}
 		} else {
 			for (int i = items.length - 1; i >= 0; i--) {
-				String item = items[i];
+				final String item = items[i];
 				output.add(item == null ? "" : stripFormatting(item));
 			}
 		}
@@ -404,7 +404,8 @@ public class Menu extends MethodProvider {
 		menuListenerStarted = true;
 		methods.bot.getEventManager().addListener(new PaintListener() {
 
-			public void onRepaint(Graphics g) {
+			@Override
+			public void onRepaint(final Graphics g) {
 				synchronized (menuCacheLock) {
 					menuOptionsCache = getOptions();
 					menuActionsCache = getActions();
@@ -419,7 +420,7 @@ public class Menu extends MethodProvider {
 	 * @param input The string you want to parse.
 	 * @return The parsed {@code String}.
 	 */
-	private String stripFormatting(String input) {
+	private String stripFormatting(final String input) {
 		return HTML_TAG.matcher(input).replaceAll("");
 	}
 }

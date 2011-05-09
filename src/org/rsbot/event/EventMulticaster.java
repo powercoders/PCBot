@@ -30,9 +30,9 @@ public class EventMulticaster implements EventListener {
 	 * Gets the default mask for an event listener.
 	 */
 	@SuppressWarnings("deprecation")
-	public static long getDefaultMask(EventListener el) {
+	public static long getDefaultMask(final EventListener el) {
 		if (el instanceof EventMulticaster) {
-			EventMulticaster em = (EventMulticaster) el;
+			final EventMulticaster em = (EventMulticaster) el;
 			return em.enabledMask;
 		}
 		int mask = 0;
@@ -75,7 +75,7 @@ public class EventMulticaster implements EventListener {
 	/**
 	 * Gets the default mask for an event.
 	 */
-	public static long getDefaultMask(EventObject e) {
+	public static long getDefaultMask(final EventObject e) {
 		long mask = 0;
 		if (e instanceof MouseEvent) {
 			final MouseEvent me = (MouseEvent) e;
@@ -131,7 +131,7 @@ public class EventMulticaster implements EventListener {
 	/**
 	 * Adds the listener to the tree with a default mask.
 	 */
-	public void addListener(EventListener el) {
+	public void addListener(final EventListener el) {
 		long mask;
 		if (el instanceof EventMulticaster) {
 			final EventMulticaster em = (EventMulticaster) el;
@@ -146,7 +146,7 @@ public class EventMulticaster implements EventListener {
 	 * Adds the listener with the specified mask. If its an EventMulticaster the
 	 * specified mask will be ignored.
 	 */
-	public void addListener(EventListener el, long mask) {
+	public void addListener(final EventListener el, long mask) {
 		synchronized (EventMulticaster.treeLock) {
 			if (listeners.contains(el)) {
 				return;
@@ -171,7 +171,7 @@ public class EventMulticaster implements EventListener {
 	 * <p/>
 	 * Has to hold tree lock.
 	 */
-	private void addMulticaster(EventMulticaster em) {
+	private void addMulticaster(final EventMulticaster em) {
 		if (em.parent != null) {
 			throw new IllegalArgumentException("adding multicaster to multiple multicasters");
 		}
@@ -215,24 +215,24 @@ public class EventMulticaster implements EventListener {
 	/**
 	 * Fires an event to all applicable listeners.
 	 */
-	public void fireEvent(EventObject e) {
+	public void fireEvent(final EventObject e) {
 		fireEvent(e, EventMulticaster.getDefaultMask(e));
 	}
 
 	/**
 	 * Fires an event to all listeners, restricted by the mask.
 	 */
-	public void fireEvent(EventObject e, long mask) {
+	public void fireEvent(final EventObject e, final long mask) {
 		synchronized (EventMulticaster.treeLock) {
 			final int len = listeners.size();
 			for (int i = 0; i < len; i++) {
-				long m = listenerMasks.get(i);
+				final long m = listenerMasks.get(i);
 				if (m != 12288 && (m & mask) == 0) {
 					continue;
 				}
-				EventListener el = listeners.get(i);
+				final EventListener el = listeners.get(i);
 				if (e instanceof MouseEvent) {
-					MouseEvent me = (MouseEvent) e;
+					final MouseEvent me = (MouseEvent) e;
 					switch (me.getID()) {
 						case MouseEvent.MOUSE_PRESSED:
 							((MouseListener) el).mousePressed(me);
@@ -260,7 +260,7 @@ public class EventMulticaster implements EventListener {
 							break;
 					}
 				} else if (e instanceof FocusEvent) {
-					FocusEvent fe = (FocusEvent) e;
+					final FocusEvent fe = (FocusEvent) e;
 					switch (fe.getID()) {
 						case FocusEvent.FOCUS_GAINED:
 							((FocusListener) el).focusGained(fe);
@@ -270,7 +270,7 @@ public class EventMulticaster implements EventListener {
 							break;
 					}
 				} else if (e instanceof KeyEvent) {
-					KeyEvent ke = (KeyEvent) e;
+					final KeyEvent ke = (KeyEvent) e;
 					switch (ke.getID()) {
 						case KeyEvent.KEY_TYPED:
 							((KeyListener) el).keyTyped(ke);
@@ -283,7 +283,7 @@ public class EventMulticaster implements EventListener {
 							break;
 					}
 				} else if (e instanceof RSEvent) {
-					RSEvent rse = (RSEvent) e;
+					final RSEvent rse = (RSEvent) e;
 					rse.dispatch(el);
 				}
 			}
@@ -307,7 +307,7 @@ public class EventMulticaster implements EventListener {
 	/**
 	 * Returns whether the mask is enabled on this multicaster.
 	 */
-	public final boolean isEnabled(long mask) {
+	public final boolean isEnabled(final long mask) {
 		return (enabledMask & mask) != 0;
 	}
 

@@ -31,7 +31,7 @@ public class BotStub implements AppletStub, AppletContext {
 
 	public BotStub(final RSLoader applet) {
 		this.applet = applet;
-		Crawler c = new Crawler("http://www." + applet.getTargetName() + ".com/");
+		final Crawler c = new Crawler("http://www." + applet.getTargetName() + ".com/");
 		parameters = c.getParameters();
 		final String world_prefix = c.getWorldPrefix();
 		try {
@@ -42,12 +42,14 @@ public class BotStub implements AppletStub, AppletContext {
 		}
 	}
 
+	@Override
 	public void appletResize(final int x, final int y) {
 		final Dimension size = new Dimension(x, y);
 		applet.setSize(size);
 		applet.setPreferredSize(size);
 	}
 
+	@Override
 	public Applet getApplet(final String name) {
 		final String thisName = parameters.get("name");
 		if (thisName == null) {
@@ -56,33 +58,39 @@ public class BotStub implements AppletStub, AppletContext {
 		return thisName.equals(name) ? applet : null;
 	}
 
+	@Override
 	public AppletContext getAppletContext() {
 		return this;
 	}
 
+	@Override
 	public Enumeration<Applet> getApplets() {
 		final Vector<Applet> apps = new Vector<Applet>();
 		apps.add(applet);
 		return apps.elements();
 	}
 
+	@Override
 	public AudioClip getAudioClip(final URL url) {
 		throw new UnsupportedOperationException("NOT YET IMPLEMENTED getAudioClip=" + url);
 	}
 
+	@Override
 	public URL getCodeBase() {
 		return codeBase;
 	}
 
+	@Override
 	public URL getDocumentBase() {
 		return documentBase;
 	}
 
+	@Override
 	public Image getImage(final URL url) {
 		synchronized (IMAGE_CACHE) {
 			WeakReference<Image> ref = IMAGE_CACHE.get(url);
 			Image img;
-			if ((ref == null) || ((img = ref.get()) == null)) {
+			if (ref == null || (img = ref.get()) == null) {
 				img = Toolkit.getDefaultToolkit().createImage(url);
 				ref = new WeakReference<Image>(img);
 				IMAGE_CACHE.put(url, ref);
@@ -91,6 +99,7 @@ public class BotStub implements AppletStub, AppletContext {
 		}
 	}
 
+	@Override
 	public String getParameter(final String s) {
 		final String parameter = parameters.get(s);
 		if (s != null) {
@@ -99,14 +108,17 @@ public class BotStub implements AppletStub, AppletContext {
 		return "";
 	}
 
+	@Override
 	public InputStream getStream(final String key) {
 		return INPUT_CACHE.get(key);
 	}
 
+	@Override
 	public Iterator<String> getStreamKeys() {
 		return Collections.unmodifiableSet(INPUT_CACHE.keySet()).iterator();
 	}
 
+	@Override
 	public boolean isActive() {
 		return isActive;
 	}
@@ -115,20 +127,23 @@ public class BotStub implements AppletStub, AppletContext {
 		this.isActive = isActive;
 	}
 
+	@Override
 	public void setStream(final String key, final InputStream stream) throws IOException {
 		INPUT_CACHE.put(key, stream);
 	}
 
+	@Override
 	public void showDocument(final URL url) {
 		showDocument(url, "");
 	}
 
+	@Override
 	public void showDocument(final URL url, final String target) {
 		if (url.toString().contains("outofdate")) {
 			final String message = GlobalConfiguration.NAME + " is currently outdated, please wait patiently for a new version.";
 			log.severe(message);
 			JOptionPane.showMessageDialog(null, message, "Outdated", JOptionPane.WARNING_MESSAGE);
-			File versionFile = new File(GlobalConfiguration.Paths.getVersionCache());
+			final File versionFile = new File(GlobalConfiguration.Paths.getVersionCache());
 			if (versionFile.exists() && !versionFile.delete()) {
 				log.warning("Unable to clear cache.");
 			}
@@ -137,6 +152,7 @@ public class BotStub implements AppletStub, AppletContext {
 		}
 	}
 
+	@Override
 	public void showStatus(final String status) {
 		log.info("Status: " + status);
 	}

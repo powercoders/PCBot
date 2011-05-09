@@ -32,6 +32,7 @@ public class LogTextArea extends JList {
 	private final LogAreaListModel model = new LogAreaListModel();
 
 	private final Runnable scrollToBottom = new Runnable() {
+		@Override
 		public void run() {
 			scrollRectToVisible(LogTextArea.BOTTOM_OF_WINDOW);
 		}
@@ -78,7 +79,7 @@ public class LogTextArea extends JList {
 	 *
 	 * @param logRecord The entry.
 	 */
-	public void log(LogRecord logRecord) {
+	public void log(final LogRecord logRecord) {
 		logQueue.queue(new WrappedLogRecord(logRecord));
 	}
 
@@ -88,7 +89,7 @@ public class LogTextArea extends JList {
 		private List<WrappedLogRecord> records = new ArrayList<WrappedLogRecord>(
 				LogTextArea.MAX_ENTRIES);
 
-		public void addAllElements(List<WrappedLogRecord> obj) {
+		public void addAllElements(final List<WrappedLogRecord> obj) {
 			records.addAll(obj);
 			if (getSize() > LogTextArea.MAX_ENTRIES) {
 				records = records.subList(
@@ -100,10 +101,12 @@ public class LogTextArea extends JList {
 			}
 		}
 
+		@Override
 		public Object getElementAt(final int index) {
 			return records.get(index);
 		}
 
+		@Override
 		public int getSize() {
 			return records.size();
 		}
@@ -128,6 +131,7 @@ public class LogTextArea extends JList {
 			}
 		}
 
+		@Override
 		public void run() {
 			while (true) {
 				List<WrappedLogRecord> toFlush = null;
@@ -160,6 +164,7 @@ public class LogTextArea extends JList {
 				.getBorder("List.focusCellHighlightBorder");
 		private final Color DARK_GREEN = new Color(0, 90, 0);
 
+		@Override
 		public Component getListCellRendererComponent(final JList list,
 		                                              final Object value, final int index, final boolean isSelected,
 		                                              final boolean cellHasFocus) {
@@ -188,15 +193,15 @@ public class LogTextArea extends JList {
 				result.setForeground(Color.RED);
 			}
 
-			if ((wlr.record.getLevel() == Level.FINE)
-					|| (wlr.record.getLevel() == Level.FINER)
-					|| (wlr.record.getLevel() == Level.FINEST)) {
+			if (wlr.record.getLevel() == Level.FINE
+					|| wlr.record.getLevel() == Level.FINER
+					|| wlr.record.getLevel() == Level.FINEST) {
 				result.setForeground(DARK_GREEN);
 			}
 
-			Object[] parameters = wlr.record.getParameters();
+			final Object[] parameters = wlr.record.getParameters();
 			if (parameters != null) {
-				for (Object parameter : parameters) {
+				for (final Object parameter : parameters) {
 					if (parameter == null) {
 						continue;
 					}

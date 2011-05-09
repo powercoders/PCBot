@@ -10,11 +10,12 @@ public class SetSuperAdapter extends ClassAdapter {
 	private String superName;
 	private final String newSuperName;
 
-	public SetSuperAdapter(ClassVisitor delegate, String superName) {
+	public SetSuperAdapter(final ClassVisitor delegate, final String superName) {
 		super(delegate);
 		newSuperName = superName;
 	}
 
+	@Override
 	public void visit(
 			final int version,
 			final int access,
@@ -26,6 +27,7 @@ public class SetSuperAdapter extends ClassAdapter {
 		cv.visit(version, access, name, signature, newSuperName, interfaces);
 	}
 
+	@Override
 	public MethodVisitor visitMethod(
 			final int access,
 			final String name,
@@ -34,7 +36,8 @@ public class SetSuperAdapter extends ClassAdapter {
 			final String[] exceptions) {
 		if (name.equals("<init>")) {
 			return new MethodAdapter(cv.visitMethod(access, name, desc, signature, exceptions)) {
-				public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+				@Override
+				public void visitMethodInsn(final int opcode, String owner, final String name, final String desc) {
 					if (opcode == Opcodes.INVOKESPECIAL && owner.equals(superName)) {
 						owner = newSuperName;
 					}

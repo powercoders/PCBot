@@ -15,7 +15,7 @@ public class ServerMessageEvent extends RSEvent {
 
 	private final String message;
 
-	public ServerMessageEvent(String message) {
+	public ServerMessageEvent(final String message) {
 		this.message = message;
 	}
 

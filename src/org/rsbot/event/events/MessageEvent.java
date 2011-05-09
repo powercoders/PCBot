@@ -33,7 +33,7 @@ public class MessageEvent extends RSEvent {
 	private final int id;
 	private final String message;
 
-	public MessageEvent(String sender, int id, String message) {
+	public MessageEvent(final String sender, final int id, final String message) {
 		this.sender = sender;
 		this.id = id;
 		this.message = message;

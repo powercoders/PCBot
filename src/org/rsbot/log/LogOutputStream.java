@@ -92,20 +92,20 @@ public class LogOutputStream extends OutputStream {
 	 */
 	@Override
 	public void flush() {
-		int pos = buffer.position();
+		final int pos = buffer.position();
 		if (pos == 0) {
 			return;
 		}
 		// don't print out blank lines; flushing from PrintStream puts out these
 		if (pos == LogOutputStream.LINE_SEPARATOR.length()) {
 
-			if (((char) buffer.get(0) == LogOutputStream.LINE_SEPARATOR.charAt(0)) && ((pos == 1) || // <-
+			if ((char) buffer.get(0) == LogOutputStream.LINE_SEPARATOR.charAt(0) && (pos == 1 || // <-
 					// Unix
 					// &
 					// Mac,
 					// ->
 					// Windows
-					((pos == 2) && ((char) buffer.get(1) == LogOutputStream.LINE_SEPARATOR.charAt(1))))) {
+					pos == 2 && (char) buffer.get(1) == LogOutputStream.LINE_SEPARATOR.charAt(1))) {
 				reset();
 				return;
 			}
@@ -143,7 +143,7 @@ public class LogOutputStream extends OutputStream {
 
 		if (buffer.position() >= buffer.capacity()) {
 			//make bigger
-			ByteBuffer newBuffer = ByteBuffer.allocate(buffer.capacity() * 2);
+			final ByteBuffer newBuffer = ByteBuffer.allocate(buffer.capacity() * 2);
 			newBuffer.put(buffer);
 			buffer = newBuffer;
 		}

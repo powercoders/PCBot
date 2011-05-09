@@ -45,7 +45,7 @@ public class MouseHandler {
 		while (i < points.size() - 1) {
 			final Point a = points.get(i++);
 			final Point b = points.get(i);
-			if ((Math.abs(a.x - b.x) > 1) || (Math.abs(a.y - b.y) > 1)) {
+			if (Math.abs(a.x - b.x) > 1 || Math.abs(a.y - b.y) > 1) {
 				if (Math.abs(a.x - b.x) != 0) {
 					final double slope = (double) (a.y - b.y) / (double) (a.x - b.x);
 					final double incpt = a.y - slope * a.x;
@@ -273,7 +273,7 @@ public class MouseHandler {
 	 * @param randY randomness in the y direction
 	 */
 	public void moveMouse(final int speed, final int x1, final int y1, final int x2, final int y2, int randX, int randY) {
-		if ((x2 == -1) && (y2 == -1))
+		if (x2 == -1 && y2 == -1)
 		// MouseHandler.log
 		// .warning("Non-fatal error. Please post log on forums. ("
 		// + x2 + "," + y2 + ")");
@@ -287,7 +287,7 @@ public class MouseHandler {
 			randY = 1;
 		}
 		try {
-			if ((x2 == x1) && (y2 == y1)) {
+			if (x2 == x1 && y2 == y1) {
 				return;
 			}
 			final Point[] controls = MouseHandler.generateControls(x1, y1, x2 + random.nextInt(randX),

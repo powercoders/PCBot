@@ -11,10 +11,11 @@ public class TCamera implements TextPaintListener {
 
 	private final Client client;
 
-	public TCamera(Bot bot) {
+	public TCamera(final Bot bot) {
 		client = bot.getClient();
 	}
 
+	@Override
 	public int drawLine(final Graphics render, int idx) {
 		final String camPos = "Camera Position (x,y,z): (" + client.getCamPosX() + ", " + client.getCamPosY() + ", " + client.getCamPosZ() + ")";
 		final String camAngle = "Camera Angle (pitch, yaw): (" + client.getCameraPitch() + ", " + client.getCameraYaw() + ")";

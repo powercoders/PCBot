@@ -10,10 +10,11 @@ public class TUserInputAllowed implements TextPaintListener {
 
 	private final Bot bot;
 
-	public TUserInputAllowed(Bot bot) {
+	public TUserInputAllowed(final Bot bot) {
 		this.bot = bot;
 	}
 
+	@Override
 	public int drawLine(final Graphics render, int idx) {
 		StringUtil.drawLine(render, idx++, "User Input: " +
 				(bot.inputFlags == 0 && !bot.overrideInput ?

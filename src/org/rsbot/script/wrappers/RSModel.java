@@ -26,7 +26,8 @@ public abstract class RSModel extends MethodProvider {
 	 */
 	public static Filter<RSModel> newVertexFilter(final short[] vertex_a) {
 		return new Filter<RSModel>() {
-			public boolean accept(RSModel m) {
+			@Override
+			public boolean accept(final RSModel m) {
 				return Arrays.equals(m.indices1, vertex_a);
 			}
 		};
@@ -40,7 +41,7 @@ public abstract class RSModel extends MethodProvider {
 	protected short[] indices2;
 	protected short[] indices3;
 
-	public RSModel(MethodContext ctx, Model model) {
+	public RSModel(final MethodContext ctx, final Model model) {
 		super(ctx);
 		xPoints = model.getXPoints();
 		yPoints = model.getYPoints();
@@ -60,13 +61,13 @@ public abstract class RSModel extends MethodProvider {
 	 * @param p A point on the screen
 	 * @return true of the point is within the bounds of the model
 	 */
-	private boolean contains(Point p) {
+	private boolean contains(final Point p) {
 		if (this == null) {
 			return false;
 		}
 
-		Polygon[] triangles = this.getTriangles();
-		for (Polygon poly : triangles) {
+		final Polygon[] triangles = getTriangles();
+		for (final Polygon poly : triangles) {
 			if (poly.contains(p)) {
 				return true;
 			}
@@ -81,16 +82,16 @@ public abstract class RSModel extends MethodProvider {
 	 * @param leftClick if true it left clicks.
 	 * @return true if clicked.
 	 */
-	public boolean doClick(boolean leftClick) {
+	public boolean doClick(final boolean leftClick) {
 		try {
 			for (int i = 0; i < 10; i++) {
 				methods.mouse.move(getPoint());
-				if (this.contains(methods.mouse.getLocation())) {
+				if (contains(methods.mouse.getLocation())) {
 					methods.mouse.click(leftClick);
 					return true;
 				}
 			}
-		} catch (Exception ignored) {
+		} catch (final Exception ignored) {
 		}
 		return false;
 	}
@@ -102,17 +103,17 @@ public abstract class RSModel extends MethodProvider {
 	 * @param option the option of the action to be clicked in the menu
 	 * @return true if clicked, false if failed.
 	 */
-	public boolean doAction(String action, String option) {
+	public boolean doAction(final String action, final String option) {
 		try {
 			for (int i = 0; i < 10; i++) {
 				methods.mouse.move(getPoint());
-				if (this.contains(methods.mouse.getLocation())) {
+				if (contains(methods.mouse.getLocation())) {
 					if (methods.menu.doAction(action, option)) {
 						return true;
 					}
 				}
 			}
-		} catch (Exception ignored) {
+		} catch (final Exception ignored) {
 		}
 		return false;
 	}
@@ -123,7 +124,7 @@ public abstract class RSModel extends MethodProvider {
 	 * @param action the action to be clicked in the menu
 	 * @return true if clicked, false if failed.
 	 */
-	public boolean doAction(String action) {
+	public boolean doAction(final String action) {
 		return doAction(action, null);
 	}
 
@@ -136,8 +137,8 @@ public abstract class RSModel extends MethodProvider {
 	 */
 	public Point getPoint() {
 		update();
-		int len = indices1.length;
-		int sever = random(0, len);
+		final int len = indices1.length;
+		final int sever = random(0, len);
 		Point point = getPointInRange(sever, len);
 		if (point != null) {
 			return point;
@@ -159,10 +160,10 @@ public abstract class RSModel extends MethodProvider {
 		if (this == null) {
 			return null;
 		}
-		Polygon[] polys = getTriangles();
-		Point[] points = new Point[polys.length * 3];
+		final Polygon[] polys = getTriangles();
+		final Point[] points = new Point[polys.length * 3];
 		int index = 0;
-		for (Polygon poly : polys) {
+		for (final Polygon poly : polys) {
 			for (int i = 0; i < 3; i++) {
 				points[index++] = new Point(poly.xpoints[i], poly.ypoints[i]);
 			}
@@ -177,12 +178,12 @@ public abstract class RSModel extends MethodProvider {
 	 *         of an object.
 	 */
 	public Point getPointOnScreen() {
-		ArrayList<Point> list = new ArrayList<Point>();
+		final ArrayList<Point> list = new ArrayList<Point>();
 		try {
-			Polygon[] tris = getTriangles();
-			for (Polygon p : tris) {
+			final Polygon[] tris = getTriangles();
+			for (final Polygon p : tris) {
 				for (int j = 0; j < p.xpoints.length; j++) {
-					Point firstPoint = new Point(p.xpoints[j], p.ypoints[j]);
+					final Point firstPoint = new Point(p.xpoints[j], p.ypoints[j]);
 					if (methods.calc.pointOnScreen(firstPoint)) {
 						return firstPoint;
 					} else {
@@ -190,7 +191,7 @@ public abstract class RSModel extends MethodProvider {
 					}
 				}
 			}
-		} catch (Exception ignored) {
+		} catch (final Exception ignored) {
 		}
 		return list.size() > 0 ? list.get(random(0, list.size())) : null;
 	}
@@ -206,27 +207,27 @@ public abstract class RSModel extends MethodProvider {
 		try {
 			/* Add X and Y of all points, to get a rough central point */
 			int x = 0, y = 0, total = 0;
-			for (Polygon poly : getTriangles()) {
+			for (final Polygon poly : getTriangles()) {
 				for (int i = 0; i < poly.npoints; i++) {
 					x += poly.xpoints[i];
 					y += poly.ypoints[i];
 					total++;
 				}
 			}
-			Point central = new Point(x / total, y / total);
+			final Point central = new Point(x / total, y / total);
 			/*
-							* Find a real point on the character that is closest to the central
-							* point
-							*/
+			 * Find a real point on the character that is closest to the central
+			 * point
+			 */
 			Point curCentral = null;
 			double dist = 20000;
-			for (Polygon poly : getTriangles()) {
+			for (final Polygon poly : getTriangles()) {
 				for (int i = 0; i < poly.npoints; i++) {
-					Point p = new Point(poly.xpoints[i], poly.ypoints[i]);
+					final Point p = new Point(poly.xpoints[i], poly.ypoints[i]);
 					if (!methods.calc.pointOnScreen(p)) {
 						continue;
 					}
-					double dist2 = methods.calc.distanceBetween(central, p);
+					final double dist2 = methods.calc.distanceBetween(central, p);
 					if (curCentral == null || dist2 < dist) {
 						curCentral = p;
 						dist = dist2;
@@ -234,7 +235,7 @@ public abstract class RSModel extends MethodProvider {
 				}
 			}
 			return curCentral;
-		} catch (Exception ignored) {
+		} catch (final Exception ignored) {
 		}
 		return new Point(-1, -1);
 	}
@@ -246,17 +247,17 @@ public abstract class RSModel extends MethodProvider {
 	 */
 	public Polygon[] getTriangles() {
 		update();
-		LinkedList<Polygon> polygons = new LinkedList<Polygon>();
-		int locX = getLocalX();
-		int locY = getLocalY();
-		int len = indices1.length;
-		int height = methods.calc.tileHeight(locX, locY);
+		final LinkedList<Polygon> polygons = new LinkedList<Polygon>();
+		final int locX = getLocalX();
+		final int locY = getLocalY();
+		final int len = indices1.length;
+		final int height = methods.calc.tileHeight(locX, locY);
 		for (int i = 0; i < len; ++i) {
-			Point one = methods.calc.worldToScreen(locX + xPoints[indices1[i]],
+			final Point one = methods.calc.worldToScreen(locX + xPoints[indices1[i]],
 					locY + zPoints[indices1[i]], height + yPoints[indices1[i]]);
-			Point two = methods.calc.worldToScreen(locX + xPoints[indices2[i]],
+			final Point two = methods.calc.worldToScreen(locX + xPoints[indices2[i]],
 					locY + zPoints[indices2[i]], height + yPoints[indices2[i]]);
-			Point three = methods.calc.worldToScreen(locX
+			final Point three = methods.calc.worldToScreen(locX
 					+ xPoints[indices3[i]], locY + zPoints[indices3[i]], height
 					+ yPoints[indices3[i]]);
 
@@ -284,9 +285,9 @@ public abstract class RSModel extends MethodProvider {
 	 *         points as this.
 	 */
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (o instanceof RSModel) {
-			RSModel m = (RSModel) o;
+			final RSModel m = (RSModel) o;
 			return Arrays.equals(indices1, m.indices1)
 					&& Arrays.equals(xPoints, m.xPoints)
 					&& Arrays.equals(yPoints, m.yPoints)
@@ -295,19 +296,19 @@ public abstract class RSModel extends MethodProvider {
 		return false;
 	}
 
-	private Point getPointInRange(int start, int end) {
-		int locX = getLocalX();
-		int locY = getLocalY();
-		int height = methods.calc.tileHeight(locX, locY);
+	private Point getPointInRange(final int start, final int end) {
+		final int locX = getLocalX();
+		final int locY = getLocalY();
+		final int height = methods.calc.tileHeight(locX, locY);
 		for (int i = start; i < end; ++i) {
-			Point one = methods.calc.worldToScreen(locX + xPoints[indices1[i]],
+			final Point one = methods.calc.worldToScreen(locX + xPoints[indices1[i]],
 					locY + zPoints[indices1[i]], height + yPoints[indices1[i]]);
 			int x = -1, y = -1;
 			if (one.x >= 0) {
 				x = one.x;
 				y = one.y;
 			}
-			Point two = methods.calc.worldToScreen(locX + xPoints[indices2[i]],
+			final Point two = methods.calc.worldToScreen(locX + xPoints[indices2[i]],
 					locY + zPoints[indices2[i]], height + yPoints[indices2[i]]);
 			if (two.x >= 0) {
 				if (x >= 0) {
@@ -318,7 +319,7 @@ public abstract class RSModel extends MethodProvider {
 					y = two.y;
 				}
 			}
-			Point three = methods.calc.worldToScreen(locX
+			final Point three = methods.calc.worldToScreen(locX
 					+ xPoints[indices3[i]], locY + zPoints[indices3[i]], height
 					+ yPoints[indices3[i]]);
 			if (three.x >= 0) {

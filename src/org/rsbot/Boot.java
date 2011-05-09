@@ -9,14 +9,14 @@ import java.net.URLDecoder;
  * @author Paris
  */
 public class Boot {
-	public static void main(String[] args) throws IOException {
+	public static void main(final String[] args) throws IOException {
 		String location = Boot.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		location = URLDecoder.decode(location, "UTF-8").replaceAll("\\\\", "/");
 		final String app = Application.class.getCanonicalName();
 		final String flags = "-Xmx512m -Dsun.java2d.d3d=false";
 		boolean sh = true;
 		final char q = '"', s = ' ';
-		StringBuilder param = new StringBuilder(64);
+		final StringBuilder param = new StringBuilder(64);
 
 		switch (GlobalConfiguration.getCurrentOperatingSystem()) {
 			case WINDOWS:

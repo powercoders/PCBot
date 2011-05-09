@@ -35,7 +35,7 @@ public class Store extends MethodProvider {
 			return false;
 		}
 		final int inventoryCount = methods.inventory.getCount(true);
-		RSItem item = getItem(itemID);
+		final RSItem item = getItem(itemID);
 		if (item != null) {
 			if (count >= 500) {
 				if (item.doAction("Buy 500")) {
@@ -154,16 +154,16 @@ public class Store extends MethodProvider {
 	 *         in the stores <tt>RSInterface</tt>.
 	 */
 	public RSItem[] getItems() {
-		if ((getInterface() == null)
-				|| (getInterface().getComponent(INTERFACE_STORE_ITEMS) == null)) {
+		if (getInterface() == null
+				|| getInterface().getComponent(INTERFACE_STORE_ITEMS) == null) {
 			return null;
 		}
 
-		ArrayList<RSItem> items = new ArrayList<RSItem>();
-		RSComponent[] components = getInterface().getComponent(
+		final ArrayList<RSItem> items = new ArrayList<RSItem>();
+		final RSComponent[] components = getInterface().getComponent(
 				INTERFACE_STORE_ITEMS).getComponents();
 
-		for (RSComponent component : components) {
+		for (final RSComponent component : components) {
 
 			if (component != null && component.getComponentID() != -1) {
 				items.add(new RSItem(methods, component));

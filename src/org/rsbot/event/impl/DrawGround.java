@@ -13,10 +13,11 @@ public class DrawGround implements PaintListener {
 
 	private final MethodContext ctx;
 
-	public DrawGround(Bot bot) {
-		this.ctx = bot.getMethodContext();
+	public DrawGround(final Bot bot) {
+		ctx = bot.getMethodContext();
 	}
 
+	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;
@@ -30,7 +31,7 @@ public class DrawGround implements PaintListener {
 		for (int x = location.getX() - 25; x < location.getX() + 25; x++) {
 			for (int y = location.getY() - 25; y < location.getY() + 25; y++) {
 				final RSGroundItem[] item = ctx.groundItems.getAllAt(x, y);
-				if ((item == null) || (item.length == 0)) {
+				if (item == null || item.length == 0) {
 					continue;
 				}
 				final Point screen = ctx.calc.tileToScreen(item[0].getLocation());

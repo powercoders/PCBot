@@ -17,10 +17,11 @@ public class DrawSettings implements PaintListener {
 
 	private final Settings settings;
 
-	public DrawSettings(Bot bot) {
+	public DrawSettings(final Bot bot) {
 		settings = bot.getMethodContext().settings;
 	}
 
+	@Override
 	public void onRepaint(final Graphics render) {
 		final int[] settings = this.settings.getSettingArray();
 		if (settings != null) {

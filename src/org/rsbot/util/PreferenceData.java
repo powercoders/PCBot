@@ -8,7 +8,7 @@ public class PreferenceData {
 	private final int type;
 	private final File file;
 
-	public PreferenceData(int type) {
+	public PreferenceData(final int type) {
 		this.type = type;
 		file = new File(GlobalConfiguration.Paths.getSettingsDirectory() + File.separator + "pref" + type + ".dat");
 		try {
@@ -47,18 +47,18 @@ public class PreferenceData {
 						break;
 				}
 			}
-		} catch (IOException ignored) {
+		} catch (final IOException ignored) {
 		}
 	}
 
 	public byte[] get() {
 		try {
-			RandomAccessFile raf = new RandomAccessFile(file, "rw");
-			byte[] b = new byte[(int) raf.length()];
+			final RandomAccessFile raf = new RandomAccessFile(file, "rw");
+			final byte[] b = new byte[(int) raf.length()];
 			raf.readFully(b);
 
 			return checkPrefs(b);
-		} catch (IOException ioe) {
+		} catch (final IOException ioe) {
 			return new byte[0];
 		}
 	}
@@ -67,13 +67,13 @@ public class PreferenceData {
 		data = checkPrefs(data);
 
 		try {
-			RandomAccessFile raf = new RandomAccessFile(file, "rw");
+			final RandomAccessFile raf = new RandomAccessFile(file, "rw");
 			raf.write(data);
-		} catch (IOException ignored) {
+		} catch (final IOException ignored) {
 		}
 	}
 
-	private byte[] checkPrefs(byte[] data) {
+	private byte[] checkPrefs(final byte[] data) {
 		switch (type) {
 
 			case 1: {

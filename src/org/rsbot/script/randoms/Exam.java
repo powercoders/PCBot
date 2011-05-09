@@ -59,7 +59,7 @@ public class Exam extends Random {
 			Two = interfaces.get(nextObjectInterface).getComponent(7).getComponentID();
 			Three = interfaces.get(nextObjectInterface).getComponent(8).getComponentID();
 
-			return (One != -1) && (Two != -1) && (Three != -1);
+			return One != -1 && Two != -1 && Three != -1;
 		}
 
 		public void guess() {
@@ -68,22 +68,8 @@ public class Exam extends Random {
 			objects[1] = interfaces.get(nextObjectInterface).getComponent(11).getComponentID();
 			objects[2] = interfaces.get(nextObjectInterface).getComponent(12).getComponentID();
 			objects[3] = interfaces.get(nextObjectInterface).getComponent(13).getComponentID();
-
-			int lowest = 120;
-			int click = 10;
-			int compare = 0;
-			if (compare <= 10) {
-				interfaces.get(nextObjectInterface).getComponent(random(10, 13)).doClick();
-				return;
-			}
-
-			for (int i = 0; i < objects.length; i++) {
-				if (Math.abs(objects[i] - compare) <= lowest) {
-					lowest = Math.abs(objects[i] - compare);
-				}
-				click = 10 + i;
-			}
-			interfaces.get(nextObjectInterface).getComponent(click).doClick();
+			interfaces.get(nextObjectInterface).getComponent(random(10, 13)).doClick();
+			return;
 		}
 
 		public int[] returnAnswer() {
@@ -96,8 +82,8 @@ public class Exam extends Random {
 				count[i] = 0;
 			}
 			// Will verify that all IDs are IDs which we currently have
-			for (int[] item : items) {
-				for (int anItem : item) {
+			for (final int[] item : items) {
+				for (final int anItem : item) {
 					if (anItem == One) {
 						firstcard = 1;
 					}
@@ -319,9 +305,9 @@ public class Exam extends Random {
 	}
 
 	/*
-				   * Don't use this with any other monster.I edited for this script only cause
-				   * Mr. Mordaunt doesn't move
-				   */
+	 * Don't use this with any other monster.I edited for this script only cause
+	 * Mr. Mordaunt doesn't move
+	 */
 	public boolean clickCharacter(final RSCharacter c, final String action) {
 		try {
 			Point screenLoc;
@@ -360,7 +346,7 @@ public class Exam extends Random {
 
 			screenLoc = new Point(X, Y);
 
-			if ((c == null) || !calc.pointOnScreen(screenLoc)) {
+			if (c == null || !calc.pointOnScreen(screenLoc)) {
 				log("Not on screen " + action);
 				return false;
 			}
@@ -397,7 +383,7 @@ public class Exam extends Random {
 			return -1;
 		}
 
-		if (getMyPlayer().isMoving() || (getMyPlayer().getAnimation() != -1)) {
+		if (getMyPlayer().isMoving() || getMyPlayer().getAnimation() != -1) {
 			return random(800, 1200);
 		}
 
@@ -451,7 +437,7 @@ public class Exam extends Random {
 				walking.walkTileMM(mordaut.getLocation());
 			}
 			clickCharacter(mordaut, "Talk-to");
-			return (random(1500, 1700));
+			return random(1500, 1700);
 		}
 		if (interfaces.get(nextObjectInterface).isValid()) {
 			log.info("Question Type: Next Object");

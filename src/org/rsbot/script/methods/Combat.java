@@ -33,7 +33,7 @@ public class Combat extends MethodProvider {
 		private final int level;
 
 		@Deprecated
-		Prayer(int index, int level) {
+		Prayer(final int index, final int level) {
 			this.index = index;
 			this.level = level;
 		}
@@ -49,7 +49,7 @@ public class Combat extends MethodProvider {
 		}
 	}
 
-	public Combat(MethodContext ctx) {
+	public Combat(final MethodContext ctx) {
 		super(ctx);
 	}
 
@@ -75,8 +75,8 @@ public class Combat extends MethodProvider {
 	 *         <tt>false</tt>.
 	 */
 	public boolean eat(final int percent, final int... foods) {
-		int firstPercent = getHealth();
-		for (int food : foods) {
+		final int firstPercent = getHealth();
+		for (final int food : foods) {
 			if (!methods.inventory.contains(food)) {
 				continue;
 			}
@@ -141,15 +141,15 @@ public class Combat extends MethodProvider {
 	 *         <tt>false</tt>.
 	 * @see #getFightMode()
 	 */
-	public boolean setFightMode(int fightMode) {
+	public boolean setFightMode(final int fightMode) {
 		if (fightMode != getFightMode()) {
 			methods.game.openTab(Game.TAB_ATTACK);
 			if (fightMode == 0) {
 				return methods.interfaces.getComponent(884, 11).doClick();
 			} else if (fightMode == 1) {
 				return methods.interfaces.getComponent(884, 12).doClick();
-			} else if (fightMode == 2 || (fightMode == 3 && methods.interfaces.getComponent(884,
-					14).getActions() == null)) {
+			} else if (fightMode == 2 || fightMode == 3 && methods.interfaces.getComponent(884,
+					14).getActions() == null) {
 				return methods.interfaces.getComponent(884, 13).doClick();
 			} else if (fightMode == 3) {
 				return methods.interfaces.getComponent(884, 14).doClick();
@@ -176,7 +176,7 @@ public class Combat extends MethodProvider {
 	public int getLifePoints() {
 		try {
 			return Integer.parseInt(methods.interfaces.get(748).getComponent(8).getText());
-		} catch (NumberFormatException ex) {
+		} catch (final NumberFormatException ex) {
 			return 0;
 		}
 	}
@@ -188,9 +188,9 @@ public class Combat extends MethodProvider {
 	 * @return <tt>true</tt> if enabled; otherwise <tt>false</tt>.
 	 */
 	@Deprecated
-	public boolean isPrayerOn(Prayer prayer) {
-		RSComponent[] prayers = methods.interfaces.getComponent(271, 7).getComponents();
-		for (RSComponent c : prayers) {
+	public boolean isPrayerOn(final Prayer prayer) {
+		final RSComponent[] prayers = methods.interfaces.getComponent(271, 7).getComponents();
+		for (final RSComponent c : prayers) {
 			if (c.getComponentIndex() == prayer.getIndex() && c.getBackgroundColor() != -1) {
 				return true;
 			}
@@ -219,7 +219,7 @@ public class Combat extends MethodProvider {
 	 *         <tt>false</tt>.
 	 */
 	@Deprecated
-	public boolean setPrayer(Prayer prayer, boolean activate) {
+	public boolean setPrayer(final Prayer prayer, final boolean activate) {
 		methods.game.openTab(Game.TAB_PRAYER);
 		return methods.interfaces.getComponent(271, 7).getComponents()[prayer.getIndex()].getBackgroundColor() ==
 				-1 && methods.interfaces.getComponent(271, 7).getComponents()[prayer.getIndex()].doAction(activate
@@ -235,9 +235,9 @@ public class Combat extends MethodProvider {
 	 */
 	@Deprecated
 	public RSComponent[] getSelectedPrayers() {
-		ArrayList<RSComponent> selected = new ArrayList<RSComponent>();
-		RSComponent[] prayers = methods.interfaces.getComponent(271, 7).getComponents();
-		for (RSComponent prayer : prayers) {
+		final ArrayList<RSComponent> selected = new ArrayList<RSComponent>();
+		final RSComponent[] prayers = methods.interfaces.getComponent(271, 7).getComponents();
+		for (final RSComponent prayer : prayers) {
 			if (prayer.getBackgroundColor() != -1) {
 				selected.add(prayer);
 			}
@@ -282,7 +282,7 @@ public class Combat extends MethodProvider {
 		try {
 			return Integer.parseInt(methods.interfaces.get(Game.INTERFACE_PRAYER_ORB).getComponent(4).getText()
 					.trim());
-		} catch (NumberFormatException ex) {
+		} catch (final NumberFormatException ex) {
 			return 0;
 		}
 	}
@@ -293,7 +293,7 @@ public class Combat extends MethodProvider {
 	 * @return The current percentage health remaining.
 	 */
 	public int getHealth() {
-		return ((getLifePoints() * 10) / methods.skills.getRealLevel(Skills.CONSTITUTION));
+		return getLifePoints() * 10 / methods.skills.getRealLevel(Skills.CONSTITUTION);
 	}
 
 	/**
@@ -304,7 +304,7 @@ public class Combat extends MethodProvider {
 	 */
 	public boolean isAttacking(final RSNPC npc) {
 		// Helpful for new scripters confused by the function of isInCombat()
-		RSCharacter interact = methods.players.getMyPlayer().getInteracting();
+		final RSCharacter interact = methods.players.getMyPlayer().getInteracting();
 		return interact != null && interact.equals(npc);
 	}
 
@@ -321,7 +321,7 @@ public class Combat extends MethodProvider {
 		// false positives)
 		// getInteracting() confirms because it will no longer interact if
 		// dead/dying
-		return npc == null || !npc.isValid() || (npc.getHPPercent() == 0 && npc.getAnimation() != -1 && npc
-				.getInteracting() == null);
+		return npc == null || !npc.isValid() || npc.getHPPercent() == 0 && npc.getAnimation() != -1 && npc
+				.getInteracting() == null;
 	}
 }

@@ -95,13 +95,13 @@ public class ClanChat extends MethodProvider {
 	 * @return The users in the channel or null if unavailable
 	 */
 	public String[] getChannelUsers() {
-		ArrayList<String> tempList = new ArrayList<String>();
+		final ArrayList<String> tempList = new ArrayList<String>();
 		if (methods.game.getCurrentTab() != Game.TAB_CLAN_CHAT) {
 			methods.game.openTab(Game.TAB_CLAN_CHAT);
 		}
 		if (methods.game.getCurrentTab() == Game.TAB_CLAN_CHAT) {
 			if (methods.interfaces.getComponent(INTERFACE_CLAN_CHAT, INTERFACE_CLAN_CHAT_USERS_LIST) != null) {
-				for (RSComponent comp : methods.interfaces.getComponent(INTERFACE_CLAN_CHAT,
+				for (final RSComponent comp : methods.interfaces.getComponent(INTERFACE_CLAN_CHAT,
 						INTERFACE_CLAN_CHAT_USERS_LIST).getComponents()) {
 					if (comp.getText() != null) {
 						tempList.add(comp.getText().trim());
@@ -111,7 +111,7 @@ public class ClanChat extends MethodProvider {
 				}
 			}
 		}
-		String[] temp = new String[tempList.size()];
+		final String[] temp = new String[tempList.size()];
 		tempList.toArray(temp);
 		return temp;
 	}

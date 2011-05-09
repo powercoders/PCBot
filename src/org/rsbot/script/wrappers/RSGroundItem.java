@@ -27,15 +27,15 @@ public class RSGroundItem extends MethodProvider {
 	 * @return The top model on the tile of this ground item.
 	 */
 	public RSModel getModel() {
-		int x = location.getX() - methods.game.getBaseX();
-		int y = location.getY() - methods.game.getBaseY();
-		int plane = methods.client.getPlane();
-		org.rsbot.client.RSGround rsGround = methods.client.getRSGroundArray()[plane][x][y];
+		final int x = location.getX() - methods.game.getBaseX();
+		final int y = location.getY() - methods.game.getBaseY();
+		final int plane = methods.client.getPlane();
+		final org.rsbot.client.RSGround rsGround = methods.client.getRSGroundArray()[plane][x][y];
 
 		if (rsGround != null) {
-			RSGroundEntity obj = rsGround.getGroundObject();
+			final RSGroundEntity obj = rsGround.getGroundObject();
 			if (obj != null) {
-				org.rsbot.client.Model model = ((RSGroundObject) rsGround.getGroundObject()).getModel();
+				final org.rsbot.client.Model model = ((RSGroundObject) rsGround.getGroundObject()).getModel();
 				if (model != null) {
 					return new RSAnimableModel(methods, model, obj);
 				}
@@ -62,7 +62,7 @@ public class RSGroundItem extends MethodProvider {
 	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>.
 	 */
 	public boolean doAction(final String action, final String option) {
-		RSModel model = getModel();
+		final RSModel model = getModel();
 		if (model != null) {
 			return model.doAction(action, option);
 		}
@@ -79,7 +79,7 @@ public class RSGroundItem extends MethodProvider {
 	}
 
 	public boolean isOnScreen() {
-		RSModel model = getModel();
+		final RSModel model = getModel();
 		if (model == null) {
 			return methods.calc.tileOnScreen(location);
 		} else {

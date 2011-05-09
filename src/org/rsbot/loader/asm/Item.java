@@ -115,9 +115,9 @@ final class Item {
 	 * @param intVal the value of this item.
 	 */
 	void set(final int intVal) {
-		this.type = ClassWriter.INT;
+		type = ClassWriter.INT;
 		this.intVal = intVal;
-		this.hashCode = 0x7FFFFFFF & (type + intVal);
+		hashCode = 0x7FFFFFFF & type + intVal;
 	}
 
 	/**
@@ -126,9 +126,9 @@ final class Item {
 	 * @param longVal the value of this item.
 	 */
 	void set(final long longVal) {
-		this.type = ClassWriter.LONG;
+		type = ClassWriter.LONG;
 		this.longVal = longVal;
-		this.hashCode = 0x7FFFFFFF & (type + (int) longVal);
+		hashCode = 0x7FFFFFFF & type + (int) longVal;
 	}
 
 	/**
@@ -137,9 +137,9 @@ final class Item {
 	 * @param floatVal the value of this item.
 	 */
 	void set(final float floatVal) {
-		this.type = ClassWriter.FLOAT;
-		this.intVal = Float.floatToRawIntBits(floatVal);
-		this.hashCode = 0x7FFFFFFF & (type + (int) floatVal);
+		type = ClassWriter.FLOAT;
+		intVal = Float.floatToRawIntBits(floatVal);
+		hashCode = 0x7FFFFFFF & type + (int) floatVal;
 	}
 
 	/**
@@ -148,9 +148,9 @@ final class Item {
 	 * @param doubleVal the value of this item.
 	 */
 	void set(final double doubleVal) {
-		this.type = ClassWriter.DOUBLE;
-		this.longVal = Double.doubleToRawLongBits(doubleVal);
-		this.hashCode = 0x7FFFFFFF & (type + (int) doubleVal);
+		type = ClassWriter.DOUBLE;
+		longVal = Double.doubleToRawLongBits(doubleVal);
+		hashCode = 0x7FFFFFFF & type + (int) doubleVal;
 	}
 
 	/**
@@ -175,18 +175,18 @@ final class Item {
 			case ClassWriter.STR:
 			case ClassWriter.CLASS:
 			case ClassWriter.TYPE_NORMAL:
-				hashCode = 0x7FFFFFFF & (type + strVal1.hashCode());
+				hashCode = 0x7FFFFFFF & type + strVal1.hashCode();
 				return;
 			case ClassWriter.NAME_TYPE:
-				hashCode = 0x7FFFFFFF & (type + strVal1.hashCode()
-						* strVal2.hashCode());
+				hashCode = 0x7FFFFFFF & type + strVal1.hashCode()
+						* strVal2.hashCode();
 				return;
 			// ClassWriter.FIELD:
 			// ClassWriter.METH:
 			// ClassWriter.IMETH:
 			default:
-				hashCode = 0x7FFFFFFF & (type + strVal1.hashCode()
-						* strVal2.hashCode() * strVal3.hashCode());
+				hashCode = 0x7FFFFFFF & type + strVal1.hashCode()
+						* strVal2.hashCode() * strVal3.hashCode();
 		}
 	}
 

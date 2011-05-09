@@ -11,10 +11,11 @@ public class TAnimation implements TextPaintListener {
 
 	private final MethodContext ctx;
 
-	public TAnimation(Bot bot) {
+	public TAnimation(final Bot bot) {
 		ctx = bot.getMethodContext();
 	}
 
+	@Override
 	public int drawLine(final Graphics render, int idx) {
 		int animation;
 		if (ctx.game.isLoggedIn()) {

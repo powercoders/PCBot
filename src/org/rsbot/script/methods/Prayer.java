@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class Prayer extends MethodProvider {
 
-	Prayer(MethodContext ctx) {
+	Prayer(final MethodContext ctx) {
 		super(ctx);
 	}
 
@@ -48,7 +48,7 @@ public class Prayer extends MethodProvider {
 		private final int index;
 		private final int level;
 
-		Book(int index, int level) {
+		Book(final int index, final int level) {
 			this.index = index;
 			this.level = level;
 		}
@@ -78,10 +78,10 @@ public class Prayer extends MethodProvider {
 	 * @param prayer The prayer to check.
 	 * @return <tt>true</tt> if enabled; otherwise <tt>false</tt>.
 	 */
-	public boolean isPrayerOn(Book prayer) {
-		RSComponent[] prayers = methods.interfaces.getComponent(271, 7)
+	public boolean isPrayerOn(final Book prayer) {
+		final RSComponent[] prayers = methods.interfaces.getComponent(271, 7)
 				.getComponents();
-		for (RSComponent c : prayers) {
+		for (final RSComponent c : prayers) {
 			if (c.getComponentIndex() == prayer.getIndex()
 					&& c.getBackgroundColor() != -1) {
 				return true;
@@ -113,9 +113,9 @@ public class Prayer extends MethodProvider {
 		if (isPrayerOn(prayer) == activate) {
 			return false;
 		}
-		RSComponent pray = methods.interfaces.getComponent(271, 7)
+		final RSComponent pray = methods.interfaces.getComponent(271, 7)
 				.getComponent(prayer.getIndex());
-		if ((pray.getBackgroundColor() != -1) == activate) {
+		if (pray.getBackgroundColor() != -1 == activate) {
 			return false;
 		}
 		if (methods.game.getCurrentTab() != Game.TAB_PRAYER && methods.game.openTab(Game.TAB_PRAYER)) {
@@ -145,10 +145,10 @@ public class Prayer extends MethodProvider {
 	 *         that represent selected prayers.
 	 */
 	public RSComponent[] getSelectedPrayers() {
-		ArrayList<RSComponent> selected = new ArrayList<RSComponent>();
-		RSComponent[] prayers = methods.interfaces.getComponent(271, 7)
+		final ArrayList<RSComponent> selected = new ArrayList<RSComponent>();
+		final RSComponent[] prayers = methods.interfaces.getComponent(271, 7)
 				.getComponents();
-		for (RSComponent prayer : prayers) {
+		for (final RSComponent prayer : prayers) {
 			if (prayer.getBackgroundColor() != -1) {
 				selected.add(prayer);
 			}
@@ -173,7 +173,7 @@ public class Prayer extends MethodProvider {
 	 * @return The percentage of prayer points left.
 	 */
 	public int getPrayerPercentLeft() {
-		return (100 * getPrayerLeft())
+		return 100 * getPrayerLeft()
 				/ methods.skills.getCurrentLevel(Skills.PRAYER);
 	}
 

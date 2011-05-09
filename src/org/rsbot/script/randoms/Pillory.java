@@ -28,6 +28,7 @@ public class Pillory extends Random implements MessageListener {
 			new RSTile(3226, 3407), new RSTile(3228, 3407), new RSTile(3230, 3407),
 			new RSTile(2685, 3489), new RSTile(2683, 3489), new RSTile(2681, 3489)};
 
+	@Override
 	public void onFinish() {
 		fail = 0;
 		inCage = false;
@@ -39,7 +40,7 @@ public class Pillory extends Random implements MessageListener {
 		if (!game.isLoggedIn()) {
 			return false;
 		}
-		for (RSTile cagetile : cagetiles) {
+		for (final RSTile cagetile : cagetiles) {
 			if (getMyPlayer().getLocation().equals(cagetile)) {
 				return true;
 			}
@@ -64,7 +65,7 @@ public class Pillory extends Random implements MessageListener {
 			for (int y = 0; y < 104; y++) {
 				final RSObject[] objs = objects.getAllAt(new RSTile(x + game.getBaseX(), y + game.getBaseY()));
 				if (objs.length > 0) {
-					RSObject o = objs[0];
+					final RSObject o = objs[0];
 					boolean isObject = false;
 					for (final int id : ids) {
 						if (o.getID() == id) {
@@ -189,9 +190,10 @@ public class Pillory extends Random implements MessageListener {
 		return -1;
 	}
 
+	@Override
 	public void messageReceived(final MessageEvent e) {
 		final String str = e.getMessage();
-		String pilloryMessage = "Solve the Pillory";
+		final String pilloryMessage = "Solve the Pillory";
 		if (str != null && str.contains(pilloryMessage)) {
 			inCage = true;
 		}

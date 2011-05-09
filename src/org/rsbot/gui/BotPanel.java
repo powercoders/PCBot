@@ -20,6 +20,7 @@ public class BotPanel extends JPanel {
 	private class HomeUpdater implements Runnable {
 		private boolean running;
 
+		@Override
 		public void run() {
 			synchronized (this) {
 				if (running) {
@@ -36,7 +37,7 @@ public class BotPanel extends JPanel {
 				repaint();
 				try {
 					Thread.sleep(70);
-				} catch (Exception ex) {
+				} catch (final Exception ex) {
 					break;
 				}
 			}
@@ -53,21 +54,22 @@ public class BotPanel extends JPanel {
 	}
 
 	private Bot bot;
-	private BotHome home;
-	private HomeUpdater updater;
+	private final BotHome home;
+	private final HomeUpdater updater;
 	private int offX;
 	private boolean present;
 
-	public BotPanel(BotHome home) {
+	public BotPanel(final BotHome home) {
 		this.home = home;
-		this.updater = new HomeUpdater();
+		updater = new HomeUpdater();
 		setSize(new Dimension(BotGUI.PANEL_WIDTH, BotGUI.PANEL_HEIGHT));
 		setMinimumSize(new Dimension(BotGUI.PANEL_WIDTH, BotGUI.PANEL_HEIGHT));
 		setPreferredSize(new Dimension(BotGUI.PANEL_WIDTH, BotGUI.PANEL_HEIGHT));
 		setBackground(Color.black);
 		home.setSize(getWidth(), getHeight());
 		addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent evt) {
+			@Override
+			public void componentResized(final ComponentEvent evt) {
 				BotPanel.this.home.setSize(getWidth(), getHeight());
 				if (bot != null) {
 					bot.resize(getWidth(), getHeight());
@@ -77,52 +79,63 @@ public class BotPanel extends JPanel {
 			}
 		});
 		addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {
+			@Override
+			public void mouseClicked(final MouseEvent e) {
 				redispatch(e);
 				if (!hasFocus()) {
 					requestFocus();
 				}
 			}
 
-			public void mouseEntered(MouseEvent e) {
+			@Override
+			public void mouseEntered(final MouseEvent e) {
 			}
 
-			public void mouseExited(MouseEvent e) {
+			@Override
+			public void mouseExited(final MouseEvent e) {
 				redispatch(e);
 			}
 
-			public void mousePressed(MouseEvent e) {
+			@Override
+			public void mousePressed(final MouseEvent e) {
 				redispatch(e);
 			}
 
-			public void mouseReleased(MouseEvent e) {
+			@Override
+			public void mouseReleased(final MouseEvent e) {
 				redispatch(e);
 			}
 		});
 		addMouseMotionListener(new MouseMotionListener() {
-			public void mouseDragged(MouseEvent e) {
+			@Override
+			public void mouseDragged(final MouseEvent e) {
 				redispatch(e);
 			}
 
-			public void mouseMoved(MouseEvent e) {
+			@Override
+			public void mouseMoved(final MouseEvent e) {
 				redispatch(e);
 			}
 		});
 		addMouseWheelListener(new MouseWheelListener() {
-			public void mouseWheelMoved(MouseWheelEvent e) {
+			@Override
+			public void mouseWheelMoved(final MouseWheelEvent e) {
 				redispatch(e);
 			}
 		});
 		addKeyListener(new KeyListener() {
-			public void keyPressed(KeyEvent e) {
+			@Override
+			public void keyPressed(final KeyEvent e) {
 				redispatch(e);
 			}
 
-			public void keyReleased(KeyEvent e) {
+			@Override
+			public void keyReleased(final KeyEvent e) {
 				redispatch(e);
 			}
 
-			public void keyTyped(KeyEvent e) {
+			@Override
+			public void keyTyped(final KeyEvent e) {
 				redispatch(e);
 			}
 		});
@@ -135,7 +148,7 @@ public class BotPanel extends JPanel {
 		}
 	}
 
-	public void setBot(Bot bot) {
+	public void setBot(final Bot bot) {
 		if (this.bot != null) {
 			this.bot.setPanel(null);
 		} else {
@@ -152,20 +165,21 @@ public class BotPanel extends JPanel {
 		}
 	}
 
-	public void paintComponent(Graphics g) {
+	@Override
+	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 		if (bot == null) {
 			home.paint(g);
 		} else if (!bot.disableCanvas) {
 			g.drawImage(bot.getImage(), offX, 0, null);
 		} else {
-			Font font = new Font("Helvetica", 1, 13);
-			FontMetrics fontMetrics = getFontMetrics(font);
+			final Font font = new Font("Helvetica", 1, 13);
+			final FontMetrics fontMetrics = getFontMetrics(font);
 			g.setColor(Color.black);
 			g.fillRect(0, 0, 768, 503);
 			g.setColor(new Color(150, 0, 0));
 			g.drawRect(230, 233, 303, 33);
-			String s = "Graphics disabled...";
+			final String s = "Graphics disabled...";
 			g.setFont(font);
 			g.setColor(Color.WHITE);
 			g.drawString(s, (768 - fontMetrics.stringWidth(s)) / 2, 255);
@@ -174,12 +188,12 @@ public class BotPanel extends JPanel {
 
 	private void redispatch(final MouseEvent e) {
 		if (bot != null && bot.getLoader().getComponentCount() > 0) {
-			Mouse mouse = bot.getMethodContext().mouse;
+			final Mouse mouse = bot.getMethodContext().mouse;
 			if (mouse == null) {
 				return; // client cannot currently accept events
 			}
-			boolean present = mouse.isPresent();
-			Component c = bot.getLoader().getComponent(0);
+			final boolean present = mouse.isPresent();
+			final Component c = bot.getLoader().getComponent(0);
 			// account for horizontal offset
 			e.translatePoint(-offX, 0);
 			// fire human mouse event for scripts
@@ -190,7 +204,7 @@ public class BotPanel extends JPanel {
 			if (e.getX() > 0 && e.getX() < c.getWidth() && e.getY() < c.getHeight() && e.getID() != MouseEvent.MOUSE_EXITED) {
 				if (present) {
 					if (e instanceof MouseWheelEvent) {
-						MouseWheelEvent mwe = (MouseWheelEvent) e;
+						final MouseWheelEvent mwe = (MouseWheelEvent) e;
 						c.dispatchEvent(new MouseWheelEvent(c, e.getID(), System.currentTimeMillis(), 0, e.getX(), e.getY(), 0, e.isPopupTrigger(), mwe.getScrollType(), mwe.getScrollAmount(), mwe.getWheelRotation()));
 					} else {
 						c.dispatchEvent(new MouseEvent(c, e.getID(), System.currentTimeMillis(), 0, e.getX(), e.getY(), 0, e.isPopupTrigger(), e.getButton()));
@@ -204,20 +218,20 @@ public class BotPanel extends JPanel {
 		}
 	}
 
-	private void redispatch(KeyEvent e) {
+	private void redispatch(final KeyEvent e) {
 		if (bot != null) {
-			EventManager m = bot.getEventManager();
+			final EventManager m = bot.getEventManager();
 			if (m != null) {
 				m.dispatchEvent(e);
 			}
 			if ((bot.overrideInput || (bot.inputFlags & INPUT_KEYBOARD) != 0) && bot.getLoader().getComponentCount() > 0) {
-				Component c = bot.getLoader().getComponent(0);
+				final Component c = bot.getLoader().getComponent(0);
 				c.dispatchEvent(e);
 			}
 		}
 	}
 
-	private void dispatchHuman(Component c, MouseEvent e) {
+	private void dispatchHuman(final Component c, final MouseEvent e) {
 		if (e.getX() > 0 && e.getX() < c.getWidth() && e.getY() < c.getHeight() && e.getID() != MouseEvent.MOUSE_EXITED) {
 			if (present) {
 				bot.getEventManager().dispatchEvent(e);

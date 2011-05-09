@@ -35,6 +35,7 @@ public class BeehiveSolver extends Random {
 	private static final int CLOSE_WINDOW = 38;
 
 
+	@Override
 	public void onFinish() {
 		BeehiveKeeper = null;
 		solved = false;
@@ -152,12 +153,12 @@ public class BeehiveSolver extends Random {
 	}
 
 	public int returnIdAtSlot(final int slot) {
-		if ((slot < 1) || (slot > 4)) {
+		if (slot < 1 || slot > 4) {
 			log.info("Invalid Slot.");
 			interfaces.getComponent(INTERFACE_BEEHIVE_WINDOW, CLOSE_WINDOW).doClick();
 		}
 
-		int Model_ID = getBeehiveInterface().getComponent(returnSlotId(slot)).getModelID();
+		final int Model_ID = getBeehiveInterface().getComponent(returnSlotId(slot)).getModelID();
 
 		if (Model_ID == -1) {
 			log.info("Could not retrieve ID. Restarting.");

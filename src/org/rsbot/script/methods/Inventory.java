@@ -16,7 +16,7 @@ public class Inventory extends MethodProvider {
 	public static final int INTERFACE_INVENTORY_BANK = 763;
 	public static final int INTERFACE_INVENTORY_SHOP = 621;
 
-	Inventory(MethodContext ctx) {
+	Inventory(final MethodContext ctx) {
 		super(ctx);
 	}
 
@@ -27,14 +27,14 @@ public class Inventory extends MethodProvider {
 	 */
 	public RSComponent getInterface() {
 		if (methods.interfaces.get(INTERFACE_INVENTORY_BANK).isValid()) {
-			RSComponent bankInv = methods.interfaces.getComponent(
+			final RSComponent bankInv = methods.interfaces.getComponent(
 					INTERFACE_INVENTORY_BANK, 0);
 			if (bankInv != null && bankInv.getAbsoluteX() > 50) {
 				return bankInv;
 			}
 		}
 		if (methods.interfaces.get(INTERFACE_INVENTORY_SHOP).isValid()) {
-			RSComponent shopInv = methods.interfaces.getComponent(
+			final RSComponent shopInv = methods.interfaces.getComponent(
 					INTERFACE_INVENTORY_SHOP, 0);
 			if (shopInv != null && shopInv.getAbsoluteX() > 50) {
 				return shopInv;
@@ -81,7 +81,7 @@ public class Inventory extends MethodProvider {
 	 * @param items       The item IDs to drop
 	 */
 	public void dropAllExcept(final boolean leftToRight, final int... items) {
-		RSTile startLocation = methods.players.getMyPlayer().getLocation();
+		final RSTile startLocation = methods.players.getMyPlayer().getLocation();
 		boolean found_droppable = true;
 		while (found_droppable && getCountExcept(items) != 0) {
 			if (methods.calc.distanceTo(startLocation) > 100) {
@@ -90,15 +90,15 @@ public class Inventory extends MethodProvider {
 			found_droppable = false;
 
 			for (int j = 0; j < 28; j++) {
-				int c = leftToRight ? j % 4 : j / 7;
-				int r = leftToRight ? j / 4 : j % 7;
-				RSItem curItem = getItems()[c + r * 4];
+				final int c = leftToRight ? j % 4 : j / 7;
+				final int r = leftToRight ? j / 4 : j % 7;
+				final RSItem curItem = getItems()[c + r * 4];
 				int id;
 				if (curItem != null
 						&& (id = curItem.getID()) != -1) {
 					boolean isInItems = false;
-					for (int i : items) {
-						isInItems |= (i == id);
+					for (final int i : items) {
+						isInItems |= i == id;
 					}
 					if (!isInItems) {
 						found_droppable |= dropItem(c, r);
@@ -123,9 +123,9 @@ public class Inventory extends MethodProvider {
 		if (item == null) {
 			return false;
 		}
-		RSItemDef itemDef = item.getDefinition();
+		final RSItemDef itemDef = item.getDefinition();
 		if (itemDef != null) {
-			for (String a : itemDef.getActions()) {
+			for (final String a : itemDef.getActions()) {
 				if (a != null && a.equalsIgnoreCase(action)) {
 					return true;
 				}
@@ -168,7 +168,7 @@ public class Inventory extends MethodProvider {
 		if (col < 0 || col > 3 || row < 0 || row > 6) {
 			return false;
 		}
-		RSItem item = getItems()[col + row * 4];
+		final RSItem item = getItems()[col + row * 4];
 		return item != null && item.getID() != -1 && item.doAction("Drop");
 	}
 
@@ -195,7 +195,7 @@ public class Inventory extends MethodProvider {
 	 * @see #containsOneOf(int...)
 	 */
 	public boolean containsAll(final int... itemID) {
-		for (int i : itemID) {
+		for (final int i : itemID) {
 			if (getItem(i) == null) {
 				return false;
 			}
@@ -213,9 +213,9 @@ public class Inventory extends MethodProvider {
 	 * @see #containsAll(int...)
 	 */
 	public boolean containsOneOf(final int... itemID) {
-		RSItem[] items = getItems();
-		for (RSItem item : items) {
-			for (int i : itemID) {
+		final RSItem[] items = getItems();
+		for (final RSItem item : items) {
+			for (final int i : itemID) {
 				if (item.getID() == i) {
 					return true;
 				}
@@ -261,7 +261,7 @@ public class Inventory extends MethodProvider {
 	 * @param item The item to select.
 	 * @return <tt>true</tt> if the item was selected; otherwise <tt>false</tt>.
 	 */
-	public boolean selectItem(RSItem item) {
+	public boolean selectItem(final RSItem item) {
 		final int itemID = item.getID();
 		if (itemID == -1) {
 			return false;
@@ -304,8 +304,8 @@ public class Inventory extends MethodProvider {
 	 *         otherwise <tt>false</tt>.
 	 */
 	public boolean useItem(final int itemID, final int targetID) {
-		RSItem item = getItem(itemID);
-		RSItem target = getItem(targetID);
+		final RSItem item = getItem(itemID);
+		final RSItem target = getItem(targetID);
 		return item != null && target != null && useItem(item, target);
 	}
 
@@ -317,7 +317,7 @@ public class Inventory extends MethodProvider {
 	 * @return <tt>true</tt> if the "use" action had been used on both the
 	 *         RSItem and RSObject; otherwise <tt>false</tt>.
 	 */
-	public boolean useItem(RSItem item, RSObject targetObject) {
+	public boolean useItem(final RSItem item, final RSObject targetObject) {
 		if (methods.game.getCurrentTab() != Game.TAB_INVENTORY) {
 			methods.game.openTab(Game.TAB_INVENTORY);
 		}
@@ -333,7 +333,7 @@ public class Inventory extends MethodProvider {
 	 *         RSItem and RSObject; otherwise <tt>false</tt>.
 	 */
 	public boolean useItem(final int itemID, final RSObject object) {
-		RSItem item = getItem(itemID);
+		final RSItem item = getItem(itemID);
 		return item != null && useItem(item, object);
 	}
 
@@ -356,7 +356,7 @@ public class Inventory extends MethodProvider {
 	 *         selected.
 	 */
 	public String getSelectedItemName() {
-		String name = methods.client.getSelectedItemName();
+		final String name = methods.client.getSelectedItemName();
 		return !isItemSelected() || name == null ? null : name.replaceAll(
 				"<[\\w\\d]+=[\\w\\d]+>", "");
 	}
@@ -367,7 +367,7 @@ public class Inventory extends MethodProvider {
 	 * @return The index of current selected item, or -1 if none is selected.
 	 */
 	public int getSelectedItemIndex() {
-		RSComponent[] comps = getInterface().getComponents();
+		final RSComponent[] comps = getInterface().getComponents();
 		for (int i = 0; i < Math.min(28, comps.length); ++i) {
 			if (comps[i].getBorderThickness() == 2) {
 				return i;
@@ -382,7 +382,7 @@ public class Inventory extends MethodProvider {
 	 * @return The current selected item, or <tt>null</tt> if none is selected.
 	 */
 	public RSItem getSelectedItem() {
-		int index = getSelectedItemIndex();
+		final int index = getSelectedItemIndex();
 		return index == -1 ? null : getItemAt(index);
 	}
 
@@ -394,7 +394,7 @@ public class Inventory extends MethodProvider {
 	 * @return <tt>true</tt> if item was selected, <tt>false</tt> if not.
 	 */
 	public boolean clickSelectedItem(final boolean leftClick) {
-		RSItem item = getSelectedItem();
+		final RSItem item = getSelectedItem();
 		return item != null && item.doClick(true);
 	}
 
@@ -415,7 +415,7 @@ public class Inventory extends MethodProvider {
 	 * @return The item, or <tt>null</tt> if not found.
 	 */
 	public RSItem getItemAt(final int index) {
-		RSComponent comp = getInterface().getComponent(index);
+		final RSComponent comp = getInterface().getComponent(index);
 		return 0 <= index && index < 28 && comp != null ? new RSItem(methods,
 				comp) : null;
 	}
@@ -427,20 +427,20 @@ public class Inventory extends MethodProvider {
 	 *         <tt>RSItem[0]</tt>.
 	 */
 	public RSItem[] getItems() {
-		RSComponent invIface = getInterface();
+		final RSComponent invIface = getInterface();
 		if (invIface != null) {
 			if (invIface.getComponents().length > 0) {
 				int len = 0;
-				RSComponent[] comps = invIface.getComponents();
-				for (RSComponent com : comps) {
+				final RSComponent[] comps = invIface.getComponents();
+				for (final RSComponent com : comps) {
 					if (com.getType() == 5) {
 						++len;
 					}
 				}
-				RSItem[] inv = new RSItem[len];
+				final RSItem[] inv = new RSItem[len];
 				for (int i = 0; i < len; ++i) {
-					RSComponent item = comps[i];
-					int idx = item.getComponentIndex();
+					final RSComponent item = comps[i];
+					final int idx = item.getComponentIndex();
 					if (idx >= 0) {
 						inv[idx] = new RSItem(methods, item);
 					} else {
@@ -461,9 +461,9 @@ public class Inventory extends MethodProvider {
 	 * @return <tt>RSItem</tt> array of the matching inventory items.
 	 */
 	public RSItem[] getItems(final int... ids) {
-		LinkedList<RSItem> items = new LinkedList<RSItem>();
-		for (RSItem item : getItems()) {
-			for (int i : ids) {
+		final LinkedList<RSItem> items = new LinkedList<RSItem>();
+		for (final RSItem item : getItems()) {
+			for (final int i : ids) {
 				if (item.getID() == i) {
 					items.add(item);
 					break;
@@ -481,21 +481,21 @@ public class Inventory extends MethodProvider {
 	 *         <tt>RSItem[0]</tt>.
 	 */
 	public RSItem[] getCachedItems() {
-		RSComponent invIface = methods.interfaces.getComponent(
+		final RSComponent invIface = methods.interfaces.getComponent(
 				INTERFACE_INVENTORY, 0);
 		if (invIface != null) {
 			if (invIface.getComponents().length > 0) {
 				int len = 0;
-				for (RSComponent com : invIface.getComponents()) {
+				for (final RSComponent com : invIface.getComponents()) {
 					if (com.getType() == 5) {
 						++len;
 					}
 				}
 
-				RSItem[] inv = new RSItem[len];
+				final RSItem[] inv = new RSItem[len];
 				for (int i = 0; i < len; ++i) {
-					RSComponent item = invIface.getComponents()[i];
-					int idx = item.getComponentIndex();
+					final RSComponent item = invIface.getComponents()[i];
+					final int idx = item.getComponentIndex();
 					if (idx >= 0) {
 						inv[idx] = new RSItem(methods, item);
 					} else {
@@ -517,10 +517,10 @@ public class Inventory extends MethodProvider {
 	 * @return The ID of the item or -1 if not in inventory.
 	 */
 	public int getItemID(final String name) {
-		RSItem[] items = getItems();
+		final RSItem[] items = getItems();
 		int slot = -1;
-		for (RSItem item : items) {
-			RSItemDef def = item.getDefinition();
+		for (final RSItem item : items) {
+			final RSItemDef def = item.getDefinition();
 			if (def != null && def.getName().contains(name)) {
 				slot = item.getID();
 				break;
@@ -536,9 +536,9 @@ public class Inventory extends MethodProvider {
 	 * @return The first <tt>RSItem</tt> for the given IDs; otherwise null.
 	 */
 	public RSItem getItem(final int... ids) {
-		RSItem[] items = getItems();
-		for (RSItem item : items) {
-			for (int id : ids) {
+		final RSItem[] items = getItems();
+		for (final RSItem item : items) {
+			for (final int id : ids) {
 				if (item.getID() == id) {
 					return item;
 				}
@@ -568,14 +568,14 @@ public class Inventory extends MethodProvider {
 	 * @return The count.
 	 */
 	public int getCountExcept(final boolean includeStacks, final int... ids) {
-		RSItem[] items = getItems();
+		final RSItem[] items = getItems();
 		int count = 0;
-		for (RSItem i : items) {
+		for (final RSItem i : items) {
 			if (i.getID() == -1) {
 				continue;
 			}
 			boolean skip = false;
-			for (int id : ids) {
+			for (final int id : ids) {
 				if (i.getID() == id) {
 					skip = true;
 					break;
@@ -611,12 +611,12 @@ public class Inventory extends MethodProvider {
 	public int getCount(final boolean includeStacks, final int... itemIDs) {
 		int total = 0;
 
-		for (RSItem item : getItems()) {
+		for (final RSItem item : getItems()) {
 			if (item == null) {
 				continue;
 			}
 
-			for (int ID : itemIDs) {
+			for (final int ID : itemIDs) {
 				if (item.getID() == ID) {
 					total += includeStacks ? item.getStackSize() : 1;
 				}
@@ -644,9 +644,9 @@ public class Inventory extends MethodProvider {
 	 */
 	public int getCount(final boolean includeStacks) {
 		int count = 0;
-		RSItem[] items = getItems();
-		for (RSItem item : items) {
-			int iid = item.getID();
+		final RSItem[] items = getItems();
+		for (final RSItem item : items) {
+			final int iid = item.getID();
 			if (iid != -1) {
 				if (includeStacks) {
 					count += item.getStackSize();

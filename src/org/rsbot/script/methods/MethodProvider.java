@@ -10,8 +10,8 @@ public abstract class MethodProvider {
 
 	protected final MethodContext methods;
 
-	public MethodProvider(MethodContext ctx) {
-		this.methods = ctx;
+	public MethodProvider(final MethodContext ctx) {
+		methods = ctx;
 	}
 
 	/**
@@ -21,7 +21,7 @@ public abstract class MethodProvider {
 	 * @param max The exclusive upper bound.
 	 * @return Random integer min <= n < max.
 	 */
-	public int random(int min, int max) {
+	public int random(final int min, final int max) {
 		return min + (max == min ? 0 : methods.random.nextInt(max - min));
 	}
 
@@ -36,8 +36,8 @@ public abstract class MethodProvider {
 	 * @return Random integer min <= n < max from the normal distribution
 	 *         described by the parameters.
 	 */
-	public int random(int min, int max, int sd) {
-		int mean = min + (max - min) / 2;
+	public int random(final int min, final int max, final int sd) {
+		final int mean = min + (max - min) / 2;
 		int rand;
 		do {
 			rand = (int) (methods.random.nextGaussian() * sd + mean);
@@ -57,7 +57,7 @@ public abstract class MethodProvider {
 	 * @return Random integer min <= n < max from the normal distribution
 	 *         described by the parameters.
 	 */
-	public int random(int min, int max, int mean, int sd) {
+	public int random(final int min, final int max, final int mean, final int sd) {
 		int rand;
 		do {
 			rand = (int) (methods.random.nextGaussian() * sd + mean);
@@ -72,22 +72,22 @@ public abstract class MethodProvider {
 	 * @param max The exclusive upper bound.
 	 * @return Random min <= n < max.
 	 */
-	public double random(double min, double max) {
+	public double random(final double min, final double max) {
 		return min + methods.random.nextDouble() * (max - min);
 	}
 
 	/**
 	 * @param toSleep The time to sleep in milliseconds.
 	 */
-	public void sleep(int toSleep) {
+	public void sleep(final int toSleep) {
 		try {
-			long start = System.currentTimeMillis();
+			final long start = System.currentTimeMillis();
 			Thread.sleep(toSleep);
 			long now; // Guarantee minimum sleep
 			while (start + toSleep > (now = System.currentTimeMillis())) {
 				Thread.sleep(start + toSleep - now);
 			}
-		} catch (InterruptedException ignored) {
+		} catch (final InterruptedException ignored) {
 		}
 	}
 

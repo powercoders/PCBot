@@ -11,10 +11,11 @@ public class TTab implements TextPaintListener {
 
 	private final Game game;
 
-	public TTab(Bot bot) {
+	public TTab(final Bot bot) {
 		game = bot.getMethodContext().game;
 	}
 
+	@Override
 	public int drawLine(final Graphics render, int idx) {
 		final int cTab = game.getCurrentTab();
 		StringUtil.drawLine(render, idx++,

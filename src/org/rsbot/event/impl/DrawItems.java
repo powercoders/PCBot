@@ -14,10 +14,11 @@ public class DrawItems implements PaintListener {
 
 	private final MethodContext ctx;
 
-	public DrawItems(Bot bot) {
+	public DrawItems(final Bot bot) {
 		ctx = bot.getMethodContext();
 	}
 
+	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;
@@ -39,10 +40,10 @@ public class DrawItems implements PaintListener {
 				}
 				final RSGroundItem[] items = ctx.groundItems.getAllAt(x, y);
 				if (items.length > 0) {
-					RSModel model = items[0].getModel();
+					final RSModel model = items[0].getModel();
 					if (model != null) {
 						render.setColor(Color.BLUE);
-						for (Polygon polygon : model.getTriangles()) {
+						for (final Polygon polygon : model.getTriangles()) {
 							render.drawPolygon(polygon);
 						}
 					}

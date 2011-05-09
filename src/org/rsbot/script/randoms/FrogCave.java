@@ -20,11 +20,11 @@ public class FrogCave extends Random {
 	public boolean activateCondition() {
 		if (!game.isLoggedIn()) {
 			return false;
-		} else if ((npcs.getNearest("Frog Herald") != null)
-				&& (objects.getNearest(5917) != null)) {
+		} else if (npcs.getNearest("Frog Herald") != null
+				&& objects.getNearest(5917) != null) {
 			sleep(random(2000, 3000));
-			return (npcs.getNearest("Frog Herald") != null)
-					&& (objects.getNearest(5917) != null);
+			return npcs.getNearest("Frog Herald") != null
+					&& objects.getNearest(5917) != null;
 		}
 		return false;
 	}
@@ -32,7 +32,7 @@ public class FrogCave extends Random {
 	private RSNPC findFrog() {
 		return npcs.getNearest(new Filter<RSNPC>() {
 			@Override
-			public boolean accept(RSNPC npc) {
+			public boolean accept(final RSNPC npc) {
 				return !npc.isMoving() && npc.getHeight() == -278;
 			}
 		});
@@ -43,6 +43,7 @@ public class FrogCave extends Random {
 				|| interfaces.getComponent(65, 6).isValid();
 	}
 
+	@Override
 	public void onFinish() {
 		talkedToHerald = false;
 		frog = null;
@@ -115,7 +116,7 @@ public class FrogCave extends Random {
 				}
 				return random(200, 400);
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 		return random(200, 400);

@@ -19,17 +19,18 @@ public class AddGetterAdapter extends ClassAdapter implements Opcodes {
 		public String desc;
 	}
 
-	private boolean virtual;
-	private Field[] fields;
+	private final boolean virtual;
+	private final Field[] fields;
 
 	private String owner;
 
-	public AddGetterAdapter(ClassVisitor delegate, boolean virtual, Field[] fields) {
+	public AddGetterAdapter(final ClassVisitor delegate, final boolean virtual, final Field[] fields) {
 		super(delegate);
 		this.virtual = virtual;
 		this.fields = fields;
 	}
 
+	@Override
 	public void visit(
 			final int version,
 			final int access,
@@ -37,17 +38,18 @@ public class AddGetterAdapter extends ClassAdapter implements Opcodes {
 			final String signature,
 			final String superName,
 			final String[] interfaces) {
-		this.owner = name;
+		owner = name;
 		cv.visit(version, access, name, signature, superName, interfaces);
 	}
 
+	@Override
 	public void visitEnd() {
 		if (virtual) {
-			for (Field f : fields) {
+			for (final Field f : fields) {
 				visitGetter(f.getter_access, f.getter_name, f.getter_desc, f.name, f.desc);
 			}
 		} else {
-			for (Field f : fields) {
+			for (final Field f : fields) {
 				visitGetter(f.getter_access, f.getter_name, f.getter_desc, f.owner, f.name, f.desc);
 			}
 		}
@@ -60,11 +62,11 @@ public class AddGetterAdapter extends ClassAdapter implements Opcodes {
 			final String getter_desc,
 			final String name,
 			final String desc) {
-		MethodVisitor mv = cv.visitMethod(getter_access, getter_name, getter_desc, null, null);
+		final MethodVisitor mv = cv.visitMethod(getter_access, getter_name, getter_desc, null, null);
 		mv.visitCode();
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitFieldInsn(GETFIELD, owner, name, desc);
-		int op = getReturnOpcode(desc);
+		final int op = getReturnOpcode(desc);
 		mv.visitInsn(op);
 		mv.visitMaxs(op == LRETURN || op == DRETURN ? 2 : 1, (getter_access & ACC_STATIC) == 0 ? 1 : 0);
 		mv.visitEnd();
@@ -77,10 +79,10 @@ public class AddGetterAdapter extends ClassAdapter implements Opcodes {
 			final String owner,
 			final String name,
 			final String desc) {
-		MethodVisitor mv = cv.visitMethod(getter_access, getter_name, getter_desc, null, null);
+		final MethodVisitor mv = cv.visitMethod(getter_access, getter_name, getter_desc, null, null);
 		mv.visitCode();
 		mv.visitFieldInsn(GETSTATIC, owner, name, desc);
-		int op = getReturnOpcode(desc);
+		final int op = getReturnOpcode(desc);
 		mv.visitInsn(op);
 		mv.visitMaxs(op == LRETURN || op == DRETURN ? 2 : 1, (getter_access & ACC_STATIC) == 0 ? 1 : 0);
 		mv.visitEnd();
@@ -91,7 +93,7 @@ public class AddGetterAdapter extends ClassAdapter implements Opcodes {
 		if (desc.length() > 1) {
 			return ARETURN;
 		}
-		char c = desc.charAt(0);
+		final char c = desc.charAt(0);
 		switch (c) {
 			case 'I':
 			case 'Z':

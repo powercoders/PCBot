@@ -18,6 +18,7 @@ public class RSPlayer extends RSCharacter {
 		this.p = new SoftReference<org.rsbot.client.RSPlayer>(p);
 	}
 
+	@Override
 	protected org.rsbot.client.RSCharacter getAccessor() {
 		return p.get();
 	}
@@ -36,7 +37,7 @@ public class RSPlayer extends RSCharacter {
 	}
 
 	public int getNPCID() {
-		RSPlayerComposite comp = p.get().getComposite();
+		final RSPlayerComposite comp = p.get().getComposite();
 		if (comp != null) {
 			return comp.getNPCID();
 		}
@@ -44,7 +45,7 @@ public class RSPlayer extends RSCharacter {
 	}
 
 	public boolean isIdle() {
-		return !isMoving() && (getAnimation() == -1) && !isInCombat();
+		return !isMoving() && getAnimation() == -1 && !isInCombat();
 	}
 
 	@Override
@@ -70,7 +71,7 @@ public class RSPlayer extends RSCharacter {
 				}
 				methods.mouse.move(screenLoc);
 			}
-			String[] items = methods.menu.getItems();
+			final String[] items = methods.menu.getItems();
 			if (items.length <= 1) {
 				return false;
 			}
@@ -81,7 +82,7 @@ public class RSPlayer extends RSCharacter {
 				methods.mouse.click(false);
 				return methods.menu.doAction(action, option);
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			return false;
 		}

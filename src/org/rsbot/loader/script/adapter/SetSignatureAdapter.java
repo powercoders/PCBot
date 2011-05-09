@@ -19,18 +19,19 @@ public class SetSignatureAdapter extends ClassAdapter {
 
 	private final Signature[] signatures;
 
-	public SetSignatureAdapter(ClassVisitor delegate, Signature[] signatures) {
+	public SetSignatureAdapter(final ClassVisitor delegate, final Signature[] signatures) {
 		super(delegate);
 		this.signatures = signatures;
 	}
 
+	@Override
 	public MethodVisitor visitMethod(
 			final int access,
 			final String name,
 			final String desc,
 			final String signature,
 			final String[] exceptions) {
-		for (Signature s : signatures) {
+		for (final Signature s : signatures) {
 			if (s.name.equals(name) && s.desc.equals("") || s.desc.equals(desc)) {
 				return cv.visitMethod(
 						s.new_access == -1 ? access : s.new_access,

@@ -11,7 +11,7 @@ public class Account extends MethodProvider {
 
 	Logger log = Logger.getLogger(getClass().getName());
 
-	public Account(MethodContext ctx) {
+	public Account(final MethodContext ctx) {
 		super(ctx);
 	}
 

@@ -8,7 +8,7 @@ public class Queue<N extends org.rsbot.client.NodeSub> {
 	private final NodeSubQueue nl;
 	private org.rsbot.client.NodeSub current;
 
-	public Queue(NodeSubQueue nl) {
+	public Queue(final NodeSubQueue nl) {
 		this.nl = nl;
 	}
 
@@ -25,7 +25,7 @@ public class Queue<N extends org.rsbot.client.NodeSub> {
 	}
 
 	public N getHead() {
-		org.rsbot.client.NodeSub node = nl.getTail().getNextSub();
+		final org.rsbot.client.NodeSub node = nl.getTail().getNextSub();
 
 		if (node == nl.getTail()) {
 			current = null;
@@ -37,7 +37,7 @@ public class Queue<N extends org.rsbot.client.NodeSub> {
 	}
 
 	public N getNext() {
-		org.rsbot.client.NodeSub node = current;
+		final org.rsbot.client.NodeSub node = current;
 
 		if (node == nl.getTail()) {
 			current = null;

@@ -58,7 +58,7 @@ public class WindowUtil {
 	 *
 	 * @param f The JFrame that WindowUtil should use.
 	 */
-	public static void setFrame(JFrame f) {
+	public static void setFrame(final JFrame f) {
 		if (frame == null) {
 			frame = f;
 		}
@@ -72,7 +72,7 @@ public class WindowUtil {
 	 *
 	 * @param message The message to be shown within the dialog.
 	 */
-	public static void showDialog(String message) {
+	public static void showDialog(final String message) {
 		JOptionPane.showMessageDialog(frame, message);
 	}
 
@@ -87,7 +87,7 @@ public class WindowUtil {
 	 * @return A string containing input the user entered into the box, or null if the user
 	 *         hit "Cancel" or closed the dialog.
 	 */
-	public static String showInputDialog(String message) {
+	public static String showInputDialog(final String message) {
 		return JOptionPane.showInputDialog(frame, message);
 	}
 
@@ -102,7 +102,7 @@ public class WindowUtil {
 	 *         CANCEL_OPTION - if the "Cancel" option was pressed.
 	 *         DIALOG_CLOSED - if the user closed the dialog.
 	 */
-	public static int showConfirmDialog(String message) {
+	public static int showConfirmDialog(final String message) {
 		return JOptionPane.showConfirmDialog(frame, message);
 	}
 
@@ -123,7 +123,7 @@ public class WindowUtil {
 	 *         CANCEL_OPTION - if the "Cancel" option was pressed.
 	 *         DIALOG_CLOSED - if the dialog was closed without an option being pressed.
 	 */
-	public static int showConfirmDialog(String message, int type) {
+	public static int showConfirmDialog(final String message, final int type) {
 		return JOptionPane.showConfirmDialog(frame, message, "Confirm", type);
 	}
 
@@ -133,7 +133,7 @@ public class WindowUtil {
 	 *
 	 * @param f The JFrame to be positioned.
 	 */
-	public static void position(JFrame f) {
+	public static void position(final JFrame f) {
 		f.setLocationRelativeTo(frame);
 	}
 
@@ -150,14 +150,14 @@ public class WindowUtil {
 	 * Minimizes the window.
 	 */
 	public static void minimizeWindow() {
-		frame.setState(JFrame.ICONIFIED);
+		frame.setState(Frame.ICONIFIED);
 	}
 
 	/**
 	 * Restores the window (if it is minimized).
 	 */
 	public static void restoreWindow() {
-		frame.setState(JFrame.NORMAL);
+		frame.setState(Frame.NORMAL);
 	}
 
 	/**
@@ -165,14 +165,14 @@ public class WindowUtil {
 	 * the "Restore Down" button on Windows when the window is maximized.
 	 */
 	public static void unmaximizeWindow() {
-		frame.setExtendedState(JFrame.NORMAL);
+		frame.setExtendedState(Frame.NORMAL);
 	}
 
 	/**
 	 * Maximizes the window.
 	 */
 	public static void maximizeWindow() {
-		frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
 	}
 
 

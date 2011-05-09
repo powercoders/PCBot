@@ -146,7 +146,7 @@ public class RSInterface extends MethodProvider implements Iterable<RSComponent>
 		if (children != null) {
 			for (final org.rsbot.client.RSInterface child : children) {
 				if (child != null) {
-					if ((child.getMasterX() != -1) && (child.getMasterY() != -1)) {
+					if (child.getMasterX() != -1 && child.getMasterY() != -1) {
 						return new Point(child.getMasterX(), child.getMasterY());
 					}
 				}
@@ -166,7 +166,7 @@ public class RSInterface extends MethodProvider implements Iterable<RSComponent>
 		if (children != null) {
 			for (final org.rsbot.client.RSInterface child : children) {
 				String string;
-				if ((child != null) && ((string = child.getText()) != null)) {
+				if (child != null && (string = child.getText()) != null) {
 					sb.append(string);
 					sb.append("\r\n");
 				}
@@ -187,14 +187,14 @@ public class RSInterface extends MethodProvider implements Iterable<RSComponent>
 		if (getChildrenInternal() == null) {
 			return false;
 		}
-		int idx = getIndex();
-		boolean[] validArray = methods.client.getValidRSInterfaceArray();
+		final int idx = getIndex();
+		final boolean[] validArray = methods.client.getValidRSInterfaceArray();
 		if (idx >= 0 && validArray != null && idx < validArray.length && validArray[idx]) {
-			org.rsbot.client.RSInterface[][] inters = methods.client.getRSInterfaceCache();
+			final org.rsbot.client.RSInterface[][] inters = methods.client.getRSInterfaceCache();
 			if (idx < inters.length && inters[idx] != null) {
-				RSComponent[] children = getComponents();
+				final RSComponent[] children = getComponents();
 				int count = 0;
-				for (RSComponent child : children) {
+				for (final RSComponent child : children) {
 					if (child.getBoundsArrayIndex() == -1) {
 						++count;
 					}
@@ -209,20 +209,24 @@ public class RSInterface extends MethodProvider implements Iterable<RSComponent>
 	 * Iterates over the children of the interface. Will never return null even
 	 * if the underlying interface is null.
 	 */
+	@Override
 	public Iterator<RSComponent> iterator() {
 		return new Iterator<RSComponent>() {
 			private int nextIdx = 0;
 
+			@Override
 			public boolean hasNext() {
-				return !isValid() && (getChildCount() >= nextIdx);
+				return !isValid() && getChildCount() >= nextIdx;
 			}
 
+			@Override
 			public RSComponent next() {
 				final RSComponent child = getComponent(nextIdx);
 				nextIdx++;
 				return child;
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
@@ -240,7 +244,7 @@ public class RSInterface extends MethodProvider implements Iterable<RSComponent>
 			return null;
 		}
 		final org.rsbot.client.RSInterface[][] inters = c.getRSInterfaceCache();
-		if ((inters != null) && (index < inters.length)) {
+		if (inters != null && index < inters.length) {
 			return inters[index];
 		}
 		return null;

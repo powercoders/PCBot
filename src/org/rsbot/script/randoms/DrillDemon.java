@@ -15,6 +15,7 @@ public class DrillDemon extends Random {
 	public int sign3;
 	public int sign4;
 
+	@Override
 	public void onFinish() {
 		sign1 = -1;
 		sign2 = -1;
@@ -34,7 +35,7 @@ public class DrillDemon extends Random {
 		camera.setPitch(true);
 		camera.setCompass('N');
 
-		if (getMyPlayer().isMoving() || (getMyPlayer().getAnimation() != -1)) {
+		if (getMyPlayer().isMoving() || getMyPlayer().getAnimation() != -1) {
 			return random(1900, 2400);
 		}
 
@@ -328,6 +329,6 @@ public class DrillDemon extends Random {
 	                            final int minY) {
 		final int x = getMyPlayer().getLocation().getX();
 		final int y = getMyPlayer().getLocation().getY();
-		return (x >= minX) && (x <= maxX) && (y >= minY) && (y <= maxY);
+		return x >= minX && x <= maxX && y >= minY && y <= maxY;
 	}
 }

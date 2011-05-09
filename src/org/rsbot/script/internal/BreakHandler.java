@@ -15,7 +15,7 @@ public class BreakHandler {
 	private boolean checked = false;
 	private boolean result = false;
 
-	public BreakHandler(Bot bot) {
+	public BreakHandler(final Bot bot) {
 		this.bot = bot;
 	}
 
@@ -42,7 +42,7 @@ public class BreakHandler {
 		}
 		if (nextBreak < 0 || nextBreak - System.currentTimeMillis() < -30000) {
 			ticks = 0;
-			int offset = random(20, 120) * 60000;
+			final int offset = random(20, 120) * 60000;
 			nextBreak = System.currentTimeMillis() + offset;
 			if (random(0, 4) != 0) {
 				breakEnd = nextBreak + random(2, 40) * 60000 + offset / 6;
@@ -56,8 +56,8 @@ public class BreakHandler {
 		return breakEnd - System.currentTimeMillis();
 	}
 
-	private int random(int min, int max) {
-		int n = Math.abs(max - min);
+	private int random(final int min, final int max) {
+		final int n = Math.abs(max - min);
 		return Math.min(min, max) + (n == 0 ? 0 : random.nextInt(n));
 	}
 

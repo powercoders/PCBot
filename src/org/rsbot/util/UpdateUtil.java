@@ -91,10 +91,10 @@ public class UpdateUtil {
 			is = new URL(GlobalConfiguration.Paths.URLs.VERSION).openConnection().getInputStream();
 			isr = new InputStreamReader(is);
 			reader = new BufferedReader(isr);
-			String s = reader.readLine().trim();
+			final String s = reader.readLine().trim();
 			latest = Integer.parseInt(s);
 			return latest;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 		} finally {
 			try {
 				if (is != null) {
@@ -106,7 +106,7 @@ public class UpdateUtil {
 				if (reader != null) {
 					reader.close();
 				}
-			} catch (IOException ioe) {
+			} catch (final IOException ioe) {
 			}
 		}
 		UpdateUtil.log.info("Unable to download latest version information.");

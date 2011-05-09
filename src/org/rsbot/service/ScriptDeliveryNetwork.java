@@ -40,7 +40,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		if (load()) {
 			try {
 				init();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				e.printStackTrace();
 				log.severe("Could not download scripts from the network!");
 			}
@@ -60,17 +60,17 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		String error = "could not load control file";
 
 		try {
-			URL source = new URL(GlobalConfiguration.Paths.URLs.SDN_CONTROL);
+			final URL source = new URL(GlobalConfiguration.Paths.URLs.SDN_CONTROL);
 			final File cache = getChachedFile("control.txt");
 			HttpClient.download(source, cache);
-			BufferedReader reader = new BufferedReader(new FileReader(cache));
+			final BufferedReader reader = new BufferedReader(new FileReader(cache));
 			keys = IniParser.deserialise(reader).get(IniParser.emptySection);
 			reader.close();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			enabled = false;
 		}
 
-		if (keys == null || keys.isEmpty() || (keys.containsKey("enabled") && !parseBool(keys.get("enabled")))) {
+		if (keys == null || keys.isEmpty() || keys.containsKey("enabled") && !parseBool(keys.get("enabled"))) {
 			enabled = false;
 		}
 
@@ -89,7 +89,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		if (keys.containsKey("url")) {
 			try {
 				base = new URL(keys.get("url").replace("%key", getKey()));
-			} catch (MalformedURLException e) {
+			} catch (final MalformedURLException e) {
 			}
 		}
 
@@ -105,26 +105,26 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 	}
 
 	private void init() throws MalformedURLException, IOException {
-		File cache = new File(GlobalConfiguration.Paths.getScriptsNetworkDirectory());
+		final File cache = new File(GlobalConfiguration.Paths.getScriptsNetworkDirectory());
 
 		if (!cache.exists()) {
 			cache.mkdirs();
 		}
 
 		if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.WINDOWS) {
-			String path = "\"" + cache.getAbsolutePath() + "\"";
+			final String path = "\"" + cache.getAbsolutePath() + "\"";
 			try {
 				Runtime.getRuntime().exec("attrib +H " + path);
-			} catch (IOException e) {
+			} catch (final IOException e) {
 			}
 		}
 
 		BufferedReader br, br1;
 		String line, line1;
-		HashMap<String, URL> scripts = new HashMap<String, URL>(64);
+		final HashMap<String, URL> scripts = new HashMap<String, URL>(64);
 
 		final File manifest = getChachedFile("manifest.txt");
-		final HttpURLConnection con = (HttpURLConnection) HttpClient.download(base, manifest);
+		final HttpURLConnection con = HttpClient.download(base, manifest);
 		base = con.getURL();
 		br = new BufferedReader(new FileReader(manifest));
 
@@ -135,7 +135,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			if (pack.exists()) {
 				mod = pack.lastModified();
 			}
-			final HttpURLConnection packCon = (HttpURLConnection) HttpClient.download(packUrl, pack);
+			final HttpURLConnection packCon = HttpClient.download(packUrl, pack);
 			if (pack.lastModified() == mod) {
 				continue;
 			}
@@ -156,7 +156,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 
 	private void sync(final HashMap<String, URL> scripts) {
 		int n = 0;
-		for (String name : scripts.keySet()) {
+		for (final String name : scripts.keySet()) {
 			if (!name.contains("$")) {
 				n++;
 			}
@@ -167,7 +167,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 
 		int created = 0, deleted = 0, updated = 0;
 		final File dir = new File(GlobalConfiguration.Paths.getScriptsNetworkDirectory());
-		ArrayList<File> delete = new ArrayList<File>(64);
+		final ArrayList<File> delete = new ArrayList<File>(64);
 
 		for (final File f : dir.listFiles()) {
 			if (f.getName().endsWith(".class")) {
@@ -175,7 +175,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			}
 		}
 
-		ArrayList<Callable<Collection<Object>>> tasks = new ArrayList<Callable<Collection<Object>>>();
+		final ArrayList<Callable<Collection<Object>>> tasks = new ArrayList<Callable<Collection<Object>>>();
 
 		for (final Entry<String, URL> key : scripts.entrySet()) {
 			final File path = new File(dir, key.getKey());
@@ -188,6 +188,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			}
 			delete.remove(path);
 			tasks.add(new Callable<Collection<Object>>() {
+				@Override
 				public Collection<Object> call() throws Exception {
 					log.fine("Downloading: " + path.getName());
 					HttpClient.download(key.getValue(), path);
@@ -199,10 +200,10 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		}
 
 		final int threads = 2;
-		ExecutorService executorService = Executors.newFixedThreadPool(threads);
+		final ExecutorService executorService = Executors.newFixedThreadPool(threads);
 		try {
 			executorService.invokeAll(tasks);
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
 
@@ -227,7 +228,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		return new File(GlobalConfiguration.Paths.getCacheDirectory(), "sdn-" + name);
 	}
 
-	private boolean parseBool(String mode) {
+	private boolean parseBool(final String mode) {
 		return mode.equals("1") || mode.equalsIgnoreCase("true") || mode.equalsIgnoreCase("yes");
 	}
 
@@ -235,7 +236,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		return key;
 	}
 
-	public void setKey(String key) {
+	public void setKey(final String key) {
 		this.key = key;
 	}
 }

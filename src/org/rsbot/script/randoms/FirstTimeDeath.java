@@ -14,8 +14,8 @@ public class FirstTimeDeath extends Random {
 
 	@Override
 	public boolean activateCondition() {
-		return ((reaper = npcs.getNearest(8869)) != null)
-				|| ((reaper = npcs.getNearest(8870)) != null);
+		return (reaper = npcs.getNearest(8869)) != null
+				|| (reaper = npcs.getNearest(8870)) != null;
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class FirstTimeDeath extends Random {
 		}
 		switch (step) {
 			case 0:
-				RSObject reaperChair = objects.getNearest(45802);
+				final RSObject reaperChair = objects.getNearest(45802);
 				reaperChair.doAction("Talk-to");
 				sleep(random(1000, 1200));
 				if (!interfaces.canContinue()) {
@@ -51,9 +51,9 @@ public class FirstTimeDeath extends Random {
 				break;
 
 			case 1:
-				int portalID = 45803;
-				RSObject portal = objects.getNearest(portalID);
-				RSTile loc = getMyPlayer().getLocation();
+				final int portalID = 45803;
+				final RSObject portal = objects.getNearest(portalID);
+				final RSTile loc = getMyPlayer().getLocation();
 				portal.doAction("Enter");
 				sleep(random(1000, 1200));
 				if (calc.distanceTo(loc) < 10) {

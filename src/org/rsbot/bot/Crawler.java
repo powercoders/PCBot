@@ -17,7 +17,7 @@ class Crawler {
 	private static HashMap<String, String> parameters;
 	private final String world_prefix;
 
-	public Crawler(String root) {
+	public Crawler(final String root) {
 		final String index = firstMatch(
 				"<a id=\"continue\" class=\"barItem\" href=\"([^\"]+)\"\\s+onclick=\"[^\"]+\">Continue to Full Site for News and Game Help",
 				downloadPage(root, null));
@@ -54,7 +54,7 @@ class Crawler {
 
 	private String downloadPage(final String url, final String referer) {
 		try {
-			HttpURLConnection con = GlobalConfiguration.getHttpConnection(new URL(url));
+			final HttpURLConnection con = GlobalConfiguration.getHttpConnection(new URL(url));
 			if (referer != null && !referer.isEmpty()) {
 				con.addRequestProperty("Referer", referer);
 			}
@@ -90,7 +90,7 @@ class Crawler {
 	}
 
 	private String removeTrailingChar(final String str, final char ch) {
-		if ((str == null) || str.isEmpty()) {
+		if (str == null || str.isEmpty()) {
 			return str;
 		} else if (str.length() == 1) {
 			return str.charAt(0) == ch ? "" : str;
