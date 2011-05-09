@@ -1,20 +1,35 @@
 package org.rsbot.loader;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
+import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
+
 import org.rsbot.loader.asm.ClassReader;
 import org.rsbot.loader.script.ModScript;
 import org.rsbot.loader.script.ParseException;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.HttpClient;
-
-import javax.swing.*;
-import java.io.*;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
-import java.util.logging.Logger;
 
 /**
  * @author Jacmob
@@ -27,7 +42,7 @@ public class ClientLoader {
 	private Map<String, byte[]> classes;
 	private int world = nextWorld();
 
-	public void init(URL script, File cache) throws IOException, ParseException {
+	public void init(final URL script, final File cache) throws IOException, ParseException {
 		byte[] data = null;
 		FileInputStream fis = null;
 
@@ -35,41 +50,41 @@ public class ClientLoader {
 			HttpClient.download(script, cache);
 			fis = new FileInputStream(cache);
 			data = load(fis);
-		} catch (IOException ioe) {
+		} catch (final IOException ioe) {
 			log.severe("Could not load ModScript data");
 		} finally {
 			try {
 				if (fis != null) {
 					fis.close();
 				}
-			} catch (IOException ioe1) {
+			} catch (final IOException ioe1) {
 			}
 		}
 
 		this.script = new ModScript(data);
 	}
 
-	public void load(File cache, File version_file) throws IOException {
+	public void load(final File cache, final File version_file) throws IOException {
 		classes = new HashMap<String, byte[]>();
-		int version = script.getVersion();
-		String target = script.getAttribute("target");
+		final int version = script.getVersion();
+		final String target = script.getAttribute("target");
 
 		int cached_version = 0;
 		if (cache.exists() && version_file.exists()) {
-			BufferedReader reader = new BufferedReader(new FileReader(version_file));
+			final BufferedReader reader = new BufferedReader(new FileReader(version_file));
 			cached_version = Integer.parseInt(reader.readLine());
 			reader.close();
 		}
 
 		if (version <= cached_version) {
-			JarFile jar = new JarFile(cache);
+			final JarFile jar = new JarFile(cache);
 
 			checkVersion(jar.getInputStream(jar.getJarEntry("client.class")));
 
 			log.info("Processing client");
-			Enumeration<JarEntry> entries = jar.entries();
+			final Enumeration<JarEntry> entries = jar.entries();
 			while (entries.hasMoreElements()) {
-				JarEntry entry = entries.nextElement();
+				final JarEntry entry = entries.nextElement();
 				String name = entry.getName();
 				if (name.endsWith(".class")) {
 					name = name.substring(0, name.length() - 6).replace('/', '.');
@@ -78,14 +93,14 @@ public class ClientLoader {
 			}
 		} else {
 			log.info("Downloading client: " + target);
-			JarFile loader = getJar(target, true);
-			JarFile client = getJar(target, false);
+			final JarFile loader = getJar(target, true);
+			final JarFile client = getJar(target, false);
 
-			List<String> replace = Arrays.asList(script.getAttribute("replace").split(" "));
+			final List<String> replace = Arrays.asList(script.getAttribute("replace").split(" "));
 
 			Enumeration<JarEntry> entries = client.entries();
 			while (entries.hasMoreElements()) {
-				JarEntry entry = entries.nextElement();
+				final JarEntry entry = entries.nextElement();
 				String name = entry.getName();
 				if (name.endsWith(".class")) {
 					name = name.substring(0, name.length() - 6).replace('/', '.');
@@ -95,7 +110,7 @@ public class ClientLoader {
 
 			entries = loader.entries();
 			while (entries.hasMoreElements()) {
-				JarEntry entry = entries.nextElement();
+				final JarEntry entry = entries.nextElement();
 				String name = entry.getName();
 				if (name.endsWith(".class")) {
 					name = name.substring(0, name.length() - 6).replace('/', '.');
@@ -105,10 +120,10 @@ public class ClientLoader {
 				}
 			}
 
-			FileOutputStream stream = new FileOutputStream(cache);
-			JarOutputStream out = new JarOutputStream(stream);
+			final FileOutputStream stream = new FileOutputStream(cache);
+			final JarOutputStream out = new JarOutputStream(stream);
 
-			for (Map.Entry<String, byte[]> entry : classes.entrySet()) {
+			for (final Map.Entry<String, byte[]> entry : classes.entrySet()) {
 				out.putNextEntry(new JarEntry(entry.getKey() + ".class"));
 				out.write(entry.getValue());
 			}
@@ -122,14 +137,14 @@ public class ClientLoader {
 				client_version = checkVersion(new ByteArrayInputStream(classes.get("client")));
 			} finally {
 				if (client_version != 0) {
-					FileWriter writer = new FileWriter(GlobalConfiguration.Paths.getVersionCache());
+					final FileWriter writer = new FileWriter(GlobalConfiguration.Paths.getVersionCache());
 					writer.write(Integer.toString(client_version));
 					writer.close();
 				}
 			}
 
 			log.info("Processing client");
-			for (Map.Entry<String, byte[]> entry : classes.entrySet()) {
+			for (final Map.Entry<String, byte[]> entry : classes.entrySet()) {
 				entry.setValue(script.process(entry.getKey(), entry.getValue()));
 			}
 
@@ -144,9 +159,9 @@ public class ClientLoader {
 		return script.getAttribute("target");
 	}
 
-	private int checkVersion(InputStream in) throws IOException {
-		ClassReader reader = new ClassReader(in);
-		VersionVisitor vv = new VersionVisitor();
+	private int checkVersion(final InputStream in) throws IOException {
+		final ClassReader reader = new ClassReader(in);
+		final VersionVisitor vv = new VersionVisitor();
 		reader.accept(vv, ClassReader.SKIP_FRAMES);
 		if (vv.getVersion() != script.getVersion()) {
 			JOptionPane.showMessageDialog(
@@ -159,7 +174,7 @@ public class ClientLoader {
 		return vv.getVersion();
 	}
 
-	private JarFile getJar(String target, boolean loader) {
+	private JarFile getJar(final String target, final boolean loader) {
 		while (true) {
 			try {
 				String s = "jar:http://world" + world + "." + target + ".com/";
@@ -168,11 +183,11 @@ public class ClientLoader {
 				} else {
 					s += target + ".jar!/";
 				}
-				URL url = new URL(s);
-				JarURLConnection juc = (JarURLConnection) url.openConnection();
+				final URL url = new URL(s);
+				final JarURLConnection juc = (JarURLConnection) url.openConnection();
 				juc.setConnectTimeout(5000);
 				return juc.getJarFile();
-			} catch (Exception ignored) {
+			} catch (final Exception ignored) {
 				world = nextWorld();
 			}
 		}
@@ -182,9 +197,9 @@ public class ClientLoader {
 		return 1 + new Random().nextInt(169);
 	}
 
-	private byte[] load(InputStream is) throws IOException {
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		byte[] buffer = new byte[4096];
+	private byte[] load(final InputStream is) throws IOException {
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		final byte[] buffer = new byte[4096];
 		int n;
 		while ((n = is.read(buffer)) != -1) {
 			os.write(buffer, 0, n);

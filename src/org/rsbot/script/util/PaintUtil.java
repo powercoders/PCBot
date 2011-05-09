@@ -1,15 +1,14 @@
 package org.rsbot.script.util;
 
-import org.rsbot.script.internal.wrappers.TileFlags;
-import org.rsbot.script.methods.Game;
-import org.rsbot.script.methods.MethodContext;
-import org.rsbot.script.methods.Skills;
-import org.rsbot.script.methods.Web;
-import org.rsbot.script.wrappers.*;
-import org.rsbot.util.GlobalConfiguration;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
@@ -20,12 +19,29 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
+
+import org.rsbot.script.internal.wrappers.TileFlags;
+import org.rsbot.script.methods.Game;
+import org.rsbot.script.methods.MethodContext;
+import org.rsbot.script.methods.Skills;
+import org.rsbot.script.methods.Web;
+import org.rsbot.script.wrappers.RSArea;
+import org.rsbot.script.wrappers.RSGroundItem;
+import org.rsbot.script.wrappers.RSItem;
+import org.rsbot.script.wrappers.RSModel;
+import org.rsbot.script.wrappers.RSNPC;
+import org.rsbot.script.wrappers.RSObject;
+import org.rsbot.script.wrappers.RSPlayer;
+import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.util.GlobalConfiguration;
+
 /**
  * @author Fletch To 99, jtryba
  * @version 1.01
  */
 public class PaintUtil {
-	public PaintUtil(MethodContext context, Graphics render) {
+	public PaintUtil(final MethodContext context, final Graphics render) {
 		ctx = context;
 		g2 = (Graphics2D) render;
 	}
@@ -35,8 +51,8 @@ public class PaintUtil {
 	private final LinkedList<MousePathPoint> mousePath = new LinkedList<MousePathPoint>();
 	private final LinkedList<MouseClick> mouseClick = new LinkedList<MouseClick>();
 	private final LinkedList<MousePicPoint> mousePic = new LinkedList<MousePicPoint>();
-	private MethodContext ctx;
-	private Graphics2D g2;
+	private final MethodContext ctx;
+	private final Graphics2D g2;
 	private BufferedImage img = null;
 
 	private class MousePathPoint extends Point {
@@ -46,10 +62,10 @@ public class PaintUtil {
 			return Math.min(255, Math.max(0, (int) d));
 		}
 
-		private long finishTime;
-		private double lastingTime;
+		private final long finishTime;
+		private final double lastingTime;
 
-		public MousePathPoint(int x, int y, int lastingTime) {
+		public MousePathPoint(final int x, final int y, final int lastingTime) {
 			super(x, y);
 			this.lastingTime = lastingTime;
 			finishTime = System.currentTimeMillis() + lastingTime;
@@ -60,15 +76,15 @@ public class PaintUtil {
 		}
 
 		public double toTime(final double d) {
-			return d * ((finishTime - System.currentTimeMillis()) / lastingTime);
+			return d * (finishTime - System.currentTimeMillis()) / lastingTime;
 		}
 	}
 
 	private class MousePicPoint extends Point {
 		private static final long serialVersionUID = 1L;
-		private long finishTime;
+		private final long finishTime;
 
-		public MousePicPoint(int x, int y, int lastingTime) {
+		public MousePicPoint(final int x, final int y, final int lastingTime) {
 			super(x, y);
 			finishTime = System.currentTimeMillis() + lastingTime;
 		}
@@ -85,10 +101,10 @@ public class PaintUtil {
 			return Math.min(255, Math.max(0, (int) d));
 		}
 
-		private long finishTime;
-		private double lastingTime;
+		private final long finishTime;
+		private final double lastingTime;
 
-		public MouseCirclePathPoint(int x, int y, int lastingTime) {
+		public MouseCirclePathPoint(final int x, final int y, final int lastingTime) {
 			super(x, y);
 			this.lastingTime = lastingTime;
 			finishTime = System.currentTimeMillis() + lastingTime;
@@ -99,7 +115,7 @@ public class PaintUtil {
 		}
 
 		public double toTime(final double d) {
-			return d * ((finishTime - System.currentTimeMillis()) / lastingTime);
+			return d * (finishTime - System.currentTimeMillis()) / lastingTime;
 		}
 	}
 
@@ -110,10 +126,10 @@ public class PaintUtil {
 			return Math.min(255, Math.max(0, (int) d));
 		}
 
-		private long finishTime;
-		private double lastingTime;
+		private final long finishTime;
+		private final double lastingTime;
 
-		public MouseSquarePathPoint(int x, int y, int lastingTime) {
+		public MouseSquarePathPoint(final int x, final int y, final int lastingTime) {
 			super(x, y);
 			this.lastingTime = lastingTime;
 			finishTime = System.currentTimeMillis() + lastingTime;
@@ -124,7 +140,7 @@ public class PaintUtil {
 		}
 
 		public double toTime(final double d) {
-			return d * ((finishTime - System.currentTimeMillis()) / lastingTime);
+			return d * (finishTime - System.currentTimeMillis()) / lastingTime;
 		}
 	}
 
@@ -135,10 +151,10 @@ public class PaintUtil {
 			return Math.min(255, Math.max(0, (int) d));
 		}
 
-		private long finishTime;
+		private final long finishTime;
 		private double lastingTime;
 
-		public MouseClick(int x, int y, int lastingTime) {
+		public MouseClick(final int x, final int y, final int lastingTime) {
 			super(x, y);
 			finishTime = System.currentTimeMillis() + lastingTime;
 		}
@@ -148,7 +164,7 @@ public class PaintUtil {
 		}
 
 		public double toTime() {
-			return 256 * ((finishTime - System.currentTimeMillis()) / lastingTime);
+			return 256 * (finishTime - System.currentTimeMillis()) / lastingTime;
 		}
 	}
 
@@ -163,7 +179,7 @@ public class PaintUtil {
 	public void drawModel(final RSModel model, final Color color, final int alpha) {
 		if (model != null) {
 			g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
-			for (Polygon p1 : model.getTriangles()) {
+			for (final Polygon p1 : model.getTriangles()) {
 				g2.fillPolygon(p1);
 			}
 		}
@@ -178,29 +194,29 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public Image getImage(final String fileName, final boolean save, final String url) {
-		Logger log = Logger.getLogger(this.getClass().getName());
-		File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/image_io");
+		final Logger log = Logger.getLogger(this.getClass().getName());
+		final File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/image_io");
 		try {
 			if (!dir.exists()) {
 				if (!dir.mkdir()) {
 					return null;
 				}
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return null;
 		}
 		ImageIO.setCacheDirectory(dir);
 		if (save) {
 			try {
-				File f = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/" + fileName);
-				File loc = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/");
+				final File f = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/" + fileName);
+				final File loc = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/");
 				if (loc.exists()) {
 					if (f.exists()) {
 						log.info("Successfully loaded Image from scripts folder.");
 						return ImageIO.read(f.toURI().toURL());
 					}
 				}
-				Image img = ImageIO.read(new URL(url));
+				final Image img = ImageIO.read(new URL(url));
 				if (img != null) {
 					if (!loc.exists()) {
 						loc.mkdir();
@@ -209,14 +225,14 @@ public class PaintUtil {
 					log.info("Saved Image to Scripts folder successfully.");
 					return img;
 				}
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				log.severe("No Internet Connection or Broken Image Link");
 			}
 		} else if (!save) {
 			try {
 				return ImageIO.read(new URL(url));
-			} catch (MalformedURLException e) {
-			} catch (IOException e) {
+			} catch (final MalformedURLException e) {
+			} catch (final IOException e) {
 				log.severe("No Internet Connection or Broken Image Link");
 			}
 		}
@@ -241,8 +257,8 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public int getHourly(final int input, final long startTime) {
-		double millis = System.currentTimeMillis() - startTime;
-		return (int) ((input / millis) * 3600000);
+		final double millis = System.currentTimeMillis() - startTime;
+		return (int) (input / millis * 3600000);
 	}
 
 	/**
@@ -303,7 +319,7 @@ public class PaintUtil {
 			g2.drawString("Exp/H: " + getHourly(ctx.skills.getCurrentExp(skill) - startXP, startTime), 60, 409);
 			g2.drawString("Done:  " + amount, 60, 426);
 			g2.drawString("Items/Hr:  " + getHourly(amount, startTime), 60, 444);
-			long ttl = ctx.skills.getTimeTillNextLevel(skill, startXP, System.currentTimeMillis() - startTime);
+			final long ttl = ctx.skills.getTimeTillNextLevel(skill, startXP, System.currentTimeMillis() - startTime);
 			if (ttl != -1) {
 				g2.drawString("Estimated TTL: " + Timer.format(ttl), 10, 40);
 			} else {
@@ -323,7 +339,7 @@ public class PaintUtil {
 			if (isHidden) {
 				g2.fillRect(22, 344, 90, 14);
 			}
-			Rectangle HIDE = new Rectangle(6, 344, 14, 14);
+			final Rectangle HIDE = new Rectangle(6, 344, 14, 14);
 			g2.fillRect(HIDE.x, HIDE.y, HIDE.width, HIDE.height);
 			g2.setColor(Color.black);
 			g2.drawRect(HIDE.x, HIDE.y, HIDE.width, HIDE.height);
@@ -339,7 +355,7 @@ public class PaintUtil {
 	 * @param color The color to inverse.
 	 * @return The inversed color.
 	 */
-	public Color getInverseColor(Color color) {
+	public Color getInverseColor(final Color color) {
 		return new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue());
 	}
 
@@ -360,18 +376,18 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public void drawProgressBar(final int skill, final int x, final int y, final int width, final int height, final Color colorBase, final Color colorOver, final Color textColor, final int alpha) {
-		GradientPaint base = new GradientPaint(x, y, new Color(200, 200, 200, alpha), x, y + height + 3, colorBase);
-		GradientPaint overlay = new GradientPaint(x, y, new Color(200, 200, 200, alpha), x, y + height + 3, colorOver);
+		final GradientPaint base = new GradientPaint(x, y, new Color(200, 200, 200, alpha), x, y + height + 3, colorBase);
+		final GradientPaint overlay = new GradientPaint(x, y, new Color(200, 200, 200, alpha), x, y + height + 3, colorOver);
 		g2.setPaint(base);
 		g2.fillRect(x, y, width, height);
 		g2.setPaint(overlay);
-		g2.fillRect(x, y, (int) (width * (ctx.skills.getPercentToNextLevel(skill) / 100.0)), height);
+		g2.fillRect(x, y, (int) (width * ctx.skills.getPercentToNextLevel(skill) / 100.0), height);
 		g2.setColor(Color.BLACK);
 		g2.drawRect(x, y, width, height);
-		g2.setFont(new Font("Arial", 1, ((width / 35) + (height / 5))));
-		String progress = ctx.skills.getPercentToNextLevel(skill) + "% to " + (ctx.skills.getCurrentLevel(skill) + 1) + " " + Skills.SKILL_NAMES[skill] + " | " + ctx.skills.getExpToNextLevel(skill) + " XP Until level";
+		g2.setFont(new Font("Arial", 1, (width / 35 + height / 5)));
+		final String progress = ctx.skills.getPercentToNextLevel(skill) + "% to " + (ctx.skills.getCurrentLevel(skill) + 1) + " " + Skills.SKILL_NAMES[skill] + " | " + ctx.skills.getExpToNextLevel(skill) + " XP Until level";
 		g2.setColor(new Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), 150));
-		g2.drawString(progress, x + ((width - (g2.getFontMetrics().stringWidth(progress))) / 2), (int) (y + ((g2.getFontMetrics().getHeight() / 2) + (height / 4) * 1.65)));
+		g2.drawString(progress, x + (width - g2.getFontMetrics().stringWidth(progress)) / 2, (int) (y + (g2.getFontMetrics().getHeight() / 2 + height / 4 * 1.65)));
 	}
 
 	/**
@@ -391,14 +407,14 @@ public class PaintUtil {
 	 */
 	public void draw3DProgressBar(final int skill, final int x, final int y, final int width, final int height, final Color color, final Color textColor, final int alpha) {
 		g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
-		g2.fillRect(x - (width / 100), y - (width / 100), width + (width / 40), height + (width / 40));
-		g2.fill3DRect(x, y, (int) (width * (ctx.skills.getPercentToNextLevel(skill) / 100.0)), height, true);
+		g2.fillRect(x - width / 100, y - width / 100, width + width / 40, height + width / 40);
+		g2.fill3DRect(x, y, (int) (width * ctx.skills.getPercentToNextLevel(skill) / 100.0), height, true);
 		g2.setColor(Color.BLACK);
-		g2.drawRect(x - (width / 100), y - (width / 100), width + (width / 40), height + (width / 40));
-		g2.setFont(new Font("Arial", 1, ((width / 35) + (height / 5))));
-		String progress = ctx.skills.getPercentToNextLevel(skill) + "% to " + (ctx.skills.getCurrentLevel(skill) + 1) + " " + Skills.SKILL_NAMES[skill] + " | " + ctx.skills.getExpToNextLevel(skill) + " XP Until level";
+		g2.drawRect(x - width / 100, y - width / 100, width + width / 40, height + width / 40);
+		g2.setFont(new Font("Arial", 1, (width / 35 + height / 5)));
+		final String progress = ctx.skills.getPercentToNextLevel(skill) + "% to " + (ctx.skills.getCurrentLevel(skill) + 1) + " " + Skills.SKILL_NAMES[skill] + " | " + ctx.skills.getExpToNextLevel(skill) + " XP Until level";
 		g2.setColor(new Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), 150));
-		g2.drawString(progress, x + ((width - (g2.getFontMetrics().stringWidth(progress))) / 2), (int) (y + ((g2.getFontMetrics().getHeight() / 2) + (height / 4) * 1.65)));
+		g2.drawString(progress, x + (width - g2.getFontMetrics().stringWidth(progress)) / 2, (int) (y + (g2.getFontMetrics().getHeight() / 2 + height / 4 * 1.65)));
 	}
 
 	/**
@@ -412,8 +428,8 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public void drawMouse(final Color color, final int diameter, final Boolean click, final int lastingTime) {
-		Point m = ctx.mouse.getLocation();
-		Point p = ctx.mouse.getPressLocation();
+		final Point m = ctx.mouse.getLocation();
+		final Point p = ctx.mouse.getPressLocation();
 		g2.setColor(color);
 		g2.drawOval(m.x - 1, m.y - 1, 2, 2);
 		g2.drawOval(m.x - diameter / 2, m.y - diameter / 2, diameter, diameter);
@@ -421,12 +437,12 @@ public class PaintUtil {
 			while (!mouseClick.isEmpty() && mouseClick.peek().isUp()) {
 				mouseClick.remove();
 			}
-			MouseClick click1 = new MouseClick(p.x, p.y, lastingTime);
+			final MouseClick click1 = new MouseClick(p.x, p.y, lastingTime);
 			if (mouseClick.isEmpty() || !mouseClick.getLast().equals(click1)) {
 				mouseClick.add(click1);
 			}
 			MouseClick lastPoint = null;
-			for (MouseClick a : mouseClick) {
+			for (final MouseClick a : mouseClick) {
 				if (lastPoint != null) {
 					g2.setFont(new Font("Airal", 0, 15));
 					g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), a.toColor(a.toTime())));
@@ -444,9 +460,9 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public void drawMouseCrosshair(final Color color) {
-		int gW = ctx.game.getWidth();
-		int gH = ctx.game.getHeight();
-		Point localPoint = ctx.mouse.getLocation();
+		final int gW = ctx.game.getWidth();
+		final int gH = ctx.game.getHeight();
+		final Point localPoint = ctx.mouse.getLocation();
 		g2.setColor(color);
 		g2.drawLine(0, localPoint.y, gW, localPoint.y);
 		g2.drawLine(localPoint.x, 0, localPoint.x, gH);
@@ -460,16 +476,16 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public void drawMouseLine(final Color color, final int lastingTime) {
-		Point m = ctx.mouse.getLocation();
+		final Point m = ctx.mouse.getLocation();
 		while (!mousePath.isEmpty() && mousePath.peek().isUp()) {
 			mousePath.remove();
 		}
-		MousePathPoint mp = new MousePathPoint(m.x, m.y, lastingTime);
+		final MousePathPoint mp = new MousePathPoint(m.x, m.y, lastingTime);
 		if (mousePath.isEmpty() || !mousePath.getLast().equals(mp)) {
 			mousePath.add(mp);
 		}
 		MousePathPoint lastPoint = null;
-		for (MousePathPoint a : mousePath) {
+		for (final MousePathPoint a : mousePath) {
 			if (lastPoint != null) {
 				g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), a.toColor(a.toTime(256))));
 				g2.drawLine(a.x, a.y, lastPoint.x, lastPoint.y);
@@ -487,16 +503,16 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public void drawCircleMouseLine(final Color color, final int lastingTime, final int diameter) {
-		Point m = ctx.mouse.getLocation();
+		final Point m = ctx.mouse.getLocation();
 		while (!mouseCirclePath.isEmpty() && mouseCirclePath.peek().isUp()) {
 			mouseCirclePath.remove();
 		}
-		MouseCirclePathPoint mp = new MouseCirclePathPoint(m.x, m.y, lastingTime);
+		final MouseCirclePathPoint mp = new MouseCirclePathPoint(m.x, m.y, lastingTime);
 		if (mouseCirclePath.isEmpty() || !mouseCirclePath.getLast().equals(mp)) {
 			mouseCirclePath.add(mp);
 		}
 		MouseCirclePathPoint lastPoint = null;
-		for (MouseCirclePathPoint a : mouseCirclePath) {
+		for (final MouseCirclePathPoint a : mouseCirclePath) {
 			if (lastPoint != null) {
 				g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), a.toColor(a.toTime(256))));
 				g2.fillOval(a.x - a.toColor(a.toTime(diameter)) / 2, a.y - a.toColor(a.toTime(diameter)) / 2, a.toColor(a.toTime(diameter)), a.toColor(a.toTime(diameter)));
@@ -515,18 +531,18 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public void drawPicMouseLine(final Image image, final int lastingTime) {
-		int h = image.getHeight(null);
-		int w = image.getWidth(null);
-		Point m = ctx.mouse.getLocation();
+		final int h = image.getHeight(null);
+		final int w = image.getWidth(null);
+		final Point m = ctx.mouse.getLocation();
 		while (!mousePic.isEmpty() && mousePic.peek().isUp()) {
 			mousePic.remove();
 		}
-		MousePicPoint mp = new MousePicPoint(m.x, m.y, lastingTime);
+		final MousePicPoint mp = new MousePicPoint(m.x, m.y, lastingTime);
 		if (mousePic.isEmpty() || !mousePic.getLast().equals(mp)) {
 			mousePic.add(mp);
 		}
 		MousePicPoint lastPoint = null;
-		for (MousePicPoint a : mousePic) {
+		for (final MousePicPoint a : mousePic) {
 			if (lastPoint != null) {
 				g2.drawImage(image, a.x - w / 2, a.y - h / 2, null);
 			}
@@ -544,16 +560,16 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public void drawPicMouseLine(final Image image, final int lastingTime, final int offsetX, final int offsetY) {
-		Point m = ctx.mouse.getLocation();
+		final Point m = ctx.mouse.getLocation();
 		while (!mousePic.isEmpty() && mousePic.peek().isUp()) {
 			mousePic.remove();
 		}
-		MousePicPoint mp = new MousePicPoint(m.x, m.y, lastingTime);
+		final MousePicPoint mp = new MousePicPoint(m.x, m.y, lastingTime);
 		if (mousePic.isEmpty() || !mousePic.getLast().equals(mp)) {
 			mousePic.add(mp);
 		}
 		MousePicPoint lastPoint = null;
-		for (MousePicPoint a : mousePic) {
+		for (final MousePicPoint a : mousePic) {
 			if (lastPoint != null) {
 				g2.drawImage(image, a.x - offsetX, a.y - offsetY, null);
 			}
@@ -570,16 +586,16 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public void drawSquareMouseLine(final Color color, final int lastingTime, final int sideLength) {
-		Point m = ctx.mouse.getLocation();
+		final Point m = ctx.mouse.getLocation();
 		while (!mouseSquarePath.isEmpty() && mouseSquarePath.peek().isUp()) {
 			mouseSquarePath.remove();
 		}
-		MouseSquarePathPoint mp = new MouseSquarePathPoint(m.x, m.y, lastingTime);
+		final MouseSquarePathPoint mp = new MouseSquarePathPoint(m.x, m.y, lastingTime);
 		if (mouseSquarePath.isEmpty() || !mouseSquarePath.getLast().equals(mp)) {
 			mouseSquarePath.add(mp);
 		}
 		MouseSquarePathPoint lastPoint = null;
-		for (MouseSquarePathPoint a : mouseSquarePath) {
+		for (final MouseSquarePathPoint a : mouseSquarePath) {
 			if (lastPoint != null) {
 				g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), a.toColor(a.toTime(256))));
 				g2.fillRect(a.x - a.toColor(a.toTime(sideLength)) / 2, a.y - a.toColor(a.toTime(sideLength)) / 2, a.toColor(a.toTime(sideLength)), a.toColor(a.toTime(sideLength)));
@@ -634,7 +650,7 @@ public class PaintUtil {
 	 * @author Fletch To 99, jtryba
 	 */
 	public void drawNpc(final int npc, final Color color, final int alpha) {
-		RSNPC NPC = ctx.npcs.getNearest(npc);
+		final RSNPC NPC = ctx.npcs.getNearest(npc);
 		if (NPC != null) {
 			drawModel(NPC.getModel(), color, alpha);
 			drawTileMM(NPC.getLocation(), color, alpha);
@@ -650,7 +666,7 @@ public class PaintUtil {
 	 * @author Fletch To 99, jtryba
 	 */
 	public void drawNpc(final int npc, final Color color, final int alpha, final boolean drawModel) {
-		RSNPC NPC = ctx.npcs.getNearest(npc);
+		final RSNPC NPC = ctx.npcs.getNearest(npc);
 		if (NPC != null) {
 			if (drawModel) {
 				drawModel(NPC.getModel(), color, alpha);
@@ -742,11 +758,11 @@ public class PaintUtil {
 		if (ctx.game.getCurrentTab() == Game.TAB_INVENTORY) {
 			g2.setFont(new Font(null, Font.BOLD, 8));
 			g2.setColor(color);
-			RSItem[] curItem = ctx.inventory.getItems();
+			final RSItem[] curItem = ctx.inventory.getItems();
 			for (int i = 0; i < 28; i++) {
 				if (curItem[i].getID() != -1) {
-					Rectangle bounds = curItem[i].getComponent().getArea();
-					String[] name = curItem[i].getName().trim().split(">");
+					final Rectangle bounds = curItem[i].getComponent().getArea();
+					final String[] name = curItem[i].getName().trim().split(">");
 					g2.draw(bounds);
 					g2.drawString(name[1], bounds.x - 5, bounds.y + bounds.height - 5);
 				}
@@ -764,10 +780,10 @@ public class PaintUtil {
 		if (ctx.game.getCurrentTab() == Game.TAB_INVENTORY) {
 			g2.setFont(new Font(null, Font.BOLD, 8));
 			g2.setColor(color);
-			for (RSItem i : ctx.inventory.getItems(items)) {
+			for (final RSItem i : ctx.inventory.getItems(items)) {
 				if (i.getID() != -1) {
-					Rectangle bounds = i.getComponent().getArea();
-					String[] name = i.getName().trim().split(">");
+					final Rectangle bounds = i.getComponent().getArea();
+					final String[] name = i.getName().trim().split(">");
 					g2.draw(bounds);
 					g2.drawString(name[1], bounds.x - 5, bounds.y + bounds.height - 5);
 				}
@@ -783,7 +799,7 @@ public class PaintUtil {
 	 * @author jtryba
 	 */
 	public void drawNearestGroundItem(final int id, final Color color, final int alpha) {
-		RSGroundItem item = ctx.groundItems.getNearest(id);
+		final RSGroundItem item = ctx.groundItems.getNearest(id);
 		if (item != null) {
 			drawTileOnScreen(item.getLocation(), color, alpha);
 			drawTileMM(item.getLocation(), color, alpha);
@@ -813,21 +829,22 @@ public class PaintUtil {
 	 */
 	public void drawGroundItems(final int[] ids, final Color color, final int alpha) {
 		final Filter<RSGroundItem> filter = new Filter<RSGroundItem>() {
-			public boolean accept(RSGroundItem gi) {
+			@Override
+			public boolean accept(final RSGroundItem gi) {
 				return gi != null && gi.getItem() != null && idMatch(gi.getItem().getID());
 			}
 
 			public boolean idMatch(final int id) {
-				for (int i = 0; i < ids.length; i++) {
-					if (ids[i] == id) {
+				for (final int id2 : ids) {
+					if (id2 == id) {
 						return true;
 					}
 				}
 				return false;
 			}
 		};
-		RSGroundItem[] items = ctx.groundItems.getAll(filter);
-		for (RSGroundItem item : items) {
+		final RSGroundItem[] items = ctx.groundItems.getAll(filter);
+		for (final RSGroundItem item : items) {
 			drawTileOnScreen(item.getLocation(), color, alpha);
 			drawTileMM(item.getLocation(), color, alpha);
 		}
@@ -841,16 +858,16 @@ public class PaintUtil {
 	 * @author Fletch To 99
 	 */
 	public void drawTilesMM(final RSTile[] tiles, final Color color) {
-		for (RSTile tile : tiles) {
+		for (final RSTile tile : tiles) {
 			if (tile != null) {
 				final int tX = tile.getX(), tY = tile.getY();
-				Point p1 = ctx.calc.worldToMinimap(tX - 0.4, tY - 0.4);
-				Point p2 = ctx.calc.worldToMinimap(tX - 0.4, tY + 0.4);
-				Point p3 = ctx.calc.worldToMinimap(tX + 0.4, tY + 0.4);
-				Point p4 = ctx.calc.worldToMinimap(tX + 0.4, tY - 0.4);
+				final Point p1 = ctx.calc.worldToMinimap(tX - 0.4, tY - 0.4);
+				final Point p2 = ctx.calc.worldToMinimap(tX - 0.4, tY + 0.4);
+				final Point p3 = ctx.calc.worldToMinimap(tX + 0.4, tY + 0.4);
+				final Point p4 = ctx.calc.worldToMinimap(tX + 0.4, tY - 0.4);
 				if (p1.x != -1 && p2.x != -1 && p3.x != -1 && p4.x != -1) {
-					int[] allX = new int[]{p1.x, p2.x, p3.x, p4.x};
-					int[] allY = new int[]{p1.y, p2.y, p3.y, p4.y};
+					final int[] allX = new int[]{p1.x, p2.x, p3.x, p4.x};
+					final int[] allY = new int[]{p1.y, p2.y, p3.y, p4.y};
 					g2.setColor(color);
 					g2.fillPolygon(allX, allY, 4);
 				}
@@ -868,13 +885,13 @@ public class PaintUtil {
 	public void drawTileMM(final RSTile tile, final Color color, final int alpha) {
 		if (tile != null) {
 			final int tX = tile.getX(), tY = tile.getY();
-			Point p1 = ctx.calc.worldToMinimap(tX - 0.4, tY - 0.4);
-			Point p2 = ctx.calc.worldToMinimap(tX - 0.4, tY + 0.4);
-			Point p3 = ctx.calc.worldToMinimap(tX + 0.4, tY + 0.4);
-			Point p4 = ctx.calc.worldToMinimap(tX + 0.4, tY - 0.4);
+			final Point p1 = ctx.calc.worldToMinimap(tX - 0.4, tY - 0.4);
+			final Point p2 = ctx.calc.worldToMinimap(tX - 0.4, tY + 0.4);
+			final Point p3 = ctx.calc.worldToMinimap(tX + 0.4, tY + 0.4);
+			final Point p4 = ctx.calc.worldToMinimap(tX + 0.4, tY - 0.4);
 			if (p1.x != -1 && p2.x != -1 && p3.x != -1 && p4.x != -1) {
-				int[] allX = new int[]{p1.x, p2.x, p3.x, p4.x};
-				int[] allY = new int[]{p1.y, p2.y, p3.y, p4.y};
+				final int[] allX = new int[]{p1.x, p2.x, p3.x, p4.x};
+				final int[] allY = new int[]{p1.y, p2.y, p3.y, p4.y};
 				g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
 				g2.fillPolygon(allX, allY, 4);
 			}
@@ -890,7 +907,7 @@ public class PaintUtil {
 	 */
 	public void drawTilesOnScreen(final RSTile[] tiles, final Color color, final int alpha) {
 		if (tiles != null) {
-			for (RSTile tile : tiles) {
+			for (final RSTile tile : tiles) {
 				drawTileOnScreen(tile, color, alpha);
 			}
 		}
@@ -904,10 +921,10 @@ public class PaintUtil {
 	 * @author Fletch to 99, jtryba
 	 */
 	public void drawTileOnScreen(final RSTile tile, final Color color, final int alpha) {
-		Point southwest = ctx.calc.tileToScreen(tile, 0, 0, 0);
-		Point southeast = ctx.calc.tileToScreen(tile, 1, 0, 0);
-		Point northwest = ctx.calc.tileToScreen(tile, 0, 1, 0);
-		Point northeast = ctx.calc.tileToScreen(tile, 1, 1, 0);
+		final Point southwest = ctx.calc.tileToScreen(tile, 0, 0, 0);
+		final Point southeast = ctx.calc.tileToScreen(tile, 1, 0, 0);
+		final Point northwest = ctx.calc.tileToScreen(tile, 0, 1, 0);
+		final Point northeast = ctx.calc.tileToScreen(tile, 1, 1, 0);
 		if (ctx.calc.pointOnScreen(southwest) && ctx.calc.pointOnScreen(southeast) && ctx.calc.pointOnScreen(northwest) && ctx.calc.pointOnScreen(northeast)) {
 			g2.setColor(Color.BLACK);
 			g2.drawPolygon(new int[]{(int) northwest.getX(), (int) northeast.getX(), (int) southeast.getX(), (int) southwest.getX()}, new int[]{(int) northwest.getY(), (int) northeast.getY(), (int) southeast.getY(), (int) southwest.getY()}, 4);
@@ -923,8 +940,8 @@ public class PaintUtil {
 	 * @param color Color to draw the RSArea
 	 * @author jtryba
 	 */
-	public void drawRSAreaOnScreen(RSArea area, Color color, final int alpha) {
-		RSTile[] array = area.getTileArray();
+	public void drawRSAreaOnScreen(final RSArea area, final Color color, final int alpha) {
+		final RSTile[] array = area.getTileArray();
 		for (final RSTile tile : array) {
 			if (tile == null) {
 				continue;
@@ -943,8 +960,8 @@ public class PaintUtil {
 	 * @param color Color to draw the RSArea
 	 * @author jtryba
 	 */
-	public void drawRSAreaMM(RSArea area, Color color, final int alpha) {
-		RSTile[] array = area.getTileArray();
+	public void drawRSAreaMM(final RSArea area, final Color color, final int alpha) {
+		final RSTile[] array = area.getTileArray();
 		for (final RSTile tile : array) {
 			if (tile == null) {
 				continue;
@@ -959,9 +976,9 @@ public class PaintUtil {
 	 * @param alpha The opacity of the color.
 	 * @author Fletch To 99
 	 */
-	public void drawWebOnScreen(int alpha) {
-		Collection<TileFlags> tiles = Web.map.values();
-		for (TileFlags t : tiles) {
+	public void drawWebOnScreen(final int alpha) {
+		final Collection<TileFlags> tiles = Web.map.values();
+		for (final TileFlags t : tiles) {
 			if (t != null) {
 				if (t.isWalkable()) {
 					drawTileOnScreen(t, Color.GREEN, alpha);
@@ -980,9 +997,9 @@ public class PaintUtil {
 	 * @param alpha The opacity of the color.
 	 * @author Fletch To 99
 	 */
-	public void drawWebMM(int alpha) {
-		Collection<TileFlags> tiles = Web.map.values();
-		for (TileFlags t : tiles) {
+	public void drawWebMM(final int alpha) {
+		final Collection<TileFlags> tiles = Web.map.values();
+		for (final TileFlags t : tiles) {
 			if (t != null) {
 				if (t.isWalkable()) {
 					drawTileMM(t, Color.GREEN, alpha);

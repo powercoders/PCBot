@@ -16,6 +16,7 @@
 /bin
 /lib/*.jar
 /scripts/*.class
+/temp/*
 /temp.txt
 /build.xml
 /manifest.mf

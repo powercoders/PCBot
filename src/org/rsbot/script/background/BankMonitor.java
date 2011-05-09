@@ -1,14 +1,14 @@
-package org.rsbot.script.passives;
+package org.rsbot.script.background;
 
-import org.rsbot.script.PassiveScript;
-import org.rsbot.script.PassiveScriptManifest;
+import org.rsbot.script.BackgroundScript;
+import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.util.BankCache;
 import org.rsbot.script.wrappers.RSItem;
 
 import java.util.HashMap;
 
-@PassiveScriptManifest(name = "Bank Monitor", authors = {"Timer"})
-public class BankMonitor extends PassiveScript {
+@ScriptManifest(name = "Bank Monitor", authors = {"Timer"})
+public class BankMonitor extends BackgroundScript {
 	private final HashMap<String, Long> updateTimes = new HashMap<String, Long>();
 
 	@Override
@@ -18,9 +18,10 @@ public class BankMonitor extends PassiveScript {
 
 	@Override
 	public int loop() {
-		String accountName = account.getName();
+		sleep(1500);
+		final String accountName = getMyPlayer().getName().trim();
 		if (updateTimes.keySet().contains(accountName.toLowerCase())) {
-			long lastTime = updateTimes.get(accountName.toLowerCase());
+			final long lastTime = updateTimes.get(accountName.toLowerCase());
 			if (System.currentTimeMillis() - lastTime < 30000) {
 				return -1;
 			} else {
@@ -28,10 +29,11 @@ public class BankMonitor extends PassiveScript {
 			}
 		}
 		if (bank.isOpen()) {
-			RSItem[] rsItems = bank.getItems();
+			final RSItem[] rsItems = bank.getItems();
 			try {
 				BankCache.Save(accountName, rsItems);
-			} catch (Exception e) {
+			} catch (final Exception e) {
+				e.printStackTrace();
 			}
 			updateTimes.put(accountName, System.currentTimeMillis());
 		}

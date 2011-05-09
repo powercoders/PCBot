@@ -29,6 +29,7 @@ public class ClassAdapter implements ClassVisitor {
 		this.cv = cv;
 	}
 
+	@Override
 	public void visit(
 			final int version,
 			final int access,
@@ -39,10 +40,12 @@ public class ClassAdapter implements ClassVisitor {
 		cv.visit(version, access, name, signature, superName, interfaces);
 	}
 
+	@Override
 	public void visitSource(final String source, final String debug) {
 		cv.visitSource(source, debug);
 	}
 
+	@Override
 	public void visitOuterClass(
 			final String owner,
 			final String name,
@@ -50,16 +53,19 @@ public class ClassAdapter implements ClassVisitor {
 		cv.visitOuterClass(owner, name, desc);
 	}
 
+	@Override
 	public AnnotationVisitor visitAnnotation(
 			final String desc,
 			final boolean visible) {
 		return cv.visitAnnotation(desc, visible);
 	}
 
+	@Override
 	public void visitAttribute(final Attribute attr) {
 		cv.visitAttribute(attr);
 	}
 
+	@Override
 	public void visitInnerClass(
 			final String name,
 			final String outerName,
@@ -68,6 +74,7 @@ public class ClassAdapter implements ClassVisitor {
 		cv.visitInnerClass(name, outerName, innerName, access);
 	}
 
+	@Override
 	public FieldVisitor visitField(
 			final int access,
 			final String name,
@@ -77,6 +84,7 @@ public class ClassAdapter implements ClassVisitor {
 		return cv.visitField(access, name, desc, signature, value);
 	}
 
+	@Override
 	public MethodVisitor visitMethod(
 			final int access,
 			final String name,
@@ -86,6 +94,7 @@ public class ClassAdapter implements ClassVisitor {
 		return cv.visitMethod(access, name, desc, signature, exceptions);
 	}
 
+	@Override
 	public void visitEnd() {
 		cv.visitEnd();
 	}

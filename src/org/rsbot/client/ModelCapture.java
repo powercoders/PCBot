@@ -20,7 +20,7 @@ public class ModelCapture implements Model {
 	private short[] face_b;
 	private short[] face_c;
 
-	public ModelCapture(Model model) {
+	public ModelCapture(final Model model) {
 		if (model == null) {
 			return;
 		}
@@ -39,26 +39,32 @@ public class ModelCapture implements Model {
 		face_c = Arrays.copyOf(faces, faces.length);
 	}
 
+	@Override
 	public int[] getXPoints() {
 		return vertex_x;
 	}
 
+	@Override
 	public int[] getYPoints() {
 		return vertex_y;
 	}
 
+	@Override
 	public int[] getZPoints() {
 		return vertex_z;
 	}
 
+	@Override
 	public short[] getIndices1() {
 		return face_a;
 	}
 
+	@Override
 	public short[] getIndices2() {
 		return face_b;
 	}
 
+	@Override
 	public short[] getIndices3() {
 		return face_c;
 	}

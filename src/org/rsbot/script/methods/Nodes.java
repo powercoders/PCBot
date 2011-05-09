@@ -10,7 +10,7 @@ import org.rsbot.client.Node;
  */
 public class Nodes extends MethodProvider {
 
-	Nodes(MethodContext ctx) {
+	Nodes(final MethodContext ctx) {
 		super(ctx);
 	}
 
@@ -21,13 +21,13 @@ public class Nodes extends MethodProvider {
 	 */
 	public Node lookup(final HashTable nc, final long id) {
 		try {
-			if ((nc == null) || (nc.getBuckets() == null) || (id < 0)) {
+			if (nc == null || nc.getBuckets() == null || id < 0) {
 				return null;
 			}
 
 			final Node n = nc.getBuckets()[(int) (id & nc.getBuckets().length - 1)];
 			for (Node node = n.getPrevious(); node != n; node = node
-					.getPrevious()) {
+			.getPrevious()) {
 				if (node.getID() == id) {
 					return node;
 				}
@@ -43,7 +43,7 @@ public class Nodes extends MethodProvider {
 	 * @return A <tt>Node</tt> object corresponding to the ID in the loader.
 	 */
 	public Node lookup(final DefLoader loader, final long id) {
-		if ((loader == null) || (loader.getCache() == null)) {
+		if (loader == null || loader.getCache() == null) {
 			return null;
 		}
 		return lookup(loader.getCache().getTable(), id);

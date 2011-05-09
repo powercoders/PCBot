@@ -1,15 +1,15 @@
 package org.rsbot.service;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.util.CacheWriter;
 import org.rsbot.util.GlobalConfiguration;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * The web queue class, passes data to Cache writer.
@@ -46,6 +46,7 @@ public class WebQueue {
 		Web.map.putAll(theFlagsList);
 		final int count = theFlagsList.size();
 		new Thread() {
+			@Override
 			public void run() {
 				try {
 					String addedString = "";
@@ -53,9 +54,9 @@ public class WebQueue {
 					theFlagsList2.putAll(theFlagsList);
 					final Map<RSTile, TileFlags> tl = Collections.unmodifiableMap(theFlagsList2);
 					bufferingCount = bufferingCount + count;
-					Iterator<Map.Entry<RSTile, TileFlags>> tileFlagsIterator = tl.entrySet().iterator();
+					final Iterator<Map.Entry<RSTile, TileFlags>> tileFlagsIterator = tl.entrySet().iterator();
 					while (tileFlagsIterator.hasNext()) {
-						TileFlags tileFlags = tileFlagsIterator.next().getValue();
+						final TileFlags tileFlags = tileFlagsIterator.next().getValue();
 						if (tileFlags != null) {
 							addedString += tileFlags.toString() + "\n";
 							bufferingCount--;
@@ -64,7 +65,7 @@ public class WebQueue {
 								if (!speedBuffer) {
 									Thread.sleep(10);
 								}
-							} catch (InterruptedException ignored) {
+							} catch (final InterruptedException ignored) {
 							}
 						}
 					}
@@ -76,10 +77,10 @@ public class WebQueue {
 					theFlagsList2.clear();
 					try {
 						Thread.sleep(500);//Prevent data loss.
-					} catch (InterruptedException ignored) {
+					} catch (final InterruptedException ignored) {
 					}
 					weAreBuffering = false;
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					bufferingCount = count;
 					if (bufferingCount < 0) {
 						bufferingCount = 0;
@@ -97,6 +98,7 @@ public class WebQueue {
 	 */
 	public static void Remove(final RSTile tile) {
 		new Thread() {
+			@Override
 			public void run() {
 				Web.map.remove(tile);
 				cacheWriter.remove(tile.getX() + "," + tile.getY() + tile.getZ());
@@ -111,6 +113,7 @@ public class WebQueue {
 	 */
 	public static void Remove(final String str) {
 		new Thread() {
+			@Override
 			public void run() {
 				cacheWriter.remove(str);
 			}
@@ -123,7 +126,7 @@ public class WebQueue {
 	 * @return <tt>true</tt> if it's running.
 	 */
 	public static boolean IsRunning() {
-		return cacheWriter.IsRunning();
+		return CacheWriter.IsRunning();
 	}
 
 	/**

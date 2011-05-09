@@ -1,7 +1,7 @@
-package org.rsbot.script.passives;
+package org.rsbot.script.background;
 
-import org.rsbot.script.PassiveScript;
-import org.rsbot.script.PassiveScriptManifest;
+import org.rsbot.script.BackgroundScript;
+import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
@@ -9,21 +9,25 @@ import org.rsbot.service.WebQueue;
 
 import java.util.HashMap;
 
-@PassiveScriptManifest(name = "Web Data Collector", authors = {"Timer"})
-public class WebData extends PassiveScript {
+@ScriptManifest(name = "Web Data Collector", authors = {"Timer"})
+public class WebData extends BackgroundScript {
 	private RSTile lb = null;
+	private int lp = -1;
 	public final HashMap<RSTile, TileFlags> rs_map = new HashMap<RSTile, TileFlags>();
 
 	@Override
 	public boolean activateCondition() {
 		final RSTile curr_base = game.getMapBase();
-		return game.isLoggedIn() && (lb == null || !lb.equals(curr_base));
+		final int curr_plane = game.getPlane();
+		return game.isLoggedIn() && (lb == null || !lb.equals(curr_base)) && (lp == -1 || !(lp == curr_plane));
 	}
 
+	@Override
 	public int loop() {
 		try {
 			final RSTile curr_base = game.getMapBase();
-			if (lb != null && lb.equals(curr_base)) {
+			final int curr_plane = game.getPlane();
+			if (lb != null && lb.equals(curr_base) && (lp != -1 && lp == curr_plane)) {
 				return -1;
 			}
 			rs_map.clear();
@@ -32,23 +36,22 @@ public class WebData extends PassiveScript {
 				return -1;
 			}
 			lb = curr_base;
+			lp = curr_plane;
 			Node t;
-			log("Analyzing new region into your local web.");
-			int plane = game.getPlane();
-			final int flags[][] = walking.getCollisionFlags(plane);
+			final int flags[][] = walking.getCollisionFlags(curr_plane);
 			for (int i = 3; i < 102; i++) {
 				for (int j = 3; j < 102; j++) {
-					RSTile start = new RSTile(curr_base.getX() + i, curr_base.getY() + j, plane);
-					int base_x = game.getBaseX(), base_y = game.getBaseY();
-					int curr_x = start.getX() - base_x, curr_y = start.getY() - base_y;
+					final RSTile start = new RSTile(curr_base.getX() + i, curr_base.getY() + j, curr_plane);
+					final int base_x = game.getBaseX(), base_y = game.getBaseY();
+					final int curr_x = start.getX() - base_x, curr_y = start.getY() - base_y;
 					t = new Node(curr_x, curr_y);
-					RSTile offset = walking.getCollisionOffset(plane);
-					int off_x = offset.getX();
-					int off_y = offset.getY();
-					int x = t.x, y = t.y;
-					int f_x = x - off_x, f_y = y - off_y;
-					int here = flags[f_x][f_y];
-					TileFlags tI = new TileFlags(start, null);
+					final RSTile offset = walking.getCollisionOffset(curr_plane);
+					final int off_x = offset.getX();
+					final int off_y = offset.getY();
+					final int x = t.x, y = t.y;
+					final int f_x = x - off_x, f_y = y - off_y;
+					final int here = flags[f_x][f_y];
+					final TileFlags tI = new TileFlags(start, null);
 					if ((here & TileFlags.Flags.WALL_EAST) != 0) {
 						tI.addKey(TileFlags.Keys.WALL_EAST);
 					}
@@ -87,14 +90,14 @@ public class WebData extends PassiveScript {
 							if (!Web.map.get(start).equals(tI)) {
 								WebQueue.Remove(start);
 							}
-						} catch (NullPointerException ignored) {
+						} catch (final NullPointerException ignored) {
 						}
 					}
 				}
 			}
 			WebQueue.Add(rs_map);
 			return -1;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 		return -1;
@@ -108,7 +111,7 @@ public class WebData extends PassiveScript {
 	private class Node {
 		public int x, y;
 
-		public Node(int x, int y) {
+		public Node(final int x, final int y) {
 			this.x = x;
 			this.y = y;
 		}

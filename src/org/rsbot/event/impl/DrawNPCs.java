@@ -1,5 +1,10 @@
 package org.rsbot.event.impl;
 
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Point;
+
 import org.rsbot.bot.Bot;
 import org.rsbot.client.Node;
 import org.rsbot.client.RSNPCNode;
@@ -7,24 +12,23 @@ import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.wrappers.RSNPC;
 
-import java.awt.*;
-
 public class DrawNPCs implements PaintListener {
 
 	private final MethodContext ctx;
 
-	public DrawNPCs(Bot bot) {
+	public DrawNPCs(final Bot bot) {
 		ctx = bot.getMethodContext();
 	}
 
+	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;
 		}
 
 		final FontMetrics metrics = render.getFontMetrics();
-		for (int element : ctx.client.getRSNPCIndexArray()) {
-			Node node = ctx.nodes.lookup(ctx.client.getRSNPCNC(), element);
+		for (final int element : ctx.client.getRSNPCIndexArray()) {
+			final Node node = ctx.nodes.lookup(ctx.client.getRSNPCNC(), element);
 			if (node == null || !(node instanceof RSNPCNode)) {
 				continue;
 			}

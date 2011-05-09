@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -17,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -29,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+
 import org.rsbot.script.methods.Environment;
 import org.rsbot.util.GlobalConfiguration;
 
@@ -48,20 +51,26 @@ public class BotToolBar extends JToolBar {
 		ICON_BOT = new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_BOT));
 		IMAGE_CLOSE_OVER = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CLOSE);
 	}
-	private JButton userInputButton;
-	private JButton runScriptButton;
-	private ActionListener listener;
+	private final JButton screenshotButton;
+	private final JButton userInputButton;
+	private final JButton runScriptButton;
+	private final ActionListener listener;
 	private int idx;
 	private int inputState = Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE;
 	private boolean inputOverride = true;
 
-	public BotToolBar(ActionListener listener) {
+	public BotToolBar(final ActionListener listener) {
 		try {
 			IMAGE_CLOSE = getTransparentImage(GlobalConfiguration.getResourceURL(GlobalConfiguration.Paths.Resources.ICON_CLOSE), 0.5f);
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 		}
 
 		this.listener = listener;
+
+		screenshotButton = new JButton("Screenshot", new ImageIcon(
+				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PHOTO)));
+		screenshotButton.addActionListener(listener);
+		screenshotButton.setFocusable(false);
 
 		userInputButton = new JButton("Input", new ImageIcon(getInputImage(inputOverride, inputState)));
 		userInputButton.addActionListener(listener);
@@ -72,13 +81,14 @@ public class BotToolBar extends JToolBar {
 		runScriptButton.addActionListener(listener);
 		runScriptButton.setFocusable(false);
 
-		HomeButton home = new HomeButton(ICON_HOME);
+		final HomeButton home = new HomeButton(ICON_HOME);
 
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		setFloatable(false);
 		add(home);
 		add(new AddButton(listener));
 		add(Box.createHorizontalGlue());
+		add(screenshotButton);
 		add(runScriptButton);
 		add(userInputButton);
 
@@ -86,13 +96,13 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void addTab() {
-		int l_idx = getComponentCount() - 4;
+		final int l_idx = getComponentCount() - 4;
 		add(new BotButton("RuneScape", ICON_BOT), l_idx);
 		validate();
 		setSelection(l_idx);
 	}
 
-	public void removeTab(int idx) {
+	public void removeTab(final int idx) {
 		remove(idx);
 		revalidate();
 		repaint();
@@ -105,7 +115,7 @@ public class BotToolBar extends JToolBar {
 		});
 	}
 
-	public void setTabLabel(int idx, String label) {
+	public void setTabLabel(final int idx, final String label) {
 		((BotButton) getComponentAtIndex(idx)).setText(label);
 	}
 
@@ -118,7 +128,7 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public int getScriptButton() {
-		String label = runScriptButton.getText();
+		final String label = runScriptButton.getText();
 		if (label.equals("Run")) {
 			return RUN_SCRIPT;
 		} else if (label.equals("Pause")) {
@@ -130,16 +140,16 @@ public class BotToolBar extends JToolBar {
 		}
 	}
 
-	public void setHome(boolean home) {
+	public void setHome(final boolean home) {
 		userInputButton.setEnabled(!home);
 		runScriptButton.setEnabled(!home);
 	}
 
-	public void setInputState(int state) {
+	public void setInputState(final int state) {
 		inputState = state;
 	}
 
-	public void setOverrideInput(boolean selected) {
+	public void setOverrideInput(final boolean selected) {
 		inputOverride = selected;
 	}
 
@@ -147,7 +157,7 @@ public class BotToolBar extends JToolBar {
 		userInputButton.setIcon(new ImageIcon(getInputImage(inputOverride, inputState)));
 	}
 
-	public void setScriptButton(int state) {
+	public void setScriptButton(final int state) {
 		String text, pathResource;
 
 		if (state == RUN_SCRIPT) {
@@ -168,22 +178,22 @@ public class BotToolBar extends JToolBar {
 		revalidate();
 	}
 
-	private void setSelection(int idx) {
+	private void setSelection(final int idx) {
 		updateSelection(true);
 		this.idx = idx;
 		updateSelection(false);
 		listener.actionPerformed(new ActionEvent(this, 0, "Tab"));
 	}
 
-	private void updateSelection(boolean enabled) {
-		int l_idx = getCurrentTab();
-		if (l_idx >= 0) {
-			getComponent(l_idx).setEnabled(enabled);
-			getComponent(l_idx).repaint();
+	private void updateSelection(final boolean enabled) {
+		final int index = getCurrentTab();
+		if (index >= 0) {
+			getComponent(index).setEnabled(enabled);
+			getComponent(index).repaint();
 		}
 	}
 
-	private Image getInputImage(boolean override, int state) {
+	private Image getInputImage(final boolean override, final int state) {
 		if (override || state == (Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE)) {
 			return GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_TICK);
 		} else if (state == Environment.INPUT_KEYBOARD) {
@@ -201,8 +211,8 @@ public class BotToolBar extends JToolBar {
 			loaded = ImageIO.read(url);
 		} catch (final IOException e) {
 		}
-		BufferedImage aimg = new BufferedImage(loaded.getWidth(), loaded.getHeight(), BufferedImage.TRANSLUCENT);
-		Graphics2D g = aimg.createGraphics();
+		final BufferedImage aimg = new BufferedImage(loaded.getWidth(), loaded.getHeight(), Transparency.TRANSLUCENT);
+		final Graphics2D g = aimg.createGraphics();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
 		g.drawImage(loaded, null, 0, 0);
 		g.dispose();
@@ -215,12 +225,12 @@ public class BotToolBar extends JToolBar {
 	private class HomeButton extends JPanel {
 
 		private static final long serialVersionUID = 938456324328L;
-		private Image image;
+		private final Image image;
 		private boolean hovered;
 
-		public HomeButton(ImageIcon icon) {
+		public HomeButton(final ImageIcon icon) {
 			super(new BorderLayout());
-			this.image = icon.getImage();
+			image = icon.getImage();
 			setBorder(new EmptyBorder(3, 6, 2, 3));
 			setPreferredSize(new Dimension(24, 22));
 			setMaximumSize(new Dimension(24, 22));
@@ -228,18 +238,18 @@ public class BotToolBar extends JToolBar {
 			addMouseListener(new MouseAdapter() {
 
 				@Override
-				public void mouseReleased(MouseEvent e) {
+				public void mouseReleased(final MouseEvent e) {
 					setSelection(getComponentIndex(HomeButton.this));
 				}
 
 				@Override
-				public void mouseEntered(MouseEvent e) {
+				public void mouseEntered(final MouseEvent e) {
 					hovered = true;
 					repaint();
 				}
 
 				@Override
-				public void mouseExited(MouseEvent e) {
+				public void mouseExited(final MouseEvent e) {
 					hovered = false;
 					repaint();
 				}
@@ -247,7 +257,7 @@ public class BotToolBar extends JToolBar {
 		}
 
 		@Override
-		public void paintComponent(Graphics g) {
+		public void paintComponent(final Graphics g) {
 			super.paintComponent(g);
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
@@ -272,11 +282,11 @@ public class BotToolBar extends JToolBar {
 	private class BotButton extends JPanel {
 
 		private static final long serialVersionUID = 329845763420L;
-		private JLabel nameLabel;
+		private final JLabel nameLabel;
 		private boolean hovered;
 		private boolean close;
 
-		public BotButton(String text, Icon icon) {
+		public BotButton(final String text, final Icon icon) {
 			super(new BorderLayout());
 			setBorder(new EmptyBorder(3, 6, 2, 3));
 			nameLabel = new JLabel(text);
@@ -291,9 +301,9 @@ public class BotToolBar extends JToolBar {
 			addMouseListener(new MouseAdapter() {
 
 				@Override
-				public void mouseReleased(MouseEvent e) {
+				public void mouseReleased(final MouseEvent e) {
 					if (hovered && close) {
-						int idx = BotToolBar.this.getComponentIndex(BotButton.this);
+						final int idx = getComponentIndex(BotButton.this);
 						listener.actionPerformed(new ActionEvent(this,
 								ActionEvent.ACTION_PERFORMED, "Close." + idx));
 					} else {
@@ -302,13 +312,13 @@ public class BotToolBar extends JToolBar {
 				}
 
 				@Override
-				public void mouseEntered(MouseEvent e) {
+				public void mouseEntered(final MouseEvent e) {
 					hovered = true;
 					repaint();
 				}
 
 				@Override
-				public void mouseExited(MouseEvent e) {
+				public void mouseExited(final MouseEvent e) {
 					hovered = false;
 					repaint();
 				}
@@ -316,23 +326,23 @@ public class BotToolBar extends JToolBar {
 			addMouseMotionListener(new MouseMotionAdapter() {
 
 				@Override
-				public void mouseMoved(MouseEvent e) {
+				public void mouseMoved(final MouseEvent e) {
 					close = e.getX() > 95;
 					repaint();
 				}
 			});
 		}
 
-		public void setText(String label) {
+		public void setText(final String label) {
 			nameLabel.setText(label);
 		}
 
 		@Override
-		public void paintComponent(Graphics g) {
+		public void paintComponent(final Graphics g) {
 			super.paintComponent(g);
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
-			int RGB = getComponentIndex(this) == idx ? 255 : hovered ? 230 : 215;
+			final int RGB = getComponentIndex(this) == idx ? 255 : hovered ? 230 : 215;
 			g.setColor(new Color(RGB, RGB, RGB, 200));
 			g.fillRoundRect(0, 0, getWidth() - 2, getHeight() - 1, 4, 4);
 			g.setColor(new Color(180, 180, 180, 200));
@@ -369,25 +379,25 @@ public class BotToolBar extends JToolBar {
 			addMouseListener(new MouseAdapter() {
 
 				@Override
-				public void mouseEntered(MouseEvent e) {
+				public void mouseEntered(final MouseEvent e) {
 					hovered = true;
 					repaint();
 				}
 
 				@Override
-				public void mouseExited(MouseEvent e) {
+				public void mouseExited(final MouseEvent e) {
 					hovered = false;
 					repaint();
 				}
 
 				@Override
-				public void mousePressed(MouseEvent e) {
+				public void mousePressed(final MouseEvent e) {
 					pressed = true;
 					repaint();
 				}
 
 				@Override
-				public void mouseReleased(MouseEvent e) {
+				public void mouseReleased(final MouseEvent e) {
 					pressed = false;
 					repaint();
 					listener.actionPerformed(new ActionEvent(this, e.getID(), "File.New Bot"));
@@ -396,7 +406,7 @@ public class BotToolBar extends JToolBar {
 		}
 
 		@Override
-		public void paintComponent(Graphics g) {
+		public void paintComponent(final Graphics g) {
 			super.paintComponent(g);
 			if (pressed) {
 				g.drawImage(ICON_DOWN, 2, 2, null);

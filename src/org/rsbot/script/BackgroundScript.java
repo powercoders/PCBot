@@ -1,18 +1,17 @@
 package org.rsbot.script;
 
+import java.util.EventListener;
+
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Methods;
 
-import java.util.EventListener;
-
 /**
- * A passive script.
+ * A background script.
  *
  * @author Timer
  */
-public abstract class PassiveScript extends Methods implements EventListener, Runnable {
+public abstract class BackgroundScript extends Methods implements EventListener, Runnable {
 	protected String name = "";
-	private volatile boolean enabled = true;
 	private volatile boolean running = false;
 	private int id = -1;
 
@@ -31,34 +30,26 @@ public abstract class PassiveScript extends Methods implements EventListener, Ru
 	}
 
 	@Override
-	public final void init(MethodContext ctx) {
+	public final void init(final MethodContext ctx) {
 		super.init(ctx);
 		onStart();
 	}
 
 	/**
-	 * Sets if it's enabled.
-	 *
-	 * @param enabled Enabled or not.
+	 * Runs the background script.
 	 */
-	public final void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	/**
-	 * Runs the passive script.
-	 */
+	@Override
 	public final void run() {
-		name = getClass().getAnnotation(PassiveScriptManifest.class).name();
+		name = getClass().getAnnotation(ScriptManifest.class).name();
 		ctx.bot.getEventManager().addListener(this);
 		running = true;
 		try {
 			while (running) {
 				if (activateCondition()) {
-					boolean start = onStart();
+					final boolean start = onStart();
 					if (start) {
 						while (running) {
-							int timeOut = loop();
+							final int timeOut = loop();
 							if (timeOut == -1) {
 								break;
 							}
@@ -69,7 +60,7 @@ public abstract class PassiveScript extends Methods implements EventListener, Ru
 				}
 				Thread.sleep(iterationSleep());
 			}
-		} catch (Exception ignored) {
+		} catch (final Exception ignored) {
 		}
 		ctx.bot.getEventManager().removeListener(this);
 		running = false;
@@ -80,11 +71,11 @@ public abstract class PassiveScript extends Methods implements EventListener, Ru
 	 *
 	 * @param id The id to deactivate.
 	 */
-	public final void deactivate(int id) {
+	public final void deactivate(final int id) {
 		if (id != this.id) {
 			throw new IllegalStateException("Invalid id!");
 		}
-		this.running = false;
+		running = false;
 	}
 
 	/**
@@ -92,7 +83,7 @@ public abstract class PassiveScript extends Methods implements EventListener, Ru
 	 *
 	 * @param id The id.
 	 */
-	public final void setID(int id) {
+	public final void setID(final int id) {
 		if (this.id != -1) {
 			throw new IllegalStateException("Already added to pool!");
 		}

@@ -1,11 +1,16 @@
 package org.rsbot.script.internal.wrappers;
 
-import org.rsbot.script.wrappers.RSTile;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.rsbot.script.wrappers.RSTile;
+
+/**
+ * A class that handles flags of tiles.
+ *
+ * @author Timer
+ */
 public class TileFlags extends RSTile {
 	public static interface Keys {
 		static final int TILE_WATER = 1280;
@@ -33,20 +38,20 @@ public class TileFlags extends RSTile {
 		public static final int WATER = 0x1280100;
 	}
 
-	private List<Integer> keys = new ArrayList<Integer>();
+	private final List<Integer> keys = new ArrayList<Integer>();
 
 	public int[] getKeys() {
-		int[] iA = new int[keys.size()];
+		final int[] iA = new int[keys.size()];
 		for (int i = 0; i < keys.size(); i++) {
 			iA[i] = keys.get(i).intValue();
 		}
 		return iA;
 	}
 
-	public TileFlags(RSTile tile, int[] keyz) {
+	public TileFlags(final RSTile tile, final int[] keyz) {
 		super(tile.getX(), tile.getY(), tile.getZ());
 		if (keyz != null) {
-			for (int k : keyz) {
+			for (final int k : keyz) {
 				keys.add(k);
 			}
 		}
@@ -70,7 +75,7 @@ public class TileFlags extends RSTile {
 
 	public boolean containsKey(final int... keyz) {
 		boolean check = false;
-		for (int key : keyz) {
+		for (final int key : keyz) {
 			check = check || keys.contains(key);
 		}
 		return check;
@@ -79,18 +84,18 @@ public class TileFlags extends RSTile {
 	@Override
 	public String toString() {
 		String flags = "";
-		Iterator<Integer> keysIterator = keys.listIterator();
+		final Iterator<Integer> keysIterator = keys.listIterator();
 		while (keysIterator.hasNext()) {
-			int flag = keysIterator.next();
+			final int flag = keysIterator.next();
 			flags += flag + "=";
 		}
 		return getX() + "," + getY() + "," + getZ() + "tile=data" + flags;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (o instanceof TileFlags) {
-			TileFlags tileFlags = (TileFlags) o;
+			final TileFlags tileFlags = (TileFlags) o;
 			return flagsEqual(tileFlags, this);
 		}
 		return false;
@@ -98,9 +103,9 @@ public class TileFlags extends RSTile {
 
 	private static final boolean flagsEqual(final TileFlags c, final TileFlags v) {
 		if (c.keys.size() == v.keys.size()) {
-			Iterator<Integer> keysIterator = c.keys.listIterator();
+			final Iterator<Integer> keysIterator = c.keys.listIterator();
 			while (keysIterator.hasNext()) {
-				int flag = keysIterator.next();
+				final int flag = keysIterator.next();
 				if (!v.keys.contains(flag)) {
 					return false;
 				}

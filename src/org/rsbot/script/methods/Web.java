@@ -3,10 +3,7 @@ package org.rsbot.script.methods;
 import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.wrappers.RSTile;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -17,12 +14,19 @@ import java.util.logging.Logger;
 public class Web extends MethodProvider {
 	public static final HashMap<RSTile, TileFlags> map = new HashMap<RSTile, TileFlags>();
 	public static boolean loaded = false;
-	private Logger log = Logger.getLogger("Web");
+	private final Logger log = Logger.getLogger("Web");
 
 	Web(final MethodContext ctx) {
 		super(ctx);
 	}
 
+	/**
+	 * Generates a path between two nodes.
+	 *
+	 * @param start The starting tile.
+	 * @param end   The ending tile.
+	 * @return The path.
+	 */
 	public RSTile[] generateNodePath(final RSTile start, final RSTile end) {
 		if (start.getZ() != end.getZ()) {
 			log.info("Different planes.");
@@ -32,10 +36,10 @@ public class Web extends MethodProvider {
 			return new RSTile[]{};
 			//return new RSWeb(methods, new WebTile[]{});
 		}
-		HashSet<Node> open = new HashSet<Node>();
-		HashSet<Node> closed = new HashSet<Node>();
+		final HashSet<Node> open = new HashSet<Node>();
+		final HashSet<Node> closed = new HashSet<Node>();
 		Node curr = new Node(start.getX(), start.getY(), start.getZ());
-		Node dest = new Node(end.getX(), end.getY(), end.getZ());
+		final Node dest = new Node(end.getX(), end.getY(), end.getZ());
 		curr.f = Heuristic(curr, dest);
 		open.add(curr);
 		while (!open.isEmpty()) {
@@ -46,9 +50,9 @@ public class Web extends MethodProvider {
 			}
 			open.remove(curr);
 			closed.add(curr);
-			for (Node next : Web.Successors(curr)) {
+			for (final Node next : Web.Successors(curr)) {
 				if (!closed.contains(next)) {
-					double t = curr.g + Dist(curr, next);
+					final double t = curr.g + Dist(curr, next);
 					boolean use_t = false;
 					if (!open.contains(next)) {
 						open.add(next);
@@ -78,7 +82,7 @@ public class Web extends MethodProvider {
 		public Node prev;
 		public double g, f;
 
-		public Node(int x, int y, int z) {
+		public Node(final int x, final int y, final int z) {
 			this.x = x;
 			this.y = y;
 			this.z = z;
@@ -87,13 +91,13 @@ public class Web extends MethodProvider {
 
 		@Override
 		public int hashCode() {
-			return (x << 4) | y;
+			return x << 4 | y;
 		}
 
 		@Override
-		public boolean equals(Object o) {
+		public boolean equals(final Object o) {
 			if (o instanceof Node) {
-				Node n = (Node) o;
+				final Node n = (Node) o;
 				return x == n.x && y == n.y;
 			}
 			return false;
@@ -109,7 +113,14 @@ public class Web extends MethodProvider {
 		}
 	}
 
-	private static double Heuristic(Node start, Node end) {
+	/**
+	 * Gets the heuristic distance.
+	 *
+	 * @param start Start node.
+	 * @param end   End node.
+	 * @return The distance.
+	 */
+	private static double Heuristic(final Node start, final Node end) {
 		double dx = start.x - end.x;
 		double dy = start.y - end.y;
 		if (dx < 0) {
@@ -121,7 +132,14 @@ public class Web extends MethodProvider {
 		return dx < dy ? dy : dx;
 	}
 
-	private static double Dist(Node start, Node end) {
+	/**
+	 * The distance between two tiles.
+	 *
+	 * @param start The start tile.
+	 * @param end   The end tile.
+	 * @return The distance.
+	 */
+	private static double Dist(final Node start, final Node end) {
 		if (start.x != end.x && start.y != end.y) {
 			return 1.41421356;
 		} else {
@@ -129,9 +147,15 @@ public class Web extends MethodProvider {
 		}
 	}
 
-	private static Node Lowest_f(Set<Node> open) {
+	/**
+	 * Gets the lowest f score of a set.
+	 *
+	 * @param open The set.
+	 * @return The node that has the lowest f score.
+	 */
+	private static Node Lowest_f(final Set<Node> open) {
 		Node best = null;
-		for (Node t : open) {
+		for (final Node t : open) {
 			if (best == null || t.f < best.f) {
 				best = t;
 			}
@@ -139,8 +163,14 @@ public class Web extends MethodProvider {
 		return best;
 	}
 
-	private static RSTile[] Path(Node end) {
-		LinkedList<RSTile> path = new LinkedList<RSTile>();
+	/**
+	 * Constructs a path from a node.
+	 *
+	 * @param end The end node.
+	 * @return The constructed path.
+	 */
+	private static RSTile[] Path(final Node end) {
+		final LinkedList<RSTile> path = new LinkedList<RSTile>();
 		Node p = end;
 		while (p != null) {
 			path.addFirst(p.toRSTile());
@@ -149,59 +179,82 @@ public class Web extends MethodProvider {
 		return path.toArray(new RSTile[path.size()]);
 	}
 
-	private static java.util.List<Node> Successors(Node t) {
-		LinkedList<Node> tiles = new LinkedList<Node>();
-		int x = t.x, y = t.y;
+	/**
+	 * Gets successors of a tile.
+	 *
+	 * @param t The node.
+	 * @return The nodes.
+	 */
+	private static List<Node> Successors(final Node t) {
+		final LinkedList<Node> tiles = new LinkedList<Node>();
+		final int x = t.x, y = t.y;
 		final RSTile here = t.toRSTile();
-		if (!Flag(here, TileFlags.Keys.WALL_SOUTH) && !Flag(new RSTile(here.getX(), here.getY() - 1), TileFlags.Keys.BLOCKED)) {
+		if (!Flag(here, TileFlags.Keys.WALL_SOUTH) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER)) {
 			tiles.add(new Node(x, y - 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileFlags.Keys.WALL_WEST) && !Flag(new RSTile(here.getX() - 1, here.getY()), TileFlags.Keys.BLOCKED)) {
+		if (!Flag(here, TileFlags.Keys.WALL_WEST) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER)) {
 			tiles.add(new Node(x - 1, y, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileFlags.Keys.WALL_NORTH) && !Flag(new RSTile(here.getX(), here.getY() + 1), TileFlags.Keys.BLOCKED)) {
+		if (!Flag(here, TileFlags.Keys.WALL_NORTH) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER)) {
 			tiles.add(new Node(x, y + 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileFlags.Keys.WALL_EAST) && !Flag(new RSTile(here.getX() + 1, here.getY()), TileFlags.Keys.BLOCKED)) {
+		if (!Flag(here, TileFlags.Keys.WALL_EAST) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER)) {
 			tiles.add(new Node(x + 1, y, t.toRSTile().getZ()));
 		}
 		if (!Flag(here, TileFlags.Keys.WALL_SOUTH_WEST, TileFlags.Keys.WALL_SOUTH, TileFlags.Keys.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY() - 1), TileFlags.Keys.BLOCKED) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_SOUTH)) {
+				!Flag(new RSTile(here.getX() - 1, here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_WEST) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_SOUTH)) {
 			tiles.add(new Node(x - 1, y - 1, t.toRSTile().getZ()));
 		}
 		if (!Flag(here, TileFlags.Keys.WALL_NORTH_WEST, TileFlags.Keys.WALL_NORTH, TileFlags.Keys.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY() + 1), TileFlags.Keys.BLOCKED) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_NORTH)) {
+				!Flag(new RSTile(here.getX() - 1, here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_WEST) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_NORTH)) {
 			tiles.add(new Node(x - 1, y + 1, t.toRSTile().getZ()));
 		}
 		if (!Flag(here, TileFlags.Keys.WALL_SOUTH_EAST, TileFlags.Keys.WALL_SOUTH, TileFlags.Keys.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY() - 1), TileFlags.Keys.BLOCKED) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_SOUTH)) {
+				!Flag(new RSTile(here.getX() + 1, here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_EAST) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_SOUTH)) {
 			tiles.add(new Node(x + 1, y - 1, t.toRSTile().getZ()));
 		}
 		if (!Flag(here, TileFlags.Keys.WALL_NORTH_EAST, TileFlags.Keys.WALL_NORTH, TileFlags.Keys.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY() + 1), TileFlags.Keys.BLOCKED) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.WALL_NORTH)) {
+				!Flag(new RSTile(here.getX() + 1, here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_EAST) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_NORTH)) {
 			tiles.add(new Node(x + 1, y + 1, t.toRSTile().getZ()));
 		}
 		return tiles;
 	}
 
-	private TileFlags getTileFlags(final RSTile tile) {
+	/**
+	 * Gets the TileFlags of a tile.
+	 *
+	 * @param tile The tile.
+	 * @return The <code>TileFlags</code>.
+	 */
+	public static TileFlags getTileFlags(final RSTile tile) {
 		if (Web.map.containsKey(tile)) {
 			return Web.map.get(tile);
 		}
 		return null;
 	}
 
-	private static boolean Flag(final RSTile tile, final int... key) {
+	/**
+	 * Checks the flags of a tile.
+	 *
+	 * @param tile The tile to check.
+	 * @param key  Keys to look for.
+	 * @return <tt>true</tt> if the tile contains flags.
+	 */
+	public static boolean Flag(final RSTile tile, final int... key) {
 		if (Web.map.containsKey(tile)) {
-			TileFlags theTile = Web.map.get(tile);
+			final TileFlags theTile = Web.map.get(tile);
 			return theTile.containsKey(key);
 		}
 		return false;

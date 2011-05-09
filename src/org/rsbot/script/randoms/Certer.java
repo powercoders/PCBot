@@ -24,6 +24,7 @@ public class Certer extends Random {
 	private boolean readyToLeave = false;
 	private int failCount = 0;
 
+	@Override
 	public void onFinish() {
 		failCount = 0;
 		readyToLeave = false;
@@ -55,7 +56,7 @@ public class Certer extends Random {
 		}
 
 		if (readyToLeave) {
-			int PORTAL_ID = 11368;
+			final int PORTAL_ID = 11368;
 			final RSObject portal = objects.getNearest(PORTAL_ID);
 			if (portal != null) {
 				final RSTile portalLocation = portal.getLocation();
@@ -71,7 +72,7 @@ public class Certer extends Random {
 
 		if (interfaces.getComponent(184, 0).isValid()) {
 			final int modelID = interfaces.getComponent(184, 8).getComponents()[3]
-					.getModelID();
+			                                                                    .getModelID();
 			String itemName = null;
 			for (int i = 0; i < MODEL_IDS.length; i++) {
 				if (MODEL_IDS[i] == modelID) {
@@ -91,7 +92,7 @@ public class Certer extends Random {
 
 			for (int j = 0; j < 3; j++) {
 				final RSComponent iface = interfaces.getComponent(184, 8)
-						.getComponents()[j];
+				.getComponents()[j];
 				if (iface.containsText(itemName)) {
 					iface.doClick();
 					return random(1000, 1200);
