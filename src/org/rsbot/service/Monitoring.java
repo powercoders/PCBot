@@ -49,6 +49,8 @@ public class Monitoring {
 		pushState(Type.ENVIRONMENT, "VERSION", Integer.toString(GlobalConfiguration.getVersion()));
 		pushState(Type.ENVIRONMENT, "OS", GlobalConfiguration.getCurrentOperatingSystem().toString());
 		pushState(Type.ENVIRONMENT, "JAR", Boolean.toString(GlobalConfiguration.RUNNING_FROM_JAR));
+		pushState(Type.ENVIRONMENT, "GIT", Boolean.toString(new File(GlobalConfiguration.Paths.ROOT, ".git").exists()));
+		pushState(Type.ENVIRONMENT, "SVN", Boolean.toString(new File(GlobalConfiguration.Paths.ROOT, ".svn").exists()));
 	}
 
 	public static void stop() {
