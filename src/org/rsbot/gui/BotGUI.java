@@ -43,6 +43,7 @@ import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.ScreenshotUtil;
+import org.rsbot.util.ScriptDownloader;
 import org.rsbot.util.UpdateUtil;
 
 /**
@@ -134,6 +135,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 			} else if (option.equals("Close Bot")) {
 				if (confirmRemoveBot()) {
 					removeBot(getCurrentBot());
+				}
+			} else if (option.equals("Add Script")) {
+				final String pretext = "";
+				final String key = (String) JOptionPane.showInputDialog(this, "Enter the script URL (e.g. pastebin link):",
+						option, JOptionPane.QUESTION_MESSAGE, null, null, pretext);
+				if (!(key == null || key.trim().isEmpty())) {
+					ScriptDownloader.save(key);
 				}
 			} else if (option.equals("Run Script")) {
 				final Bot current = getCurrentBot();

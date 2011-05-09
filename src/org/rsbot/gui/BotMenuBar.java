@@ -91,7 +91,7 @@ public class BotMenuBar extends JMenuBar {
 		ELEMENTS = new String[][]{
 				{"New Bot", "Close Bot", "-",
 					/*"Service Key", "-",*/
-					"Run Script", "Stop Script", "Pause Script", "-",
+					"Add Script", "Run Script", "Stop Script", "Pause Script", "-",
 					"Save Screenshot", "-",
 				"Exit"},
 				{"Accounts", "-",
@@ -140,6 +140,7 @@ public class BotMenuBar extends JMenuBar {
 		final HashMap<String, String> map = new HashMap<String, String>(16);
 		map.put("New Bot", GlobalConfiguration.Paths.Resources.ICON_APPADD);
 		map.put("Close Bot", GlobalConfiguration.Paths.Resources.ICON_APPDELETE);
+		map.put("Add Script", GlobalConfiguration.Paths.Resources.ICON_SCRIPT_ADD);
 		map.put("Run Script", GlobalConfiguration.Paths.Resources.ICON_PLAY);
 		map.put("Stop Script", GlobalConfiguration.Paths.Resources.ICON_DELETE);
 		map.put("Pause Script", GlobalConfiguration.Paths.Resources.ICON_PAUSE);
