@@ -18,6 +18,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -38,14 +40,11 @@ import org.rsbot.util.GlobalConfiguration;
 public class BotToolBar extends JToolBar {
 
 	private static final long serialVersionUID = -1861866523519184211L;
-
 	public static final int RUN_SCRIPT = 0;
 	public static final int PAUSE_SCRIPT = 1;
 	public static final int RESUME_SCRIPT = 2;
-
 	public static final ImageIcon ICON_HOME;
 	public static final ImageIcon ICON_BOT;
-
 	public static Image IMAGE_CLOSE;
 	public static final Image IMAGE_CLOSE_OVER;
 
@@ -54,11 +53,9 @@ public class BotToolBar extends JToolBar {
 		ICON_BOT = new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_BOT));
 		IMAGE_CLOSE_OVER = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CLOSE);
 	}
-
 	private final JButton screenshotButton;
 	private final JButton userInputButton;
 	private final JButton runScriptButton;
-
 	private final ActionListener listener;
 	private int idx;
 	private int inputState = Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE;
@@ -101,10 +98,10 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void addTab() {
-		final int idx = getComponentCount() - 4;
-		add(new BotButton("RuneScape", ICON_BOT), idx);
+		final int l_idx = getComponentCount() - 4;
+		add(new BotButton("RuneScape", ICON_BOT), l_idx);
 		validate();
-		setSelection(idx);
+		setSelection(l_idx);
 	}
 
 	public void removeTab(final int idx) {
@@ -112,6 +109,7 @@ public class BotToolBar extends JToolBar {
 		revalidate();
 		repaint();
 		SwingUtilities.invokeLater(new Runnable() {
+
 			@Override
 			public void run() {
 				setSelection(0);
@@ -176,9 +174,12 @@ public class BotToolBar extends JToolBar {
 		} else {
 			throw new IllegalArgumentException("Illegal button state: " + state + "!");
 		}
-
+		Image image = GlobalConfiguration.getImage(pathResource);
+		while (image == null) {
+			image = GlobalConfiguration.getImage(pathResource);
+		}
 		runScriptButton.setText(text);
-		runScriptButton.setIcon(new ImageIcon(GlobalConfiguration.getImage(pathResource)));
+		runScriptButton.setIcon(new ImageIcon(image));
 		revalidate();
 	}
 
@@ -190,10 +191,10 @@ public class BotToolBar extends JToolBar {
 	}
 
 	private void updateSelection(final boolean enabled) {
-		final int idx = getCurrentTab();
-		if (idx >= 0) {
-			getComponent(idx).setEnabled(enabled);
-			getComponent(idx).repaint();
+		final int index = getCurrentTab();
+		if (index >= 0) {
+			getComponent(index).setEnabled(enabled);
+			getComponent(index).repaint();
 		}
 	}
 
@@ -229,7 +230,6 @@ public class BotToolBar extends JToolBar {
 	private class HomeButton extends JPanel {
 
 		private static final long serialVersionUID = 938456324328L;
-
 		private final Image image;
 		private boolean hovered;
 
@@ -241,6 +241,7 @@ public class BotToolBar extends JToolBar {
 			setMaximumSize(new Dimension(24, 22));
 			setFocusable(false);
 			addMouseListener(new MouseAdapter() {
+
 				@Override
 				public void mouseReleased(final MouseEvent e) {
 					setSelection(getComponentIndex(HomeButton.this));
@@ -278,7 +279,6 @@ public class BotToolBar extends JToolBar {
 			}
 			g.drawImage(image, 3, 3, null);
 		}
-
 	}
 
 	/**
@@ -287,7 +287,6 @@ public class BotToolBar extends JToolBar {
 	private class BotButton extends JPanel {
 
 		private static final long serialVersionUID = 329845763420L;
-
 		private final JLabel nameLabel;
 		private boolean hovered;
 		private boolean close;
@@ -305,6 +304,7 @@ public class BotToolBar extends JToolBar {
 			setMaximumSize(new Dimension(110, 22));
 			setFocusable(false);
 			addMouseListener(new MouseAdapter() {
+
 				@Override
 				public void mouseReleased(final MouseEvent e) {
 					if (hovered && close) {
@@ -329,6 +329,7 @@ public class BotToolBar extends JToolBar {
 				}
 			});
 			addMouseMotionListener(new MouseMotionAdapter() {
+
 				@Override
 				public void mouseMoved(final MouseEvent e) {
 					close = e.getX() > 95;
@@ -358,7 +359,6 @@ public class BotToolBar extends JToolBar {
 	private static class AddButton extends JComponent {
 
 		private static final long serialVersionUID = 1L;
-
 		private static Image ICON;
 		private static Image ICON_OVER;
 		private static final Image ICON_DOWN;
@@ -382,6 +382,7 @@ public class BotToolBar extends JToolBar {
 			setMaximumSize(new Dimension(20, 20));
 			setFocusable(false);
 			addMouseListener(new MouseAdapter() {
+
 				@Override
 				public void mouseEntered(final MouseEvent e) {
 					hovered = true;
@@ -420,7 +421,5 @@ public class BotToolBar extends JToolBar {
 				g.drawImage(ICON, 2, 2, null);
 			}
 		}
-
 	}
-
 }
