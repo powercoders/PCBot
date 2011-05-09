@@ -1,16 +1,23 @@
 package org.rsbot.loader.script;
 
-import org.rsbot.loader.asm.ClassAdapter;
-import org.rsbot.loader.asm.ClassReader;
-import org.rsbot.loader.asm.ClassVisitor;
-import org.rsbot.loader.asm.ClassWriter;
-import org.rsbot.loader.script.adapter.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.rsbot.loader.asm.ClassAdapter;
+import org.rsbot.loader.asm.ClassReader;
+import org.rsbot.loader.asm.ClassVisitor;
+import org.rsbot.loader.asm.ClassWriter;
+import org.rsbot.loader.script.adapter.AddFieldAdapter;
+import org.rsbot.loader.script.adapter.AddGetterAdapter;
+import org.rsbot.loader.script.adapter.AddInterfaceAdapter;
+import org.rsbot.loader.script.adapter.AddMethodAdapter;
+import org.rsbot.loader.script.adapter.InsertCodeAdapter;
+import org.rsbot.loader.script.adapter.OverrideClassAdapter;
+import org.rsbot.loader.script.adapter.SetSignatureAdapter;
+import org.rsbot.loader.script.adapter.SetSuperAdapter;
 
 /**
  * @author Jacmob

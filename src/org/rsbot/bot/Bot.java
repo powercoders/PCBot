@@ -1,5 +1,14 @@
 package org.rsbot.bot;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Constructor;
+import java.util.EventListener;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.rsbot.Application;
 import org.rsbot.client.Client;
 import org.rsbot.client.input.Canvas;
@@ -16,13 +25,6 @@ import org.rsbot.script.internal.InputManager;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.methods.Environment;
 import org.rsbot.script.methods.MethodContext;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.lang.reflect.Constructor;
-import java.util.EventListener;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class Bot {
 	private String account;

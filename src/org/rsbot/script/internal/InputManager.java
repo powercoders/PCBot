@@ -1,13 +1,13 @@
 package org.rsbot.script.internal;
 
-import org.rsbot.bot.Bot;
-import org.rsbot.client.Client;
-import org.rsbot.client.input.Canvas;
-
 import java.applet.Applet;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+
+import org.rsbot.bot.Bot;
+import org.rsbot.client.Client;
+import org.rsbot.client.input.Canvas;
 
 public class InputManager {
 
@@ -186,22 +186,22 @@ public class InputManager {
 		if (!isOnCanvas(thisX, thisY)) {
 			// on which side of canvas should it enter
 			switch (side) {
-				case 1:
-					thisX = -1;
-					thisY = random(0, bot.getCanvas().getHeight());
-					break;
-				case 2:
-					thisX = random(0, bot.getCanvas().getWidth());
-					thisY = bot.getCanvas().getHeight() + 1;
-					break;
-				case 3:
-					thisX = bot.getCanvas().getWidth() + 1;
-					thisY = random(0, bot.getCanvas().getHeight());
-					break;
-				case 4:
-					thisX = random(0, bot.getCanvas().getWidth());
-					thisY = -1;
-					break;
+			case 1:
+				thisX = -1;
+				thisY = random(0, bot.getCanvas().getHeight());
+				break;
+			case 2:
+				thisX = random(0, bot.getCanvas().getWidth());
+				thisY = bot.getCanvas().getHeight() + 1;
+				break;
+			case 3:
+				thisX = bot.getCanvas().getWidth() + 1;
+				thisY = random(0, bot.getCanvas().getHeight());
+				break;
+			case 4:
+				thisX = random(0, bot.getCanvas().getWidth());
+				thisY = -1;
+				break;
 			}
 		}
 		windMouse(speed, thisX, thisY, random(x, x + randomX), random(y, y + randomY));

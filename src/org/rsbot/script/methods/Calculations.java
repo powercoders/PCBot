@@ -1,12 +1,12 @@
 package org.rsbot.script.methods;
 
+import java.awt.Point;
+
 import org.rsbot.client.TileData;
 import org.rsbot.script.wrappers.RSCharacter;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSTile;
-
-import java.awt.*;
 
 /**
  * Game world and projection calculations.
@@ -121,7 +121,7 @@ public class Calculations extends MethodProvider {
 	@Override
 	public double random(final double min, final double max) {
 		return Math.min(min, max) + methods.random.nextDouble()
-				* Math.abs(max - min);
+		* Math.abs(max - min);
 	}
 
 	/**
@@ -395,8 +395,8 @@ public class Calculations extends MethodProvider {
 					final int x2 = x & 512 - 1;
 					final int y2 = y & 512 - 1;
 					final int start_h = heights[x1][y1] * (512 - x2) + heights[x1 + 1][y1] * x2 >> 9;
-					final int end_h = heights[x1][1 + y1] * (512 - x2) + heights[x1 + 1][y1 + 1] * x2 >> 9;
-					return start_h * (512 - y2) + end_h * y2 >> 9;
+			final int end_h = heights[x1][1 + y1] * (512 - x2) + heights[x1 + 1][y1 + 1] * x2 >> 9;
+		return start_h * (512 - y2) + end_h * y2 >> 9;
 				}
 			}
 		}
@@ -424,7 +424,7 @@ public class Calculations extends MethodProvider {
 			final int _y = (int) (render.yMultiplier * ((int) renderData.yOff + (int) (renderData.yX * x + renderData.yY
 					* z + renderData.yZ * y)) / _z);
 			if (_x >= render.absoluteX1 && _x <= render.absoluteX2 && _y >= render.absoluteY1 && _y <=
-					render.absoluteY2) {
+				render.absoluteY2) {
 				if (methods.game.isFixed()) {
 					return new Point((int) (_x - render.absoluteX1) + 4, (int) (_y - render.absoluteY1) + 4);
 				} else {
@@ -480,7 +480,7 @@ public class Calculations extends MethodProvider {
 	 *         valid path to the destination was found.
 	 */
 	private int dijkstraDist(final int startX, final int startY, final int destX, final int destY,
-	                         final boolean isObject) {
+			final boolean isObject) {
 		final int[][] prev = new int[104][104];
 		final int[][] dist = new int[104][104];
 		final int[] path_x = new int[4000];
@@ -548,7 +548,7 @@ public class Calculations extends MethodProvider {
 			// south west
 			if (curr_x > 0 && curr_y > 0 && prev[curr_x - 1][curr_y - 1] == 0 && (blocks[curr_x][curr_y] &
 					0x128010e) == 0 && (blocks[curr_x][curr_y + 1] & 0x1280108) == 0 && (blocks[curr_x +
-					1][curr_y] & 0x1280102) == 0) {
+					                                                                            1][curr_y] & 0x1280102) == 0) {
 				path_x[path_ptr] = curr_x - 1;
 				path_y[path_ptr] = curr_y - 1;
 				path_ptr = (path_ptr + 1) % pathLength;
@@ -557,7 +557,7 @@ public class Calculations extends MethodProvider {
 			}
 			// north west
 			if (curr_x > 0 && curr_y < 104 - 1 && prev[curr_x - 1][curr_y + 1] == 0 && (blocks[curr_x][curr_y + 2] & 0x1280138) == 0 && (blocks[curr_x][curr_y + 1] & 0x1280108) ==
-					0 && (blocks[curr_x + 1][curr_y + 2] & 0x1280120) == 0) {
+				0 && (blocks[curr_x + 1][curr_y + 2] & 0x1280120) == 0) {
 				path_x[path_ptr] = curr_x - 1;
 				path_y[path_ptr] = curr_y + 1;
 				path_ptr = (path_ptr + 1) % pathLength;
@@ -566,7 +566,7 @@ public class Calculations extends MethodProvider {
 			}
 			// south east
 			if (curr_x < 104 - 1 && curr_y > 0 && prev[curr_x + 1][curr_y - 1] == 0 && (blocks[curr_x +
-					2][curr_y] & 0x1280183) == 0 && (blocks[curr_x + 2][curr_y + 1] & 0x1280180) == 0 && (blocks[curr_x + 1][curr_y] & 0x1280102) == 0) {
+			                                                                                   2][curr_y] & 0x1280183) == 0 && (blocks[curr_x + 2][curr_y + 1] & 0x1280180) == 0 && (blocks[curr_x + 1][curr_y] & 0x1280102) == 0) {
 				path_x[path_ptr] = curr_x + 1;
 				path_y[path_ptr] = curr_y - 1;
 				path_ptr = (path_ptr + 1) % pathLength;
@@ -575,7 +575,7 @@ public class Calculations extends MethodProvider {
 			}
 			// north east
 			if (curr_x < 104 - 1 && curr_y < 104 - 1 && prev[curr_x + 1][curr_y + 1] == 0 && (blocks[curr_x
-					+ 2][curr_y + 2] & 0x12801e0) == 0 && (blocks[curr_x + 2][curr_y + 1] & 0x1280180) == 0 && (blocks[curr_x + 1][curr_y + 2] & 0x1280120) == 0) {
+			                                                                                         + 2][curr_y + 2] & 0x12801e0) == 0 && (blocks[curr_x + 2][curr_y + 1] & 0x1280180) == 0 && (blocks[curr_x + 1][curr_y + 2] & 0x1280120) == 0) {
 				path_x[path_ptr] = curr_x + 1;
 				path_y[path_ptr] = curr_y + 1;
 				path_ptr = (path_ptr + 1) % pathLength;

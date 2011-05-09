@@ -1,12 +1,6 @@
 package org.rsbot.gui;
 
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpClient;
-import org.rsbot.util.IniParser;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -20,6 +14,18 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+import org.rsbot.service.Monitoring;
+import org.rsbot.service.Monitoring.Type;
+import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.util.HttpClient;
+import org.rsbot.util.IniParser;
 
 /**
  * @author Paris
@@ -127,6 +133,7 @@ public class SplashAd extends JDialog implements MouseListener {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
+				Monitoring.pushState(Type.ENVIRONMENT, "ADS", "CLICK", "false");
 				dispose();
 			}
 		}, display);
@@ -143,6 +150,7 @@ public class SplashAd extends JDialog implements MouseListener {
 	@Override
 	public void mouseReleased(final MouseEvent e) {
 		BotGUI.openURL(link);
+		Monitoring.pushState(Type.ENVIRONMENT, "ADS", "CLICK", "true");
 		dispose();
 	}
 

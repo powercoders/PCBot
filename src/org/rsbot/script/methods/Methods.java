@@ -1,13 +1,18 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.wrappers.*;
-import org.rsbot.util.GlobalConfiguration;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+
+import org.rsbot.script.wrappers.RSGroundItem;
+import org.rsbot.script.wrappers.RSNPC;
+import org.rsbot.script.wrappers.RSObject;
+import org.rsbot.script.wrappers.RSPlayer;
+import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.util.GlobalConfiguration;
 
 
 /**
@@ -231,7 +236,7 @@ public class Methods {
 	 * @return <tt>true</tt> if found.
 	 */
 	public boolean verify(final RSNPC npc) {
-		return npc != null && (getModel() != null || verify(npc.getLocation()) );
+		return npc != null;
 	}
 
 	/**
@@ -241,7 +246,7 @@ public class Methods {
 	 * @return <tt>true</tt> if found.
 	 */
 	public boolean verify(final RSObject o) {
-		return o != null && (o.getModel() != null || verify(o.getLocation()));
+		return o != null;
 	}
 
 	/**
@@ -251,7 +256,7 @@ public class Methods {
 	 * @return <tt>true</tt> if found.
 	 */
 	public boolean verify(final RSTile t) {
-		return t != null && t.getX() != -1 && t.getY() != -1;
+		return t != null;
 	}
 
 	/**
@@ -261,7 +266,7 @@ public class Methods {
 	 * @return <tt>true</tt> if found.
 	 */
 	public boolean verify(final RSGroundItem i) {
-		return i != null && (i.getModel() != null || verify(i.getLocation()));
+		return i != null;
 	}
 
 	/**

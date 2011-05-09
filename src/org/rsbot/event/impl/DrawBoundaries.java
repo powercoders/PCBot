@@ -1,11 +1,13 @@
 package org.rsbot.event.impl;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.wrappers.RSTile;
-
-import java.awt.*;
 
 public class DrawBoundaries implements PaintListener {
 

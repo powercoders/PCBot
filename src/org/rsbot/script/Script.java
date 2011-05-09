@@ -1,5 +1,12 @@
 package org.rsbot.script;
 
+import java.io.File;
+import java.util.EventListener;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+
 import org.rsbot.bot.Bot;
 import org.rsbot.event.EventMulticaster;
 import org.rsbot.event.listeners.PaintListener;
@@ -9,14 +16,9 @@ import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Methods;
 import org.rsbot.script.randoms.LoginBot;
 import org.rsbot.script.util.Timer;
+import org.rsbot.service.Monitoring;
+import org.rsbot.service.Monitoring.Type;
 import org.rsbot.util.GlobalConfiguration;
-
-import java.io.File;
-import java.util.EventListener;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
 
 public abstract class Script extends Methods implements EventListener, Runnable {
 
@@ -227,7 +229,6 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 		running = false;
 	}
 
-	@Override
 	public final void run() {
 		boolean start = false;
 		try {
@@ -240,6 +241,7 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 			running = true;
 			ctx.bot.getEventManager().addListener(this);
 			log.info("Script started.");
+			Monitoring.pushState(Type.SCRIPT, "START", getClass().getName());
 			try {
 				while (running) {
 					if (!paused) {
@@ -249,6 +251,7 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 								if (System.currentTimeMillis() - lastNotice > 600000) {
 									lastNotice = System.currentTimeMillis();
 									log.info("Breaking for " + Timer.format(h.getBreakTime()));
+									Monitoring.pushState(Type.SCRIPT, "BREAK", Long.toString(h.getBreakTime()));
 								}
 								if (game.isLoggedIn() && h.getBreakTime() > 60000) {
 									game.logout(true);
@@ -273,6 +276,7 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 							break;
 						} catch (final Exception ex) {
 							log.log(Level.WARNING, "Uncaught exception from script: ", ex);
+							Monitoring.pushState(Type.SCRIPT, "ERROR", getClass().getName());
 						}
 						if (timeOut == -1) {
 							break;
@@ -301,8 +305,10 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 			}
 			running = false;
 			log.info("Script stopped.");
+			Monitoring.pushState(Type.SCRIPT, "STOP", getClass().getName());
 		} else {
 			log.severe("Failed to start up.");
+			Monitoring.pushState(Type.SCRIPT, "FAIL", getClass().getName());
 		}
 		mouse.moveOffScreen();
 		for (final Script s : delegates) {

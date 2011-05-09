@@ -1,6 +1,10 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.wrappers.*;
+import org.rsbot.script.wrappers.RSCharacter;
+import org.rsbot.script.wrappers.RSComponent;
+import org.rsbot.script.wrappers.RSGroundItem;
+import org.rsbot.script.wrappers.RSInterface;
+import org.rsbot.script.wrappers.RSObject;
 
 /**
  * Magic tab and spell related operations.
@@ -292,7 +296,7 @@ public class Magic extends MethodProvider {
 	 */
 	public RSInterface getInterface() {
 		RSInterface inter = methods.interfaces
-				.get(Book.MODERN.getInterfaceID());
+		.get(Book.MODERN.getInterfaceID());
 		if (!inter.isValid()) {
 			inter = methods.interfaces.get(Book.ANCIENT.getInterfaceID());
 			if (!inter.isValid()) {
@@ -313,10 +317,10 @@ public class Magic extends MethodProvider {
 	public Book getCurrentSpellBook() {
 		return methods.interfaces.get(Book.MODERN.getInterfaceID()).isValid() ? Book.MODERN
 				:
-				methods.interfaces.get(Book.ANCIENT.getInterfaceID())
-						.isValid() ? Book.ANCIENT : methods.interfaces.get(
-						Book.LUNAR.getInterfaceID()).isValid() ? Book.LUNAR
-						: Book.NULL;
+					methods.interfaces.get(Book.ANCIENT.getInterfaceID())
+					.isValid() ? Book.ANCIENT : methods.interfaces.get(
+							Book.LUNAR.getInterfaceID()).isValid() ? Book.LUNAR
+									: Book.NULL;
 	}
 
 	/**

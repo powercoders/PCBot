@@ -1,9 +1,9 @@
 package org.rsbot.script;
 
+import java.util.EventListener;
+
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Methods;
-
-import java.util.EventListener;
 
 /**
  * A background script.
@@ -38,7 +38,6 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 	/**
 	 * Runs the background script.
 	 */
-	@Override
 	public final void run() {
 		name = getClass().getAnnotation(ScriptManifest.class).name();
 		ctx.bot.getEventManager().addListener(this);
@@ -60,7 +59,8 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 				}
 				Thread.sleep(iterationSleep());
 			}
-		} catch (final Exception ignored) {
+		} catch (final Exception e) {
+			e.printStackTrace();
 		}
 		ctx.bot.getEventManager().removeListener(this);
 		running = false;

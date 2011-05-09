@@ -1,9 +1,9 @@
 package org.rsbot.event.impl;
 
+import java.util.logging.Logger;
+
 import org.rsbot.event.events.CharacterMovedEvent;
 import org.rsbot.event.listeners.CharacterMovedListener;
-
-import java.util.logging.Logger;
 
 public class CharacterMovedLogger implements CharacterMovedListener {
 

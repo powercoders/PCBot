@@ -1,12 +1,12 @@
 package org.rsbot.script.wrappers;
 
+import java.awt.Point;
+import java.util.Arrays;
+import java.util.Iterator;
+
 import org.rsbot.client.Client;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
-
-import java.awt.*;
-import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * Represents an interface. Each interface consists

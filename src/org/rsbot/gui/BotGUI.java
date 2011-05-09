@@ -1,26 +1,15 @@
 package org.rsbot.gui;
 
-import org.rsbot.bot.Bot;
-import org.rsbot.log.TextAreaLogHandler;
-import org.rsbot.script.BackgroundScript;
-import org.rsbot.script.Script;
-import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.internal.BackgroundScriptHandler;
-import org.rsbot.script.internal.ScriptHandler;
-import org.rsbot.script.internal.event.BackgroundScriptListener;
-import org.rsbot.script.internal.event.ScriptListener;
-import org.rsbot.script.methods.Environment;
-import org.rsbot.script.util.WindowUtil;
-import org.rsbot.service.ScriptDeliveryNetwork;
-import org.rsbot.service.TwitterUpdates;
-import org.rsbot.service.WebQueue;
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.ScreenshotUtil;
-import org.rsbot.util.UpdateUtil;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.AWTKeyStroke;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,10 +17,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
+
+import org.rsbot.bot.Bot;
+import org.rsbot.log.TextAreaLogHandler;
+import org.rsbot.script.Script;
+import org.rsbot.script.ScriptManifest;
+import org.rsbot.script.internal.ScriptHandler;
+import org.rsbot.script.internal.event.ScriptListener;
+import org.rsbot.script.methods.Environment;
+import org.rsbot.script.util.WindowUtil;
+import org.rsbot.service.Monitoring;
+import org.rsbot.service.ScriptDeliveryNetwork;
+import org.rsbot.service.TwitterUpdates;
+import org.rsbot.service.WebQueue;
+import org.rsbot.service.Monitoring.Type;
+import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.util.ScreenshotUtil;
+import org.rsbot.util.ScriptDownloader;
+import org.rsbot.util.UpdateUtil;
+
 /**
  * @author Jacmob
  */
-public class BotGUI extends JFrame implements ActionListener, ScriptListener, BackgroundScriptListener {
+public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public static final int PANEL_WIDTH = 765, PANEL_HEIGHT = 503, LOG_HEIGHT = 120;
 	private static final long serialVersionUID = -5411033752001988794L;
 	private static final Logger log = Logger.getLogger(BotGUI.class.getName());
@@ -57,7 +74,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		setResizable(true);
 		menuBar.loadPrefs();
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 				ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
@@ -77,6 +93,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 						ScriptDeliveryNetwork.getInstance().start();
 					}
 				}.start();
+				Monitoring.start();
 			}
 		});
 	}
@@ -94,7 +111,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		super.setTitle(t);
 	}
 
-	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		final String action = evt.getActionCommand();
 		String menu, option;
@@ -117,6 +133,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 			} else if (option.equals("Close Bot")) {
 				if (confirmRemoveBot()) {
 					removeBot(getCurrentBot());
+				}
+			} else if (option.equals("Add Script")) {
+				final String pretext = "";
+				final String key = (String) JOptionPane.showInputDialog(this, "Enter the script URL (e.g. pastebin link):",
+						option, JOptionPane.QUESTION_MESSAGE, null, null, pretext);
+				if (!(key == null || key.trim().isEmpty())) {
+					ScriptDownloader.save(key);
 				}
 			} else if (option.equals("Run Script")) {
 				final Bot current = getCurrentBot();
@@ -316,9 +339,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		bots.add(bot);
 		toolBar.addTab();
 		bot.getScriptHandler().addScriptListener(this);
-		bot.getBackgroundScriptHandler().addScriptListener(this);
 		new Thread(new Runnable() {
-			@Override
 			public void run() {
 				bot.start();
 				home.setBots(bots);
@@ -335,10 +356,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		bot.getScriptHandler().stopAllScripts();
 		bot.getScriptHandler().removeScriptListener(this);
 		bot.getBackgroundScriptHandler().stopAllScripts();
-		bot.getBackgroundScriptHandler().removeScriptListener(this);
 		home.setBots(bots);
 		new Thread(new Runnable() {
-			@Override
 			public void run() {
 				bot.stop();
 				System.gc();
@@ -401,7 +420,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 
 	private void init() {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		WebQueue.Create();
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(final WindowEvent e) {
@@ -411,15 +429,14 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 			}
 		});
 		addWindowStateListener(new WindowStateListener() {
-			@Override
 			public void windowStateChanged(final WindowEvent arg0) {
 				switch (arg0.getID()) {
-					case WindowEvent.WINDOW_ICONIFIED:
-						lessCpu(true);
-						break;
-					case WindowEvent.WINDOW_DEICONIFIED:
-						lessCpu(false);
-						break;
+				case WindowEvent.WINDOW_ICONIFIED:
+					lessCpu(true);
+					break;
+				case WindowEvent.WINDOW_DEICONIFIED:
+					lessCpu(false);
+					break;
 				}
 			}
 		});
@@ -448,10 +465,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		add(textScroll, BorderLayout.SOUTH);
 	}
 
-	@Override
 	public void scriptStarted(final ScriptHandler handler, final Script script) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				final Bot bot = handler.getBot();
 				if (bot == getCurrentBot()) {
@@ -470,7 +485,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		});
 	}
 
-	@Override
 	public void scriptStopped(final ScriptHandler handler, final Script script) {
 		final Bot bot = handler.getBot();
 		if (bot == getCurrentBot()) {
@@ -487,7 +501,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		}
 	}
 
-	@Override
 	public void scriptResumed(final ScriptHandler handler, final Script script) {
 		if (handler.getBot() == getCurrentBot()) {
 			toolBar.setScriptButton(BotToolBar.PAUSE_SCRIPT);
@@ -495,7 +508,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		}
 	}
 
-	@Override
 	public void scriptPaused(final ScriptHandler handler, final Script script) {
 		if (handler.getBot() == getCurrentBot()) {
 			toolBar.setScriptButton(BotToolBar.RESUME_SCRIPT);
@@ -503,7 +515,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		}
 	}
 
-	@Override
 	public void inputChanged(final Bot bot, final int mask) {
 		bot.inputFlags = mask;
 		toolBar.setInputState(mask);
@@ -567,26 +578,14 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		}
 		WebQueue.Destroy();
 		setVisible(false);
-		while (WebQueue.IsRunning()) {
-			try {
-				Thread.sleep(50);
-			} catch (final Exception e) {
-			}
-		}
+		Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(showAds));
 		if (doExit) {
 			menuBar.savePrefs();
+			Monitoring.stop();
 			System.exit(0);
 		} else {
 			setVisible(true);
 		}
 		return doExit;
-	}
-
-	@Override
-	public void scriptStarted(final BackgroundScriptHandler handler, final BackgroundScript script) {
-	}
-
-	@Override
-	public void scriptStopped(final BackgroundScriptHandler handler, final BackgroundScript script) {
 	}
 }
