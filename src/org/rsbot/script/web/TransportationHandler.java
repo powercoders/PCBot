@@ -5,5 +5,5 @@ package org.rsbot.script.web;
  *
  * @author Timer
  */
-public class ActivityHandler {
+public class TransportationHandler {
 }
