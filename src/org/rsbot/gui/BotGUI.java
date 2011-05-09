@@ -74,7 +74,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		setResizable(true);
 		menuBar.loadPrefs();
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 				ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
@@ -112,7 +111,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		super.setTitle(t);
 	}
 
-	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		final String action = evt.getActionCommand();
 		String menu, option;
@@ -342,7 +340,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		toolBar.addTab();
 		bot.getScriptHandler().addScriptListener(this);
 		new Thread(new Runnable() {
-			@Override
 			public void run() {
 				bot.start();
 				home.setBots(bots);
@@ -361,7 +358,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		bot.getBackgroundScriptHandler().stopAllScripts();
 		home.setBots(bots);
 		new Thread(new Runnable() {
-			@Override
 			public void run() {
 				bot.stop();
 				System.gc();
@@ -424,7 +420,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	private void init() {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		WebQueue.Create();
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(final WindowEvent e) {
@@ -434,7 +429,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			}
 		});
 		addWindowStateListener(new WindowStateListener() {
-			@Override
 			public void windowStateChanged(final WindowEvent arg0) {
 				switch (arg0.getID()) {
 				case WindowEvent.WINDOW_ICONIFIED:
@@ -471,10 +465,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		add(textScroll, BorderLayout.SOUTH);
 	}
 
-	@Override
 	public void scriptStarted(final ScriptHandler handler, final Script script) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				final Bot bot = handler.getBot();
 				if (bot == getCurrentBot()) {
@@ -493,7 +485,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		});
 	}
 
-	@Override
 	public void scriptStopped(final ScriptHandler handler, final Script script) {
 		final Bot bot = handler.getBot();
 		if (bot == getCurrentBot()) {
@@ -510,7 +501,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 	}
 
-	@Override
 	public void scriptResumed(final ScriptHandler handler, final Script script) {
 		if (handler.getBot() == getCurrentBot()) {
 			toolBar.setScriptButton(BotToolBar.PAUSE_SCRIPT);
@@ -518,7 +508,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 	}
 
-	@Override
 	public void scriptPaused(final ScriptHandler handler, final Script script) {
 		if (handler.getBot() == getCurrentBot()) {
 			toolBar.setScriptButton(BotToolBar.RESUME_SCRIPT);
@@ -526,7 +515,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 	}
 
-	@Override
 	public void inputChanged(final Bot bot, final int mask) {
 		bot.inputFlags = mask;
 		toolBar.setInputState(mask);

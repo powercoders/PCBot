@@ -1,15 +1,13 @@
 package org.rsbot.service;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.util.CacheWriter;
 import org.rsbot.util.GlobalConfiguration;
+
+import java.io.*;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * The web queue class, passes data to Cache writer.
@@ -17,24 +15,14 @@ import org.rsbot.util.GlobalConfiguration;
  * @author Timer
  */
 public class WebQueue {
-	private static CacheWriter cacheWriter = null;
-	public static boolean weAreBuffering = false;
-	public static boolean speedBuffer = false;
+	public static boolean weAreBuffering = false, speedBuffer = false;
 	public static int bufferingCount = 0;
+	private static final List<String> queue = new ArrayList<String>(), removeQueue = new ArrayList<String>(), removeStack = new ArrayList<String>();
+	private static QueueWriter writer;
+	private static final Logger log = Logger.getLogger(WebQueue.class.getName());
 
-	public static void Create() {
-		if (cacheWriter == null) {
-			cacheWriter = new CacheWriter(GlobalConfiguration.Paths.getWebCache());
-		}
-	}
-
-	/**
-	 * Gets the cache writer.
-	 *
-	 * @return The cache writer instance.
-	 */
-	public static CacheWriter getCacheWriter() {
-		return cacheWriter;
+	static {
+		writer = new QueueWriter(GlobalConfiguration.Paths.getWebCache());
 	}
 
 	/**
@@ -63,7 +51,7 @@ public class WebQueue {
 							try {
 								weAreBuffering = true;
 								if (!speedBuffer) {
-									Thread.sleep(10);
+									Thread.sleep(1);
 								}
 							} catch (final InterruptedException ignored) {
 							}
@@ -72,13 +60,9 @@ public class WebQueue {
 					if (bufferingCount < 0) {
 						bufferingCount = 0;
 					}
-					cacheWriter.add(addedString);
+					queue.add(addedString);
 					addedString = null;
 					theFlagsList2.clear();
-					try {
-						Thread.sleep(500);//Prevent data loss.
-					} catch (final InterruptedException ignored) {
-					}
 					weAreBuffering = false;
 				} catch (final Exception e) {
 					bufferingCount = count;
@@ -97,36 +81,8 @@ public class WebQueue {
 	 * @param tile The tile to remove.
 	 */
 	public static void Remove(final RSTile tile) {
-		new Thread() {
-			@Override
-			public void run() {
-				Web.map.remove(tile);
-				cacheWriter.remove(tile.getX() + "," + tile.getY() + tile.getZ());
-			}
-		}.start();
-	}
-
-	/**
-	 * Removes a string from the data base.
-	 *
-	 * @param str The string to remove.
-	 */
-	public static void Remove(final String str) {
-		new Thread() {
-			@Override
-			public void run() {
-				cacheWriter.remove(str);
-			}
-		}.start();
-	}
-
-	/**
-	 * Checks if the queue is running.
-	 *
-	 * @return <tt>true</tt> if it's running.
-	 */
-	public static boolean IsRunning() {
-		return CacheWriter.IsRunning();
+		Web.map.remove(tile);
+		Remove(tile.getX() + "," + tile.getY() + tile.getZ());
 	}
 
 	/**
@@ -134,6 +90,133 @@ public class WebQueue {
 	 */
 	public static void Destroy() {
 		speedBuffer = true;
-		cacheWriter.destroy();
+		writer.destroyWriter();
+	}
+
+	/**
+	 * Gets the queue size.
+	 *
+	 * @param id The id to grab.
+	 * @return The size of the queue.
+	 */
+	public static int queueSize(final int id) {
+		switch (id) {
+			case 0:
+				return queue.size();
+			case 1:
+				return removeQueue.size();
+			case 2:
+				return removeStack.size();
+		}
+		return -1;
+	}
+
+	/**
+	 * The threaded writer class.
+	 *
+	 * @author Timer
+	 */
+	private static class QueueWriter extends Thread {
+		private boolean destroy = false;
+		private final File file, tmpFile;
+
+		public QueueWriter(final String fileName) {
+			file = new File(fileName);
+			tmpFile = new File(fileName + ".tmp");
+			if (!file.exists()) {
+				log.fine("File not created, creating: " + fileName);
+				try {
+					if (file.createNewFile()) {
+						file.setExecutable(false);
+						file.setReadable(true);
+						file.setWritable(true);
+					}
+				} catch (final Exception e) {
+					destroy = true;
+				}
+			}
+		}
+
+		/**
+		 * The main method...  doesn't stop until all data is written.
+		 */
+		@Override
+		public void run() {
+			final List<String> outList = new ArrayList<String>();
+			while ((!destroy || queue.size() > 0 || WebQueue.weAreBuffering) && file.exists() && file.canWrite()) {
+				try {
+					if (removeQueue.size() > 0) {
+						removeStack.clear();
+						removeStack.addAll(removeQueue);
+						removeQueue.clear();
+						final BufferedReader br = new BufferedReader(new FileReader(file));
+						final PrintWriter pw = new PrintWriter(new FileWriter(tmpFile));
+						String line;
+						while ((line = br.readLine()) != null) {
+							boolean good = true;
+							final Iterator<String> removeLines = removeStack.listIterator();
+							while (removeLines.hasNext()) {
+								final String str = removeLines.next();
+								if (str != null && line.contains(str)) {
+									good = false;
+									break;
+								}
+							}
+							if (good) {
+								pw.println(line);
+								pw.flush();
+							}
+						}
+						pw.close();
+						br.close();
+						if (file.delete()) {
+							if (!tmpFile.renameTo(file)) {
+								destroyWriter();
+								continue;
+							}
+						}
+						removeStack.clear();
+					}
+					if (queue.size() > 0) {
+						final FileWriter fileWriter = new FileWriter(file, true);
+						final BufferedWriter out = new BufferedWriter(fileWriter);
+						outList.clear();
+						outList.addAll(queue);
+						queue.clear();
+						final Iterator<String> outLines = outList.listIterator();
+						while (outLines.hasNext()) {
+							final String line = outLines.next();
+							out.write(line + "\n");
+						}
+						out.flush();
+						out.close();
+					}
+					try {
+						if (!destroy) {
+							Thread.sleep(5000);
+						}
+					} catch (final InterruptedException ignored) {
+					}
+				} catch (final IOException ignored) {
+				}
+			}
+		}
+
+		public void remove(final String str) {
+			removeQueue.add(str);
+		}
+
+		public void destroyWriter() {
+			destroy = true;
+		}
+	}
+
+	/**
+	 * Adds a string to remove to the queue.
+	 *
+	 * @param str The string to remove.
+	 */
+	public static void Remove(final String str) {
+		writer.remove(str);
 	}
 }
