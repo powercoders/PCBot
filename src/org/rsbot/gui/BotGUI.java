@@ -29,12 +29,9 @@ import javax.swing.UIManager;
 
 import org.rsbot.bot.Bot;
 import org.rsbot.log.TextAreaLogHandler;
-import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.internal.BackgroundScriptHandler;
 import org.rsbot.script.internal.ScriptHandler;
-import org.rsbot.script.internal.event.BackgroundScriptListener;
 import org.rsbot.script.internal.event.ScriptListener;
 import org.rsbot.script.methods.Environment;
 import org.rsbot.script.util.WindowUtil;
@@ -50,7 +47,7 @@ import org.rsbot.util.UpdateUtil;
 /**
  * @author Jacmob
  */
-public class BotGUI extends JFrame implements ActionListener, ScriptListener, BackgroundScriptListener {
+public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public static final int PANEL_WIDTH = 765, PANEL_HEIGHT = 503, LOG_HEIGHT = 120;
 	private static final long serialVersionUID = -5411033752001988794L;
 	private static final Logger log = Logger.getLogger(BotGUI.class.getName());
@@ -343,7 +340,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		bots.add(bot);
 		toolBar.addTab();
 		bot.getScriptHandler().addScriptListener(this);
-		bot.getBackgroundScriptHandler().addScriptListener(this);
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -362,7 +358,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 		bot.getScriptHandler().stopAllScripts();
 		bot.getScriptHandler().removeScriptListener(this);
 		bot.getBackgroundScriptHandler().stopAllScripts();
-		bot.getBackgroundScriptHandler().removeScriptListener(this);
 		home.setBots(bots);
 		new Thread(new Runnable() {
 			@Override
@@ -608,13 +603,5 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener, Ba
 			setVisible(true);
 		}
 		return doExit;
-	}
-
-	@Override
-	public void scriptStarted(final BackgroundScriptHandler handler, final BackgroundScript script) {
-	}
-
-	@Override
-	public void scriptStopped(final BackgroundScriptHandler handler, final BackgroundScript script) {
 	}
 }

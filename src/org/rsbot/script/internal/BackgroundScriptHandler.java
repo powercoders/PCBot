@@ -2,33 +2,21 @@ package org.rsbot.script.internal;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.rsbot.bot.Bot;
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.internal.event.BackgroundScriptListener;
 
 public class BackgroundScriptHandler {
 	private final HashMap<Integer, BackgroundScript> scripts = new HashMap<Integer, BackgroundScript>();
 	private final HashMap<Integer, Thread> scriptThreads = new HashMap<Integer, Thread>();
 
-	private final Set<BackgroundScriptListener> listeners = Collections.synchronizedSet(new HashSet<BackgroundScriptListener>());
-
 	private final Bot bot;
 
 	public BackgroundScriptHandler(final Bot bot) {
 		this.bot = bot;
-	}
-
-	public void addScriptListener(final BackgroundScriptListener l) {
-		listeners.add(l);
-	}
-
-	public void removeScriptListener(final BackgroundScriptListener l) {
-		listeners.remove(l);
 	}
 
 	private void addScriptToPool(final BackgroundScript ss, final Thread t) {
@@ -59,17 +47,11 @@ public class BackgroundScriptHandler {
 			script.deactivate(id);
 			scripts.remove(id);
 			scriptThreads.remove(id);
-			for (final BackgroundScriptListener l : listeners) {
-				l.scriptStopped(this, script);
-			}
 		}
 	}
 
 	public void runScript(final BackgroundScript script) {
 		script.init(bot.getMethodContext());
-		for (final BackgroundScriptListener l : listeners) {
-			l.scriptStarted(this, script);
-		}
 		final ScriptManifest prop = script.getClass().getAnnotation(ScriptManifest.class);
 		final Thread t = new Thread(script, "BackgroundScript-" + prop.name());
 		addScriptToPool(script, t);
