@@ -53,7 +53,7 @@ GOTO :eof
 :pack
 IF EXIST "%dist%" DEL /F /Q "%dist%"
 IF EXIST "%lstf%" DEL /F /Q "%lstf%"
-COPY "%manifest%" "%lstf%"
+COPY "%manifest%" "%lstf%" > NUL
 ECHO Specification-Version: "%version%" >> "%lstf%"
 ECHO Implementation-Version: "%version%" >> "%lstf%"
 jar cfm "%dist%" "%lstf%" -C "%out%" . %versionfile% %imgdir%\* %res%\*.bat %res%\*.sh
