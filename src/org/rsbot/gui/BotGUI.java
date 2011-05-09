@@ -39,6 +39,7 @@ import org.rsbot.service.Monitoring;
 import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
+import org.rsbot.service.Monitoring.Type;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.ScreenshotUtil;
 import org.rsbot.util.ScriptDownloader;
@@ -589,6 +590,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 		WebQueue.Destroy();
 		setVisible(false);
+		Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(showAds));
 		if (doExit) {
 			menuBar.savePrefs();
 			Monitoring.stop();
