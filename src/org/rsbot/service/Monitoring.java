@@ -1,13 +1,25 @@
 package org.rsbot.service;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.util.HttpClient;
+import org.rsbot.util.IniParser;
 
 
 /**
@@ -15,10 +27,47 @@ import org.rsbot.util.GlobalConfiguration;
  */
 public class Monitoring {
 	private static ConcurrentLinkedQueue<Event> events = null;
+	private static boolean enabled = false;
+	private static String uri;
+
+	private static void init() {
+		if (events != null) {
+			return;
+		}
+
+		events = new ConcurrentLinkedQueue<Event>();
+		HashMap<String, String> keys = null;
+
+		try {
+			final URL source = new URL(GlobalConfiguration.Paths.URLs.MONITORING_CONTROL);
+			final File cache = new File(GlobalConfiguration.Paths.getCacheDirectory(), "monitoring-control.txt");
+			HttpClient.download(source, cache);
+			final BufferedReader reader = new BufferedReader(new FileReader(cache));
+			keys = IniParser.deserialise(reader).get(IniParser.emptySection);
+			reader.close();
+		} catch (final Exception e) {
+			return;
+		}
+
+		if (keys == null || keys.isEmpty() || !keys.containsKey("enabled") || !parseBool(keys.get("enabled"))) {
+			return;
+		}
+
+		if (keys.containsKey("uri")) {
+			uri = keys.get(uri);
+			enabled = !uri.isEmpty();
+		}
+	}
+
+	private static boolean parseBool(final String mode) {
+		return mode.equals("1") || mode.equalsIgnoreCase("true") || mode.equalsIgnoreCase("yes");
+	}
 
 	public static void start() {
-		if (events == null) {
-			events = new ConcurrentLinkedQueue<Event>();
+		init();
+
+		if (!enabled) {
+			return;
 		}
 
 		events.clear();
@@ -54,11 +103,17 @@ public class Monitoring {
 	}
 
 	public static void stop() {
+		if (!enabled) {
+			return;
+		}
 		pushState(Type.STOP);
-		send();
+		try {
+			send();
+		} catch (Exception ignored) {
+		}
 	}
 
-	public static void send() {
+	public static void send() throws IOException, URISyntaxException {
 		if (events.isEmpty()) {
 			return;
 		}
@@ -69,12 +124,37 @@ public class Monitoring {
 		}
 		final String log = s.toString();
 
-		try {
-			final FileWriter out = new FileWriter(GlobalConfiguration.Paths.getEventsLog());
-			out.write(log);
-			out.close();
-		} catch (IOException ignored) {
+		final FileWriter out = new FileWriter(GlobalConfiguration.Paths.getEventsLog());
+		out.write(log);
+		out.close();
+
+		final URI sync = new URI(uri);
+
+		if (sync.getScheme().equals("udp")) {
+			uploadUdp(sync, log.getBytes());
+		} else if (sync.getScheme().equals("http")) {
+			uploadHttp(sync.toURL(), log);
 		}
+	}
+
+	private static void uploadUdp(final URI uri, final byte[] data) throws IOException {
+		final InetAddress host = InetAddress.getByName(uri.getHost());
+		final DatagramSocket client = new DatagramSocket(uri.getPort(), host);
+		final DatagramPacket payload = new DatagramPacket(data, data.length);
+		client.send(payload);
+		client.close();
+	}
+
+	private static void uploadHttp(final URL url, final String data) throws IOException {
+		final HttpURLConnection con = GlobalConfiguration.getHttpConnection(url);
+		con.setDoOutput(true);
+		OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
+		out.write(data);
+		out.flush();
+		con.getInputStream().read();
+		out.close();
+		con.getInputStream().close();
+		con.disconnect();
 	}
 
 	private static String getMacAddress() {
@@ -95,6 +175,9 @@ public class Monitoring {
 	}
 
 	public static void pushState(final Type type, final String... args) {
+		if (!enabled) {
+			return;
+		}
 		final Event e = new Event(type);
 		e.setArgs(args);
 		events.add(e);
