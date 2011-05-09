@@ -1,13 +1,12 @@
 package org.rsbot.script.randoms;
 
-import java.awt.Point;
-import java.awt.Rectangle;
-
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
 import org.rsbot.script.wrappers.RSNPC;
+
+import java.awt.*;
 
 /**
  * Update by Iscream (Apr 24,2010)
@@ -134,22 +133,22 @@ public class BeehiveSolver extends Random {
 		sleep(random(800, 1000));
 		return interfaces.getComponent(243, 7).doClick() || interfaces.getComponent(241,
 				5).doClick() || interfaces.getComponent(
-						242, 6).doClick() || interfaces.getComponent(244, 8).doClick() || interfaces.getComponent(64,
-								5).doClick();
+				242, 6).doClick() || interfaces.getComponent(244, 8).doClick() || interfaces.getComponent(64,
+				5).doClick();
 	}
 
 	public int returnDragTo(final int Model) {
 		switch (Model) {
-		case 16036:
-			return DEST_INTERFACE_IDS[0];
-		case 16025:
-			return DEST_INTERFACE_IDS[1];
-		case 16022:
-			return DEST_INTERFACE_IDS[2];
-		case 16034:
-			return DEST_INTERFACE_IDS[3];
-		default:
-			return -1;
+			case 16036:
+				return DEST_INTERFACE_IDS[0];
+			case 16025:
+				return DEST_INTERFACE_IDS[1];
+			case 16022:
+				return DEST_INTERFACE_IDS[2];
+			case 16034:
+				return DEST_INTERFACE_IDS[3];
+			default:
+				return -1;
 		}
 	}
 
@@ -187,18 +186,18 @@ public class BeehiveSolver extends Random {
 
 	public int returnSlotId(final int slot) {
 		switch (slot) {
-		case 1:
-			return 25;
-		case 2:
-			return 22;
-		case 3:
-			return 23;
-		case 4:
-			return 21;
-		default:
-			log.info("Invalid slot ID. Restarting.");
-			interfaces.getComponent(INTERFACE_BEEHIVE_WINDOW, CLOSE_WINDOW).doClick();
-			break;
+			case 1:
+				return 25;
+			case 2:
+				return 22;
+			case 3:
+				return 23;
+			case 4:
+				return 21;
+			default:
+				log.info("Invalid slot ID. Restarting.");
+				interfaces.getComponent(INTERFACE_BEEHIVE_WINDOW, CLOSE_WINDOW).doClick();
+				break;
 		}
 		return -1;
 	}

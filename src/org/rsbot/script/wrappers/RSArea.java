@@ -1,7 +1,6 @@
 package org.rsbot.script.wrappers;
 
-import java.awt.Polygon;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.ArrayList;
 
 /**

@@ -1,14 +1,9 @@
 package org.rsbot.script.methods;
 
-import java.awt.Point;
-
 import org.rsbot.script.util.Filter;
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSInterface;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.*;
+
+import java.awt.*;
 
 /**
  * Bank related operations.
@@ -16,14 +11,14 @@ import org.rsbot.script.wrappers.RSTile;
 public class Bank extends MethodProvider {
 
 	public static final int[] BANKERS = {44, 45, 494, 495, 499, 553, 958, 1036, 2271, 2354, 2355, 2759, 3824, 5488,
-		5901, 5912, 5913, 6362, 6532, 6533, 6534, 6535, 7605, 8948, 9710, 14367};
+			5901, 5912, 5913, 6362, 6532, 6533, 6534, 6535, 7605, 8948, 9710, 14367};
 	public static final int[] BANK_BOOTHS = {782, 2213, 4483, 6084, 11402, 11758, 12759, 14367, 19230, 24914, 25808, 26972,
-		27663, 29085, 34752, 35647, 36786};
+			27663, 29085, 34752, 35647, 36786};
 	public static final int[] BANK_CHESTS = {4483, 12308, 21301, 27663, 42192};
 	public static final int[] BANK_DEPOSIT_BOX = {9398, 20228, 26969, 36788};
 	public static final int[] DO_NOT_DEPOSIT = new int[]{1265, 1267, 1269, 1273, 1271, 1275, 1351, 590, 303};
 	public static final RSTile[] UNREACHABLE_BANKERS = {
-		new RSTile(3191, 3445), new RSTile(3180, 3433) // VARROCK EAST
+			new RSTile(3191, 3445), new RSTile(3180, 3433) // VARROCK EAST
 	};
 
 	public static final int INTERFACE_BANK = 762;
@@ -126,23 +121,23 @@ public class Bank extends MethodProvider {
 				return true;
 			}
 			switch (number) {
-			case 0:
-				item.doAction(itemCount > 1 ? "Deposit-All" : "Deposit");
-				break;
-			case 1:
-				item.doAction("Deposit");
-				break;
-			case 5:
-				item.doAction("Deposit-" + number);
-				break;
-			default:
-				if (!item.doAction("Deposit-" + number)) {
-					if (item.doAction("Deposit-X")) {
-						sleep(random(1000, 1300));
-						methods.inputManager.sendKeys(String.valueOf(number), true);
+				case 0:
+					item.doAction(itemCount > 1 ? "Deposit-All" : "Deposit");
+					break;
+				case 1:
+					item.doAction("Deposit");
+					break;
+				case 5:
+					item.doAction("Deposit-" + number);
+					break;
+				default:
+					if (!item.doAction("Deposit-" + number)) {
+						if (item.doAction("Deposit-X")) {
+							sleep(random(1000, 1300));
+							methods.inputManager.sendKeys(String.valueOf(number), true);
+						}
 					}
-				}
-				break;
+					break;
 			}
 			sleep(300);
 			final int cInvCount = isOpen() ? methods.inventory.getCount(true) : getBoxCount();
@@ -177,27 +172,27 @@ public class Bank extends MethodProvider {
 			boolean deposit = true;
 			int invCount = isOpen() ? methods.inventory.getCount(true) : getBoxCount();
 			outer:
-				for (int i = 0; i < 28; i++) {
-					final RSComponent item = isOpen() ? methods.inventory.getItemAt(i).getComponent() :
+			for (int i = 0; i < 28; i++) {
+				final RSComponent item = isOpen() ? methods.inventory.getItemAt(i).getComponent() :
 						methods.interfaces.get(11).getComponent(17).getComponent(i);
-					if (item != null && item.getComponentID() != -1) {
-						for (final int id : items) {
-							if (item.getComponentID() == id) {
-								continue outer;
-							}
+				if (item != null && item.getComponentID() != -1) {
+					for (final int id : items) {
+						if (item.getComponentID() == id) {
+							continue outer;
 						}
-						for (int tries = 0; tries < 5; tries++) {
-							deposit(item.getComponentID(), 0);
-							sleep(random(600, 900));
-							final int cInvCount = isOpen() ? methods.inventory.getCount(true) : getBoxCount();
-							if (cInvCount < invCount) {
-								invCount = cInvCount;
-								continue outer;
-							}
-						}
-						deposit = false;
 					}
+					for (int tries = 0; tries < 5; tries++) {
+						deposit(item.getComponentID(), 0);
+						sleep(random(600, 900));
+						final int cInvCount = isOpen() ? methods.inventory.getCount(true) : getBoxCount();
+						if (cInvCount < invCount) {
+							invCount = cInvCount;
+							continue outer;
+						}
+					}
+					deposit = false;
 				}
+			}
 			return deposit;
 		}
 		return false;
@@ -478,7 +473,7 @@ public class Bank extends MethodProvider {
 						BANK_DEPOSIT_BOX);
 				if (depositBox != null && methods.calc.distanceTo(depositBox) < 8 && methods.calc.tileOnMap(
 						depositBox.getLocation()) && methods.calc.canReach(
-								depositBox.getLocation(), true)) {
+						depositBox.getLocation(), true)) {
 					if (depositBox.doAction("Deposit")) {
 						int count = 0;
 						while (!isDepositOpen() && ++count < 10) {
@@ -651,30 +646,30 @@ public class Bank extends MethodProvider {
 		final String defaultAction = "Withdraw-" + count;
 		String action = null;
 		switch (count) {
-		case 0:
-			action = "Withdraw-All";
-			break;
-		case 1:
-			break;
-		case 5:
-			action = defaultAction;
-			break;
-		case 10:
-			action = defaultAction;
-			break;
-		default:
-			int i = -1;
-			try {
-				i = Integer.parseInt(item.getActions()[3].toLowerCase().trim().replaceAll("\\D", ""));
-			} catch (final Exception e) {
-				e.printStackTrace();
-			}
-			if (i == count) {
+			case 0:
+				action = "Withdraw-All";
+				break;
+			case 1:
+				break;
+			case 5:
 				action = defaultAction;
-			} else if (item.doAction("Withdraw-X")) {
-				sleep(random(1000, 1300));
-				methods.keyboard.sendText(String.valueOf(count), true);
-			}
+				break;
+			case 10:
+				action = defaultAction;
+				break;
+			default:
+				int i = -1;
+				try {
+					i = Integer.parseInt(item.getActions()[3].toLowerCase().trim().replaceAll("\\D", ""));
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
+				if (i == count) {
+					action = defaultAction;
+				} else if (item.doAction("Withdraw-X")) {
+					sleep(random(1000, 1300));
+					methods.keyboard.sendText(String.valueOf(count), true);
+				}
 		}
 		if (action != null && item.doAction(action)) {
 			sleep(random(1000, 1300));

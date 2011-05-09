@@ -1,13 +1,13 @@
 package org.rsbot.script.methods;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.rsbot.client.RSAnimableNode;
 import org.rsbot.script.util.Filter;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSObjectDef;
 import org.rsbot.script.wrappers.RSTile;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Provides access to in-game physical objects.
@@ -222,7 +222,7 @@ public class Objects extends MethodProvider {
 				// Interactable (e.g. Trees)
 				if ((mask & TYPE_INTERACTABLE) != 0) {
 					for (RSAnimableNode node = rsGround.getRSAnimableList(); node != null; node = node
-					.getNext()) {
+							.getNext()) {
 						obj = node.getRSAnimable();
 						if (obj != null
 								&& obj instanceof org.rsbot.client.RSObject) {

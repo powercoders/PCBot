@@ -95,18 +95,18 @@ public class AddGetterAdapter extends ClassAdapter implements Opcodes {
 		}
 		final char c = desc.charAt(0);
 		switch (c) {
-		case 'I':
-		case 'Z':
-		case 'B':
-		case 'S':
-		case 'C':
-			return IRETURN;
-		case 'J':
-			return LRETURN;
-		case 'F':
-			return FRETURN;
-		case 'D':
-			return DRETURN;
+			case 'I':
+			case 'Z':
+			case 'B':
+			case 'S':
+			case 'C':
+				return IRETURN;
+			case 'J':
+				return LRETURN;
+			case 'F':
+				return FRETURN;
+			case 'D':
+				return DRETURN;
 		}
 		throw new RuntimeException("eek");
 	}
