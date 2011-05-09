@@ -23,6 +23,7 @@ public class WebQueue {
 
 	static {
 		writer = new QueueWriter(GlobalConfiguration.Paths.getWebCache());
+		writer.start();
 	}
 
 	/**
@@ -37,7 +38,6 @@ public class WebQueue {
 			@Override
 			public void run() {
 				try {
-					String addedString = "";
 					final HashMap<RSTile, TileFlags> theFlagsList2 = new HashMap<RSTile, TileFlags>();
 					theFlagsList2.putAll(theFlagsList);
 					final Map<RSTile, TileFlags> tl = Collections.unmodifiableMap(theFlagsList2);
@@ -46,7 +46,7 @@ public class WebQueue {
 					while (tileFlagsIterator.hasNext()) {
 						final TileFlags tileFlags = tileFlagsIterator.next().getValue();
 						if (tileFlags != null) {
-							addedString += tileFlags.toString() + "\n";
+							queue.add(tileFlags.toString() + "\n");
 							bufferingCount--;
 							try {
 								weAreBuffering = true;
@@ -60,8 +60,6 @@ public class WebQueue {
 					if (bufferingCount < 0) {
 						bufferingCount = 0;
 					}
-					queue.add(addedString);
-					addedString = null;
 					theFlagsList2.clear();
 					weAreBuffering = false;
 				} catch (final Exception e) {
