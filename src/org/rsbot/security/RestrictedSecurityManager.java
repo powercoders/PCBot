@@ -59,6 +59,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("www.dlolpics.com"); // DlolPics
 		whitelist.add("logikmedia.co"); // countvidal
 		whitelist.add("*.letthesmokeout.com"); // MrByte
+		whitelist.add("zaszmedia.com"); // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
+		whitelist.add("pumyscript.orgfree.com"); // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
 
 		return whitelist;
 	}
