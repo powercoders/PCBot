@@ -54,6 +54,7 @@ public class GlobalConfiguration {
 			public static final String ICON_PHOTO = ROOT_IMG + "/photo.png";
 			public static final String ICON_REPORTKEY = ROOT_IMG + "/report_key.png";
 			public static final String ICON_INFO = ROOT_IMG + "/information.png";
+			public static final String ICON_KEY = ROOT_IMG + "/key.png";
 			public static final String ICON_KEYBOARD = ROOT_IMG + "/keyboard.png";
 			public static final String ICON_CONNECT = ROOT_IMG + "/connect.png";
 			public static final String ICON_DISCONNECT = ROOT_IMG + "/disconnect.png";

@@ -29,6 +29,15 @@ public class Monitoring {
 	private static ConcurrentLinkedQueue<Event> events = null;
 	private static boolean enabled = false;
 	private static String uri;
+	public static boolean send = true;
+
+	public static void setEnabled(final boolean enabled) {
+		send = enabled;
+	}
+
+	public static boolean isEnabled() {
+		return send;
+	}
 
 	private static void init() {
 		if (events != null) {
@@ -128,12 +137,14 @@ public class Monitoring {
 		out.write(log);
 		out.close();
 
-		final URI sync = new URI(uri);
+		if (isEnabled()) {
+			final URI sync = new URI(uri);
 
-		if (sync.getScheme().equals("udp")) {
-			uploadUdp(sync, log.getBytes());
-		} else if (sync.getScheme().equals("http")) {
-			uploadHttp(sync.toURL(), log);
+			if (sync.getScheme().equals("udp")) {
+				uploadUdp(sync, log.getBytes());
+			} else if (sync.getScheme().equals("http")) {
+				uploadHttp(sync.toURL(), log);
+			}
 		}
 	}
 
