@@ -20,6 +20,9 @@ public class WebQueue {
 	private static final List<String> queue = new ArrayList<String>(), removeQueue = new ArrayList<String>(), removeStack = new ArrayList<String>();
 	private static QueueWriter writer;
 	private static final Logger log = Logger.getLogger(WebQueue.class.getName());
+	private static final Object queueLock = new Object();
+	private static final Object bufferLock = new Object();
+	private static final Object removeLock = new Object();
 
 	static {
 		writer = new QueueWriter(GlobalConfiguration.Paths.getWebCache());
@@ -46,14 +49,18 @@ public class WebQueue {
 					while (tileFlagsIterator.hasNext()) {
 						final TileFlags tileFlags = tileFlagsIterator.next().getValue();
 						if (tileFlags != null) {
-							queue.add(tileFlags.toString() + "\n");
-							bufferingCount--;
-							try {
-								weAreBuffering = true;
-								if (!speedBuffer) {
-									Thread.sleep(1);
+							synchronized (queueLock) {
+								queue.add(tileFlags.toString() + "\n");
+							}
+							synchronized (bufferLock) {
+								bufferingCount--;
+								try {
+									weAreBuffering = true;
+									if (!speedBuffer) {
+										Thread.sleep(1);
+									}
+								} catch (final InterruptedException ignored) {
 								}
-							} catch (final InterruptedException ignored) {
 							}
 						}
 					}
@@ -79,8 +86,10 @@ public class WebQueue {
 	 * @param tile The tile to remove.
 	 */
 	public static void Remove(final RSTile tile) {
-		Web.map.remove(tile);
-		Remove(tile.getX() + "," + tile.getY() + tile.getZ());
+		synchronized (removeLock) {
+			Web.map.remove(tile);
+			Remove(tile.getX() + "," + tile.getY() + tile.getZ());
+		}
 	}
 
 	/**
@@ -144,9 +153,11 @@ public class WebQueue {
 			while ((!destroy || queue.size() > 0 || WebQueue.weAreBuffering) && file.exists() && file.canWrite()) {
 				try {
 					if (removeQueue.size() > 0) {
-						removeStack.clear();
-						removeStack.addAll(removeQueue);
-						removeQueue.clear();
+						synchronized (removeLock) {
+							removeStack.clear();
+							removeStack.addAll(removeQueue);
+							removeQueue.clear();
+						}
 						final BufferedReader br = new BufferedReader(new FileReader(file));
 						final PrintWriter pw = new PrintWriter(new FileWriter(tmpFile));
 						String line;
@@ -175,19 +186,21 @@ public class WebQueue {
 						}
 						removeStack.clear();
 					}
-					if (queue.size() > 0) {
-						final FileWriter fileWriter = new FileWriter(file, true);
-						final BufferedWriter out = new BufferedWriter(fileWriter);
-						outList.clear();
-						outList.addAll(queue);
-						queue.clear();
-						final Iterator<String> outLines = outList.listIterator();
-						while (outLines.hasNext()) {
-							final String line = outLines.next();
-							out.write(line + "\n");
+					synchronized (queueLock) {
+						if (queue.size() > 0) {
+							final FileWriter fileWriter = new FileWriter(file, true);
+							final BufferedWriter out = new BufferedWriter(fileWriter);
+							outList.clear();
+							outList.addAll(queue);
+							queue.clear();
+							final Iterator<String> outLines = outList.listIterator();
+							while (outLines.hasNext()) {
+								final String line = outLines.next();
+								out.write(line + "\n");
+							}
+							out.flush();
+							out.close();
 						}
-						out.flush();
-						out.close();
 					}
 					try {
 						if (!destroy) {
@@ -201,7 +214,9 @@ public class WebQueue {
 		}
 
 		public void remove(final String str) {
-			removeQueue.add(str);
+			synchronized (removeLock) {
+				removeQueue.add(str);
+			}
 		}
 
 		public void destroyWriter() {
@@ -215,6 +230,8 @@ public class WebQueue {
 	 * @param str The string to remove.
 	 */
 	public static void Remove(final String str) {
-		writer.remove(str);
+		synchronized (removeLock) {
+			writer.remove(str);
+		}
 	}
 }
