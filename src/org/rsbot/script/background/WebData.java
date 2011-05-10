@@ -94,8 +94,7 @@ public class WebData extends BackgroundScript {
 			}
 			WebQueue.Add(rs_map);
 			return -1;
-		} catch (final Exception e) {
-			e.printStackTrace();
+		} catch (final Exception ignored) {
 		}
 		return -1;
 	}
