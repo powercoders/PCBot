@@ -12,6 +12,7 @@ import org.rsbot.gui.BotGUI;
 import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.util.GlobalConfiguration.OperatingSystem;
 
 /**
  * @author Paris
@@ -304,6 +305,12 @@ public class RestrictedSecurityManager extends SecurityManager {
 				final String jre = System.getProperty("java.home");
 				if (jre != null && !jre.isEmpty() && path.startsWith(jre)) {
 					fail = false;
+				}
+				if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
+					final String sysroot = System.getenv("SystemRoot");
+					if (sysroot != null & !sysroot.isEmpty() && path.startsWith(sysroot)) {
+						fail = false;
+					}
 				}
 				if (fail) {
 					throw new SecurityException();
