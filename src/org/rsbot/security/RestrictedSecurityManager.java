@@ -1,17 +1,18 @@
 package org.rsbot.security;
 
-import org.rsbot.Application;
-import org.rsbot.gui.BotGUI;
-import org.rsbot.service.ScriptDeliveryNetwork;
-import org.rsbot.util.AccountStore;
-import org.rsbot.util.GlobalConfiguration;
-
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.security.Permission;
 import java.util.ArrayList;
+
+import org.rsbot.Application;
+import org.rsbot.gui.BotGUI;
+import org.rsbot.service.ScriptDeliveryNetwork;
+import org.rsbot.util.AccountStore;
+import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.util.GlobalConfiguration.OperatingSystem;
 
 /**
  * @author Paris
@@ -59,7 +60,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("www.dlolpics.com"); // DlolPics
 		whitelist.add("logikmedia.co"); // countvidal
 		whitelist.add("*.letthesmokeout.com"); // MrByte
-		whitelist.add("testscriptsecurity.host22.com"); // Marneus901
+		whitelist.add("zaszmedia.com"); // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
+		whitelist.add("pumyscript.orgfree.com"); // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
 
 		return whitelist;
 	}
@@ -138,7 +140,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkDelete(final String file) {
-		checkFilePath(file);
+		checkFilePath(file, false);
 		super.checkDelete(file);
 	}
 
@@ -234,7 +236,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkRead(final String file) {
-		checkFilePath(file);
+		checkFilePath(file, true);
 		super.checkRead(file);
 	}
 
@@ -272,11 +274,11 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkWrite(final String file) {
-		checkFilePath(file);
+		checkFilePath(file, false);
 		super.checkWrite(file);
 	}
 
-	private void checkFilePath(String path) {
+	private void checkFilePath(String path, final boolean readOnly) {
 		path = new File(path).getAbsolutePath();
 		if (isCallerScript()) {
 			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())) {
@@ -291,20 +293,26 @@ public class RestrictedSecurityManager extends SecurityManager {
 					fail = !path.startsWith(check);
 				} else {
 					final String check = new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
-					fail = !path.equals(check);
+					if (readOnly && path.equals(check)) {
+						fail = false;
+					}
 				}
-				// allow screenshots directory
-				if (path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory())) {
+				for (final String prefix : new String[] { GlobalConfiguration.Paths.getScreenshotsDirectory(),
+						GlobalConfiguration.Paths.getScriptsDirectory(), GlobalConfiguration.Paths.getWebCache() }) {
+					if (path.startsWith(prefix)) {
+						fail = false;
+						break;
+					}
+				}
+				final String jre = System.getProperty("java.home");
+				if (readOnly && jre != null && !jre.isEmpty() && path.startsWith(jre)) {
 					fail = false;
 				}
-				if (path.startsWith(GlobalConfiguration.Paths.getScriptsDirectory())) {
-					fail = false;
-				}
-				if (path.equals(GlobalConfiguration.Paths.getWebDatabase())) {
-					fail = false;
-				}
-				if (path.contains("jre6\\bin") || path.contains("jre/lib")) {
-					fail = false;
+				if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
+					final String sysroot = System.getenv("SystemRoot");
+					if (readOnly && sysroot != null & !sysroot.isEmpty() && path.startsWith(sysroot)) {
+						fail = false;
+					}
 				}
 				if (fail) {
 					throw new SecurityException();

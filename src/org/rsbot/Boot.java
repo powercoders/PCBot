@@ -13,7 +13,7 @@ public class Boot {
 		String location = Boot.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		location = URLDecoder.decode(location, "UTF-8").replaceAll("\\\\", "/");
 		final String app = Application.class.getCanonicalName();
-		final String flags = "-Xmx512m -Dsun.java2d.d3d=false";
+		final String flags = "-Xmx512m -Dsun.java2d.d3d=false -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+AggressiveOpts -XX:+UseBiasedLocking";
 		boolean sh = true;
 		final char q = '"', s = ' ';
 		final StringBuilder param = new StringBuilder(64);
