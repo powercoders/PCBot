@@ -90,8 +90,7 @@ public class BotMenuBar extends JMenuBar {
 		TITLES = new String[]{"File", "Edit", "View", "Help"};
 		ELEMENTS = new String[][]{
 				{"New Bot", "Close Bot", "-",
-					/*"Service Key", "-",*/
-					"Add Script", "Run Script", "Stop Script", "Pause Script", "-",
+					"Service Key", "Add Script", "Run Script", "Stop Script", "Pause Script", "-",
 					"Save Screenshot", "-",
 				"Exit"},
 				{"Accounts", "-",
@@ -140,6 +139,7 @@ public class BotMenuBar extends JMenuBar {
 		final HashMap<String, String> map = new HashMap<String, String>(16);
 		map.put("New Bot", GlobalConfiguration.Paths.Resources.ICON_APPADD);
 		map.put("Close Bot", GlobalConfiguration.Paths.Resources.ICON_APPDELETE);
+		map.put("Service Key", GlobalConfiguration.Paths.Resources.ICON_KEY);
 		map.put("Add Script", GlobalConfiguration.Paths.Resources.ICON_SCRIPT_ADD);
 		map.put("Run Script", GlobalConfiguration.Paths.Resources.ICON_PLAY);
 		map.put("Stop Script", GlobalConfiguration.Paths.Resources.ICON_DELETE);
@@ -169,6 +169,7 @@ public class BotMenuBar extends JMenuBar {
 			add(constructMenu(title, elems));
 		}
 		constructItemIcons();
+		commandMenuItem.get("Service Key").setVisible(false);
 	}
 
 	public void setOverrideInput(final boolean force) {
