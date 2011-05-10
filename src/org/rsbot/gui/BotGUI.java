@@ -230,7 +230,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					}
 				}
 			}
-		} else if (menu.equals(Messages.VIEW)) {
+		} else if (menu.equals(Messages.HELP)) {
 			if (option.equals("Site")) {
 				openURL(GlobalConfiguration.Paths.URLs.SITE);
 			} else if (option.equals("Project")) {
