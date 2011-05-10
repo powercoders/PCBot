@@ -128,42 +128,42 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				removeBot(bots.get(idx - botsIndex));
 			}
 		} else if (menu.equals(Messages.FILE)) {
-			if (option.equals("New Bot")) {
+			if (option.equals(Messages.NEWBOT)) {
 				addBot();
-			} else if (option.equals("Close Bot")) {
+			} else if (option.equals(Messages.CLOSEBOT)) {
 				if (confirmRemoveBot()) {
 					removeBot(getCurrentBot());
 				}
-			} else if (option.equals("Add Script")) {
+			} else if (option.equals(Messages.ADDSCRIPT)) {
 				final String pretext = "";
 				final String key = (String) JOptionPane.showInputDialog(this, "Enter the script URL (e.g. pastebin link):",
 						option, JOptionPane.QUESTION_MESSAGE, null, null, pretext);
 				if (!(key == null || key.trim().isEmpty())) {
 					ScriptDownloader.save(key);
 				}
-			} else if (option.equals("Run Script")) {
+			} else if (option.equals(Messages.RUNSCRIPT)) {
 				final Bot current = getCurrentBot();
 				if (current != null) {
 					showScriptSelector(current);
 				}
-			} else if (option.equals("Service Key")) {
+			} else if (option.equals(Messages.SERVICEKEY)) {
 				serviceKeyQuery(option);
-			} else if (option.equals("Stop Script")) {
+			} else if (option.equals(Messages.STOPSCRIPT)) {
 				final Bot current = getCurrentBot();
 				if (current != null) {
 					showStopScript(current);
 				}
-			} else if (option.equals("Pause Script")) {
+			} else if (option.equals(Messages.PAUSESCRIPT)) {
 				final Bot current = getCurrentBot();
 				if (current != null) {
 					pauseScript(current);
 				}
-			} else if (option.equals("Save Screenshot")) {
+			} else if (option.equals(Messages.SAVESCREENSHOT)) {
 				final Bot current = getCurrentBot();
 				if (current != null) {
 					ScreenshotUtil.saveScreenshot(current, current.getMethodContext().game.isLoggedIn());
 				}
-			} else if (option.equals("Exit")) {
+			} else if (option.equals(Messages.EXIT)) {
 				cleanExit();
 			}
 		} else if (menu.equals(Messages.EDIT)) {
@@ -267,7 +267,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				toolBar.updateInputButton();
 			}
 		} else if (menu.equals("Screenshot")) {
-			menuBar.doClick("Save Screenshot");
+			menuBar.doClick(Messages.SAVESCREENSHOT);
 		} else if (menu.equals("Run")) {
 			final Bot current = getCurrentBot();
 			if (current != null) {
@@ -556,7 +556,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	private boolean confirmRemoveBot() {
 		if (!disableConfirmations) {
-			final int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to close this bot?", "Close Bot", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+			final int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to close this bot?", Messages.CLOSEBOT, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 			return result == JOptionPane.OK_OPTION;
 		} else {
 			return true;
@@ -576,7 +576,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		boolean doExit = true;
 		if (!disableConfirmations) {
 			final String message = "Are you sure you want to exit?";
-			final int result = JOptionPane.showConfirmDialog(this, message, "Exit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+			final int result = JOptionPane.showConfirmDialog(this, message, Messages.EXIT, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result != JOptionPane.OK_OPTION) {
 				doExit = false;
 			}
