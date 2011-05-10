@@ -107,6 +107,7 @@ public class BotMenuBar extends JMenuBar {
 		map.put("Stop Script", GlobalConfiguration.Paths.Resources.ICON_DELETE);
 		map.put("Pause Script", GlobalConfiguration.Paths.Resources.ICON_PAUSE);
 		map.put("Save Screenshot", GlobalConfiguration.Paths.Resources.ICON_PHOTO);
+		map.put("Hide in Tray", GlobalConfiguration.Paths.Resources.ICON_TRAY);
 		map.put("Exit", GlobalConfiguration.Paths.Resources.ICON_CLOSE);
 		map.put("Accounts", GlobalConfiguration.Paths.Resources.ICON_REPORTKEY);
 		map.put("Site", GlobalConfiguration.Paths.Resources.ICON_WEBLINK);

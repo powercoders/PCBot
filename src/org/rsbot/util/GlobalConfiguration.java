@@ -36,6 +36,7 @@ public class GlobalConfiguration {
 			public static final String ICON_ADD = ROOT_IMG + "/add.png";
 			public static final String ICON_HOME = ROOT_IMG + "/home.png";
 			public static final String ICON_BOT = ROOT_IMG + "/bot.png";
+			public static final String ICON_TRAY = ROOT_IMG + "/tray.png";
 			public static final String ICON_CLOSE = ROOT_IMG + "/close.png";
 			public static final String ICON_TICK = ROOT_IMG + "/tick.png";
 			public static final String ICON_MOUSE = ROOT_IMG + "/mouse.png";
