@@ -52,14 +52,14 @@ public class BotMenuBar extends JMenuBar {
 		TITLES = new String[]{Messages.FILE, Messages.EDIT, Messages.VIEW, Messages.HELP};
 		ELEMENTS = new String[][]{
 				{Messages.NEWBOT, Messages.CLOSEBOT, Messages.MENUSEPERATOR,
-					Messages.SERVICEKEY, Messages.ADDSCRIPT, Messages.RUNSCRIPT, Messages.STOPSCRIPT, Messages.PAUSESCRIPT, Messages.MENUSEPERATOR,
-					Messages.SAVESCREENSHOT, Messages.MENUSEPERATOR,
-				Messages.EXIT},
+						Messages.SERVICEKEY, Messages.ADDSCRIPT, Messages.RUNSCRIPT, Messages.STOPSCRIPT, Messages.PAUSESCRIPT, Messages.MENUSEPERATOR,
+						Messages.SAVESCREENSHOT, Messages.MENUSEPERATOR,
+						Messages.HIDEBOT, Messages.EXIT},
 				{"Accounts", Messages.MENUSEPERATOR,
-					"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", Messages.MENUSEPERATOR,
-					"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", Messages.MENUSEPERATOR,
-					"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations"}, constructDebugs(),
-					{"Site", "Project", "About"}};
+						"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", Messages.MENUSEPERATOR,
+						"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", Messages.MENUSEPERATOR,
+						"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations"}, constructDebugs(),
+				{"Site", "Project", "About"}};
 	}
 
 	private static String[] constructDebugs() {
@@ -107,6 +107,7 @@ public class BotMenuBar extends JMenuBar {
 		map.put(Messages.STOPSCRIPT, GlobalConfiguration.Paths.Resources.ICON_DELETE);
 		map.put(Messages.PAUSESCRIPT, GlobalConfiguration.Paths.Resources.ICON_PAUSE);
 		map.put(Messages.SAVESCREENSHOT, GlobalConfiguration.Paths.Resources.ICON_PHOTO);
+		map.put(Messages.HIDEBOT, GlobalConfiguration.Paths.Resources.ICON_TRAY_DOWN);
 		map.put(Messages.EXIT, GlobalConfiguration.Paths.Resources.ICON_CLOSE);
 		map.put("Accounts", GlobalConfiguration.Paths.Resources.ICON_REPORTKEY);
 		map.put("Site", GlobalConfiguration.Paths.Resources.ICON_WEBLINK);

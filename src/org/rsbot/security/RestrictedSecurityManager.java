@@ -1,18 +1,18 @@
 package org.rsbot.security;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.security.Permission;
-import java.util.ArrayList;
-
 import org.rsbot.Application;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.GlobalConfiguration.OperatingSystem;
+
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.security.Permission;
+import java.util.ArrayList;
 
 /**
  * @author Paris
@@ -297,8 +297,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 						fail = false;
 					}
 				}
-				for (final String prefix : new String[] { GlobalConfiguration.Paths.getScreenshotsDirectory(),
-						GlobalConfiguration.Paths.getScriptsDirectory(), GlobalConfiguration.Paths.getWebCache() }) {
+				for (final String prefix : new String[]{GlobalConfiguration.Paths.getScreenshotsDirectory(),
+						GlobalConfiguration.Paths.getScriptsDirectory(), GlobalConfiguration.Paths.getWebDatabase()}) {
 					if (path.startsWith(prefix)) {
 						fail = false;
 						break;

@@ -145,13 +145,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (current != null) {
 					ScreenshotUtil.saveScreenshot(current, current.getMethodContext().game.isLoggedIn());
 				}
-			} else if (option.equals("Hide in Tray")) {
+			} else if (option.equals(Messages.HIDEBOT)) {
 				try {
 					TrayManager.Hide();
 				} catch (AWTException ignored) {
 					log.warning("Failed to snap into tray!");
 				}
-			} else if (option.equals("Exit")) {
+			} else if (option.equals(Messages.EXIT)) {
 				cleanExit();
 			}
 		} else if (menu.equals(Messages.EDIT)) {

@@ -1,6 +1,6 @@
 package org.rsbot.gui;
 
-public final class Messages {
+public interface Messages {
 	public static final String FILE = "File";
 	public static final String EDIT = "Edit";
 	public static final String VIEW = "View";
@@ -21,7 +21,4 @@ public final class Messages {
 	public static final String TOGGLEFALSE = TOGGLE + "F";
 	public static final String TOGGLETRUE = TOGGLE + "T";
 	public static final String MENUSEPERATOR = "-";
-
-	private Messages() {
-	}
 }
