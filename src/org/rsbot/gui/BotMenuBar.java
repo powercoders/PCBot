@@ -107,7 +107,7 @@ public class BotMenuBar extends JMenuBar {
 		map.put(Messages.STOPSCRIPT, GlobalConfiguration.Paths.Resources.ICON_DELETE);
 		map.put(Messages.PAUSESCRIPT, GlobalConfiguration.Paths.Resources.ICON_PAUSE);
 		map.put(Messages.SAVESCREENSHOT, GlobalConfiguration.Paths.Resources.ICON_PHOTO);
-		map.put(Messages.HIDEBOT, GlobalConfiguration.Paths.Resources.ICON_TRAY_DOWN);
+		map.put(Messages.HIDEBOT, GlobalConfiguration.Paths.Resources.ICON_ARROWIN);
 		map.put(Messages.EXIT, GlobalConfiguration.Paths.Resources.ICON_CLOSE);
 		map.put("Accounts", GlobalConfiguration.Paths.Resources.ICON_REPORTKEY);
 		map.put("Site", GlobalConfiguration.Paths.Resources.ICON_WEBLINK);
