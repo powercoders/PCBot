@@ -81,7 +81,6 @@ public class Bot {
 		loader = new RSLoader();
 		final Dimension size = Application.getPanelSize();
 		loader.setCallback(new Runnable() {
-			@Override
 			public void run() {
 				try {
 					setClient((Client) loader.getClient());

@@ -14,6 +14,7 @@ public class WebData extends BackgroundScript {
 	private RSTile lb = null;
 	private int lp = -1;
 	public final HashMap<RSTile, TileFlags> rs_map = new HashMap<RSTile, TileFlags>();
+	private static final Object lock = new Object();
 
 	@Override
 	public boolean activateCondition() {
@@ -80,22 +81,25 @@ public class WebData extends BackgroundScript {
 							tI.addKey(TileFlags.Keys.TILE_WATER);
 						}
 					}
-					if (!Web.map.containsKey(start) && !tI.isWalkable()) {
-						rs_map.put(start, tI);
-					} else {
-						try {
-							if (!Web.map.get(start).equals(tI)) {
-								WebQueue.Remove(start);
+					synchronized (lock) {
+						if (!Web.map.containsKey(start) && !tI.isWalkable()) {
+							rs_map.put(start, tI);
+						} else {
+							try {
+								if (!Web.map.get(start).equals(tI)) {
+									WebQueue.Remove(start);
+									lb = null;
+									lp = -1;
+								}
+							} catch (final NullPointerException ignored) {
 							}
-						} catch (final NullPointerException ignored) {
 						}
 					}
 				}
 			}
 			WebQueue.Add(rs_map);
 			return -1;
-		} catch (final Exception e) {
-			e.printStackTrace();
+		} catch (final Exception ignored) {
 		}
 		return -1;
 	}

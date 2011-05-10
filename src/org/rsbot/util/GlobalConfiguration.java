@@ -1,18 +1,12 @@
 package org.rsbot.util;
 
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import org.rsbot.log.LogFormatter;
+import org.rsbot.log.SystemConsoleHandler;
+import org.rsbot.log.TextAreaLogHandler;
+
+import javax.swing.filechooser.FileSystemView;
+import java.awt.*;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,14 +16,7 @@ import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
 
-import javax.swing.filechooser.FileSystemView;
-
-import org.rsbot.log.LogFormatter;
-import org.rsbot.log.SystemConsoleHandler;
-import org.rsbot.log.TextAreaLogHandler;
-
 public class GlobalConfiguration {
-
 	public enum OperatingSystem {
 		MAC, WINDOWS, LINUX, UNKNOWN
 	}
@@ -42,6 +29,7 @@ public class GlobalConfiguration {
 			public static final String ICON = ROOT_IMG + "/icon.png";
 			public static final String ICON_APPADD = ROOT_IMG + "/application_add.png";
 			public static final String ICON_APPDELETE = ROOT_IMG + "/application_delete.png";
+			public static final String ICON_ARROWIN = ROOT_IMG + "/arrow_in.png";
 			public static final String ICON_DELETE = ROOT_IMG + "/delete.png";
 			public static final String ICON_PLAY = ROOT_IMG + "/control_play_blue.png";
 			public static final String ICON_PAUSE = ROOT_IMG + "/control_pause.png";
@@ -74,7 +62,6 @@ public class GlobalConfiguration {
 			private static final String BASE = "http://links.powerbot.org/";
 			public static final String DOWNLOAD = BASE + "download";
 			public static final String UPDATE = BASE + "modscript";
-			public static final String WEB = BASE + "webwalker.gz";
 			public static final String VERSION = BASE + "version.txt";
 			public static final String PROJECT = BASE + "git-project";
 			public static final String SITE = BASE + "site";
@@ -95,11 +82,9 @@ public class GlobalConfiguration {
 		public static String getAccountsFile() {
 			final String path;
 			if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
-				path = System.getenv("APPDATA") + File.separator
-				+ GlobalConfiguration.NAME + "_Accounts.ini";
+				path = System.getenv("APPDATA") + File.separator + GlobalConfiguration.NAME + "_Accounts.ini";
 			} else {
-				path = Paths.getUnixHome() + File.separator + "."
-				+ GlobalConfiguration.NAME_LOWERCASE + "acct";
+				path = Paths.getUnixHome() + File.separator + "." + GlobalConfiguration.NAME_LOWERCASE + "acct";
 			}
 			return path;
 		}
@@ -109,7 +94,7 @@ public class GlobalConfiguration {
 			if (env == null || env.isEmpty()) {
 				return (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS ?
 						FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath() :
-							Paths.getUnixHome()) + File.separator + GlobalConfiguration.NAME;
+						Paths.getUnixHome()) + File.separator + GlobalConfiguration.NAME;
 			} else {
 				return env;
 			}
@@ -183,8 +168,8 @@ public class GlobalConfiguration {
 			return Paths.getCacheDirectory() + File.separator + "events.log";
 		}
 
-		public static String getWebCache() {
-			return Paths.getCacheDirectory() + File.separator + "web.dat";
+		public static String getWebDatabase() {
+			return Paths.getSettingsDirectory() + File.separator + "Web.store";
 		}
 
 		public static String getBankCache() {

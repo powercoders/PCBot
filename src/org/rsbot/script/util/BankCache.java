@@ -15,6 +15,7 @@ import java.util.HashMap;
 public class BankCache {
 	private final static File cacheFile = new File(GlobalConfiguration.Paths.getBankCache());
 	private final static HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
+	private static final Object lock = new Object();
 
 	/**
 	 * Saves a bank cache for a user.
@@ -23,56 +24,62 @@ public class BankCache {
 	 * @param items The array of items in the bank.
 	 */
 	public static void Save(final String name, final RSItem[] items) throws Exception {
-		Load();// For multiple bot instances.
-		final FileWriter fw = new FileWriter(cacheFile, false);
-		final BufferedWriter bw = new BufferedWriter(fw);
-		HashMap<String, String> newData = BankCache.genMap(name, items);
-		if (data.containsKey(name.toLowerCase())) {
-			data.get(name.toLowerCase()).putAll(newData);
-		} else {
-			data.put(name.toLowerCase(), newData);
+		synchronized (lock) {
+			Load();// For multiple bot instances.
+			final FileWriter fw = new FileWriter(cacheFile, false);
+			final BufferedWriter bw = new BufferedWriter(fw);
+			HashMap<String, String> newData = BankCache.genMap(name, items);
+			if (data.containsKey(name.toLowerCase())) {
+				data.get(name.toLowerCase()).putAll(newData);
+			} else {
+				data.put(name.toLowerCase(), newData);
+			}
+			IniParser.serialise(data, bw);
+			bw.close();
 		}
-		IniParser.serialise(data, bw);
-		bw.close();
 	}
 
 	private static HashMap<String, String> genMap(final String name, final RSItem[] items) {
-		final HashMap<String, String> newData = new HashMap<String, String>();
-		if (data.containsKey(name.toLowerCase())) {
-			final HashMap<String, String> oldData = data.get(name.toLowerCase());
-			for (final RSItem i : items) {
-				if (i != null) {
-					if (oldData.containsKey(i.getName())) {
-						if (!(Integer.parseInt(oldData.get(i.getName())) == i.getID())) {
-							data.get(name.toLowerCase()).remove(i.getName());
+		synchronized (lock) {
+			final HashMap<String, String> newData = new HashMap<String, String>();
+			if (data.containsKey(name.toLowerCase())) {
+				final HashMap<String, String> oldData = data.get(name.toLowerCase());
+				for (final RSItem i : items) {
+					if (i != null) {
+						if (oldData.containsKey(i.getName())) {
+							if (!(Integer.parseInt(oldData.get(i.getName())) == i.getID())) {
+								data.get(name.toLowerCase()).remove(i.getName());
+								newData.put(i.getName(), i.getID() + "");
+							}
+						} else {
 							newData.put(i.getName(), i.getID() + "");
 						}
-					} else {
+					}
+				}
+			} else {
+				for (final RSItem i : items) {
+					if (i != null) {
 						newData.put(i.getName(), i.getID() + "");
 					}
 				}
 			}
-		} else {
-			for (final RSItem i : items) {
-				if (i != null) {
-					newData.put(i.getName(), i.getID() + "");
-				}
-			}
+			return newData;
 		}
-		return newData;
 	}
 
 	public static void Load() throws Exception {
-		if (!cacheFile.exists()) {
-			if (!cacheFile.createNewFile()) {
-				return;
+		synchronized (lock) {
+			if (!cacheFile.exists()) {
+				if (!cacheFile.createNewFile()) {
+					return;
+				}
 			}
+			final FileReader fr = new FileReader(cacheFile);
+			final BufferedReader br = new BufferedReader(fr);
+			data.clear();
+			data.putAll(IniParser.deserialise(br));
+			br.close();
 		}
-		final FileReader fr = new FileReader(cacheFile);
-		final BufferedReader br = new BufferedReader(fr);
-		data.clear();
-		data.putAll(IniParser.deserialise(br));
-		br.close();
 	}
 
 	/**
@@ -83,14 +90,16 @@ public class BankCache {
 	 * @return <tt>true</tt> if the bank cache contains it.
 	 */
 	public static boolean Contains(final String name, final Object o) {
-		try {
-			Load();// For multiple bot instances.
-			if (data.containsKey(name)) {
-				final HashMap<String, String> userData = data.get(name);
-				return userData.containsKey(o) || userData.containsValue(o);
+		synchronized (lock) {
+			try {
+				Load();// For multiple bot instances.
+				if (data.containsKey(name)) {
+					final HashMap<String, String> userData = data.get(name);
+					return userData.containsKey(o) || userData.containsValue(o);
+				}
+			} catch (final Exception e) {
 			}
-		} catch (final Exception e) {
+			return false;
 		}
-		return false;
 	}
 }

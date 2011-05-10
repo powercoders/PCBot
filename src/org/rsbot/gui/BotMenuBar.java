@@ -1,54 +1,18 @@
 package org.rsbot.gui;
 
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
-
 import org.rsbot.bot.Bot;
-import org.rsbot.event.impl.DrawBoundaries;
-import org.rsbot.event.impl.DrawInventory;
-import org.rsbot.event.impl.DrawItems;
-import org.rsbot.event.impl.DrawModel;
-import org.rsbot.event.impl.DrawMouse;
-import org.rsbot.event.impl.DrawNPCs;
-import org.rsbot.event.impl.DrawObjects;
-import org.rsbot.event.impl.DrawPlayers;
-import org.rsbot.event.impl.DrawSettings;
-import org.rsbot.event.impl.DrawWeb;
-import org.rsbot.event.impl.MessageLogger;
-import org.rsbot.event.impl.TAnimation;
-import org.rsbot.event.impl.TCamera;
-import org.rsbot.event.impl.TFPS;
-import org.rsbot.event.impl.TFloorHeight;
-import org.rsbot.event.impl.TLoginIndex;
-import org.rsbot.event.impl.TMenu;
-import org.rsbot.event.impl.TMenuActions;
-import org.rsbot.event.impl.TMousePosition;
-import org.rsbot.event.impl.TPlayerPosition;
-import org.rsbot.event.impl.TTab;
-import org.rsbot.event.impl.TUserInputAllowed;
-import org.rsbot.event.impl.TWebStatus;
+import org.rsbot.event.impl.*;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.event.listeners.TextPaintListener;
 import org.rsbot.util.GlobalConfiguration;
+
+import javax.swing.*;
+
+import java.awt.SystemTray;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class BotMenuBar extends JMenuBar {
 	private static final long serialVersionUID = 971579975301998332L;
@@ -90,14 +54,14 @@ public class BotMenuBar extends JMenuBar {
 		TITLES = new String[]{Messages.FILE, Messages.EDIT, Messages.VIEW, Messages.HELP};
 		ELEMENTS = new String[][]{
 				{Messages.NEWBOT, Messages.CLOSEBOT, Messages.MENUSEPERATOR,
-					Messages.SERVICEKEY, Messages.ADDSCRIPT, Messages.RUNSCRIPT, Messages.STOPSCRIPT, Messages.PAUSESCRIPT, Messages.MENUSEPERATOR,
-					Messages.SAVESCREENSHOT, Messages.MENUSEPERATOR,
-				Messages.EXIT},
+						Messages.SERVICEKEY, Messages.ADDSCRIPT, Messages.RUNSCRIPT, Messages.STOPSCRIPT, Messages.PAUSESCRIPT, Messages.MENUSEPERATOR,
+						Messages.SAVESCREENSHOT, Messages.MENUSEPERATOR,
+						Messages.HIDEBOT, Messages.EXIT},
 				{"Accounts", Messages.MENUSEPERATOR,
-					"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", Messages.MENUSEPERATOR,
-					"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", Messages.MENUSEPERATOR,
-					"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations"}, constructDebugs(),
-					{"Site", "Project", "About"}};
+						"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", Messages.MENUSEPERATOR,
+						"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", Messages.MENUSEPERATOR,
+						"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations"}, constructDebugs(),
+				{"Site", "Project", "About"}};
 	}
 
 	private static String[] constructDebugs() {
@@ -145,6 +109,7 @@ public class BotMenuBar extends JMenuBar {
 		map.put(Messages.STOPSCRIPT, GlobalConfiguration.Paths.Resources.ICON_DELETE);
 		map.put(Messages.PAUSESCRIPT, GlobalConfiguration.Paths.Resources.ICON_PAUSE);
 		map.put(Messages.SAVESCREENSHOT, GlobalConfiguration.Paths.Resources.ICON_PHOTO);
+		map.put(Messages.HIDEBOT, GlobalConfiguration.Paths.Resources.ICON_ARROWIN);
 		map.put(Messages.EXIT, GlobalConfiguration.Paths.Resources.ICON_CLOSE);
 		map.put("Accounts", GlobalConfiguration.Paths.Resources.ICON_REPORTKEY);
 		map.put("Site", GlobalConfiguration.Paths.Resources.ICON_WEBLINK);
@@ -171,6 +136,7 @@ public class BotMenuBar extends JMenuBar {
 		constructItemIcons();
 		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
 		commandCheckMap.get("Disable Monitoring").setVisible(false);
+		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
 	}
 
 	public void setOverrideInput(final boolean force) {

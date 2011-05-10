@@ -1,6 +1,6 @@
 package org.rsbot.gui;
 
-public final class Messages {
+public interface Messages {
 	public static final String FILE = "File";
 	public static final String EDIT = "Edit";
 	public static final String VIEW = "View";
@@ -8,6 +8,7 @@ public final class Messages {
 
 	public static final String NEWBOT = "New Bot";
 	public static final String CLOSEBOT = "Close Bot";
+	public static final String HIDEBOT = "Hide";
 	public static final String SERVICEKEY = "Service Key";
 	public static final String ADDSCRIPT = "Add Script";
 	public static final String RUNSCRIPT = "Run Script";
@@ -20,7 +21,4 @@ public final class Messages {
 	public static final String TOGGLEFALSE = TOGGLE + "F";
 	public static final String TOGGLETRUE = TOGGLE + "T";
 	public static final String MENUSEPERATOR = "-";
-
-	private Messages() {
-	}
 }

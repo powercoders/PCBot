@@ -46,7 +46,6 @@ public class Web extends MethodProvider {
 			curr = Lowest_f(open);
 			if (curr.equals(dest)) {
 				return Path(curr);
-				//return new RSWeb(methods, Path(curr));
 			}
 			open.remove(curr);
 			closed.add(curr);
