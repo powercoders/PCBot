@@ -1,17 +1,17 @@
 package org.rsbot.security;
 
+import org.rsbot.Application;
+import org.rsbot.gui.BotGUI;
+import org.rsbot.service.ScriptDeliveryNetwork;
+import org.rsbot.util.AccountStore;
+import org.rsbot.util.GlobalConfiguration;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.security.Permission;
 import java.util.ArrayList;
-
-import org.rsbot.Application;
-import org.rsbot.gui.BotGUI;
-import org.rsbot.service.ScriptDeliveryNetwork;
-import org.rsbot.util.AccountStore;
-import org.rsbot.util.GlobalConfiguration;
 
 /**
  * @author Paris
@@ -59,6 +59,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("www.dlolpics.com"); // DlolPics
 		whitelist.add("logikmedia.co"); // countvidal
 		whitelist.add("*.letthesmokeout.com"); // MrByte
+		whitelist.add("testscriptsecurity.host22.com"); // Marneus901
 
 		return whitelist;
 	}
