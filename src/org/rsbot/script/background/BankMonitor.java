@@ -10,6 +10,7 @@ import java.util.HashMap;
 @ScriptManifest(name = "Bank Monitor", authors = {"Timer"})
 public class BankMonitor extends BackgroundScript {
 	private final HashMap<String, Long> updateTimes = new HashMap<String, Long>();
+	private static final Object lock = new Object();
 
 	@Override
 	public boolean activateCondition() {
@@ -18,24 +19,26 @@ public class BankMonitor extends BackgroundScript {
 
 	@Override
 	public int loop() {
-		sleep(1500);
-		final String accountName = getMyPlayer().getName().trim();
-		if (updateTimes.keySet().contains(accountName.toLowerCase())) {
-			final long lastTime = updateTimes.get(accountName.toLowerCase());
-			if (System.currentTimeMillis() - lastTime < 30000) {
-				return -1;
-			} else {
-				updateTimes.remove(accountName.toLowerCase());
+		synchronized (lock) {
+			sleep(1500);
+			final String accountName = getMyPlayer().getName().trim();
+			if (updateTimes.keySet().contains(accountName.toLowerCase())) {
+				final long lastTime = updateTimes.get(accountName.toLowerCase());
+				if (System.currentTimeMillis() - lastTime < 30000) {
+					return -1;
+				} else {
+					updateTimes.remove(accountName.toLowerCase());
+				}
 			}
-		}
-		if (bank.isOpen()) {
-			final RSItem[] rsItems = bank.getItems();
-			try {
-				BankCache.Save(accountName, rsItems);
-			} catch (final Exception e) {
-				e.printStackTrace();
+			if (bank.isOpen()) {
+				final RSItem[] rsItems = bank.getItems();
+				try {
+					BankCache.Save(accountName, rsItems);
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
+				updateTimes.put(accountName, System.currentTimeMillis());
 			}
-			updateTimes.put(accountName, System.currentTimeMillis());
 		}
 		return -1;
 	}
