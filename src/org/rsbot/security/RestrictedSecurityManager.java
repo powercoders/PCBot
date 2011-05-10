@@ -294,15 +294,12 @@ public class RestrictedSecurityManager extends SecurityManager {
 					final String check = new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
 					fail = !path.equals(check);
 				}
-				// allow screenshots directory
-				if (path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory())) {
-					fail = false;
-				}
-				if (path.startsWith(GlobalConfiguration.Paths.getScriptsDirectory())) {
-					fail = false;
-				}
-				if (path.equals(GlobalConfiguration.Paths.getWebCache())) {
-					fail = false;
+				for (final String prefix : new String[] { GlobalConfiguration.Paths.getScreenshotsDirectory(),
+						GlobalConfiguration.Paths.getScriptsDirectory(), GlobalConfiguration.Paths.getWebCache() }) {
+					if (path.startsWith(prefix)) {
+						fail = false;
+						break;
+					}
 				}
 				final String jre = System.getProperty("java.home");
 				if (jre != null && !jre.isEmpty() && path.startsWith(jre)) {
