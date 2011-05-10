@@ -17,7 +17,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
 
 public class GlobalConfiguration {
-
 	public enum OperatingSystem {
 		MAC, WINDOWS, LINUX, UNKNOWN
 	}
@@ -84,11 +83,9 @@ public class GlobalConfiguration {
 		public static String getAccountsFile() {
 			final String path;
 			if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
-				path = System.getenv("APPDATA") + File.separator
-						+ GlobalConfiguration.NAME + "_Accounts.ini";
+				path = System.getenv("APPDATA") + File.separator + GlobalConfiguration.NAME + "_Accounts.ini";
 			} else {
-				path = Paths.getUnixHome() + File.separator + "."
-						+ GlobalConfiguration.NAME_LOWERCASE + "acct";
+				path = Paths.getUnixHome() + File.separator + "." + GlobalConfiguration.NAME_LOWERCASE + "acct";
 			}
 			return path;
 		}

@@ -22,11 +22,15 @@ public class RSWeb {
 		return routes.toArray(new Route[routes.size()]);
 	}
 
-	public boolean traverse() {
+	public boolean step() {
 		if (routes.size() > 0) {
 			Route route = routes.poll();
 			return route.execute();
 		}
 		return false;
+	}
+
+	public boolean finished() {
+		return routes.size() == 0;
 	}
 }
