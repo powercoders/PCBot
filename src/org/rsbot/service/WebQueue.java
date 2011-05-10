@@ -25,7 +25,7 @@ public class WebQueue {
 	private static final Object removeLock = new Object();
 
 	static {
-		writer = new QueueWriter(GlobalConfiguration.Paths.getWebCache());
+		writer = new QueueWriter(GlobalConfiguration.Paths.getWebDatabase());
 		writer.start();
 	}
 

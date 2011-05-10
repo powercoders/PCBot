@@ -300,7 +300,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 				if (path.startsWith(GlobalConfiguration.Paths.getScriptsDirectory())) {
 					fail = false;
 				}
-				if (path.equals(GlobalConfiguration.Paths.getWebCache())) {
+				if (path.equals(GlobalConfiguration.Paths.getWebDatabase())) {
 					fail = false;
 				}
 				if (path.contains("jre6\\bin") || path.contains("jre/lib")) {

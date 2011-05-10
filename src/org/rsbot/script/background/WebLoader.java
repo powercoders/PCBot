@@ -28,7 +28,7 @@ public class WebLoader extends BackgroundScript {
 				try {
 					int badRemoved = 0;
 					int redundantRemoved = 0;
-					final BufferedReader br = new BufferedReader(new FileReader(GlobalConfiguration.Paths.getWebCache()));
+					final BufferedReader br = new BufferedReader(new FileReader(GlobalConfiguration.Paths.getWebDatabase()));
 					String line;
 					final HashMap<RSTile, TileFlags> theFlagsList = new HashMap<RSTile, TileFlags>();
 					while ((line = br.readLine()) != null) {
