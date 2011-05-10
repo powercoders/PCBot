@@ -14,6 +14,7 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 	protected String name = "";
 	private volatile boolean running = false;
 	private int id = -1;
+	private static final int INDEX_LOGGING_IN = 9;
 
 	public abstract boolean activateCondition();
 
@@ -44,7 +45,7 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 		running = true;
 		try {
 			while (running) {
-				if (activateCondition()) {
+				if (activateCondition() && isLoggedIn()) {
 					final boolean start = onStart();
 					if (start) {
 						while (running) {
@@ -106,5 +107,9 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 	 */
 	public final boolean isRunning() {
 		return running;
+	}
+
+	private boolean isLoggedIn() {
+		return game.getClientState() > INDEX_LOGGING_IN;
 	}
 }
