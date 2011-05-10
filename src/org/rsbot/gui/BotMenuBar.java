@@ -7,6 +7,8 @@ import org.rsbot.event.listeners.TextPaintListener;
 import org.rsbot.util.GlobalConfiguration;
 
 import javax.swing.*;
+
+import java.awt.SystemTray;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.*;
@@ -134,6 +136,7 @@ public class BotMenuBar extends JMenuBar {
 		constructItemIcons();
 		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
 		commandCheckMap.get("Disable Monitoring").setVisible(false);
+		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
 	}
 
 	public void setOverrideInput(final boolean force) {
