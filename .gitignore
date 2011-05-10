@@ -1,7 +1,7 @@
 *.class
 *.diff
 *.patch
-.svn
+/.svn
 .DS_Store
 /*.iml
 /*.ipr
@@ -20,4 +20,4 @@
 /temp.txt
 /build.xml
 /manifest.mf
-/nbproject/
+/nbproject

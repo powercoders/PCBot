@@ -5,6 +5,6 @@ package org.rsbot.script.web;
  *
  * @author Timer
  */
-public abstract class Teleportation implements Activity, Prerequisites {
+public abstract class Teleport implements Transportation, Prerequisites {
 	public abstract boolean teleportationLocation();
 }

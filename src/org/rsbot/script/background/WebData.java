@@ -19,7 +19,7 @@ public class WebData extends BackgroundScript {
 	public boolean activateCondition() {
 		final RSTile curr_base = game.getMapBase();
 		final int curr_plane = game.getPlane();
-		return game.isLoggedIn() && (lb == null || !lb.equals(curr_base)) && (lp == -1 || !(lp == curr_plane));
+		return game.isLoggedIn() && (lb == null || !lb.equals(curr_base)) || (lp == -1 || lp != curr_plane);
 	}
 
 	@Override
@@ -27,9 +27,6 @@ public class WebData extends BackgroundScript {
 		try {
 			final RSTile curr_base = game.getMapBase();
 			final int curr_plane = game.getPlane();
-			if (lb != null && lb.equals(curr_base) && (lp != -1 && lp == curr_plane)) {
-				return -1;
-			}
 			rs_map.clear();
 			sleep(5000);
 			if (!curr_base.equals(game.getMapBase())) {
