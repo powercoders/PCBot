@@ -96,7 +96,7 @@ public class BotMenuBar extends JMenuBar {
 				{"Accounts", "-",
 					"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", "-",
 					"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", "-",
-					"ToggleF Disable Advertisements", "ToggleF Disable Confirmations"}, constructDebugs(),
+					"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations"}, constructDebugs(),
 					{"Site", "Project", "About"}};
 	}
 
@@ -170,6 +170,7 @@ public class BotMenuBar extends JMenuBar {
 		}
 		constructItemIcons();
 		commandMenuItem.get("Service Key").setVisible(false);
+		commandCheckMap.get("Disable Monitoring").setVisible(false);
 	}
 
 	public void setOverrideInput(final boolean force) {
