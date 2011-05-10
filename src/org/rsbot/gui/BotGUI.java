@@ -1,32 +1,5 @@
 package org.rsbot.gui;
 
-import java.awt.AWTKeyStroke;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.log.TextAreaLogHandler;
 import org.rsbot.script.Script;
@@ -36,14 +9,21 @@ import org.rsbot.script.internal.event.ScriptListener;
 import org.rsbot.script.methods.Environment;
 import org.rsbot.script.util.WindowUtil;
 import org.rsbot.service.Monitoring;
+import org.rsbot.service.Monitoring.Type;
 import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
-import org.rsbot.service.Monitoring.Type;
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.ScreenshotUtil;
-import org.rsbot.util.ScriptDownloader;
-import org.rsbot.util.UpdateUtil;
+import org.rsbot.util.*;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * @author Jacmob
@@ -64,6 +44,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private static final ScriptDeliveryNetwork sdn = ScriptDeliveryNetwork.getInstance();
 	private final List<Bot> noModificationBots = new ArrayList<Bot>();
 	private final int botsIndex = 2;
+	private static Component instance = null;
 
 	public BotGUI() {
 		init();
@@ -96,6 +77,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				Monitoring.start();
 			}
 		});
+		instance = this;
 	}
 
 	@Override
@@ -162,6 +144,12 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				final Bot current = getCurrentBot();
 				if (current != null) {
 					ScreenshotUtil.saveScreenshot(current, current.getMethodContext().game.isLoggedIn());
+				}
+			} else if (option.equals("Hide in Tray")) {
+				try {
+					TrayManager.Hide();
+				} catch (AWTException ignored) {
+					log.warning("Failed to snap into tray!");
 				}
 			} else if (option.equals("Exit")) {
 				cleanExit();
@@ -431,12 +419,12 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		addWindowStateListener(new WindowStateListener() {
 			public void windowStateChanged(final WindowEvent arg0) {
 				switch (arg0.getID()) {
-				case WindowEvent.WINDOW_ICONIFIED:
-					lessCpu(true);
-					break;
-				case WindowEvent.WINDOW_DEICONIFIED:
-					lessCpu(false);
-					break;
+					case WindowEvent.WINDOW_ICONIFIED:
+						lessCpu(true);
+						break;
+					case WindowEvent.WINDOW_DEICONIFIED:
+						lessCpu(false);
+						break;
 				}
 			}
 		});
@@ -587,5 +575,17 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			setVisible(true);
 		}
 		return doExit;
+	}
+
+	public static final void hideGUI() {
+		if (instance != null) {
+			instance.setVisible(false);
+		}
+	}
+
+	public static final void showGUI() {
+		if (instance != null) {
+			instance.setVisible(true);
+		}
 	}
 }
