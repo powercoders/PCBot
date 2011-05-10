@@ -36,7 +36,7 @@ public class GlobalConfiguration {
 			public static final String ICON_ADD = ROOT_IMG + "/add.png";
 			public static final String ICON_HOME = ROOT_IMG + "/home.png";
 			public static final String ICON_BOT = ROOT_IMG + "/bot.png";
-			public static final String ICON_TRAY = ROOT_IMG + "/tray.png";
+			public static final String ICON_TRAY_DOWN = ROOT_IMG + "/tray_down.png";
 			public static final String ICON_CLOSE = ROOT_IMG + "/close.png";
 			public static final String ICON_TICK = ROOT_IMG + "/tick.png";
 			public static final String ICON_MOUSE = ROOT_IMG + "/mouse.png";
@@ -54,6 +54,7 @@ public class GlobalConfiguration {
 			public static final String ICON_SCRIPT_SRC = ROOT_IMG + "/script_src.png";
 			public static final String ICON_USEREDIT = ROOT_IMG + "/user_edit.png";
 			public static final String ICON_WEBLINK = ROOT_IMG + "/world_link.png";
+			public static final String ICON_TRAY_UP = ROOT_IMG + "/tray_up.png";
 
 			public static final String VERSION = ROOT + "/version.txt";
 		}
