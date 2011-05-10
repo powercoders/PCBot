@@ -140,7 +140,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkDelete(final String file) {
-		checkFilePath(file);
+		checkFilePath(file, false);
 		super.checkDelete(file);
 	}
 
@@ -236,7 +236,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkRead(final String file) {
-		checkFilePath(file);
+		checkFilePath(file, true);
 		super.checkRead(file);
 	}
 
@@ -274,11 +274,11 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkWrite(final String file) {
-		checkFilePath(file);
+		checkFilePath(file, false);
 		super.checkWrite(file);
 	}
 
-	private void checkFilePath(String path) {
+	private void checkFilePath(String path, final boolean readOnly) {
 		path = new File(path).getAbsolutePath();
 		if (isCallerScript()) {
 			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())) {
@@ -293,7 +293,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 					fail = !path.startsWith(check);
 				} else {
 					final String check = new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
-					fail = !path.equals(check);
+					if (readOnly && path.equals(check)) {
+						fail = false;
+					}
 				}
 				for (final String prefix : new String[] { GlobalConfiguration.Paths.getScreenshotsDirectory(),
 						GlobalConfiguration.Paths.getScriptsDirectory(), GlobalConfiguration.Paths.getWebCache() }) {
@@ -303,12 +305,12 @@ public class RestrictedSecurityManager extends SecurityManager {
 					}
 				}
 				final String jre = System.getProperty("java.home");
-				if (jre != null && !jre.isEmpty() && path.startsWith(jre)) {
+				if (readOnly && jre != null && !jre.isEmpty() && path.startsWith(jre)) {
 					fail = false;
 				}
 				if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
 					final String sysroot = System.getenv("SystemRoot");
-					if (sysroot != null & !sysroot.isEmpty() && path.startsWith(sysroot)) {
+					if (readOnly && sysroot != null & !sysroot.isEmpty() && path.startsWith(sysroot)) {
 						fail = false;
 					}
 				}
