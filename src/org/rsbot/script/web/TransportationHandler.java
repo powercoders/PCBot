@@ -19,6 +19,9 @@ public class TransportationHandler extends MethodProvider {
 
 	public TransportationHandler(final MethodContext ctx) {
 		super(ctx);
+		Tablets tablets = new Tablets();
+		teleports.add(tablets.CAMELOT);
+		teleports.add(tablets.VARROCK);
 	}
 
 	public boolean canPreform(final RSTile destination) {
@@ -52,12 +55,7 @@ public class TransportationHandler extends MethodProvider {
 	}
 
 	private class Tablets {
-		final TeleportTab VARROCK = new TeleportTab(methods, 8007, new RSTile(3212, 3428, 0));
-		final TeleportTab CAMELOT = new TeleportTab(methods, 8010, new RSTile(2757, 3478, 0));
-
-		{
-			teleports.add(VARROCK);
-			teleports.add(CAMELOT);
-		}
+		public final TeleportTab VARROCK = new TeleportTab(methods, 8007, new RSTile(3212, 3428, 0));
+		public final TeleportTab CAMELOT = new TeleportTab(methods, 8010, new RSTile(2757, 3478, 0));
 	}
 }
