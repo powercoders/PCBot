@@ -44,7 +44,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private static final ScriptDeliveryNetwork sdn = ScriptDeliveryNetwork.getInstance();
 	private final List<Bot> noModificationBots = new ArrayList<Bot>();
 	private final int botsIndex = 2;
-	private static Component instance = null;
+	private TrayIcon tray = null;
 
 	public BotGUI() {
 		init();
@@ -77,7 +77,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				Monitoring.start();
 			}
 		});
-		instance = this;
 	}
 
 	@Override
@@ -146,11 +145,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					ScreenshotUtil.saveScreenshot(current, current.getMethodContext().game.isLoggedIn());
 				}
 			} else if (option.equals(Messages.HIDEBOT)) {
-				try {
-					TrayManager.Hide();
-				} catch (AWTException ignored) {
-					log.warning("Failed to snap into tray!");
-				}
+				setTray();
 			} else if (option.equals(Messages.EXIT)) {
 				cleanExit();
 			}
@@ -582,15 +577,34 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		return doExit;
 	}
 
-	public static final void hideGUI() {
-		if (instance != null) {
-			instance.setVisible(false);
+	public void setTray() {
+		if (tray == null) {
+			final Image image = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON);
+			tray = new TrayIcon(image, GlobalConfiguration.NAME, null);
+			tray.setImageAutoSize(true);
+			tray.addMouseListener(new MouseListener() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) { }
+				@Override
+				public void mouseEntered(MouseEvent arg0) { }
+				@Override
+				public void mouseExited(MouseEvent arg0) { }
+				@Override
+				public void mouseReleased(MouseEvent arg0) { }
+				@Override
+				public void mousePressed(MouseEvent arg0) {
+					SystemTray.getSystemTray().remove(tray);
+					setVisible(true);
+					lessCpu(false);
+				}
+			});
 		}
-	}
-
-	public static final void showGUI() {
-		if (instance != null) {
-			instance.setVisible(true);
+		try {
+			SystemTray.getSystemTray().add(tray);
+		} catch (Exception ignored) {
+			log.warning("Unable to hide window");
 		}
+		setVisible(false);
+		lessCpu(true);
 	}
 }
