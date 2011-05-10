@@ -25,63 +25,63 @@ public class WebData extends BackgroundScript {
 
 	@Override
 	public int loop() {
-		synchronized (lock) {
-			try {
-				final RSTile curr_base = game.getMapBase();
-				final int curr_plane = game.getPlane();
-				rs_map.clear();
-				sleep(5000);
-				if (!curr_base.equals(game.getMapBase())) {
-					return -1;
-				}
-				lb = curr_base;
-				lp = curr_plane;
-				Node t;
-				final int flags[][] = walking.getCollisionFlags(curr_plane);
-				for (int i = 3; i < 102; i++) {
-					for (int j = 3; j < 102; j++) {
-						final RSTile start = new RSTile(curr_base.getX() + i, curr_base.getY() + j, curr_plane);
-						final int base_x = game.getBaseX(), base_y = game.getBaseY();
-						final int curr_x = start.getX() - base_x, curr_y = start.getY() - base_y;
-						t = new Node(curr_x, curr_y);
-						final RSTile offset = walking.getCollisionOffset(curr_plane);
-						final int off_x = offset.getX();
-						final int off_y = offset.getY();
-						final int x = t.x, y = t.y;
-						final int f_x = x - off_x, f_y = y - off_y;
-						final int here = flags[f_x][f_y];
-						final TileFlags tI = new TileFlags(start, null);
-						if ((here & TileFlags.Flags.WALL_EAST) != 0) {
-							tI.addKey(TileFlags.Keys.WALL_EAST);
+		try {
+			final RSTile curr_base = game.getMapBase();
+			final int curr_plane = game.getPlane();
+			rs_map.clear();
+			sleep(5000);
+			if (!curr_base.equals(game.getMapBase())) {
+				return -1;
+			}
+			lb = curr_base;
+			lp = curr_plane;
+			Node t;
+			final int flags[][] = walking.getCollisionFlags(curr_plane);
+			for (int i = 3; i < 102; i++) {
+				for (int j = 3; j < 102; j++) {
+					final RSTile start = new RSTile(curr_base.getX() + i, curr_base.getY() + j, curr_plane);
+					final int base_x = game.getBaseX(), base_y = game.getBaseY();
+					final int curr_x = start.getX() - base_x, curr_y = start.getY() - base_y;
+					t = new Node(curr_x, curr_y);
+					final RSTile offset = walking.getCollisionOffset(curr_plane);
+					final int off_x = offset.getX();
+					final int off_y = offset.getY();
+					final int x = t.x, y = t.y;
+					final int f_x = x - off_x, f_y = y - off_y;
+					final int here = flags[f_x][f_y];
+					final TileFlags tI = new TileFlags(start, null);
+					if ((here & TileFlags.Flags.WALL_EAST) != 0) {
+						tI.addKey(TileFlags.Keys.WALL_EAST);
+					}
+					if ((here & TileFlags.Flags.WALL_WEST) != 0) {
+						tI.addKey(TileFlags.Keys.WALL_WEST);
+					}
+					if ((here & TileFlags.Flags.WALL_NORTH) != 0) {
+						tI.addKey(TileFlags.Keys.WALL_NORTH);
+					}
+					if ((here & TileFlags.Flags.WALL_SOUTH) != 0) {
+						tI.addKey(TileFlags.Keys.WALL_SOUTH);
+					}
+					if ((here & TileFlags.Flags.WALL_NORTH_EAST) != 0) {
+						tI.addKey(TileFlags.Keys.WALL_NORTH_EAST);
+					}
+					if ((here & TileFlags.Flags.WALL_NORTH_WEST) != 0) {
+						tI.addKey(TileFlags.Keys.WALL_NORTH_WEST);
+					}
+					if ((here & TileFlags.Flags.WALL_SOUTH_EAST) != 0) {
+						tI.addKey(TileFlags.Keys.WALL_SOUTH_EAST);
+					}
+					if ((here & TileFlags.Flags.WALL_SOUTH_WEST) != 0) {
+						tI.addKey(TileFlags.Keys.WALL_SOUTH_WEST);
+					}
+					if ((here & TileFlags.Flags.BLOCKED) != 0) {
+						tI.addKey(TileFlags.Keys.BLOCKED);
+					} else {
+						if ((here & TileFlags.Flags.WATER) != 0) {
+							tI.addKey(TileFlags.Keys.TILE_WATER);
 						}
-						if ((here & TileFlags.Flags.WALL_WEST) != 0) {
-							tI.addKey(TileFlags.Keys.WALL_WEST);
-						}
-						if ((here & TileFlags.Flags.WALL_NORTH) != 0) {
-							tI.addKey(TileFlags.Keys.WALL_NORTH);
-						}
-						if ((here & TileFlags.Flags.WALL_SOUTH) != 0) {
-							tI.addKey(TileFlags.Keys.WALL_SOUTH);
-						}
-						if ((here & TileFlags.Flags.WALL_NORTH_EAST) != 0) {
-							tI.addKey(TileFlags.Keys.WALL_NORTH_EAST);
-						}
-						if ((here & TileFlags.Flags.WALL_NORTH_WEST) != 0) {
-							tI.addKey(TileFlags.Keys.WALL_NORTH_WEST);
-						}
-						if ((here & TileFlags.Flags.WALL_SOUTH_EAST) != 0) {
-							tI.addKey(TileFlags.Keys.WALL_SOUTH_EAST);
-						}
-						if ((here & TileFlags.Flags.WALL_SOUTH_WEST) != 0) {
-							tI.addKey(TileFlags.Keys.WALL_SOUTH_WEST);
-						}
-						if ((here & TileFlags.Flags.BLOCKED) != 0) {
-							tI.addKey(TileFlags.Keys.BLOCKED);
-						} else {
-							if ((here & TileFlags.Flags.WATER) != 0) {
-								tI.addKey(TileFlags.Keys.TILE_WATER);
-							}
-						}
+					}
+					synchronized (lock) {
 						if (!Web.map.containsKey(start) && !tI.isWalkable()) {
 							rs_map.put(start, tI);
 						} else {
@@ -96,12 +96,12 @@ public class WebData extends BackgroundScript {
 						}
 					}
 				}
-				WebQueue.Add(rs_map);
-				return -1;
-			} catch (final Exception ignored) {
 			}
+			WebQueue.Add(rs_map);
 			return -1;
+		} catch (final Exception ignored) {
 		}
+		return -1;
 	}
 
 	@Override
