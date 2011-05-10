@@ -26,8 +26,6 @@ public class WebLoader extends BackgroundScript {
 		synchronized (lock) {
 			if (!Web.loaded) {
 				try {
-					int badRemoved = 0;
-					int redundantRemoved = 0;
 					final BufferedReader br = new BufferedReader(new FileReader(GlobalConfiguration.Paths.getWebDatabase()));
 					String line;
 					final HashMap<RSTile, TileFlags> theFlagsList = new HashMap<RSTile, TileFlags>();
@@ -50,11 +48,9 @@ public class WebLoader extends BackgroundScript {
 									}
 									if (tileFlags.containsKey(0)) {
 										WebQueue.Remove(line);//Line is redundant as of Thursday, May 5, 2011.
-										redundantRemoved++;
 									} else {
 										if (theFlagsList.containsKey(tile)) {
 											WebQueue.Remove(line);//Line is double, remove from file--bad collection.
-											badRemoved++;
 										} else {
 											theFlagsList.put(tile, tileFlags);
 										}
@@ -63,11 +59,9 @@ public class WebLoader extends BackgroundScript {
 								}
 							} else {
 								WebQueue.Remove(line);//Line is bad, remove from file.
-								badRemoved++;
 							}
 						} else {
 							WebQueue.Remove(line);//Line is bad, remove from file.
-							badRemoved++;
 						}
 					}
 					Web.map.putAll(theFlagsList);
