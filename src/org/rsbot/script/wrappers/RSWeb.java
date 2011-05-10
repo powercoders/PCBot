@@ -1,48 +1,32 @@
 package org.rsbot.script.wrappers;
 
-import java.util.EnumSet;
+import org.rsbot.script.web.Route;
 
-import org.rsbot.script.methods.MethodContext;
+import java.util.LinkedList;
 
 /**
- * A path consisting of a list of tile waypoints.
+ * A transportation action consisting of a list of routes.
  *
  * @author Timer
  */
-public class RSWeb extends RSPath {
-	private final RSTile[] tiles;
+public class RSWeb {
+	private final LinkedList<Route> routes = new LinkedList<Route>();
 
-	public RSWeb(final MethodContext ctx, final RSTile[] tiles) {
-		super(ctx);
-		this.tiles = tiles;
+	public RSWeb(final Route[] routes) {
+		for (Route route : routes) {
+			this.routes.addLast(route);
+		}
 	}
 
-	public RSTile[] getTiles() {
-		return tiles;
+	public Route[] getRoutes() {
+		return routes.toArray(new Route[routes.size()]);
 	}
 
-	@Override
-	public boolean traverse(final EnumSet<TraversalOption> options) {
+	public boolean traverse() {
+		if (routes.size() > 0) {
+			Route route = routes.poll();
+			return route.execute();
+		}
 		return false;
-	}
-
-	@Override
-	public boolean isValid() {
-		return false;
-	}
-
-	@Override
-	public RSTile getNext() {
-		return null;
-	}
-
-	@Override
-	public RSTile getStart() {
-		return null;
-	}
-
-	@Override
-	public RSTile getEnd() {
-		return null;
 	}
 }
