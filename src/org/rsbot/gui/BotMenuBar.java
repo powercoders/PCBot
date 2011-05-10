@@ -87,7 +87,7 @@ public class BotMenuBar extends JMenuBar {
 		// Other
 		DEBUG_MAP.put("Log Messages", MessageLogger.class);
 
-		TITLES = new String[]{"File", "Edit", "View", "Help"};
+		TITLES = new String[]{Messages.FILE, Messages.EDIT, Messages.VIEW, Messages.HELP};
 		ELEMENTS = new String[][]{
 				{"New Bot", "Close Bot", "-",
 					"Service Key", "Add Script", "Run Script", "Stop Script", "Pause Script", "-",

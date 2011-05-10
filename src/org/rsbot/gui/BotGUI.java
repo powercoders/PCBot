@@ -127,7 +127,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				final int idx = Integer.parseInt(option);
 				removeBot(bots.get(idx - botsIndex));
 			}
-		} else if (menu.equals("File")) {
+		} else if (menu.equals(Messages.FILE)) {
 			if (option.equals("New Bot")) {
 				addBot();
 			} else if (option.equals("Close Bot")) {
@@ -166,7 +166,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			} else if (option.equals("Exit")) {
 				cleanExit();
 			}
-		} else if (menu.equals("Edit")) {
+		} else if (menu.equals(Messages.EDIT)) {
 			if (option.equals("Accounts")) {
 				AccountManager.getInstance().showGUI();
 			} else if (option.equals("Disable Advertisements")) {
@@ -196,7 +196,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					}
 				}
 			}
-		} else if (menu.equals("View")) {
+		} else if (menu.equals(Messages.VIEW)) {
 			final Bot current = getCurrentBot();
 			final boolean selected = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 			if (option.equals("Hide Toolbar")) {
@@ -230,7 +230,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					}
 				}
 			}
-		} else if (menu.equals("Help")) {
+		} else if (menu.equals(Messages.VIEW)) {
 			if (option.equals("Site")) {
 				openURL(GlobalConfiguration.Paths.URLs.SITE);
 			} else if (option.equals("Project")) {
