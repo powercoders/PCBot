@@ -66,16 +66,13 @@ public class TransportationHandler extends MethodProvider {
 	    if (teleport.meetsPrerequisites()
 		    && teleport.isApplicable(methods.players.getMyPlayer()
 			    .getLocation(), destination)) {
-		if (dist == 0.0D || teleport.getDistance(destination) < dist) {
+		if (dist == 0.0D || dist > teleport.getDistance(destination)) {
 		    dist = teleport.getDistance(destination);
 		    bestTeleport = teleport;
 		}
 	    }
 	}
-	if (bestTeleport != null) {
-	    return bestTeleport;
-	}
-	return null;
+	return bestTeleport;
     }
 
     private class Items {
