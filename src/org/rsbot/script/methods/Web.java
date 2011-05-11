@@ -6,6 +6,7 @@ import org.rsbot.script.web.RouteStep;
 import org.rsbot.script.web.Teleport;
 import org.rsbot.script.web.TransportationHandler;
 import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.RSWeb;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -93,6 +94,11 @@ public class Web extends MethodProvider {
 			return new Route(routeSteps.toArray(new RouteStep[routeSteps.size()]));
 		}
 		return null;
+	}
+
+	public RSWeb getWeb(RSTile start, final RSTile end) {
+		Route onlyRoute = generateRoute(start, end);
+		return new RSWeb(new Route[]{onlyRoute});
 	}
 
 	/**
