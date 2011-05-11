@@ -313,7 +313,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 				}
 				if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
 					final String sysroot = System.getenv("SystemRoot");
-					if (readOnly && sysroot != null & !sysroot.isEmpty() && path.startsWith(sysroot)) {
+					if (readOnly && sysroot != null && !sysroot.isEmpty() && path.startsWith(sysroot)) {
 						fail = false;
 					}
 				}
