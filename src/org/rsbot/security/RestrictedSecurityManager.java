@@ -19,7 +19,6 @@ import java.util.ArrayList;
  * @author Paris
  */
 public class RestrictedSecurityManager extends SecurityManager {
-
 	private String getCallingClass() {
 		final String prefix = Application.class.getPackage().getName() + ".";
 		for (final StackTraceElement s : Thread.currentThread().getStackTrace()) {
@@ -100,7 +99,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 					} else if (host.equals(check)) {
 						allowed = true;
 					}
-					if (allowed == true) {
+					if (allowed) {
 						break;
 					}
 				}
@@ -297,17 +296,12 @@ public class RestrictedSecurityManager extends SecurityManager {
 					}
 					fail = !path.startsWith(check);
 				} else {
-<<<<<<< HEAD
 					if (readOnly && path.equals(GlobalConfiguration.Paths.getRunningJarPath())) {
-=======
-					final String check = new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath().replace("%20", " ");
-					if (readOnly && path.equals(check)) {
->>>>>>> eckyecky/master
 						fail = false;
 					}
 				}
 				for (final String prefix : new String[]{GlobalConfiguration.Paths.getScreenshotsDirectory(),
-							GlobalConfiguration.Paths.getScriptsDirectory(), GlobalConfiguration.Paths.getWebDatabase()}) {
+						GlobalConfiguration.Paths.getScriptsDirectory(), GlobalConfiguration.Paths.getWebDatabase()}) {
 					if (path.startsWith(prefix)) {
 						fail = false;
 						break;
