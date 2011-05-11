@@ -17,7 +17,7 @@ public class Application {
 
 	public static void main(final String[] args) throws Exception {
 		bootstrap();
-		new Extractor(args).run();
+		new Extractor().run();
 		System.setSecurityManager(new RestrictedSecurityManager());
 		gui = new BotGUI();
 		gui.setVisible(true);
