@@ -300,7 +300,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 					}
 				}
 				for (final String prefix : new String[]{GlobalConfiguration.Paths.getScreenshotsDirectory(),
-						GlobalConfiguration.Paths.getScriptsDirectory(), GlobalConfiguration.Paths.getWebDatabase()}) {
+						GlobalConfiguration.Paths.getScriptsDirectory(), getScriptCacheTempDirectory(), GlobalConfiguration.Paths.getWebDatabase()}) {
 					if (path.startsWith(prefix)) {
 						fail = false;
 						break;
