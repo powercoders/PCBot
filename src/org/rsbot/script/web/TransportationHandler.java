@@ -24,7 +24,7 @@ public class TransportationHandler extends MethodProvider {
 		teleports.add(tablets.VARROCK);
 	}
 
-	public boolean canPreform(final RSTile destination) {
+	public boolean canTeleport(final RSTile destination) {
 		Iterator<Teleport> teleportIterator = teleports.listIterator();
 		while (teleportIterator.hasNext()) {
 			Teleport teleport = teleportIterator.next();
@@ -35,23 +35,23 @@ public class TransportationHandler extends MethodProvider {
 		return false;
 	}
 
-	public boolean preform(final RSTile destination) {
+	public Teleport getTeleport(final RSTile destination) {
 		Teleport bestTeleport = null;
 		double dist = 0.0D;
 		Iterator<Teleport> teleportIterator = teleports.listIterator();
 		while (teleportIterator.hasNext()) {
 			Teleport teleport = teleportIterator.next();
 			if (teleport.meetsPrerequisites() && teleport.isApplicable(methods.players.getMyPlayer().getLocation(), destination)) {
-				if (dist == 0.0D || dist < teleport.getDistance(destination)) {
+				if (dist == 0.0D || teleport.getDistance(destination) < dist) {
 					dist = teleport.getDistance(destination);
 					bestTeleport = teleport;
 				}
 			}
 		}
 		if (bestTeleport != null) {
-			return bestTeleport.preform();
+			return bestTeleport;
 		}
-		return false;
+		return null;
 	}
 
 	private class Tablets {

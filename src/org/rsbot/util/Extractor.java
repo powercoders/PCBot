@@ -27,10 +27,7 @@ public class Extractor implements Runnable {
 		}
 	}
 
-	private final String[] args;
-
-	public Extractor(final String[] args) {
-		this.args = args;
+	public Extractor() {
 	}
 
 	public void run() {
@@ -81,15 +78,6 @@ public class Extractor implements Runnable {
 				}
 			} catch (final Exception e) {
 				e.printStackTrace();
-			}
-		} else if (args.length > 2) {
-			if (args[0].toLowerCase().startsWith("delete")) {
-				final File jarOld = new File(args[1]);
-				if (jarOld.exists()) {
-					if (!jarOld.delete()) {
-						jarOld.deleteOnExit();
-					}
-				}
 			}
 		}
 	}
