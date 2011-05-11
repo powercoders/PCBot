@@ -26,27 +26,25 @@ public class RouteStep extends MethodProvider {
 			this.path = (RSTile[]) step;
 		} else if (step instanceof RSTile) {
 			this.type = Type.PATH;
-			this.path = new RSTile[] { (RSTile) step };
-		}else{
+			this.path = new RSTile[]{(RSTile) step};
+		} else {
 			throw new IllegalArgumentException("Step is of an invalid type!");
 		}
 	}
 
 	public boolean execute() {
 		switch (type) {
-		case PATH:
-			RSPath walkingPath = methods.walking.newTilePath(path);
-			while (!inSomeRandom()) {
-				if (!walkingPath.traverse()
-						|| methods.calc.distanceTo(walkingPath.getEnd()) < 5) {
-					break;
+			case PATH:
+				RSPath walkingPath = methods.walking.newTilePath(path);
+				while (!inSomeRandom()) {
+					if (!walkingPath.traverse() || methods.calc.distanceTo(walkingPath.getEnd()) < 5) {
+						break;
+					}
+					sleep(random(50, 150));
 				}
-				sleep(random(50, 150));
-			}
-			return !inSomeRandom()
-					&& methods.calc.distanceTo(walkingPath.getEnd()) < 5;
-		case TELEPORT:
-			return teleport != null && teleport.preform();
+				return !inSomeRandom() && methods.calc.distanceTo(walkingPath.getEnd()) < 5;
+			case TELEPORT:
+				return teleport != null && teleport.preform();
 		}
 		return false;
 	}
@@ -64,8 +62,7 @@ public class RouteStep extends MethodProvider {
 			return false;
 		}
 		for (final Random random : methods.bot.getScriptHandler().getRandoms()) {
-			if (random.isEnabled()
-					&& !(methods.bot.disableAutoLogin && random instanceof LoginBot)) {
+			if (random.isEnabled() && !(methods.bot.disableAutoLogin && random instanceof LoginBot)) {
 				if (random.activateCondition()) {
 					return true;
 				}
