@@ -195,6 +195,13 @@ public class GlobalConfiguration {
 			return Paths.getSettingsDirectory() + File.separator + "Menu.txt";
 		}
 
+		public static String getRunningJarPath() {
+			if (!RUNNING_FROM_JAR) {
+				return null;
+			}
+			return new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
+		}
+
 		public static String getUnixHome() {
 			final String home = System.getProperty("user.home");
 			return home == null ? "~" : home;
