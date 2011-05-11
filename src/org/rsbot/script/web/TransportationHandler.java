@@ -47,7 +47,7 @@ public class TransportationHandler extends MethodProvider {
 		while (teleportIterator.hasNext()) {
 			Teleport teleport = teleportIterator.next();
 			if (teleport.meetsPrerequisites() && teleport.isApplicable(methods.players.getMyPlayer().getLocation(), destination)) {
-				if (dist == 0.0D || teleport.getDistance(destination) < dist) {
+				if (dist == 0.0D || dist > teleport.getDistance(destination)) {
 					dist = teleport.getDistance(destination);
 					bestTeleport = teleport;
 				}
@@ -70,8 +70,8 @@ public class TransportationHandler extends MethodProvider {
 
 		public Runes() {
 			try {
-				VARROCK = new TeleportRunes(methods, Magic.SPELL_VARROCK_TELEPORT, new RSTile(3212, 3428, 0), new int[]{LAW_RUNE, FIRE_RUNE, AIR_RUNE}, new int[]{1, 1, 3});
-				CAMELOT = new TeleportRunes(methods, Magic.SPELL_CAMELOT_TELEPORT, new RSTile(2757, 3478, 0), new int[]{LAW_RUNE, AIR_RUNE}, new int[]{1, 5});
+				VARROCK = new TeleportRunes(methods, Magic.SPELL_VARROCK_TELEPORT, Magic.Book.MODERN, new RSTile(3212, 3428, 0), new int[]{LAW_RUNE, FIRE_RUNE, AIR_RUNE}, new int[]{1, 1, 3});
+				CAMELOT = new TeleportRunes(methods, Magic.SPELL_CAMELOT_TELEPORT, Magic.Book.MODERN, new RSTile(2757, 3478, 0), new int[]{LAW_RUNE, AIR_RUNE}, new int[]{1, 5});
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
