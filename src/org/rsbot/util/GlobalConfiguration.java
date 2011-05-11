@@ -17,12 +17,16 @@ import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
 
 public class GlobalConfiguration {
+
 	public enum OperatingSystem {
+
 		MAC, WINDOWS, LINUX, UNKNOWN
 	}
 
 	public static class Paths {
+
 		public static class Resources {
+
 			public static final String ROOT = "resources";
 			public static final String SCRIPTS = Paths.SCRIPTS_NAME_SRC + "/";
 			public static final String ROOT_IMG = ROOT + "/images";
@@ -54,11 +58,11 @@ public class GlobalConfiguration {
 			public static final String ICON_SCRIPT_SRC = ROOT_IMG + "/script_src.png";
 			public static final String ICON_USEREDIT = ROOT_IMG + "/user_edit.png";
 			public static final String ICON_WEBLINK = ROOT_IMG + "/world_link.png";
-
 			public static final String VERSION = ROOT + "/version.txt";
 		}
 
 		public static class URLs {
+
 			private static final String BASE = "http://links.powerbot.org/";
 			public static final String DOWNLOAD = BASE + "download";
 			public static final String UPDATE = BASE + "modscript";
@@ -69,13 +73,10 @@ public class GlobalConfiguration {
 			public static final String AD_INFO = BASE + "botad-info";
 			public static final String MONITORING_CONTROL = BASE + "monitoring";
 		}
-
 		public static final String ROOT = new File(".").getAbsolutePath();
-
 		public static final String COMPILE_SCRIPTS_BAT = "Compile-Scripts.bat";
 		public static final String COMPILE_SCRIPTS_SH = "compile-scripts.sh";
 		public static final String COMPILE_FIND_JDK = "FindJDK.bat";
-
 		public static final String SCRIPTS_NAME_SRC = "scripts";
 		public static final String SCRIPTS_NAME_OUT = "Scripts";
 
@@ -92,9 +93,9 @@ public class GlobalConfiguration {
 		public static String getHomeDirectory() {
 			final String env = System.getenv(GlobalConfiguration.NAME.toUpperCase() + "_HOME");
 			if (env == null || env.isEmpty()) {
-				return (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS ?
-						FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath() :
-						Paths.getUnixHome()) + File.separator + GlobalConfiguration.NAME;
+				return (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS
+						? FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath()
+						: Paths.getUnixHome()) + File.separator + GlobalConfiguration.NAME;
 			} else {
 				return env;
 			}
@@ -196,15 +197,14 @@ public class GlobalConfiguration {
 			return home == null ? "~" : home;
 		}
 	}
-
 	public static final String NAME = "RSBot";
 	public static final String NAME_LOWERCASE = NAME.toLowerCase();
 	private static final OperatingSystem CURRENT_OS;
 	public static boolean RUNNING_FROM_JAR = false;
 	public static final boolean SCRIPT_DRM = true;
 
-
 	public static class Twitter {
+
 		public static final boolean ENABLED = true;
 		public static final String NAME = "rsbotorg";
 		public static final String HASHTAG = "#" + NAME_LOWERCASE;
@@ -302,7 +302,6 @@ public class GlobalConfiguration {
 	public static OperatingSystem getCurrentOperatingSystem() {
 		return GlobalConfiguration.CURRENT_OS;
 	}
-
 	static String httpUserAgent = null;
 
 	public static String getHttpUserAgent() {
@@ -338,9 +337,9 @@ public class GlobalConfiguration {
 		InputStreamReader is = null;
 		BufferedReader reader = null;
 		try {
-			is = new InputStreamReader(RUNNING_FROM_JAR ?
-					GlobalConfiguration.class.getClassLoader().getResourceAsStream(
-							Paths.Resources.VERSION) : new FileInputStream(Paths.Resources.VERSION));
+			is = new InputStreamReader(RUNNING_FROM_JAR
+					? GlobalConfiguration.class.getClassLoader().getResourceAsStream(
+					Paths.Resources.VERSION) : new FileInputStream(Paths.Resources.VERSION));
 			reader = new BufferedReader(is);
 			final String s = reader.readLine().trim();
 			return Integer.parseInt(s);
