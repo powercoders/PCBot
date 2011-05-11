@@ -294,8 +294,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 					}
 					fail = !path.startsWith(check);
 				} else {
-					final String check = new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
-					if (readOnly && path.equals(check)) {
+					if (readOnly && path.equals(GlobalConfiguration.Paths.getRunningJarPath())) {
 						fail = false;
 					}
 				}
