@@ -123,7 +123,7 @@ public class Lobby extends MethodProvider {
 	 * Finds all available worlds if in lobby.
 	 *
 	 * @param includingFull If true it will include all full worlds when returned
-	 * @return All available worlds as a String arrat
+	 * @return All available worlds as a String array
 	 */
 	public String[] getAvailableWorlds(final boolean includingFull) {
 		final ArrayList<String> tempList = new ArrayList<String>();

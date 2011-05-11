@@ -1,54 +1,18 @@
 package org.rsbot.gui;
 
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
-
 import org.rsbot.bot.Bot;
-import org.rsbot.event.impl.DrawBoundaries;
-import org.rsbot.event.impl.DrawInventory;
-import org.rsbot.event.impl.DrawItems;
-import org.rsbot.event.impl.DrawModel;
-import org.rsbot.event.impl.DrawMouse;
-import org.rsbot.event.impl.DrawNPCs;
-import org.rsbot.event.impl.DrawObjects;
-import org.rsbot.event.impl.DrawPlayers;
-import org.rsbot.event.impl.DrawSettings;
-import org.rsbot.event.impl.DrawWeb;
-import org.rsbot.event.impl.MessageLogger;
-import org.rsbot.event.impl.TAnimation;
-import org.rsbot.event.impl.TCamera;
-import org.rsbot.event.impl.TFPS;
-import org.rsbot.event.impl.TFloorHeight;
-import org.rsbot.event.impl.TLoginIndex;
-import org.rsbot.event.impl.TMenu;
-import org.rsbot.event.impl.TMenuActions;
-import org.rsbot.event.impl.TMousePosition;
-import org.rsbot.event.impl.TPlayerPosition;
-import org.rsbot.event.impl.TTab;
-import org.rsbot.event.impl.TUserInputAllowed;
-import org.rsbot.event.impl.TWebStatus;
+import org.rsbot.event.impl.*;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.event.listeners.TextPaintListener;
 import org.rsbot.util.GlobalConfiguration;
+
+import javax.swing.*;
+
+import java.awt.SystemTray;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class BotMenuBar extends JMenuBar {
 	private static final long serialVersionUID = 971579975301998332L;
@@ -87,18 +51,17 @@ public class BotMenuBar extends JMenuBar {
 		// Other
 		DEBUG_MAP.put("Log Messages", MessageLogger.class);
 
-		TITLES = new String[]{"File", "Edit", "View", "Help"};
+		TITLES = new String[]{Messages.FILE, Messages.EDIT, Messages.VIEW, Messages.HELP};
 		ELEMENTS = new String[][]{
-				{"New Bot", "Close Bot", "-",
-					/*"Service Key", "-",*/
-					"Add Script", "Run Script", "Stop Script", "Pause Script", "-",
-					"Save Screenshot", "-",
-				"Exit"},
-				{"Accounts", "-",
-					"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", "-",
-					"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", "-",
-					"ToggleF Disable Advertisements", "ToggleF Disable Confirmations"}, constructDebugs(),
-					{"Site", "Project", "About"}};
+				{Messages.NEWBOT, Messages.CLOSEBOT, Messages.MENUSEPERATOR,
+						Messages.SERVICEKEY, Messages.ADDSCRIPT, Messages.RUNSCRIPT, Messages.STOPSCRIPT, Messages.PAUSESCRIPT, Messages.MENUSEPERATOR,
+						Messages.SAVESCREENSHOT, Messages.MENUSEPERATOR,
+						Messages.HIDEBOT, Messages.EXIT},
+				{"Accounts", Messages.MENUSEPERATOR,
+						"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", Messages.MENUSEPERATOR,
+						"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", Messages.MENUSEPERATOR,
+						"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations"}, constructDebugs(),
+				{"Site", "Project", "About"}};
 	}
 
 	private static String[] constructDebugs() {
@@ -106,21 +69,21 @@ public class BotMenuBar extends JMenuBar {
 		debugItems.add("Hide Toolbar");
 		debugItems.add("Hide Log Window");
 		debugItems.add("All Debugging");
-		debugItems.add("-");
+		debugItems.add(Messages.MENUSEPERATOR);
 		for (final String key : DEBUG_MAP.keySet()) {
 			final Class<?> el = DEBUG_MAP.get(key);
 			if (PaintListener.class.isAssignableFrom(el)) {
 				debugItems.add(key);
 			}
 		}
-		debugItems.add("-");
+		debugItems.add(Messages.MENUSEPERATOR);
 		for (final String key : DEBUG_MAP.keySet()) {
 			final Class<?> el = DEBUG_MAP.get(key);
 			if (TextPaintListener.class.isAssignableFrom(el)) {
 				debugItems.add(key);
 			}
 		}
-		debugItems.add("-");
+		debugItems.add(Messages.MENUSEPERATOR);
 		for (final String key : DEBUG_MAP.keySet()) {
 			final Class<?> el = DEBUG_MAP.get(key);
 			if (!TextPaintListener.class.isAssignableFrom(el) && !PaintListener.class.isAssignableFrom(el)) {
@@ -129,7 +92,7 @@ public class BotMenuBar extends JMenuBar {
 		}
 		for (final ListIterator<String> it = debugItems.listIterator(); it.hasNext();) {
 			final String s = it.next();
-			if (!s.equals("-")) {
+			if (!s.equals(Messages.MENUSEPERATOR)) {
 				it.set("ToggleF " + s);
 			}
 		}
@@ -138,14 +101,16 @@ public class BotMenuBar extends JMenuBar {
 
 	private void constructItemIcons() {
 		final HashMap<String, String> map = new HashMap<String, String>(16);
-		map.put("New Bot", GlobalConfiguration.Paths.Resources.ICON_APPADD);
-		map.put("Close Bot", GlobalConfiguration.Paths.Resources.ICON_APPDELETE);
-		map.put("Add Script", GlobalConfiguration.Paths.Resources.ICON_SCRIPT_ADD);
-		map.put("Run Script", GlobalConfiguration.Paths.Resources.ICON_PLAY);
-		map.put("Stop Script", GlobalConfiguration.Paths.Resources.ICON_DELETE);
-		map.put("Pause Script", GlobalConfiguration.Paths.Resources.ICON_PAUSE);
-		map.put("Save Screenshot", GlobalConfiguration.Paths.Resources.ICON_PHOTO);
-		map.put("Exit", GlobalConfiguration.Paths.Resources.ICON_CLOSE);
+		map.put(Messages.NEWBOT, GlobalConfiguration.Paths.Resources.ICON_APPADD);
+		map.put(Messages.CLOSEBOT, GlobalConfiguration.Paths.Resources.ICON_APPDELETE);
+		map.put(Messages.SERVICEKEY, GlobalConfiguration.Paths.Resources.ICON_KEY);
+		map.put(Messages.ADDSCRIPT, GlobalConfiguration.Paths.Resources.ICON_SCRIPT_ADD);
+		map.put(Messages.RUNSCRIPT, GlobalConfiguration.Paths.Resources.ICON_PLAY);
+		map.put(Messages.STOPSCRIPT, GlobalConfiguration.Paths.Resources.ICON_DELETE);
+		map.put(Messages.PAUSESCRIPT, GlobalConfiguration.Paths.Resources.ICON_PAUSE);
+		map.put(Messages.SAVESCREENSHOT, GlobalConfiguration.Paths.Resources.ICON_PHOTO);
+		map.put(Messages.HIDEBOT, GlobalConfiguration.Paths.Resources.ICON_ARROWIN);
+		map.put(Messages.EXIT, GlobalConfiguration.Paths.Resources.ICON_CLOSE);
 		map.put("Accounts", GlobalConfiguration.Paths.Resources.ICON_REPORTKEY);
 		map.put("Site", GlobalConfiguration.Paths.Resources.ICON_WEBLINK);
 		map.put("Project", GlobalConfiguration.Paths.Resources.ICON_USEREDIT);
@@ -169,6 +134,9 @@ public class BotMenuBar extends JMenuBar {
 			add(constructMenu(title, elems));
 		}
 		constructItemIcons();
+		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
+		commandCheckMap.get("Disable Monitoring").setVisible(false);
+		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
 	}
 
 	public void setOverrideInput(final boolean force) {
@@ -176,27 +144,27 @@ public class BotMenuBar extends JMenuBar {
 	}
 
 	public void setPauseScript(final boolean pause) {
-		commandMenuItem.get("Pause Script").setText(pause ? "Resume Script" : "Pause Script");
+		commandMenuItem.get(Messages.PAUSESCRIPT).setText(pause ? "Resume Script" : Messages.PAUSESCRIPT);
 	}
 
 	public void setBot(final Bot bot) {
 		if (bot == null) {
-			commandMenuItem.get("Close Bot").setEnabled(false);
-			commandMenuItem.get("Run Script").setEnabled(false);
-			commandMenuItem.get("Stop Script").setEnabled(false);
-			commandMenuItem.get("Pause Script").setEnabled(false);
-			commandMenuItem.get("Save Screenshot").setEnabled(false);
+			commandMenuItem.get(Messages.CLOSEBOT).setEnabled(false);
+			commandMenuItem.get(Messages.RUNSCRIPT).setEnabled(false);
+			commandMenuItem.get(Messages.STOPSCRIPT).setEnabled(false);
+			commandMenuItem.get(Messages.PAUSESCRIPT).setEnabled(false);
+			commandMenuItem.get(Messages.SAVESCREENSHOT).setEnabled(false);
 			for (final JCheckBoxMenuItem item : eventCheckMap.values()) {
 				item.setSelected(false);
 				item.setEnabled(false);
 			}
 			disable("All Debugging", "Force Input", "Disable Rendering", "Disable Canvas", "Disable Anti-Randoms", "Disable Auto Login");
 		} else {
-			commandMenuItem.get("Close Bot").setEnabled(true);
-			commandMenuItem.get("Run Script").setEnabled(true);
-			commandMenuItem.get("Stop Script").setEnabled(true);
-			commandMenuItem.get("Pause Script").setEnabled(true);
-			commandMenuItem.get("Save Screenshot").setEnabled(true);
+			commandMenuItem.get(Messages.CLOSEBOT).setEnabled(true);
+			commandMenuItem.get(Messages.RUNSCRIPT).setEnabled(true);
+			commandMenuItem.get(Messages.STOPSCRIPT).setEnabled(true);
+			commandMenuItem.get(Messages.PAUSESCRIPT).setEnabled(true);
+			commandMenuItem.get(Messages.SAVESCREENSHOT).setEnabled(true);
 			int selections = 0;
 			for (final Map.Entry<String, JCheckBoxMenuItem> entry : eventCheckMap.entrySet()) {
 				entry.getValue().setEnabled(true);
@@ -301,12 +269,12 @@ public class BotMenuBar extends JMenuBar {
 	private JMenu constructMenu(final String title, final String[] elems) {
 		final JMenu menu = new JMenu(title);
 		for (String e : elems) {
-			if (e.equals("-")) {
+			if (e.equals(Messages.MENUSEPERATOR)) {
 				menu.add(new JSeparator());
 			} else {
 				JMenuItem jmi;
-				if (e.startsWith("Toggle")) {
-					e = e.substring("Toggle".length());
+				if (e.startsWith(Messages.TOGGLE)) {
+					e = e.substring(Messages.TOGGLE.length());
 					final char state = e.charAt(0);
 					e = e.substring(2);
 					jmi = new JCheckBoxMenuItem(e);

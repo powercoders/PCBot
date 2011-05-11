@@ -83,7 +83,6 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	/**
 	 * The run void of the loader
 	 */
-	@Override
 	public void run() {
 		try {
 			final Class<?> c = classLoader.loadClass("client");
@@ -103,17 +102,11 @@ public class RSLoader extends Applet implements Runnable, Loader {
 		}
 	}
 
-	@Override
 	public Applet getClient() {
 		return client;
 	}
 
 	public void load() {
-		try {
-			HttpClient.download(new URL(GlobalConfiguration.Paths.URLs.WEB), new File(GlobalConfiguration.Paths.getWebCache()));
-		} catch (final IOException wex) {
-			log.severe("Unable to load web matrix: " + wex.getMessage());
-		}
 		try {
 			final ClientLoader cl = new ClientLoader();
 			cl.init(new URL(GlobalConfiguration.Paths.URLs.UPDATE), new File(GlobalConfiguration.Paths.getModScriptCache()));

@@ -188,7 +188,6 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			}
 			delete.remove(path);
 			tasks.add(new Callable<Collection<Object>>() {
-				@Override
 				public Collection<Object> call() throws Exception {
 					log.fine("Downloading: " + path.getName());
 					HttpClient.download(key.getValue(), path);

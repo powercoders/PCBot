@@ -1,5 +1,9 @@
 package org.rsbot.service;
 
+import org.rsbot.script.Script;
+import org.rsbot.script.ScriptManifest;
+import org.rsbot.util.GlobalConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -9,10 +13,6 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
-
-import org.rsbot.script.Script;
-import org.rsbot.script.ScriptManifest;
-import org.rsbot.util.GlobalConfiguration;
 
 /**
  * @author Jacmob
@@ -27,7 +27,6 @@ public class FileScriptSource implements ScriptSource {
 		this.file = file;
 	}
 
-	@Override
 	public List<ScriptDefinition> list() {
 		final LinkedList<ScriptDefinition> defs = new LinkedList<ScriptDefinition>();
 		if (file != null) {
@@ -54,7 +53,6 @@ public class FileScriptSource implements ScriptSource {
 		return defs;
 	}
 
-	@Override
 	public Script load(final ScriptDefinition def) throws ServiceException {
 		if (!(def instanceof FileScriptDefinition)) {
 			throw new IllegalArgumentException("Invalid definition!");
@@ -137,9 +135,7 @@ public class FileScriptSource implements ScriptSource {
 	}
 
 	private static class FileScriptDefinition extends ScriptDefinition {
-
 		Class<?> clazz;
-
 	}
 
 }
