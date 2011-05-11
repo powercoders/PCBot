@@ -199,7 +199,7 @@ public class GlobalConfiguration {
 			if (!RUNNING_FROM_JAR) {
 				return null;
 			}
-			return new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
+			return new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath().replace("%20", " ");
 		}
 
 		public static String getUnixHome() {
