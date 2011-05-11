@@ -17,6 +17,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.rsbot.security.RestrictedSecurityManager;
+
 /**
  * @author Jacmob
  * @author Timer
@@ -30,6 +32,9 @@ public class AccountStore {
 		private final Map<String, String> attributes = new TreeMap<String, String>();
 
 		public Account(final String username) {
+			if (RestrictedSecurityManager.isCallerScript()) {
+				throw new SecurityException();
+			}
 			this.username = username;
 		}
 
