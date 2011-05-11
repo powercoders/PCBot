@@ -1,6 +1,7 @@
 package org.rsbot;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,10 +19,24 @@ public class Application {
 	public static void main(final String[] args) throws Exception {
 		bootstrap();
 		new Extractor().run();
+		commands(args);
 		System.setSecurityManager(new RestrictedSecurityManager());
 		gui = new BotGUI();
 		gui.setVisible(true);
 		gui.addBot();
+	}
+
+	private static void commands(final String[] args) {
+		 if (args.length > 2) {
+			if (args[0].toLowerCase().endsWith("delete")) {
+				final File jarOld = new File(args[1]);
+				if (jarOld.exists()) {
+					if (!jarOld.delete()) {
+						jarOld.deleteOnExit();
+					}
+				}
+			}
+		}
 	}
 
 	/**
