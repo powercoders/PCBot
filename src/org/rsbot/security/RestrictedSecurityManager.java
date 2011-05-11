@@ -5,8 +5,9 @@ import org.rsbot.gui.BotGUI;
 import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.GlobalConfiguration.OperatingSystem;
 import org.rsbot.util.UpdateUtil;
+
+import sun.font.FontManager;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -311,10 +312,12 @@ public class RestrictedSecurityManager extends SecurityManager {
 				if (readOnly && jre != null && !jre.isEmpty() && path.startsWith(jre)) {
 					fail = false;
 				}
-				if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
-					final String sysroot = System.getenv("SystemRoot");
-					if (readOnly && sysroot != null & !sysroot.isEmpty() && path.startsWith(sysroot)) {
-						fail = false;
+				if (fail && readOnly) {
+					for (final String font : FontManager.getFontPath(true).split("\\Q" + File.pathSeparator + "\\E")) {
+						if (path.startsWith(font)) {
+							fail = false;
+							break;
+						}
 					}
 				}
 				if (fail) {
