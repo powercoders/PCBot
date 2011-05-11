@@ -27,7 +27,7 @@ public class Application {
 	}
 
 	private static void commands(final String[] args) {
-		 if (args.length > 2) {
+		 if (args.length > 1) {
 			if (args[0].toLowerCase().endsWith("delete")) {
 				final File jarOld = new File(args[1]);
 				if (jarOld.exists()) {
