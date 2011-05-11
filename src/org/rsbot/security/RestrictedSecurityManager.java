@@ -6,6 +6,7 @@ import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.GlobalConfiguration.OperatingSystem;
+import org.rsbot.util.UpdateUtil;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -149,7 +150,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 	@Override
 	public void checkExec(final String cmd) {
 		final String calling = getCallingClass();
-		if (calling.equals(ScriptDeliveryNetwork.class.getName()) || calling.equals(BotGUI.class.getName())) {
+		if (calling.equals(ScriptDeliveryNetwork.class.getName()) || calling.equals(BotGUI.class.getName()) ||
+				calling.equals(UpdateUtil.class.getName())) {
 			super.checkExec(cmd);
 		} else {
 			throw new SecurityException();
