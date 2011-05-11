@@ -16,32 +16,37 @@ public class RouteStep extends MethodProvider {
 		PATH, TELEPORT
 	}
 
-	public RouteStep(final MethodContext ctx, final Type type, final Object step) {
+	public RouteStep(final MethodContext ctx, final Object step) {
 		super(ctx);
-		this.type = type;
-		switch (type) {
-			case PATH:
-				path = (RSTile[]) step;
-				break;
-			case TELEPORT:
-				teleport = (Teleport) step;
-				break;
+		if (step instanceof Teleport) {
+			this.type = Type.TELEPORT;
+			this.teleport = (Teleport) step;
+		} else if (step instanceof RSTile[]) {
+			this.type = Type.PATH;
+			this.path = (RSTile[]) step;
+		} else if (step instanceof RSTile) {
+			this.type = Type.PATH;
+			this.path = new RSTile[] { (RSTile) step };
+		}else{
+			throw new IllegalArgumentException("Step is of an invalid type!");
 		}
 	}
 
 	public boolean execute() {
 		switch (type) {
-			case PATH:
-				RSPath walkingPath = methods.walking.newTilePath(path);
-				while (!inSomeRandom()) {
-					if (!walkingPath.traverse() || methods.calc.distanceTo(walkingPath.getEnd()) < 5) {
-						break;
-					}
-					sleep(random(50, 150));
+		case PATH:
+			RSPath walkingPath = methods.walking.newTilePath(path);
+			while (!inSomeRandom()) {
+				if (!walkingPath.traverse()
+						|| methods.calc.distanceTo(walkingPath.getEnd()) < 5) {
+					break;
 				}
-				return !inSomeRandom() && methods.calc.distanceTo(walkingPath.getEnd()) < 5;
-			case TELEPORT:
-				return teleport != null && teleport.preform();
+				sleep(random(50, 150));
+			}
+			return !inSomeRandom()
+					&& methods.calc.distanceTo(walkingPath.getEnd()) < 5;
+		case TELEPORT:
+			return teleport != null && teleport.preform();
 		}
 		return false;
 	}
@@ -59,7 +64,8 @@ public class RouteStep extends MethodProvider {
 			return false;
 		}
 		for (final Random random : methods.bot.getScriptHandler().getRandoms()) {
-			if (random.isEnabled() && !(methods.bot.disableAutoLogin && random instanceof LoginBot)) {
+			if (random.isEnabled()
+					&& !(methods.bot.disableAutoLogin && random instanceof LoginBot)) {
 				if (random.activateCondition()) {
 					return true;
 				}
