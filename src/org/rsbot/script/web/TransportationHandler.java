@@ -42,7 +42,7 @@ public class TransportationHandler extends MethodProvider {
 		while (teleportIterator.hasNext()) {
 			Teleport teleport = teleportIterator.next();
 			if (teleport.meetsPrerequisites() && teleport.isApplicable(methods.players.getMyPlayer().getLocation(), destination)) {
-				if (dist == 0.0D || dist < teleport.getDistance(destination)) {
+				if (dist == 0.0D || teleport.getDistance(destination) < dist) {
 					dist = teleport.getDistance(destination);
 					bestTeleport = teleport;
 				}
