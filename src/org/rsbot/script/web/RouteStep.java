@@ -10,6 +10,7 @@ import org.rsbot.script.wrappers.RSTile;
 public class RouteStep extends MethodProvider {
 	private final Type type;
 	private RSTile[] path = null;
+	private RSPath rspath = null;
 	private Teleport teleport = null;
 
 	public static enum Type {
@@ -35,14 +36,16 @@ public class RouteStep extends MethodProvider {
 	public boolean execute() {
 		switch (type) {
 			case PATH:
-				RSPath walkingPath = methods.walking.newTilePath(path);
+				if (rspath == null) {
+					rspath = methods.walking.newTilePath(path);
+				}
 				while (!inSomeRandom()) {
-					if (!walkingPath.traverse() || methods.calc.distanceTo(walkingPath.getEnd()) < 5) {
+					if (!rspath.traverse() || methods.calc.distanceTo(rspath.getEnd()) < 5) {
 						break;
 					}
 					sleep(random(50, 150));
 				}
-				return !inSomeRandom() && methods.calc.distanceTo(walkingPath.getEnd()) < 5;
+				return !inSomeRandom() && methods.calc.distanceTo(rspath.getEnd()) < 5;
 			case TELEPORT:
 				return teleport != null && teleport.preform();
 		}
