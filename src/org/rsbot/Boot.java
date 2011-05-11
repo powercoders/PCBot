@@ -56,6 +56,11 @@ public class Boot {
 		param.append(s);
 		param.append(app);
 
+		for (final String arg : args) {
+			param.append(s);
+			param.append(arg);
+		}
+
 		final Runtime run = Runtime.getRuntime();
 
 		if (sh) {
