@@ -17,7 +17,6 @@ import org.rsbot.client.Loader;
 import org.rsbot.loader.ClientLoader;
 import org.rsbot.loader.script.ParseException;
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpClient;
 
 /**
  * @author Qauters

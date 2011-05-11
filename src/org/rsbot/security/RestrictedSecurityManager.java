@@ -6,6 +6,7 @@ import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.GlobalConfiguration.OperatingSystem;
+import org.rsbot.util.UpdateUtil;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -44,6 +45,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add(".deviantart.net");
 		whitelist.add(".powerbot.org");
 		whitelist.add(".runescape.com");
+		whitelist.add(".ipcounter.de");
 
 		whitelist.add("shadowscripting.org"); // iDungeon
 		whitelist.add("shadowscripting.wordpress.com"); // iDungeon
@@ -58,10 +60,11 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("www.universalscripts.org"); // Fletch To 99 - UFletch
 		whitelist.add("www.dunkscripts.freeiz.com"); // Dunnkers
 		whitelist.add("www.dlolpics.com"); // DlolPics
-		whitelist.add("logikmedia.co"); // countvidal
+		whitelist.add(".logikmedia.co"); // countvidal
 		whitelist.add("*.letthesmokeout.com"); // MrByte
 		whitelist.add("zaszmedia.com"); // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
 		whitelist.add("pumyscript.orgfree.com"); // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
+		whitelist.add("noneevr2.r00t.la"); // noneevr2 - TakeBury
 
 		return whitelist;
 	}
@@ -147,7 +150,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 	@Override
 	public void checkExec(final String cmd) {
 		final String calling = getCallingClass();
-		if (calling.equals(ScriptDeliveryNetwork.class.getName()) || calling.equals(BotGUI.class.getName())) {
+		if (calling.equals(ScriptDeliveryNetwork.class.getName()) || calling.equals(BotGUI.class.getName()) ||
+				calling.equals(UpdateUtil.class.getName())) {
 			super.checkExec(cmd);
 		} else {
 			throw new SecurityException();
@@ -292,8 +296,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 					}
 					fail = !path.startsWith(check);
 				} else {
-					final String check = new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
-					if (readOnly && path.equals(check)) {
+					if (readOnly && path.equals(GlobalConfiguration.Paths.getRunningJarPath())) {
 						fail = false;
 					}
 				}

@@ -62,8 +62,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					new SplashAd(BotGUI.this).display();
 				}
 				if (GlobalConfiguration.RUNNING_FROM_JAR) {
-					final UpdateUtil updater = new UpdateUtil(BotGUI.this);
-					updater.checkUpdate(false);
+					UpdateUtil.check(BotGUI.this);
 				}
 				if (GlobalConfiguration.Twitter.ENABLED) {
 					TwitterUpdates.loadTweets(GlobalConfiguration.Twitter.MESSAGES);
@@ -147,7 +146,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			} else if (option.equals(Messages.HIDEBOT)) {
 				setTray();
 			} else if (option.equals(Messages.EXIT)) {
-				cleanExit();
+				cleanExit(false);
 			}
 		} else if (menu.equals(Messages.EDIT)) {
 			if (option.equals("Accounts")) {
@@ -411,7 +410,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(final WindowEvent e) {
-				if (cleanExit()) {
+				if (cleanExit(false)) {
 					dispose();
 				}
 			}
@@ -546,7 +545,10 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 	}
 
-	public boolean cleanExit() {
+	public boolean cleanExit(final boolean silent) {
+		if (silent) {
+			disableConfirmations = true;
+		}
 		if (!disableConfirmations) {
 			disableConfirmations = true;
 			for (final Bot bot : bots) {

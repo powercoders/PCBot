@@ -46,6 +46,14 @@ public class RouteStep extends MethodProvider {
 		return false;
 	}
 
+	public Teleport getTeleport() {
+		return teleport;
+	}
+
+	public RSTile[] getPath() {
+		return path;
+	}
+
 	private boolean inSomeRandom() {
 		if (methods.bot.disableRandoms) {
 			return false;

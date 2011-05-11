@@ -1,7 +1,12 @@
 package org.rsbot.script.methods;
 
 import org.rsbot.script.internal.wrappers.TileFlags;
+import org.rsbot.script.web.Route;
+import org.rsbot.script.web.RouteStep;
+import org.rsbot.script.web.Teleport;
+import org.rsbot.script.web.TransportationHandler;
 import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.RSWeb;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -69,6 +74,31 @@ public class Web extends MethodProvider {
 		}
 		log.info("We did not find a path, how is that possible?");
 		return null;
+	}
+
+	public Route generateRoute(RSTile start, final RSTile end) {
+		TransportationHandler transportationHandler = new TransportationHandler(methods);
+		List<RouteStep> routeSteps = new ArrayList<RouteStep>();
+		if (transportationHandler.canTeleport(end)) {
+			Teleport teleport = transportationHandler.getTeleport(end);
+			if (teleport.teleportationLocation().getZ() == end.getZ()) {
+				RouteStep teleportStep = new RouteStep(methods, RouteStep.Type.TELEPORT, transportationHandler.getTeleport(end));
+				start = teleport.teleportationLocation();
+				routeSteps.add(teleportStep);
+			}
+		}
+		RSTile[] nodePath = generateNodePath(start, end);
+		if (nodePath != null) {
+			RouteStep walkingStep = new RouteStep(methods, RouteStep.Type.PATH, nodePath);
+			routeSteps.add(walkingStep);
+			return new Route(routeSteps.toArray(new RouteStep[routeSteps.size()]));
+		}
+		return null;
+	}
+
+	public RSWeb getWeb(RSTile start, final RSTile end) {
+		Route onlyRoute = generateRoute(start, end);
+		return new RSWeb(new Route[]{onlyRoute});
 	}
 
 	/**

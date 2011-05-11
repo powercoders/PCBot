@@ -1,8 +1,5 @@
 package org.rsbot.script.web;
 
-import org.rsbot.script.methods.MethodContext;
-import org.rsbot.script.methods.MethodProvider;
-
 import java.util.LinkedList;
 
 public class Route {
