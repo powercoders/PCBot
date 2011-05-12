@@ -185,18 +185,28 @@ public class GlobalConfiguration {
 		}
 
 		public static String getGarbageDirectory() {
-			final File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory(), "java_cache");
+			final File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory(), ".java");
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
-			return dir.getAbsolutePath().replace("%20", " ");
+			String path = dir.getAbsolutePath();
+			try {
+				path = URLDecoder.decode(path, "UTF-8");
+			} catch (final UnsupportedEncodingException ignored) {
+			}
+			return path;
 		}
 
 		public static String getRunningJarPath() {
 			if (!RUNNING_FROM_JAR) {
 				return null;
 			}
-			return new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath().replace("%20", " ");
+			String path = new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
+			try {
+				path = URLDecoder.decode(path, "UTF-8");
+			} catch (UnsupportedEncodingException ignored) {
+			}
+			return path;
 		}
 
 		public static String getUnixHome() {

@@ -14,7 +14,7 @@ public interface Messages {
 	public static final String RUNSCRIPT = "Run Script";
 	public static final String STOPSCRIPT = "Stop Script";
 	public static final String PAUSESCRIPT = "Pause Script";
-	public static final String SAVESCREENSHOT = "Save Screenshot";
+	public static final String SAVESCREENSHOT = "Screenshot";
 	public static final String EXIT = "Exit";
 
 	public static final String TOGGLE = "Toggle";

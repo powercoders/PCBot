@@ -74,6 +74,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					}
 				}.start();
 				Monitoring.start();
+				updateScriptControls();
 			}
 		});
 	}
@@ -166,7 +167,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					if (option.equals("Force Input")) {
 						final boolean selected = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 						current.overrideInput = selected;
-						toolBar.setOverrideInput(selected);
+						updateScriptControls();
 					} else if (option.equals("Disable Rendering")) {
 						current.disableRendering = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals("Disable Canvas")) {
@@ -226,50 +227,43 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			panel.setBot(curr);
 			panel.repaint();
 			toolBar.setHome(curr == null);
-			if (curr == null) {
-				setTitle(null);
-				toolBar.setScriptButton(BotToolBar.RUN_SCRIPT);
-				toolBar.setOverrideInput(false);
-				toolBar.setInputState(Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE);
-				toolBar.updateInputButton();
+			setTitle(curr == null ? null : curr.getAccountName());
+			updateScriptControls();
+		}
+	}
+
+	private void updateScriptControls() {
+		boolean idle = true, paused = false;
+		final Bot bot = getCurrentBot();
+
+		if (bot != null) {
+			final Map<Integer, Script> scriptMap = bot.getScriptHandler().getRunningScripts();
+			if (scriptMap.size() > 0) {
+				idle = false;
+				paused = scriptMap.values().iterator().next().isPaused();
 			} else {
-				setTitle(curr.getAccountName());
-				final Map<Integer, Script> scriptMap = curr.getScriptHandler().getRunningScripts();
-				if (scriptMap.size() > 0) {
-					if (scriptMap.values().iterator().next().isPaused()) {
-						toolBar.setScriptButton(BotToolBar.RESUME_SCRIPT);
-					} else {
-						toolBar.setScriptButton(BotToolBar.PAUSE_SCRIPT);
-					}
-				} else {
-					toolBar.setScriptButton(BotToolBar.RUN_SCRIPT);
-				}
-				toolBar.setOverrideInput(curr.overrideInput);
-				toolBar.setInputState(curr.inputFlags);
-				toolBar.updateInputButton();
-			}
-		} else if (menu.equals("Screenshot")) {
-			menuBar.doClick(Messages.SAVESCREENSHOT);
-		} else if (menu.equals("Run")) {
-			final Bot current = getCurrentBot();
-			if (current != null) {
-				showScriptSelector(current);
-			}
-		} else if (menu.equals("Pause") || menu.equals("Resume")) {
-			final Bot current = getCurrentBot();
-			if (current != null) {
-				pauseScript(current);
-			}
-		} else if (menu.equals("Input")) {
-			final Bot current = getCurrentBot();
-			if (current != null) {
-				final boolean override = !current.overrideInput;
-				current.overrideInput = override;
-				menuBar.setOverrideInput(override);
-				toolBar.setOverrideInput(override);
-				toolBar.updateInputButton();
+				idle = true;
 			}
 		}
+
+		menuBar.getMenuItem(Messages.RUNSCRIPT).setVisible(idle);
+		menuBar.getMenuItem(Messages.STOPSCRIPT).setVisible(!idle);
+		menuBar.getMenuItem(Messages.PAUSESCRIPT).setEnabled(!idle);
+		menuBar.setPauseScript(paused);
+
+		if (idle) {
+			toolBar.setOverrideInput(false);
+			menuBar.setOverrideInput(false);
+			toolBar.setInputState(Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE);
+			toolBar.setScriptButton(BotToolBar.RUN_SCRIPT);
+		} else {
+			toolBar.setOverrideInput(bot.overrideInput);
+			toolBar.setOverrideInput(bot.overrideInput);
+			toolBar.setInputState(bot.inputFlags);
+			toolBar.setScriptButton(paused ? BotToolBar.RESUME_SCRIPT : BotToolBar.PAUSE_SCRIPT);
+		}
+
+		toolBar.updateInputButton();
 	}
 
 	private void serviceKeyQuery(final String option) {
@@ -390,7 +384,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			final int result = JOptionPane.showConfirmDialog(this, "Would you like to stop the script " + prop.name() + "?", "Script", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result == JOptionPane.OK_OPTION) {
 				sh.stopScript(id);
-				toolBar.setScriptButton(BotToolBar.RUN_SCRIPT);
+				updateScriptControls();
 			}
 		}
 	}
@@ -436,10 +430,9 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		WindowUtil.setFrame(this);
 		home = new BotHome();
 		panel = new BotPanel(home);
-		toolBar = new BotToolBar(this);
 		menuBar = new BotMenuBar(this);
+		toolBar = new BotToolBar(this, menuBar);
 		panel.setFocusTraversalKeys(0, new HashSet<AWTKeyStroke>());
-		toolBar.setHome(true);
 		menuBar.setBot(null);
 		setJMenuBar(menuBar);
 		textScroll = new JScrollPane(TextAreaLogHandler.TEXT_AREA, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -459,13 +452,9 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (bot == getCurrentBot()) {
 					bot.inputFlags = Environment.INPUT_KEYBOARD;
 					bot.overrideInput = false;
-					toolBar.setScriptButton(BotToolBar.PAUSE_SCRIPT);
-					toolBar.setInputState(bot.inputFlags);
-					toolBar.setOverrideInput(false);
-					menuBar.setOverrideInput(false);
+					updateScriptControls();
 					final String acct = bot.getAccountName();
 					toolBar.setTabLabel(bots.indexOf(bot) + botsIndex, acct == null ? "RuneScape" : acct);
-					toolBar.updateInputButton();
 					setTitle(acct);
 				}
 			}
@@ -477,35 +466,28 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		if (bot == getCurrentBot()) {
 			bot.inputFlags = Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE;
 			bot.overrideInput = false;
-			toolBar.setScriptButton(BotToolBar.RUN_SCRIPT);
-			toolBar.setInputState(bot.inputFlags);
-			toolBar.setOverrideInput(false);
-			menuBar.setOverrideInput(false);
-			menuBar.setPauseScript(false);
+			updateScriptControls();
 			toolBar.setTabLabel(bots.indexOf(bot) + botsIndex, "RuneScape");
-			toolBar.updateInputButton();
 			setTitle(null);
 		}
 	}
 
 	public void scriptResumed(final ScriptHandler handler, final Script script) {
 		if (handler.getBot() == getCurrentBot()) {
-			toolBar.setScriptButton(BotToolBar.PAUSE_SCRIPT);
-			menuBar.setPauseScript(false);
+			updateScriptControls();
 		}
 	}
 
 	public void scriptPaused(final ScriptHandler handler, final Script script) {
 		if (handler.getBot() == getCurrentBot()) {
-			toolBar.setScriptButton(BotToolBar.RESUME_SCRIPT);
-			menuBar.setPauseScript(true);
+			updateScriptControls();
 		}
 	}
 
 	public void inputChanged(final Bot bot, final int mask) {
 		bot.inputFlags = mask;
 		toolBar.setInputState(mask);
-		toolBar.updateInputButton();
+		updateScriptControls();
 	}
 
 	public static void openURL(final String url) {

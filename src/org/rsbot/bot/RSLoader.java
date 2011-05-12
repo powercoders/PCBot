@@ -71,7 +71,7 @@ public class RSLoader extends Applet implements Runnable, Loader {
 			graphics.setColor(Color.black);
 			graphics.fillRect(0, 0, 768, 503);
 			graphics.setColor(new Color(150, 0, 0));
-			graphics.drawRect(230, 233, 303, 33);
+			graphics.drawRect(230, 233, 304, 34);
 			final String s = "Loading...";
 			graphics.setFont(font);
 			graphics.setColor(Color.WHITE);
