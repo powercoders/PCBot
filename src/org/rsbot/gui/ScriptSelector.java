@@ -171,8 +171,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				table.revalidate();
 			}
 		});
-		submit = new JButton("Start Script", new ImageIcon(
-				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_START)));
+		submit = new JButton("Start", new ImageIcon(
+				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PLAY)));
 		final JButton connect = new JButton(new ImageIcon(
 				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CONNECT)));
 		submit.setEnabled(false);
