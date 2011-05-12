@@ -9,6 +9,7 @@ import org.rsbot.script.wrappers.RSTile;
 public class TeleportItem extends Teleport {
 	public final int[] itemIDs;
 	public final String[] action;
+	public final Equipment equips = new Equipment(methods);
 
 	public TeleportItem(final MethodContext ctx, final RSTile teleportationLocation, final String action, final int... itemIDs) {
 		super(ctx, teleportationLocation);
@@ -23,7 +24,7 @@ public class TeleportItem extends Teleport {
 	}
 
 	public boolean meetsPrerequisites() {
-		return !deepWilderness() && (methods.inventory.containsOneOf(itemIDs) || methods.equipment.containsOneOf(itemIDs));
+		return !deepWilderness() && (methods.inventory.containsOneOf(itemIDs) || equips.equipmentContainsOneOf(itemIDs));
 	}
 
 	public boolean isApplicable(RSTile base, RSTile destination) {
@@ -34,7 +35,7 @@ public class TeleportItem extends Teleport {
 		RSItem item = methods.inventory.getItem(itemIDs);
 		boolean equip = false;
 		if (item == null) {
-			for (RSItem itm : methods.equipment.getItems()) {
+			for (RSItem itm : equips.equips()) {
 				for (int id : itemIDs) {
 					if (itm.getID() == id) {
 						equip = true;

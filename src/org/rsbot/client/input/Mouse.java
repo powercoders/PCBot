@@ -1,14 +1,10 @@
 package org.rsbot.client.input;
 
-import java.awt.Component;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import java.awt.*;
+import java.awt.event.*;
 
 public abstract class Mouse extends Focus implements MouseListener,
-MouseMotionListener, MouseWheelListener {
+		MouseMotionListener, MouseWheelListener {
 
 	private int clientX;
 	private int clientY;
@@ -64,7 +60,6 @@ MouseMotionListener, MouseWheelListener {
 		return clientPresent;
 	}
 
-	@Override
 	public final void mouseClicked(final MouseEvent e) {
 		clientX = e.getX();
 		clientY = e.getY();
@@ -72,7 +67,6 @@ MouseMotionListener, MouseWheelListener {
 		e.consume();
 	}
 
-	@Override
 	public final void mouseDragged(final MouseEvent e) {
 		clientX = e.getX();
 		clientY = e.getY();
@@ -80,7 +74,6 @@ MouseMotionListener, MouseWheelListener {
 		e.consume();
 	}
 
-	@Override
 	public final void mouseEntered(final MouseEvent e) {
 		clientPresent = true;
 		clientX = e.getX();
@@ -89,7 +82,6 @@ MouseMotionListener, MouseWheelListener {
 		e.consume();
 	}
 
-	@Override
 	public final void mouseExited(final MouseEvent e) {
 		clientPresent = false;
 		clientX = e.getX();
@@ -98,7 +90,6 @@ MouseMotionListener, MouseWheelListener {
 		e.consume();
 	}
 
-	@Override
 	public final void mouseMoved(final MouseEvent e) {
 		clientX = e.getX();
 		clientY = e.getY();
@@ -106,7 +97,6 @@ MouseMotionListener, MouseWheelListener {
 		e.consume();
 	}
 
-	@Override
 	public final void mousePressed(final MouseEvent e) {
 		clientPressed = true;
 		clientX = e.getX();
@@ -115,7 +105,6 @@ MouseMotionListener, MouseWheelListener {
 		e.consume();
 	}
 
-	@Override
 	public final void mouseReleased(final MouseEvent e) {
 		clientX = e.getX();
 		clientY = e.getY();
@@ -128,7 +117,6 @@ MouseMotionListener, MouseWheelListener {
 		e.consume();
 	}
 
-	@Override
 	public void mouseWheelMoved(final MouseWheelEvent e) {
 		try {
 			_mouseWheelMoved(e);
