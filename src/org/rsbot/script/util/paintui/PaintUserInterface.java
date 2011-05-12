@@ -1,12 +1,17 @@
 package org.rsbot.script.util.paintui;
 
+import java.awt.Color;
+import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import org.rsbot.event.listeners.PaintListener;
@@ -41,9 +46,11 @@ public class PaintUserInterface implements MouseListener, MouseMotionListener,
 
     @Override
     public void onRepaint(Graphics render) {
-	Graphics g = render.create();
+	Graphics2D g = (Graphics2D) render;
 	for (PaintComponent comp : children)
 	    comp.onRepaint(g);
+	if (caret != null)
+	    caret.paint(g);
     }
 
     @Override
@@ -82,7 +89,7 @@ public class PaintUserInterface implements MouseListener, MouseMotionListener,
 		    && c instanceof PaintTextField) {
 		if (caret == null || caret.field != c)
 		    caret = new PaintCaret((PaintTextField) c);
-		else if (e.isShiftDown())
+		if (e.isShiftDown())
 		    caret.moveDot(caret.getPosition(e.getPoint()));
 		else
 		    caret.setDot(caret.getPosition(e.getPoint()));
@@ -101,7 +108,8 @@ public class PaintUserInterface implements MouseListener, MouseMotionListener,
     public void mouseDragged(MouseEvent e) {
 	for (PaintComponent c : children)
 	    c.mouseDragged(e);
-	if (caret != null)
+	if (caret != null && caret.field != null
+		&& caret.field.getAbsoluteBounds().contains(e.getPoint()))
 	    caret.moveDot(caret.getPosition(e.getPoint()));
     }
 

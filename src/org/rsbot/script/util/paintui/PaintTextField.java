@@ -21,20 +21,20 @@ public class PaintTextField extends PaintComponent {
 	this.text = s;
     }
 
-    public PaintTextField(Rectangle rect, String empty) {
-	super.setLocation(rect.x, rect.y);
-	super.setSize(rect.width, rect.height);
+    public PaintTextField(String empty) {
 	this.name = empty;
+	setStyle(getClass());
     }
 
-    public PaintTextField(Rectangle rect, String empty, char mask) {
-	this(rect, empty);
+    public PaintTextField(String empty, char mask) {
+	this.name = empty;
 	this.mask = mask;
+	setStyle(getClass());
     }
 
     @Override
-    public void onRepaint(Graphics render) {
-	paint(render);
+    public void paint(Graphics render) {
+	super.paint(render);
 	Graphics g = super.getClippedGraphics(render);
 	g.setColor(getCurrentStyle().fgColor);
 	g.setFont(getCurrentStyle().font);
@@ -45,6 +45,7 @@ public class PaintTextField extends PaintComponent {
 	    g.drawString(getDisplay(), getAbsoluteX() + 3, getAbsoluteY()
 		    + getHeight() - 3);
 	}
+	g.dispose();
     }
 
     public boolean selected() {

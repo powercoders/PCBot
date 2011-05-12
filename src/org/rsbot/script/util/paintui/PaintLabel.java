@@ -8,11 +8,21 @@ public class PaintLabel extends PaintComponent {
     private String text = "";
 
     public PaintLabel(String text) {
+	super();
 	this.text = text;
+	setStyle(getClass());
+    }
+
+    public void setLabel(String lbl) {
+	this.text = lbl;
+    }
+
+    public String getLabel() {
+	return text;
     }
 
     @Override
-    public void onRepaint(Graphics render) {
+    public void paint(Graphics render) {
 	super.paint(render);
 	Graphics g = getClippedGraphics(render);
 	g.setFont(super.getCurrentStyle().font);
@@ -23,5 +33,6 @@ public class PaintLabel extends PaintComponent {
 	Rectangle strBounds = metrics.getStringBounds(text, g).getBounds();
 	g.drawString(text, (int) centerX - (strBounds.width / 2), (int) centerY
 		+ (strBounds.height / 2));
+	g.dispose();
     }
 }

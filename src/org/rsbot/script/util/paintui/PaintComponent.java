@@ -23,13 +23,22 @@ public class PaintComponent implements MouseListener, MouseMotionListener,
     private List<KeyListener> keyListeners = new ArrayList<KeyListener>();
     private List<MouseMotionListener> mouseMotionListeners = new ArrayList<MouseMotionListener>();
 
-    protected int x, y, width, height;
+    protected int x = 0, y = 0, width = 0, height = 0;
 
-    public PaintStyleSheet styleSheet = new PaintStyleSheet();
-    public PaintStyleSheet mouseOverSheet = new PaintStyleSheet();
+    public PaintStyleSheet styleSheet = new PaintStyleSheet();;
+    public PaintStyleSheet mouseOverSheet = new PaintStyleSheet();;
 
     public PaintComponent(PaintComponent parent) {
 	this.parent = parent;
+    }
+
+    public void setStyle(Class<?> clazz) {
+	styleSheet = PaintStyleSheet.defaultPaintStyles.get(clazz);
+	mouseOverSheet = PaintStyleSheet.defaultHoverStyles.get(clazz);
+	if (styleSheet == null)
+	    styleSheet = new PaintStyleSheet();
+	if (mouseOverSheet == null)
+	    mouseOverSheet = new PaintStyleSheet();
     }
 
     public PaintComponent() {
@@ -110,8 +119,8 @@ public class PaintComponent implements MouseListener, MouseMotionListener,
 
     public void inheritStyle() {
 	if (parent != null) {
-	    styleSheet = parent.styleSheet.clone();
-	    mouseOverSheet = parent.mouseOverSheet.clone();
+	    styleSheet = parent.styleSheet;
+	    mouseOverSheet = parent.mouseOverSheet;
 	}
     }
 
@@ -143,30 +152,31 @@ public class PaintComponent implements MouseListener, MouseMotionListener,
     public void paint(Graphics render) {
 	Graphics2D g = (Graphics2D) render;
 	Rectangle bounds = getAbsoluteBounds();
-	if (getCurrentStyle().bgColor != null) {
-	    g.setColor(getCurrentStyle().bgColor);
-	    g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-	}
-	if (getCurrentStyle().background != null) {
-	    g.drawImage(getCurrentStyle().background, bounds.x, bounds.y, bounds.x
-		    + bounds.width, bounds.y + bounds.height, 0, 0,
-		    bounds.width, bounds.height, null);
-	}
-	// Borders
-	if (getCurrentStyle().border != null && getCurrentStyle().borderSize >= 0) {
-	    Stroke curr = g.getStroke();
-	    g.setStroke(new BasicStroke(getCurrentStyle().borderSize));
-	    g.setColor(getCurrentStyle().border);
-	    g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
-	    g.setStroke(curr);
+	if (getCurrentStyle() != null) {
+	    if (getCurrentStyle().bgColor != null) {
+		g.setColor(getCurrentStyle().bgColor);
+		if (getCurrentStyle().bkg3D)
+		    g.fill3DRect(bounds.x, bounds.y, bounds.width,
+			    bounds.height, getCurrentStyle().bkgRaised);
+		else
+		    g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	    }
+	    // Borders
+	    if (getCurrentStyle().border != null) {
+		g.setColor(getCurrentStyle().border);
+		if (getCurrentStyle().border3D)
+		    g.draw3DRect(bounds.x, bounds.y, bounds.width,
+			    bounds.height, getCurrentStyle().borderRaised);
+		else
+		    g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	    }
 	}
     }
 
-    public Graphics getClippedGraphics(Graphics g) {
-	Rectangle currClip = g.getClipBounds();
-	return g.create(Math.max(0, x), Math.max(0, y),
-		Math.min(width, currClip.width),
-		Math.min(currClip.height, height));
+    public Graphics getClippedGraphics(Graphics render) {
+	Graphics g = render.create();
+	g.clipRect(x, y, width, height);
+	return g;
     }
 
     public void addMouseListener(final MouseListener m) {
