@@ -16,6 +16,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @author Jacmob
@@ -26,7 +27,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	private static final long serialVersionUID = 5475451138208522511L;
-
+	private static final Logger log = Logger.getLogger(ScriptSelector.class.getName());
 	private static final String[] COLUMN_NAMES = new String[]{"", "Name", "Version", "Author", "Description"};
 
 	private static final ScriptSource SRC_SOURCES;
@@ -123,12 +124,40 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						BotGUI.openURL(def.website);
 					}
 				});
-				contextMenu.add(visit);
+
+				final JMenuItem start = new JMenuItem();
+				start.setText(submit.getText());
+				start.setIcon(new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PLAY)));
+				start.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						submit.doClick();
+					}
+				});
+				start.setEnabled(submit.isEnabled());
+
+				final JMenuItem delete = new JMenuItem();
+				delete.setText("Delete");
+				delete.setIcon(new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CLOSE)));
+				delete.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						final File path = def.path == null || def.path.isEmpty() ? null : new File(def.path);
+						if (path != null && path.exists() && path.delete()) {
+							log.info("Deleted script " + def.name + " (" + def.path + ")");
+						} else {
+							log.warning("Could not delete " + def.name);
+						}
+					}
+				});
 
 				if (def.website == null || def.website.isEmpty()) {
 					visit.setEnabled(false);
 				}
 
+				contextMenu.add(start);
+				contextMenu.add(visit);
+				contextMenu.add(delete);
 				contextMenu.show(table, e.getX(), e.getY());
 			}
 		});
@@ -171,8 +200,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				table.revalidate();
 			}
 		});
-		submit = new JButton("Start Script", new ImageIcon(
-				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_START)));
+		submit = new JButton("Start", new ImageIcon(
+				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PLAY)));
 		final JButton connect = new JButton(new ImageIcon(
 				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CONNECT)));
 		submit.setEnabled(false);

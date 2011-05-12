@@ -22,8 +22,8 @@ import java.util.ArrayList;
 public class RestrictedSecurityManager extends SecurityManager {
 	private String getCallingClass() {
 		final String prefix = Application.class.getPackage().getName() + ".";
-		for (final StackTraceElement s : Thread.currentThread().getStackTrace()) {
-			final String name = s.getClassName();
+		for (final Class<?> c : getClassContext()) {
+			final String name = c.getName();
 			if (name.startsWith(prefix) && !name.equals(RestrictedSecurityManager.class.getName())) {
 				return name;
 			}
@@ -31,8 +31,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 		return "";
 	}
 
-	public static boolean isCallerScript() {
-		return Thread.currentThread().getName().startsWith("Script-");
+	public boolean isCallerScript() {
+		return Thread.currentThread().getName().startsWith("Script-") || getCallingClass().startsWith("org.rsbot.script.Script");
 	}
 
 	public ArrayList<String> getAllowedHosts() {
@@ -62,10 +62,11 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("www.dunkscripts.freeiz.com"); // Dunnkers
 		whitelist.add("www.dlolpics.com"); // DlolPics
 		whitelist.add(".logikmedia.co"); // countvidal
-		whitelist.add("*.letthesmokeout.com"); // MrByte
+		whitelist.add("letthesmokeout.com"); // MrByte
 		whitelist.add("zaszmedia.com"); // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
 		whitelist.add("pumyscript.orgfree.com"); // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
 		whitelist.add("noneevr2.r00t.la"); // noneevr2 - TakeBury
+		whitelist.add(".ownagebots.com"); //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
 
 		return whitelist;
 	}

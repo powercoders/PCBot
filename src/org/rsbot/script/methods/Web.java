@@ -82,14 +82,14 @@ public class Web extends MethodProvider {
 		if (transportationHandler.canTeleport(end)) {
 			Teleport teleport = transportationHandler.getTeleport(end);
 			if (teleport.teleportationLocation().getZ() == end.getZ()) {
-				RouteStep teleportStep = new RouteStep(methods, RouteStep.Type.TELEPORT, transportationHandler.getTeleport(end));
+				RouteStep teleportStep = new RouteStep(methods, transportationHandler.getTeleport(end));
 				start = teleport.teleportationLocation();
 				routeSteps.add(teleportStep);
 			}
 		}
 		RSTile[] nodePath = generateNodePath(start, end);
 		if (nodePath != null) {
-			RouteStep walkingStep = new RouteStep(methods, RouteStep.Type.PATH, nodePath);
+			RouteStep walkingStep = new RouteStep(methods, nodePath);
 			routeSteps.add(walkingStep);
 			return new Route(routeSteps.toArray(new RouteStep[routeSteps.size()]));
 		}

@@ -64,7 +64,7 @@ public class BotToolBar extends JToolBar {
 	private int inputState = Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE;
 	private boolean inputOverride = true;
 
-	public BotToolBar(final ActionListener listener) {
+	public BotToolBar(final ActionListener listener, final BotMenuBar menu) {
 		try {
 			IMAGE_CLOSE = getTransparentImage(GlobalConfiguration.getResourceURL(GlobalConfiguration.Paths.Resources.ICON_CLOSE), 0.5f);
 		} catch (final MalformedURLException e) {
@@ -74,17 +74,46 @@ public class BotToolBar extends JToolBar {
 
 		screenshotButton = new JButton("Screenshot", new ImageIcon(
 				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PHOTO)));
-		screenshotButton.addActionListener(listener);
+		screenshotButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				menu.doClick(Messages.SAVESCREENSHOT);
+			}
+		});
 		screenshotButton.setFocusable(false);
+		screenshotButton.setToolTipText(screenshotButton.getText());
+		screenshotButton.setText("");
 
 		userInputButton = new JButton("Input", new ImageIcon(getInputImage(inputOverride, inputState)));
-		userInputButton.addActionListener(listener);
+		userInputButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				menu.doTick("Force Input");
+			}
+		});
 		userInputButton.setFocusable(false);
+		userInputButton.setToolTipText(userInputButton.getText());
+		userInputButton.setText("");
 
 		runScriptButton = new JButton("Run", new ImageIcon(
 				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PLAY)));
-		runScriptButton.addActionListener(listener);
+		runScriptButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switch (getScriptButton()) {
+				case RUN_SCRIPT:
+					menu.doClick(Messages.RUNSCRIPT);
+					break;
+				case RESUME_SCRIPT:
+				case PAUSE_SCRIPT:
+					menu.doClick(Messages.PAUSESCRIPT);
+					break;
+				}
+			}
+		});
 		runScriptButton.setFocusable(false);
+		runScriptButton.setToolTipText(runScriptButton.getText());
+		runScriptButton.setText("");
 
 		final HomeButton home = new HomeButton(ICON_HOME);
 
@@ -132,7 +161,7 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public int getScriptButton() {
-		final String label = runScriptButton.getText();
+		final String label = runScriptButton.getToolTipText();
 		if (label.equals("Run")) {
 			return RUN_SCRIPT;
 		} else if (label.equals("Pause")) {
@@ -145,9 +174,10 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void setHome(final boolean home) {
-		screenshotButton.setEnabled(!home);
-		userInputButton.setEnabled(!home);
-		runScriptButton.setEnabled(!home);
+		for (final JButton button : new JButton[] {screenshotButton, userInputButton, runScriptButton}) {
+			button.setEnabled(!home);
+			button.setVisible(!home);
+		}
 	}
 
 	public void setInputState(final int state) {
@@ -163,23 +193,26 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void setScriptButton(final int state) {
-		String text, pathResource;
+		String text = null, pathResource = null;
 
-		if (state == RUN_SCRIPT) {
+		switch (state) {
+		case RUN_SCRIPT:
 			text = "Run";
 			pathResource = GlobalConfiguration.Paths.Resources.ICON_PLAY;
-		} else if (state == PAUSE_SCRIPT) {
+			break;
+		case PAUSE_SCRIPT:
 			text = "Pause";
 			pathResource = GlobalConfiguration.Paths.Resources.ICON_PAUSE;
-		} else if (state == RESUME_SCRIPT) {
+			break;
+		case RESUME_SCRIPT:
 			text = "Resume";
-			pathResource = GlobalConfiguration.Paths.Resources.ICON_PLAY;
-		} else {
-			throw new IllegalArgumentException("Illegal button state: " + state + "!");
+			pathResource = GlobalConfiguration.Paths.Resources.ICON_START;
+			break;
 		}
 
-		runScriptButton.setText(text);
+		runScriptButton.setToolTipText(text);
 		runScriptButton.setIcon(new ImageIcon(GlobalConfiguration.getImage(pathResource)));
+		runScriptButton.repaint();
 		revalidate();
 	}
 

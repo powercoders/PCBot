@@ -8,6 +8,7 @@ import org.rsbot.util.GlobalConfiguration;
 
 import javax.swing.*;
 
+import java.awt.Image;
 import java.awt.SystemTray;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -144,7 +145,14 @@ public class BotMenuBar extends JMenuBar {
 	}
 
 	public void setPauseScript(final boolean pause) {
-		commandMenuItem.get(Messages.PAUSESCRIPT).setText(pause ? "Resume Script" : Messages.PAUSESCRIPT);
+		final JMenuItem item = commandMenuItem.get(Messages.PAUSESCRIPT);
+		item.setText(pause ? "Resume Script" : Messages.PAUSESCRIPT);
+		final Image image = GlobalConfiguration.getImage(pause ? GlobalConfiguration.Paths.Resources.ICON_START : GlobalConfiguration.Paths.Resources.ICON_PAUSE);
+		item.setIcon(new ImageIcon(image));
+	}
+
+	public JMenuItem getMenuItem(final String name) {
+		return commandMenuItem.get(name);
 	}
 
 	public void setBot(final Bot bot) {
@@ -201,6 +209,10 @@ public class BotMenuBar extends JMenuBar {
 
 	public void doClick(final String item) {
 		commandMenuItem.get(item).doClick();
+	}
+
+	public void doTick(final String item) {
+		commandCheckMap.get(item).doClick();
 	}
 
 	public void loadPrefs() {
