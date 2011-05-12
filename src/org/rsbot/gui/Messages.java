@@ -17,6 +17,8 @@ public interface Messages {
 	public static final String SAVESCREENSHOT = "Screenshot";
 	public static final String EXIT = "Exit";
 
+	public static final String AUTOSHUTDOWN = "Auto Shutdown";
+
 	public static final String TOGGLE = "Toggle";
 	public static final String TOGGLEFALSE = TOGGLE + "F";
 	public static final String TOGGLETRUE = TOGGLE + "T";
