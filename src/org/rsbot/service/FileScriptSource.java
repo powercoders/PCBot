@@ -72,7 +72,7 @@ public class FileScriptSource implements ScriptSource {
 			final String name = e.getName().replace('/', '.');
 			final String ext = ".class";
 			if (name.endsWith(ext) && !name.contains("$")) {
-				load(loader, scripts, name.substring(0, name.length() - ext.length()));
+				load(loader, scripts, name.substring(0, name.length() - ext.length()), null);
 			}
 		}
 	}
@@ -89,12 +89,12 @@ public class FileScriptSource implements ScriptSource {
 			final String ext = ".class";
 			if (name.endsWith(ext) && !name.startsWith(".") && !name.contains("!") && !name.contains("$")) {
 				name = name.substring(0, name.length() - ext.length());
-				load(loader, scripts, name);
+				load(loader, scripts, name, file.getAbsolutePath());
 			}
 		}
 	}
 
-	private void load(final ClassLoader loader, final LinkedList<ScriptDefinition> scripts, final String name) {
+	private void load(final ClassLoader loader, final LinkedList<ScriptDefinition> scripts, final String name, final String path) {
 		Class<?> clazz;
 		try {
 			clazz = loader.loadClass(name);
@@ -118,6 +118,7 @@ public class FileScriptSource implements ScriptSource {
 			def.website = manifest.website();
 			def.clazz = clazz;
 			def.source = this;
+			def.path = path;
 			if (manifest.requiresVersion() <= GlobalConfiguration.getVersion()) {
 				scripts.add(def);
 			}

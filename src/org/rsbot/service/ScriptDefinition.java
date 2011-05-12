@@ -21,4 +21,6 @@ public class ScriptDefinition {
 
 	public ScriptSource source;
 
+	public String path;
+
 }
