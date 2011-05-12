@@ -67,7 +67,7 @@ public final class UpdateUtil {
 		final File jarNew = new File(GlobalConfiguration.NAME + "-" + getLatestVersion() + ".jar");
 		HttpClient.download(new URL(GlobalConfiguration.Paths.URLs.DOWNLOAD), jarNew);
 		final String jarOld = GlobalConfiguration.Paths.getRunningJarPath();
-		Runtime.getRuntime().exec("java -jar \"" + jarNew + "\" delete \"" + jarOld + "\"");
+		Runtime.getRuntime().exec("java -jar \"" + jarNew + "\" --delete \"" + jarOld + "\"");
 		instance.cleanExit(true);
 	}
 }

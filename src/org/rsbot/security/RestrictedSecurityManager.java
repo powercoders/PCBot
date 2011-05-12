@@ -5,8 +5,9 @@ import org.rsbot.gui.BotGUI;
 import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.GlobalConfiguration.OperatingSystem;
 import org.rsbot.util.UpdateUtil;
+
+import sun.font.FontManager;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -21,8 +22,8 @@ import java.util.ArrayList;
 public class RestrictedSecurityManager extends SecurityManager {
 	private String getCallingClass() {
 		final String prefix = Application.class.getPackage().getName() + ".";
-		for (final StackTraceElement s : Thread.currentThread().getStackTrace()) {
-			final String name = s.getClassName();
+		for (final Class<?> c : getClassContext()) {
+			final String name = c.getName();
 			if (name.startsWith(prefix) && !name.equals(RestrictedSecurityManager.class.getName())) {
 				return name;
 			}
@@ -30,8 +31,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 		return "";
 	}
 
-	private boolean isCallerScript() {
-		return Thread.currentThread().getName().startsWith("Script-");
+	public boolean isCallerScript() {
+		return Thread.currentThread().getName().startsWith("Script-") || getCallingClass().startsWith("org.rsbot.script.Script");
 	}
 
 	public ArrayList<String> getAllowedHosts() {
@@ -64,7 +65,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("*.letthesmokeout.com"); // MrByte
 		whitelist.add("zaszmedia.com"); // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
 		whitelist.add("pumyscript.orgfree.com"); // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
-		whitelist.add("ownagebots.com"); //ownageful - OwnagefulGDK, AutoBDKPro, FrostdragonsPro		whitelist.add("noneevr2.r00t.la"); // noneevr2 - TakeBury
+		whitelist.add("noneevr2.r00t.la"); // noneevr2 - TakeBury
+		whitelist.add(".ownagebots.com"); //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
 
 		return whitelist;
 	}
@@ -311,10 +313,12 @@ public class RestrictedSecurityManager extends SecurityManager {
 				if (readOnly && jre != null && !jre.isEmpty() && path.startsWith(jre)) {
 					fail = false;
 				}
-				if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
-					final String sysroot = System.getenv("SystemRoot");
-					if (readOnly && sysroot != null & !sysroot.isEmpty() && path.startsWith(sysroot)) {
-						fail = false;
+				if (fail && readOnly) {
+					for (final String font : FontManager.getFontPath(true).split("\\Q" + File.pathSeparator + "\\E")) {
+						if (path.startsWith(font)) {
+							fail = false;
+							break;
+						}
 					}
 				}
 				if (fail) {
