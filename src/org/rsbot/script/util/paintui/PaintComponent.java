@@ -19,12 +19,11 @@ public class PaintComponent implements MouseListener,
 	MouseMotionListener, KeyListener {
     private PaintComponent parent;
     private PaintUserInterface rootPane;
-    private ArrayList<PaintComponent> children = new ArrayList<PaintComponent>();
     private List<MouseListener> mouseListeners = new ArrayList<MouseListener>();
     private List<KeyListener> keyListeners = new ArrayList<KeyListener>();
     private List<MouseMotionListener> mouseMotionListeners = new ArrayList<MouseMotionListener>();
 
-    private int x, y, width, height;
+    protected int x, y, width, height;
 
     public PaintStyleSheet styleSheet = new PaintStyleSheet();
 
@@ -100,19 +99,6 @@ public class PaintComponent implements MouseListener,
 	return new Rectangle(getAbsoluteX(), getAbsoluteY(), width, height);
     }
 
-    public void addChild(PaintComponent comp) {
-	comp.setParent(this);
-	children.add(comp);
-    }
-
-    public PaintComponent getChild(int id) {
-	return (id >= 0 && id < children.size()) ? children.get(id) : null;
-    }
-
-    public void removeChild(PaintComponent comp) {
-	children.remove(comp);
-    }
-
     public void style(PaintStyleSheet styleSheet) {
 	this.styleSheet = styleSheet;
     }
@@ -132,7 +118,6 @@ public class PaintComponent implements MouseListener,
 
     public void onRepaint(Graphics render) {
 	paint(render);
-	paintChildren(render);
     }
 
     public void paint(Graphics render){
@@ -161,12 +146,6 @@ public class PaintComponent implements MouseListener,
 	return g.create(Math.max(0, x), Math.max(0, y),
 		Math.min(width, currClip.width),
 		Math.min(currClip.height, height));
-    }
-
-    public void paintChildren(Graphics g) {
-	Graphics myGraphics = getClippedGraphics(g);
-	for (PaintComponent comp : children)
-	    comp.onRepaint(myGraphics);
     }
 
     public void addMouseListener(final MouseListener m) {
@@ -223,8 +202,6 @@ public class PaintComponent implements MouseListener,
 		    e.getClickCount(), e.isPopupTrigger());
 	    for (MouseListener l : getMouseListeners())
 		l.mouseClicked(priv);
-	    for (PaintComponent c : children)
-		c.mouseClicked(priv);
 	}
     }
 
@@ -244,8 +221,6 @@ public class PaintComponent implements MouseListener,
 		    e.getClickCount(), e.isPopupTrigger());
 	    for (MouseListener l : getMouseListeners())
 		l.mousePressed(priv);
-	    for (PaintComponent c : children)
-		c.mousePressed(priv);
 	}
     }
 
@@ -257,8 +232,6 @@ public class PaintComponent implements MouseListener,
 		    e.getClickCount(), e.isPopupTrigger());
 	    for (MouseListener l : getMouseListeners())
 		l.mouseReleased(priv);
-	    for (PaintComponent c : children)
-		c.mouseReleased(priv);
 	}
     }
 
@@ -270,8 +243,6 @@ public class PaintComponent implements MouseListener,
 		    e.getClickCount(), e.isPopupTrigger());
 	    for (MouseMotionListener l : getMouseMotionListeners())
 		l.mouseDragged(priv);
-	    for (PaintComponent c : children)
-		c.mouseDragged(priv);
 	}
     }
 
@@ -283,8 +254,6 @@ public class PaintComponent implements MouseListener,
 		    e.getClickCount(), e.isPopupTrigger());
 	    for (MouseMotionListener l : getMouseMotionListeners())
 		l.mouseMoved(priv);
-	    for (PaintComponent c : children)
-		c.mouseMoved(priv);
 	}
     }
 
