@@ -14,15 +14,18 @@ import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
 import org.rsbot.util.*;
+import org.rsbot.util.GlobalConfiguration.OperatingSystem;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 /**
@@ -45,6 +48,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private final List<Bot> noModificationBots = new ArrayList<Bot>();
 	private final int botsIndex = 2;
 	private TrayIcon tray = null;
+	private java.util.Timer shutdown = null;
 
 	public BotGUI() {
 		init();
@@ -161,6 +165,41 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				}
 			} else if (option.equals("Disable Confirmations")) {
 				disableConfirmations = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
+			} else if (option.equals(Messages.AUTOSHUTDOWN)) {
+				final boolean enabled = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
+				if (!enabled) {
+					if (shutdown != null) {
+						shutdown.cancel();
+						shutdown.purge();
+					}
+					shutdown = null;
+				} else {
+					final long interval = 10 * 60 * 1000; // 10mins
+					shutdown = new java.util.Timer(true);
+					shutdown.schedule(new TimerTask() {
+						@Override
+						public void run() {
+							for (final Bot bot : bots) {
+								if (bot.getScriptHandler().getRunningScripts().size() != 0) {
+									return;
+								}
+							}
+							log.info("Shutting down in 1 minute...");
+							try {
+								Thread.sleep(1 * 60 * 1000);
+							} catch (InterruptedException ignored) {
+							}
+							if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
+								try {
+									Runtime.getRuntime().exec("shutdown.exe", new String[] {"-s"});
+									cleanExit(true);
+								} catch (IOException ignored) {
+									log.severe("Could not shutdown system");
+								}
+							}
+						}
+					}, interval, interval);
+				}
 			} else {
 				final Bot current = getCurrentBot();
 				if (current != null) {
