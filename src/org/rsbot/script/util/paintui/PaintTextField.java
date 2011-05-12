@@ -12,20 +12,23 @@ public class PaintTextField extends PaintComponent {
     final String name;
     FontRenderContext frc = new FontRenderContext(new AffineTransform(), false,
 	    false);
-    public String getText(){
+
+    public String getText() {
 	return text;
     }
-    public void setText(String s){
+
+    public void setText(String s) {
 	this.text = s;
     }
-    public PaintTextField(Rectangle rect, String name) {
+
+    public PaintTextField(Rectangle rect, String empty) {
 	super.setLocation(rect.x, rect.y);
 	super.setSize(rect.width, rect.height);
-	this.name = name;
+	this.name = empty;
     }
 
-    public PaintTextField(Rectangle rect, String name, char mask) {
-	this(rect, name);
+    public PaintTextField(Rectangle rect, String empty, char mask) {
+	this(rect, empty);
 	this.mask = mask;
     }
 
@@ -33,8 +36,8 @@ public class PaintTextField extends PaintComponent {
     public void onRepaint(Graphics render) {
 	paint(render);
 	Graphics g = super.getClippedGraphics(render);
-	g.setColor(styleSheet.fgColor);
-	g.setFont(styleSheet.font);
+	g.setColor(getCurrentStyle().fgColor);
+	g.setFont(getCurrentStyle().font);
 	if (text.isEmpty() && !selected()) {
 	    g.drawString(name, getAbsoluteX() + 3, getAbsoluteY() + getHeight()
 		    - 3);
@@ -42,7 +45,6 @@ public class PaintTextField extends PaintComponent {
 	    g.drawString(getDisplay(), getAbsoluteX() + 3, getAbsoluteY()
 		    + getHeight() - 3);
 	}
-	super.paintChildren(render);
     }
 
     public boolean selected() {

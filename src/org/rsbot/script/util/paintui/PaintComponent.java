@@ -15,8 +15,8 @@ import java.util.List;
 
 import org.rsbot.event.listeners.PaintListener;
 
-public class PaintComponent implements MouseListener,
-	MouseMotionListener, KeyListener {
+public class PaintComponent implements MouseListener, MouseMotionListener,
+	KeyListener {
     private PaintComponent parent;
     private PaintUserInterface rootPane;
     private List<MouseListener> mouseListeners = new ArrayList<MouseListener>();
@@ -26,6 +26,7 @@ public class PaintComponent implements MouseListener,
     protected int x, y, width, height;
 
     public PaintStyleSheet styleSheet = new PaintStyleSheet();
+    public PaintStyleSheet mouseOverSheet = new PaintStyleSheet();
 
     public PaintComponent(PaintComponent parent) {
 	this.parent = parent;
@@ -99,48 +100,68 @@ public class PaintComponent implements MouseListener,
 	return new Rectangle(getAbsoluteX(), getAbsoluteY(), width, height);
     }
 
-    public void style(PaintStyleSheet styleSheet) {
+    public void setStyle(PaintStyleSheet styleSheet) {
 	this.styleSheet = styleSheet;
     }
 
+    public void setHoverStyle(PaintStyleSheet styleSheet) {
+	this.mouseOverSheet = styleSheet;
+    }
+
     public void inheritStyle() {
-	if (parent != null)
+	if (parent != null) {
 	    styleSheet = parent.styleSheet.clone();
+	    mouseOverSheet = parent.mouseOverSheet.clone();
+	}
     }
 
     public void revertStyle() {
 	styleSheet = new PaintStyleSheet();
+	mouseOverSheet = new PaintStyleSheet();
     }
 
     public PaintStyleSheet getStyle() {
 	return styleSheet;
     }
 
+    public PaintStyleSheet getHoverStyle() {
+	return mouseOverSheet;
+    }
+
+    protected PaintStyleSheet getCurrentStyle() {
+	if (getAbsoluteBounds().contains(getInterface().getMouseLocation())
+		&& mouseOverSheet != null)
+	    return mouseOverSheet;
+	else
+	    return styleSheet;
+    }
+
     public void onRepaint(Graphics render) {
 	paint(render);
     }
 
-    public void paint(Graphics render){
+    public void paint(Graphics render) {
 	Graphics2D g = (Graphics2D) render;
 	Rectangle bounds = getAbsoluteBounds();
-	if (styleSheet.bgColor != null) {
-	    g.setColor(styleSheet.bgColor);
+	if (getCurrentStyle().bgColor != null) {
+	    g.setColor(getCurrentStyle().bgColor);
 	    g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
-	if (styleSheet.background != null) {
-	    g.drawImage(styleSheet.background, bounds.x, bounds.y, bounds.x
+	if (getCurrentStyle().background != null) {
+	    g.drawImage(getCurrentStyle().background, bounds.x, bounds.y, bounds.x
 		    + bounds.width, bounds.y + bounds.height, 0, 0,
 		    bounds.width, bounds.height, null);
 	}
 	// Borders
-	if (styleSheet.border != null && styleSheet.borderSize >= 0) {
+	if (getCurrentStyle().border != null && getCurrentStyle().borderSize >= 0) {
 	    Stroke curr = g.getStroke();
-	    g.setStroke(new BasicStroke(styleSheet.borderSize));
-	    g.setColor(styleSheet.border);
+	    g.setStroke(new BasicStroke(getCurrentStyle().borderSize));
+	    g.setColor(getCurrentStyle().border);
 	    g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
 	    g.setStroke(curr);
 	}
     }
+
     public Graphics getClippedGraphics(Graphics g) {
 	Rectangle currClip = g.getClipBounds();
 	return g.create(Math.max(0, x), Math.max(0, y),
