@@ -31,8 +31,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 		return "";
 	}
 
-	public static boolean isCallerScript() {
-		return Thread.currentThread().getName().startsWith("Script-");
+	public boolean isCallerScript() {
+		return Thread.currentThread().getName().startsWith("Script-") || getCallingClass().startsWith("org.rsbot.script.Script");
 	}
 
 	public ArrayList<String> getAllowedHosts() {
