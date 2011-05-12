@@ -32,9 +32,6 @@ public class AccountStore {
 		private final Map<String, String> attributes = new TreeMap<String, String>();
 
 		public Account(final String username) {
-			if (RestrictedSecurityManager.isCallerScript()) {
-				throw new SecurityException();
-			}
 			this.username = username;
 		}
 
@@ -98,6 +95,9 @@ public class AccountStore {
 	private final Map<String, Account> accounts = new TreeMap<String, Account>();
 
 	public AccountStore(final File file) {
+		if (((RestrictedSecurityManager) System.getSecurityManager()).isCallerScript()) {
+			throw new SecurityException();
+		}
 		this.file = file;
 	}
 

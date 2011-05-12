@@ -22,8 +22,8 @@ import java.util.ArrayList;
 public class RestrictedSecurityManager extends SecurityManager {
 	private String getCallingClass() {
 		final String prefix = Application.class.getPackage().getName() + ".";
-		for (final StackTraceElement s : Thread.currentThread().getStackTrace()) {
-			final String name = s.getClassName();
+		for (final Class<?> c : getClassContext()) {
+			final String name = c.getName();
 			if (name.startsWith(prefix) && !name.equals(RestrictedSecurityManager.class.getName())) {
 				return name;
 			}
@@ -31,8 +31,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 		return "";
 	}
 
-	public static boolean isCallerScript() {
-		return Thread.currentThread().getName().startsWith("Script-");
+	public boolean isCallerScript() {
+		return Thread.currentThread().getName().startsWith("Script-") || getCallingClass().startsWith("org.rsbot.script.Script");
 	}
 
 	public ArrayList<String> getAllowedHosts() {
