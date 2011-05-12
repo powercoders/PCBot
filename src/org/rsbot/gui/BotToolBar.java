@@ -174,9 +174,10 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void setHome(final boolean home) {
-		screenshotButton.setEnabled(!home);
-		userInputButton.setEnabled(!home);
-		runScriptButton.setEnabled(!home);
+		for (final JButton button : new JButton[] {screenshotButton, userInputButton, runScriptButton}) {
+			button.setEnabled(!home);
+			button.setVisible(!home);
+		}
 	}
 
 	public void setInputState(final int state) {
