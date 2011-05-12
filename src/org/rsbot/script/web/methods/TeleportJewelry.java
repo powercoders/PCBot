@@ -8,91 +8,83 @@ import org.rsbot.script.wrappers.RSItem;
 import org.rsbot.script.wrappers.RSTile;
 
 public class TeleportJewelry extends TeleportItem {
-
-    public TeleportJewelry(MethodContext ctx, RSTile teleportationLocation,
-	    String[] action, int[] itemIDs) {
-	super(ctx, teleportationLocation, action, itemIDs);
-    }
-
-    public TeleportJewelry(MethodContext ctx, RSTile teleportationLocation,
-	    String action, int[] itemIDs) {
-	super(ctx, teleportationLocation, action, itemIDs);
-    }
-
-    public boolean perform() {
-	RSItem item = methods.inventory.getItem(itemIDs);
-	boolean equip = false;
-	if (item == null) {
-	    for (RSItem itm : methods.equipment.getItems())
-		for (int id : itemIDs)
-		    if (itm.getID() == id) {
-			equip = true;
-			item = itm;
-			break;
-		    }
+	public TeleportJewelry(MethodContext ctx, RSTile teleportationLocation, String[] action, int[] itemIDs) {
+		super(ctx, teleportationLocation, action, itemIDs);
 	}
-	if (item != null) {
-	    if (methods.game.getCurrentTab() != (equip ? Game.TAB_EQUIPMENT
-		    : Game.TAB_INVENTORY)) {
-		methods.game.openTab(equip ? Game.TAB_EQUIPMENT
-			: Game.TAB_INVENTORY);
-		sleep(500);
-	    }
-	    for (String s : action)
-		if (item.doAction(s)) {
-		    final long tO = System.currentTimeMillis();
-		    while (System.currentTimeMillis() - tO < 10000) {
-			sleep(100);
-			if (methods.calc.distanceBetween(methods.players
-				.getMyPlayer().getLocation(),
-				teleportationLocation()) < 15) {
-			    return true;
-			}
-		    }
-		}
 
-	    if (item.doAction("Rub")) {
-		RSComponent comp = null;
-		long tO = System.currentTimeMillis();
-		while (System.currentTimeMillis() - tO < 10000) {
-		    sleep(100);
-		    if ((comp = getDialogOption(action)) != null) {
-			break;
-		    }
-		}
-		if (comp != null && comp.doClick()) {
-		    tO = System.currentTimeMillis();
-		    while (System.currentTimeMillis() - tO < 10000) {
-			sleep(100);
-			if (methods.calc.distanceBetween(methods.players
-				.getMyPlayer().getLocation(),
-				teleportationLocation()) < 15) {
-			    return true;
-			}
-		    }
-		}
-	    }
+	public TeleportJewelry(MethodContext ctx, RSTile teleportationLocation, String action, int[] itemIDs) {
+		super(ctx, teleportationLocation, action, itemIDs);
 	}
-	return false;
-    }
 
-    private RSComponent getDialogOption(String... opts) {
-	final RSInterface[] valid = methods.interfaces.getAll();
-	for (final RSInterface iface : valid) {
-	    if (iface.getIndex() != 137) {
-		final int len = iface.getChildCount();
-		for (int i = 0; i < len; i++) {
-		    final RSComponent child = iface.getComponent(i);
-		    for (String opt : opts) {
-			if (child.containsText(opt) && child.isValid()
-				&& child.getAbsoluteX() > 10
-				&& child.getAbsoluteY() > 300) {
-			    return child;
+	public boolean perform() {
+		RSItem item = methods.inventory.getItem(itemIDs);
+		boolean equip = false;
+		if (item == null) {
+			for (RSItem itm : methods.equipment.getItems()) {
+				for (int id : itemIDs) {
+					if (itm.getID() == id) {
+						equip = true;
+						item = itm;
+						break;
+					}
+				}
 			}
-		    }
 		}
-	    }
+		if (item != null) {
+			if (methods.game.getCurrentTab() != (equip ? Game.TAB_EQUIPMENT : Game.TAB_INVENTORY)) {
+				methods.game.openTab(equip ? Game.TAB_EQUIPMENT : Game.TAB_INVENTORY);
+				sleep(500);
+			}
+			for (String s : action) {
+				if (item.doAction(s)) {
+					final long tO = System.currentTimeMillis();
+					while (System.currentTimeMillis() - tO < 10000) {
+						sleep(100);
+						if (methods.calc.distanceBetween(methods.players.getMyPlayer().getLocation(), teleportationLocation()) < 15) {
+							return true;
+						}
+					}
+				}
+			}
+
+			if (item.doAction("Rub")) {
+				RSComponent comp = null;
+				long tO = System.currentTimeMillis();
+				while (System.currentTimeMillis() - tO < 10000) {
+					sleep(100);
+					if ((comp = getDialogOption(action)) != null) {
+						break;
+					}
+				}
+				if (comp != null && comp.doClick()) {
+					tO = System.currentTimeMillis();
+					while (System.currentTimeMillis() - tO < 10000) {
+						sleep(100);
+						if (methods.calc.distanceBetween(methods.players.getMyPlayer().getLocation(), teleportationLocation()) < 15) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
-	return null;
-    }
+
+	private RSComponent getDialogOption(String... opts) {
+		final RSInterface[] valid = methods.interfaces.getAll();
+		for (final RSInterface iface : valid) {
+			if (iface.getIndex() != 137) {
+				final int len = iface.getChildCount();
+				for (int i = 0; i < len; i++) {
+					final RSComponent child = iface.getComponent(i);
+					for (String opt : opts) {
+						if (child.containsText(opt) && child.isValid() && child.getAbsoluteX() > 10 && child.getAbsoluteY() > 300) {
+							return child;
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
 }
