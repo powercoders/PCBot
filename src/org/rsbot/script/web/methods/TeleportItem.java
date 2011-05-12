@@ -10,17 +10,13 @@ public class TeleportItem extends Teleport {
 	public final int[] itemIDs;
 	public final String[] action;
 
-	public TeleportItem(final MethodContext ctx,
-			final RSTile teleportationLocation, final String action,
-			final int... itemIDs) {
+	public TeleportItem(final MethodContext ctx, final RSTile teleportationLocation, final String action, final int... itemIDs) {
 		super(ctx, teleportationLocation);
 		this.itemIDs = itemIDs;
-		this.action = new String[] { action };
+		this.action = new String[]{action};
 	}
 
-	public TeleportItem(final MethodContext ctx,
-			final RSTile teleportationLocation, final String[] action,
-			final int... itemIDs) {
+	public TeleportItem(final MethodContext ctx, final RSTile teleportationLocation, final String[] action, final int... itemIDs) {
 		super(ctx, teleportationLocation);
 		this.itemIDs = itemIDs;
 		this.action = action;
@@ -31,9 +27,7 @@ public class TeleportItem extends Teleport {
 	}
 
 	public boolean isApplicable(RSTile base, RSTile destination) {
-		return methods.calc.distanceBetween(base, teleportationLocation()) > 30
-				&& methods.calc.distanceBetween(teleportationLocation(),
-						destination) < methods.calc.distanceTo(destination);
+		return methods.calc.distanceBetween(base, teleportationLocation()) > 30 && methods.calc.distanceBetween(teleportationLocation(), destination) < methods.calc.distanceTo(destination);
 	}
 
 	public boolean preform() {
@@ -49,24 +43,20 @@ public class TeleportItem extends Teleport {
 						final long tO = System.currentTimeMillis();
 						while (System.currentTimeMillis() - tO < 10000) {
 							sleep(100);
-							if (methods.calc.distanceBetween(methods.players
-									.getMyPlayer().getLocation(),
-									teleportationLocation()) < 15) {
+							if (methods.calc.distanceBetween(methods.players.getMyPlayer().getLocation(), teleportationLocation()) < 15) {
 								break;
 							}
 						}
 					}
 				}
 			}
-			return methods.calc.distanceBetween(methods.players.getMyPlayer()
-					.getLocation(), teleportationLocation()) < 15;
+			return methods.calc.distanceBetween(methods.players.getMyPlayer().getLocation(), teleportationLocation()) < 15;
 		}
 		return false;
 	}
 
 	public double getDistance(RSTile destination) {
-		return methods.calc.distanceBetween(teleportationLocation(),
-				destination);// TODO use web distancing.
+		return methods.calc.distanceBetween(teleportationLocation(), destination);// TODO use web distancing.
 	}
 
 	private boolean deepWilderness() {
