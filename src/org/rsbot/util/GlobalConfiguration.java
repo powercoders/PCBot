@@ -294,7 +294,7 @@ public class GlobalConfiguration {
 	public static Image getImage(final String resource) {
 		try {
 			return Toolkit.getDefaultToolkit().getImage(getResourceURL(resource));
-		} catch (final Exception e) {
+		} catch (final Exception ignored) {
 		}
 		return null;
 	}
@@ -344,7 +344,7 @@ public class GlobalConfiguration {
 			reader = new BufferedReader(is);
 			final String s = reader.readLine().trim();
 			return Integer.parseInt(s);
-		} catch (final Exception e) {
+		} catch (final Exception ignored) {
 		} finally {
 			try {
 				if (is != null) {
@@ -353,7 +353,7 @@ public class GlobalConfiguration {
 				if (reader != null) {
 					reader.close();
 				}
-			} catch (final IOException ioe) {
+			} catch (final IOException ignored) {
 			}
 		}
 		return -1;
