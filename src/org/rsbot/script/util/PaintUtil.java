@@ -1,14 +1,15 @@
 package org.rsbot.script.util;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
+import org.rsbot.script.internal.wrappers.TileFlags;
+import org.rsbot.script.methods.Game;
+import org.rsbot.script.methods.MethodContext;
+import org.rsbot.script.methods.Skills;
+import org.rsbot.script.methods.Web;
+import org.rsbot.script.wrappers.*;
+import org.rsbot.util.GlobalConfiguration;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
@@ -18,23 +19,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
-
-import org.rsbot.script.internal.wrappers.TileFlags;
-import org.rsbot.script.methods.Game;
-import org.rsbot.script.methods.MethodContext;
-import org.rsbot.script.methods.Skills;
-import org.rsbot.script.methods.Web;
-import org.rsbot.script.wrappers.RSArea;
-import org.rsbot.script.wrappers.RSGroundItem;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSModel;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSPlayer;
-import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.util.GlobalConfiguration;
 
 /**
  * @author Fletch To 99, jtryba
@@ -165,23 +149,6 @@ public class PaintUtil {
 
 		public double toTime() {
 			return 256 * (finishTime - System.currentTimeMillis()) / lastingTime;
-		}
-	}
-
-	/**
-	 * Draws an RSModel
-	 *
-	 * @param model RSModel to draw
-	 * @param color Color to draw the RSModel
-	 * @param alpha The opacity of the color.
-	 * @author jtryba
-	 */
-	public void drawModel(final RSModel model, final Color color, final int alpha) {
-		if (model != null) {
-			g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
-			for (final Polygon p1 : model.getTriangles()) {
-				g2.fillPolygon(p1);
-			}
 		}
 	}
 
@@ -607,6 +574,23 @@ public class PaintUtil {
 	}
 
 	/**
+	 * Draws an rs model.
+	 *
+	 * @param model The model to draw.
+	 * @param color The color to make the model.
+	 * @param alpha The opacity of the color.
+	 * @author jtryba
+	 */
+	public void drawModel(final RSModel model, final Color color, final int alpha) {
+		if (model != null) {
+			g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
+			for (final Polygon p1 : model.getTriangles()) {
+				g2.fillPolygon(p1);
+			}
+		}
+	}
+
+	/**
 	 * Draws the object of your choice.
 	 *
 	 * @param object Target object to color.
@@ -759,12 +743,12 @@ public class PaintUtil {
 			g2.setFont(new Font(null, Font.BOLD, 8));
 			g2.setColor(color);
 			final RSItem[] curItem = ctx.inventory.getItems();
-			for (int i = 0; i < 28; i++) {
-				if (curItem[i].getID() != -1) {
-					final Rectangle bounds = curItem[i].getComponent().getArea();
-					final String[] name = curItem[i].getName().trim().split(">");
+			for (RSItem i : curItem) {
+				if (i != null && i.getID() != -1) {
+					final Rectangle bounds = i.getComponent().getArea();
+					final String name = i.getName().replaceAll(" ", "\n");
 					g2.draw(bounds);
-					g2.drawString(name[1], bounds.x - 5, bounds.y + bounds.height - 5);
+					g2.drawString(name, i.getComponent().getAbsoluteX(), i.getComponent().getCenter().y);
 				}
 			}
 		}
@@ -783,9 +767,9 @@ public class PaintUtil {
 			for (final RSItem i : ctx.inventory.getItems(items)) {
 				if (i.getID() != -1) {
 					final Rectangle bounds = i.getComponent().getArea();
-					final String[] name = i.getName().trim().split(">");
+					final String name = i.getName();
 					g2.draw(bounds);
-					g2.drawString(name[1], bounds.x - 5, bounds.y + bounds.height - 5);
+					g2.drawString(name, i.getComponent().getAbsoluteX(), i.getComponent().getCenter().y);
 				}
 			}
 		}
@@ -829,7 +813,6 @@ public class PaintUtil {
 	 */
 	public void drawGroundItems(final int[] ids, final Color color, final int alpha) {
 		final Filter<RSGroundItem> filter = new Filter<RSGroundItem>() {
-			@Override
 			public boolean accept(final RSGroundItem gi) {
 				return gi != null && gi.getItem() != null && idMatch(gi.getItem().getID());
 			}
