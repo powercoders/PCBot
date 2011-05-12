@@ -1,17 +1,18 @@
 package org.rsbot;
 
-import java.awt.Dimension;
-import java.io.File;
-import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.security.RestrictedSecurityManager;
 import org.rsbot.util.Extractor;
+import org.rsbot.util.GlobalConfiguration;
+
+import java.awt.*;
+import java.io.File;
+import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Application {
 	private static BotGUI gui;
@@ -21,13 +22,14 @@ public class Application {
 		new Extractor().run();
 		commands(args);
 		System.setSecurityManager(new RestrictedSecurityManager());
+		System.setProperty("java.io.tmpdir", GlobalConfiguration.Paths.getGarbageDirectory());
 		gui = new BotGUI();
 		gui.setVisible(true);
 		gui.addBot();
 	}
 
 	private static void commands(final String[] args) {
-		 if (args.length > 1) {
+		if (args.length > 1) {
 			if (args[0].toLowerCase().endsWith("delete")) {
 				final File jarOld = new File(args[1]);
 				if (jarOld.exists()) {
@@ -65,6 +67,7 @@ public class Application {
 		Logger.getLogger("").addHandler(new SystemConsoleHandler());
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			private final Logger log = Logger.getLogger("EXCEPTION");
+
 			public void uncaughtException(final Thread t, final Throwable e) {
 				log.logp(Level.SEVERE, "EXCEPTION", "", "Unhandled exception in thread " + t.getName() + ": ", e);
 			}

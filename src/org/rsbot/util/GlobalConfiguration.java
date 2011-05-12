@@ -184,6 +184,14 @@ public class GlobalConfiguration {
 			return Paths.getSettingsDirectory() + File.separator + "Menu.txt";
 		}
 
+		public static String getGarbageDirectory() {
+			final File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory(), "java_cache");
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			return dir.getAbsolutePath().replace("%20", " ");
+		}
+
 		public static String getRunningJarPath() {
 			if (!RUNNING_FROM_JAR) {
 				return null;
