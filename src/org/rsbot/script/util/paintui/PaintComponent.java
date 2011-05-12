@@ -1,10 +1,8 @@
 package org.rsbot.script.util.paintui;
 
-import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -13,8 +11,6 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.rsbot.event.listeners.PaintListener;
-
 public class PaintComponent implements MouseListener, MouseMotionListener,
 	KeyListener {
     private PaintComponent parent;
@@ -22,14 +18,22 @@ public class PaintComponent implements MouseListener, MouseMotionListener,
     private List<MouseListener> mouseListeners = new ArrayList<MouseListener>();
     private List<KeyListener> keyListeners = new ArrayList<KeyListener>();
     private List<MouseMotionListener> mouseMotionListeners = new ArrayList<MouseMotionListener>();
-
+    private boolean repaint = false;
     protected int x = 0, y = 0, width = 0, height = 0;
 
-    public PaintStyleSheet styleSheet = new PaintStyleSheet();;
-    public PaintStyleSheet mouseOverSheet = new PaintStyleSheet();;
+    public PaintStyleSheet styleSheet = new PaintStyleSheet();
+    public PaintStyleSheet mouseOverSheet = new PaintStyleSheet();
 
     public PaintComponent(PaintComponent parent) {
 	this.parent = parent;
+    }
+
+    public void queuePaint() {
+	repaint = true;
+    }
+
+    public boolean shouldRepaint() {
+	return repaint;
     }
 
     public void setStyle(Class<?> clazz) {
@@ -37,8 +41,13 @@ public class PaintComponent implements MouseListener, MouseMotionListener,
 	mouseOverSheet = PaintStyleSheet.defaultHoverStyles.get(clazz);
 	if (styleSheet == null)
 	    styleSheet = new PaintStyleSheet();
+	else
+	    styleSheet = styleSheet.clone();
 	if (mouseOverSheet == null)
 	    mouseOverSheet = new PaintStyleSheet();
+	else
+	    mouseOverSheet = mouseOverSheet.clone();
+	queuePaint();
     }
 
     public PaintComponent() {
@@ -48,11 +57,13 @@ public class PaintComponent implements MouseListener, MouseMotionListener,
     public void setSize(int width, int height) {
 	this.width = width;
 	this.height = height;
+	queuePaint();
     }
 
     public void setLocation(int x, int y) {
 	this.x = x;
 	this.y = y;
+	queuePaint();
     }
 
     public PaintComponent getParent() {
@@ -61,6 +72,7 @@ public class PaintComponent implements MouseListener, MouseMotionListener,
 
     public void setParent(PaintComponent parent) {
 	this.parent = parent;
+	queuePaint();
     }
 
     public PaintUserInterface getInterface() {
@@ -70,6 +82,7 @@ public class PaintComponent implements MouseListener, MouseMotionListener,
 
     public void setInterface(PaintUserInterface rtPane) {
 	this.rootPane = rtPane;
+	queuePaint();
     }
 
     public int getAbsoluteX() {
@@ -111,22 +124,26 @@ public class PaintComponent implements MouseListener, MouseMotionListener,
 
     public void setStyle(PaintStyleSheet styleSheet) {
 	this.styleSheet = styleSheet;
+	queuePaint();
     }
 
     public void setHoverStyle(PaintStyleSheet styleSheet) {
 	this.mouseOverSheet = styleSheet;
+	queuePaint();
     }
 
     public void inheritStyle() {
 	if (parent != null) {
 	    styleSheet = parent.styleSheet;
 	    mouseOverSheet = parent.mouseOverSheet;
+	    queuePaint();
 	}
     }
 
     public void revertStyle() {
 	styleSheet = new PaintStyleSheet();
 	mouseOverSheet = new PaintStyleSheet();
+	queuePaint();
     }
 
     public PaintStyleSheet getStyle() {
@@ -145,8 +162,9 @@ public class PaintComponent implements MouseListener, MouseMotionListener,
 	    return styleSheet;
     }
 
-    public void onRepaint(Graphics render) {
+    public final void onRepaint(Graphics render) {
 	paint(render);
+	repaint = false;
     }
 
     public void paint(Graphics render) {

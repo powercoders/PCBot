@@ -9,11 +9,21 @@ public class PaintImage extends PaintContainer {
     public PaintImage(Image img) {
 	this.image = img;
     }
-    
-    public void paint(Graphics g){
+
+    public void setImage(Image img) {
+	this.image = img;
+	queuePaint();
+    }
+
+    public Image getImage() {
+	return image;
+    }
+
+    @Override
+    public void paint(Graphics g) {
 	super.paint(g);
 	Graphics clipped = getClippedGraphics(g);
-	clipped.drawImage(image,0,0,null);
+	clipped.drawImage(image, 0, 0, null);
 	clipped.dispose();
     }
 }

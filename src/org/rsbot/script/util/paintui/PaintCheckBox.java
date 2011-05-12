@@ -2,6 +2,7 @@ package org.rsbot.script.util.paintui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -44,6 +45,16 @@ public class PaintCheckBox extends PaintComponent {
 
     public void toggle() {
 	this.checked = !checked;
+	queuePaint();
+    }
+
+    public void setLabel(String s) {
+	this.label = s;
+	queuePaint();
+    }
+
+    public String getLabel() {
+	return label;
     }
 
     public boolean isChecked() {
@@ -60,7 +71,13 @@ public class PaintCheckBox extends PaintComponent {
 	if (getCurrentStyle().fgColor != null && getCurrentStyle().font != null) {
 	    g.setColor(getCurrentStyle().fgColor);
 	    g.setFont(getCurrentStyle().font);
-	    g.drawString(label, boxRect.x + boxRect.width + 3, boxRect.y
+	    if (isItalic() && isBold())
+		g.setFont(g.getFont().deriveFont(Font.BOLD | Font.ITALIC));
+	    else if (isItalic())
+		g.setFont(g.getFont().deriveFont(Font.ITALIC));
+	    else if (isBold())
+		g.setFont(g.getFont().deriveFont(Font.BOLD));
+	    g.drawString(getDisplay(), boxRect.x + boxRect.width + 3, boxRect.y
 		    + boxRect.height - 2);
 	}
 	if (getCurrentStyle().border != null) {
@@ -69,5 +86,18 @@ public class PaintCheckBox extends PaintComponent {
 		    !checked);
 	}
 	g.dispose();
+    }
+
+    private String getDisplay() {
+	return label.replace("[B]", "").replace("[I]", "").replace("[i]", "")
+		.replace("[b]", "");
+    }
+
+    private boolean isBold() {
+	return label.toLowerCase().contains("[b]");
+    }
+
+    private boolean isItalic() {
+	return label.toLowerCase().contains("[i]");
     }
 }

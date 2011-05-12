@@ -1,7 +1,7 @@
 package org.rsbot.script.util.paintui;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 
@@ -19,17 +19,23 @@ public class PaintTextField extends PaintComponent {
 
     public void setText(String s) {
 	this.text = s;
+	queuePaint();
     }
 
     public PaintTextField(String empty) {
-	this.name = empty;
-	setStyle(getClass());
+	this(empty, null);
     }
 
-    public PaintTextField(String empty, char mask) {
+    public PaintTextField(String empty, Character mask) {
 	this.name = empty;
 	this.mask = mask;
 	setStyle(getClass());
+	setSize(100,16);
+    }
+
+    public void setMask(Character mask) {
+	this.mask = mask;
+	queuePaint();
     }
 
     @Override
@@ -38,6 +44,7 @@ public class PaintTextField extends PaintComponent {
 	Graphics g = super.getClippedGraphics(render);
 	g.setColor(getCurrentStyle().fgColor);
 	g.setFont(getCurrentStyle().font);
+	frc = ((Graphics2D) g).getFontRenderContext();
 	if (text.isEmpty() && !selected()) {
 	    g.drawString(name, getAbsoluteX() + 3, getAbsoluteY() + getHeight()
 		    - 3);
@@ -48,7 +55,7 @@ public class PaintTextField extends PaintComponent {
 	g.dispose();
     }
 
-    public boolean selected() {
+    private boolean selected() {
 	return getInterface().getCaret() != null
 		&& getInterface().getCaret().field == this;
     }

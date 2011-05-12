@@ -12,6 +12,7 @@ public class PaintContainer extends PaintComponent {
     public void addChild(PaintComponent comp) {
 	comp.setParent(this);
 	children.add(comp);
+	queuePaint();
     }
 
     public PaintComponent getChild(int id) {
@@ -20,11 +21,12 @@ public class PaintContainer extends PaintComponent {
 
     public void removeChild(PaintComponent comp) {
 	children.remove(comp);
+	queuePaint();
     }
 
     @Override
-    public void onRepaint(Graphics g) {
-	paint(g);
+    public void paint(Graphics g) {
+	super.paint(g);
 	paintChildren(g);
     }
 
@@ -98,5 +100,15 @@ public class PaintContainer extends PaintComponent {
 	    for (PaintComponent c : children)
 		c.mouseMoved(priv);
 	}
+    }
+
+    @Override
+    public boolean shouldRepaint() {
+	if (super.shouldRepaint())
+	    return true;
+	for (PaintComponent c : children)
+	    if (c.shouldRepaint())
+		return true;
+	return false;
     }
 }
