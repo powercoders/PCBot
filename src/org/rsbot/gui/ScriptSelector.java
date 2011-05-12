@@ -123,12 +123,24 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						BotGUI.openURL(def.website);
 					}
 				});
-				contextMenu.add(visit);
+
+				final JMenuItem start = new JMenuItem();
+				start.setText(submit.getText());
+				start.setIcon(new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PLAY)));
+				start.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						submit.doClick();
+					}
+				});
+				start.setEnabled(submit.isEnabled());
 
 				if (def.website == null || def.website.isEmpty()) {
 					visit.setEnabled(false);
 				}
 
+				contextMenu.add(start);
+				contextMenu.add(visit);
 				contextMenu.show(table, e.getX(), e.getY());
 			}
 		});
