@@ -147,17 +147,6 @@ public class GlobalConfiguration {
 		public static String getScriptCacheDirectory() {
 			return getCacheDirectory() + File.separator + "Scripts";
 		}
-		
-		public static String getScriptCacheTempDirectory() {
-			final String env = System.getProperty("user.home") + "\\AppData\\Local\\Temp";
-			if (env == null || env.isEmpty()) {
-				return (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS ?
-						FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath() :
-						Paths.getUnixHome()) + File.separator + GlobalConfiguration.NAME;
-			} else {
-				return env;
-			}
-		}
 
 		public static String getScriptsExtractedCache() {
 			return Paths.getCacheDirectory() + File.separator + "script.dat";

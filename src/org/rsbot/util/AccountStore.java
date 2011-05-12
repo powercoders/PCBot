@@ -32,9 +32,6 @@ public class AccountStore {
 		private final Map<String, String> attributes = new TreeMap<String, String>();
 
 		public Account(final String username) {
-			if (RestrictedSecurityManager.isCallerScript()) {
-				throw new SecurityException();
-			}
 			this.username = username;
 		}
 
