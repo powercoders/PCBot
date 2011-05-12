@@ -185,7 +185,7 @@ public class GlobalConfiguration {
 		}
 
 		public static String getGarbageDirectory() {
-			final File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory(), "java_cache");
+			final File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory(), ".java");
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
