@@ -140,6 +140,11 @@ public class BotMenuBar extends JMenuBar {
 		commandCheckMap.get("Disable Monitoring").setVisible(false);
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
 		commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
+
+		if (GlobalConfiguration.RUNNING_FROM_JAR) {
+			// disable auto-shutdown for release builds
+			commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(false);
+		}
 	}
 
 	public void setOverrideInput(final boolean force) {
