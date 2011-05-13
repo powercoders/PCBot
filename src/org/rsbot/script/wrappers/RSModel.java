@@ -27,7 +27,6 @@ public abstract class RSModel extends MethodProvider {
 	 */
 	public static Filter<RSModel> newVertexFilter(final short[] vertex_a) {
 		return new Filter<RSModel>() {
-			@Override
 			public boolean accept(final RSModel m) {
 				return Arrays.equals(m.indices1, vertex_a);
 			}
