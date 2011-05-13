@@ -34,7 +34,6 @@ public class BotPanel extends JPanel {
 	private class HomeUpdater implements Runnable {
 		private boolean running;
 
-		@Override
 		public void run() {
 			synchronized (this) {
 				if (running) {
@@ -93,7 +92,6 @@ public class BotPanel extends JPanel {
 			}
 		});
 		addMouseListener(new MouseListener() {
-			@Override
 			public void mouseClicked(final MouseEvent e) {
 				redispatch(e);
 				if (!hasFocus()) {
@@ -101,54 +99,44 @@ public class BotPanel extends JPanel {
 				}
 			}
 
-			@Override
 			public void mouseEntered(final MouseEvent e) {
 			}
 
-			@Override
 			public void mouseExited(final MouseEvent e) {
 				redispatch(e);
 			}
 
-			@Override
 			public void mousePressed(final MouseEvent e) {
 				redispatch(e);
 			}
 
-			@Override
 			public void mouseReleased(final MouseEvent e) {
 				redispatch(e);
 			}
 		});
 		addMouseMotionListener(new MouseMotionListener() {
-			@Override
 			public void mouseDragged(final MouseEvent e) {
 				redispatch(e);
 			}
 
-			@Override
 			public void mouseMoved(final MouseEvent e) {
 				redispatch(e);
 			}
 		});
 		addMouseWheelListener(new MouseWheelListener() {
-			@Override
 			public void mouseWheelMoved(final MouseWheelEvent e) {
 				redispatch(e);
 			}
 		});
 		addKeyListener(new KeyListener() {
-			@Override
 			public void keyPressed(final KeyEvent e) {
 				redispatch(e);
 			}
 
-			@Override
 			public void keyReleased(final KeyEvent e) {
 				redispatch(e);
 			}
 
-			@Override
 			public void keyTyped(final KeyEvent e) {
 				redispatch(e);
 			}
