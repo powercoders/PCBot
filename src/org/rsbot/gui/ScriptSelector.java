@@ -129,7 +129,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				start.setText(submit.getText());
 				start.setIcon(new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PLAY)));
 				start.addActionListener(new ActionListener(){
-					@Override
 					public void actionPerformed(ActionEvent e) {
 						submit.doClick();
 					}
@@ -140,7 +139,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				delete.setText("Delete");
 				delete.setIcon(new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CLOSE)));
 				delete.addActionListener(new ActionListener() {
-					@Override
 					public void actionPerformed(ActionEvent e) {
 						final File path = def.path == null || def.path.isEmpty() ? null : new File(def.path);
 						if (path != null && path.exists() && path.delete()) {
