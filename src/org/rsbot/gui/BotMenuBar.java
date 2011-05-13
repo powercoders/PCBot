@@ -22,7 +22,7 @@ public class BotMenuBar extends JMenuBar {
 	public static final String[][] ELEMENTS;
 
 	private static final String[] DEVELOPER_CHECK_FEATURES = {"Game State", "Current Tab", "Camera", "Floor Height",
-			"Mouse Position", "Menu", "Cache", "Models", "Calc Test", "Settings"};
+			"Mouse Position", "User Input Allowed", "Menu", "Menu Actions", "Cache", "Models", "Calc Test", "Settings"};
 
 	static {
 		// Text
