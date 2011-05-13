@@ -98,7 +98,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	public void actionPerformed(final ActionEvent evt) {
 		final String action = evt.getActionCommand();
-		String menu, option;
+		final String menu, option;
 		final int z = action.indexOf('.');
 		if (z == -1) {
 			menu = action;
@@ -189,7 +189,9 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 								Thread.sleep(1 * 60 * 1000);
 							} catch (InterruptedException ignored) {
 							}
-							if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
+							if (!menuBar.isTicked(option)) {
+								log.info("Shutdown cancelled");
+							} else if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
 								try {
 									Runtime.getRuntime().exec("shutdown.exe", new String[]{"-s"});
 									cleanExit(true);
