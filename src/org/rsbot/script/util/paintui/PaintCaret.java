@@ -35,8 +35,8 @@ public class PaintCaret {
 	    off = field.getDisplay().substring(0, dotPos);
 	else
 	    off = field.getDisplay();
-	Rectangle2D strBounds = field.getStyle().font.getStringBounds(off,
-		field.frc);
+	Rectangle2D strBounds = field.getCurrentStyle().font.getStringBounds(
+		off, field.frc);
 	return new Line2D.Double(field.getAbsoluteX() + 3
 		+ (dotPos >= 0 ? (int) strBounds.getWidth() : 0),
 		field.getAbsoluteY() + field.getHeight() - 2,
@@ -54,8 +54,8 @@ public class PaintCaret {
     }
 
     public void paint(Graphics2D g) {
-	if (System.currentTimeMillis() > lastBlink) {
-	    lastBlink = System.currentTimeMillis() + blinkRate;
+	if (System.currentTimeMillis() > lastBlink + blinkRate) {
+	    lastBlink = System.currentTimeMillis();
 	    blinkState = !blinkState;
 	}
 	Line2D dotP = getCaretPosition(dot);
@@ -69,7 +69,7 @@ public class PaintCaret {
 	    poly.addPoint((int) markP.getX2(), (int) markP.getY2());
 	    poly.addPoint((int) dotP.getX2(), (int) dotP.getY2());
 	    poly.addPoint((int) dotP.getX1(), (int) dotP.getY1());
-	    g.setColor(new Color(0f, 0f, 0f, 0.1f));
+	    g.setColor(new Color(0f, 0f, 0f, 0.05f));
 	    g.fill(poly);
 	}
     }
@@ -160,15 +160,20 @@ public class PaintCaret {
 		field.setText(b4 + after);
 		setDot(b4.length());
 	    }
-	} else if (field.getStyle().font.canDisplay(e.getKeyChar())
-		&& field.getText().length() < 16) {
+	} else if (field.getStyle().font.canDisplay(e.getKeyChar())) {
 	    String b4 = Math.min(dot, mark) > 0 ? field.getText().substring(0,
 		    Math.min(dot, mark)) : "";
 	    String after = "";
 	    if (Math.max(dot, mark) >= 0)
 		after = field.getText().substring(Math.max(dot, mark));
-	    field.setText(b4 + e.getKeyChar() + after);
-	    setDot(b4.length() + 1);
+	    String newText = b4 + e.getKeyChar() + after;
+	    Rectangle2D strBounds = field.getCurrentStyle().font
+		    .getStringBounds(newText, field.frc);
+	    int width = (int) (strBounds.getWidth() + 6);
+	    if (width <= field.getWidth()) {
+		field.setText(newText);
+		setDot(b4.length() + 1);
+	    }
 	}
     }
 }

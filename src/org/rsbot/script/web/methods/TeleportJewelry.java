@@ -16,6 +16,11 @@ public class TeleportJewelry extends TeleportItem {
 		super(ctx, teleportationLocation, action, itemIDs);
 	}
 
+	/**
+	 * Preforms the usage on the jewelery.
+	 *
+	 * @return <tt>true</tt> if succeeded.
+	 */
 	public boolean perform() {
 		RSItem item = methods.inventory.getItem(itemIDs);
 		boolean equip = false;
@@ -70,6 +75,12 @@ public class TeleportJewelry extends TeleportItem {
 		return false;
 	}
 
+	/**
+	 * Looks for the dialog option to select.
+	 *
+	 * @param opts The options.
+	 * @return The RSComponent matched.
+	 */
 	private RSComponent getDialogOption(String... opts) {
 		final RSInterface[] valid = methods.interfaces.getAll();
 		for (final RSInterface iface : valid) {

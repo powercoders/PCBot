@@ -12,6 +12,7 @@ public class PaintContainer extends PaintComponent {
     public void addChild(PaintComponent comp) {
 	comp.setParent(this);
 	children.add(comp);
+	queuePaint();
     }
 
     public PaintComponent getChild(int id) {
@@ -20,20 +21,22 @@ public class PaintContainer extends PaintComponent {
 
     public void removeChild(PaintComponent comp) {
 	children.remove(comp);
+	queuePaint();
     }
 
     @Override
-    public void onRepaint(Graphics g) {
-	paint(g);
-	paintChildren(getClippedGraphics(g));
+    public void paint(Graphics g) {
+	super.paint(g);
+	paintChildren(g);
     }
 
     public void paintChildren(Graphics g) {
 	Graphics myGraphics = getClippedGraphics(g);
 	for (PaintComponent comp : children)
 	    comp.onRepaint(myGraphics);
+	myGraphics.dispose();
     }
-    
+
     @Override
     public void mouseClicked(MouseEvent e) {
 	if (getRelativeBounds().contains(e.getPoint())) {
@@ -46,6 +49,7 @@ public class PaintContainer extends PaintComponent {
 		c.mouseClicked(priv);
 	}
     }
+
     @Override
     public void mousePressed(MouseEvent e) {
 	if (getRelativeBounds().contains(e.getPoint())) {
@@ -58,6 +62,7 @@ public class PaintContainer extends PaintComponent {
 		c.mousePressed(priv);
 	}
     }
+
     @Override
     public void mouseReleased(MouseEvent e) {
 	if (getRelativeBounds().contains(e.getPoint())) {
@@ -70,6 +75,7 @@ public class PaintContainer extends PaintComponent {
 		c.mouseReleased(priv);
 	}
     }
+
     @Override
     public void mouseDragged(MouseEvent e) {
 	if (getRelativeBounds().contains(e.getPoint())) {
@@ -94,5 +100,15 @@ public class PaintContainer extends PaintComponent {
 	    for (PaintComponent c : children)
 		c.mouseMoved(priv);
 	}
+    }
+
+    @Override
+    public boolean shouldRepaint() {
+	if (super.shouldRepaint())
+	    return true;
+	for (PaintComponent c : children)
+	    if (c.shouldRepaint())
+		return true;
+	return false;
     }
 }

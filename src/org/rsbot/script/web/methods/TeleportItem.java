@@ -9,6 +9,7 @@ import org.rsbot.script.wrappers.RSTile;
 public class TeleportItem extends Teleport {
 	public final int[] itemIDs;
 	public final String[] action;
+	public final Equipment equips = new Equipment(methods);
 
 	public TeleportItem(final MethodContext ctx, final RSTile teleportationLocation, final String action, final int... itemIDs) {
 		super(ctx, teleportationLocation);
@@ -22,19 +23,34 @@ public class TeleportItem extends Teleport {
 		this.action = action;
 	}
 
+	/**
+	 * Checks if you can use the teleport.
+	 *
+	 * @return <tt>true</tt> if you can.
+	 */
 	public boolean meetsPrerequisites() {
-		return !deepWilderness() && (methods.inventory.containsOneOf(itemIDs) || methods.equipment.containsOneOf(itemIDs));
+		return !deepWilderness() && (methods.inventory.containsOneOf(itemIDs) || equips.equipmentContainsOneOf(itemIDs));
 	}
 
+	/**
+	 * Checks to see if this teleport is worth using.
+	 *
+	 * @return <tt>true</tt> if we gain from the teleport.
+	 */
 	public boolean isApplicable(RSTile base, RSTile destination) {
 		return methods.calc.distanceBetween(base, teleportationLocation()) > 30 && methods.calc.distanceBetween(teleportationLocation(), destination) < methods.calc.distanceTo(destination);
 	}
 
+	/**
+	 * Preforms the action on the item.
+	 *
+	 * @return <tt>true</tt> if we succeeded.
+	 */
 	public boolean preform() {
 		RSItem item = methods.inventory.getItem(itemIDs);
 		boolean equip = false;
 		if (item == null) {
-			for (RSItem itm : methods.equipment.getItems()) {
+			for (RSItem itm : equips.equips()) {
 				for (int id : itemIDs) {
 					if (itm.getID() == id) {
 						equip = true;
@@ -67,10 +83,21 @@ public class TeleportItem extends Teleport {
 		return false;
 	}
 
+	/**
+	 * Gets the distance to your destination from the teleport.
+	 *
+	 * @param destination The destination tile.
+	 * @return The distance.
+	 */
 	public double getDistance(RSTile destination) {
 		return methods.calc.distanceBetween(teleportationLocation(), destination);// TODO use web distancing.
 	}
 
+	/**
+	 * Checks if you're in deep wilderness.
+	 *
+	 * @return <tt>true</tt> if you cannot teleport.
+	 */
 	private boolean deepWilderness() {
 		return methods.combat.getWildernessLevel() > 20;
 	}

@@ -25,6 +25,10 @@ public class Web extends MethodProvider {
 		super(ctx);
 	}
 
+	public RSTile getNearestBank(final RSTile tile) {
+		return null;
+	}
+
 	/**
 	 * Generates a path between two nodes.
 	 *

@@ -5,6 +5,7 @@ import org.rsbot.event.impl.*;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.event.listeners.TextPaintListener;
 import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.util.GlobalConfiguration.OperatingSystem;
 
 import javax.swing.*;
 
@@ -61,7 +62,7 @@ public class BotMenuBar extends JMenuBar {
 				{"Accounts", Messages.MENUSEPERATOR,
 						"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", Messages.MENUSEPERATOR,
 						"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", Messages.MENUSEPERATOR,
-						"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations"}, constructDebugs(),
+						"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations", Messages.MENUSEPERATOR, Messages.TOGGLEFALSE + " " + Messages.AUTOSHUTDOWN}, constructDebugs(),
 				{"Site", "Project", "About"}};
 	}
 
@@ -138,6 +139,7 @@ public class BotMenuBar extends JMenuBar {
 		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
 		commandCheckMap.get("Disable Monitoring").setVisible(false);
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
+		commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
 	}
 
 	public void setOverrideInput(final boolean force) {

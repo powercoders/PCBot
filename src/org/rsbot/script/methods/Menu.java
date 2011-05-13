@@ -404,8 +404,6 @@ public class Menu extends MethodProvider {
 		}
 		menuListenerStarted = true;
 		methods.bot.getEventManager().addListener(new PaintListener() {
-
-			@Override
 			public void onRepaint(final Graphics g) {
 				synchronized (menuCacheLock) {
 					menuOptionsCache = getOptions();

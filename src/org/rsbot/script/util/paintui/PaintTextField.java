@@ -1,7 +1,7 @@
 package org.rsbot.script.util.paintui;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 
@@ -19,25 +19,32 @@ public class PaintTextField extends PaintComponent {
 
     public void setText(String s) {
 	this.text = s;
+	queuePaint();
     }
 
-    public PaintTextField(Rectangle rect, String empty) {
-	super.setLocation(rect.x, rect.y);
-	super.setSize(rect.width, rect.height);
+    public PaintTextField(String empty) {
+	this(empty, null);
+    }
+
+    public PaintTextField(String empty, Character mask) {
 	this.name = empty;
+	this.mask = mask;
+	setStyle(getClass());
+	setSize(100,16);
     }
 
-    public PaintTextField(Rectangle rect, String empty, char mask) {
-	this(rect, empty);
+    public void setMask(Character mask) {
 	this.mask = mask;
+	queuePaint();
     }
 
     @Override
-    public void onRepaint(Graphics render) {
-	paint(render);
+    public void paint(Graphics render) {
+	super.paint(render);
 	Graphics g = super.getClippedGraphics(render);
 	g.setColor(getCurrentStyle().fgColor);
 	g.setFont(getCurrentStyle().font);
+	frc = ((Graphics2D) g).getFontRenderContext();
 	if (text.isEmpty() && !selected()) {
 	    g.drawString(name, getAbsoluteX() + 3, getAbsoluteY() + getHeight()
 		    - 3);
@@ -45,9 +52,10 @@ public class PaintTextField extends PaintComponent {
 	    g.drawString(getDisplay(), getAbsoluteX() + 3, getAbsoluteY()
 		    + getHeight() - 3);
 	}
+	g.dispose();
     }
 
-    public boolean selected() {
+    private boolean selected() {
 	return getInterface().getCaret() != null
 		&& getInterface().getCaret().field == this;
     }
