@@ -374,7 +374,6 @@ public class Bank extends MethodProvider {
 	}
 
 	private static class ReachableBankerFilter implements Filter<RSNPC> {
-		@Override
 		public boolean accept(final RSNPC npc) {
 			final int id = npc.getID();
 			final RSTile location = npc.getLocation();
