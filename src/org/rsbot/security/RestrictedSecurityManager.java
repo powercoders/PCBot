@@ -66,6 +66,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("pumyscript.orgfree.com"); // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
 		whitelist.add("noneevr2.r00t.la"); // noneevr2 - TakeBury
 		whitelist.add("testscriptsecurity.host22.com");//Marneus901
+		whitelist.add("massacrescripting.net");//ShizZznit - Aviansie Massacre.
 		whitelist.add(".ownagebots.com"); //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
 
 		return whitelist;
