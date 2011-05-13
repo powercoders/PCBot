@@ -217,6 +217,10 @@ public class BotMenuBar extends JMenuBar {
 		commandCheckMap.get(item).doClick();
 	}
 
+	public boolean isTicked(final String item) {
+		return commandCheckMap.get(item).isSelected();
+	}
+
 	public void loadPrefs() {
 		final String path = GlobalConfiguration.Paths.getMenuBarPrefs();
 		if (!new File(path).exists()) {

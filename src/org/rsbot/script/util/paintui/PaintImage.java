@@ -4,26 +4,26 @@ import java.awt.Graphics;
 import java.awt.Image;
 
 public class PaintImage extends PaintContainer {
-    private Image image;
+	private Image image;
 
-    public PaintImage(Image img) {
-	this.image = img;
-    }
+	public PaintImage(final Image img) {
+		image = img;
+	}
 
-    public void setImage(Image img) {
-	this.image = img;
-	queuePaint();
-    }
+	public void setImage(final Image img) {
+		image = img;
+		queuePaint();
+	}
 
-    public Image getImage() {
-	return image;
-    }
+	public Image getImage() {
+		return image;
+	}
 
-    @Override
-    public void paint(Graphics g) {
-	super.paint(g);
-	Graphics clipped = getClippedGraphics(g);
-	clipped.drawImage(image, 0, 0, null);
-	clipped.dispose();
-    }
+	@Override
+	public void paint(final Graphics g) {
+		super.paint(g);
+		final Graphics clipped = getClippedGraphics(g);
+		clipped.drawImage(image, 0, 0, null);
+		clipped.dispose();
+	}
 }
