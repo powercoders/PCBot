@@ -148,7 +148,7 @@ public class BotMenuBar extends JMenuBar {
 				}
 			}
 			// disable auto-shutdown for release builds
-			commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(false);
+			disable(Messages.AUTOSHUTDOWN);
 		}
 	}
 
