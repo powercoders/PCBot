@@ -6,7 +6,6 @@ import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.UpdateUtil;
-
 import sun.font.FontManager;
 
 import java.io.File;
@@ -66,6 +65,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("zaszmedia.com"); // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
 		whitelist.add("pumyscript.orgfree.com"); // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
 		whitelist.add("noneevr2.r00t.la"); // noneevr2 - TakeBury
+		whitelist.add("testscriptsecurity.host22.com");//Marneus901
 		whitelist.add(".ownagebots.com"); //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
 
 		return whitelist;
