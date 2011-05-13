@@ -147,8 +147,12 @@ public class PaintComponent implements MouseListener, MouseMotionListener, KeyLi
 		return mouseOverSheet;
 	}
 
+	public Point getMouseLocation() {
+		return getInterface() != null ? getInterface().getMouseLocation() : new Point(0, 0);
+	}
+
 	protected PaintStyleSheet getCurrentStyle() {
-		if (getAbsoluteBounds().contains(getInterface().getMouseLocation()) && mouseOverSheet != null) {
+		if (getAbsoluteBounds().contains(getMouseLocation()) && mouseOverSheet != null) {
 			return mouseOverSheet;
 		} else {
 			return styleSheet;
@@ -241,9 +245,19 @@ public class PaintComponent implements MouseListener, MouseMotionListener, KeyLi
 	}
 
 	public void mouseEntered(MouseEvent e) {
+		MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y, e.getClickCount(), e.isPopupTrigger());
+		for (MouseListener l : getMouseListeners()) {
+			l.mouseEntered(priv);
+		}
+		queuePaint();
 	}
 
 	public void mouseExited(MouseEvent e) {
+		MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y, e.getClickCount(), e.isPopupTrigger());
+		for (MouseListener l : getMouseListeners()) {
+			l.mouseExited(priv);
+		}
+		queuePaint();
 	}
 
 	public void mousePressed(MouseEvent e) {
