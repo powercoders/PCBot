@@ -24,17 +24,17 @@ public class TeleportNPC extends Teleport {
 	}
 
 	public boolean preform() {
-			RSNPC npc = methods.npcs.getNearest(npcID);
-			if (npc != null) {
-					if (npc.doAction(action)) {
-						final long tO = System.currentTimeMillis();
-						while (System.currentTimeMillis() - tO < 10000) {
-							sleep(100);
-							if (!npc.isValid() || npc == null) {
-								break;
-							}
-						}
+		RSNPC npc = methods.npcs.getNearest(npcID);
+		if (npc != null) {
+			if (npc.doAction(action)) {
+				final long tO = System.currentTimeMillis();
+				while (System.currentTimeMillis() - tO < 10000) {
+					sleep(100);
+					if (!npc.isValid() || npc == null) {
+						break;
 					}
+				}
+			}
 			return !npc.isValid() || npc == null;
 		}
 		return false;

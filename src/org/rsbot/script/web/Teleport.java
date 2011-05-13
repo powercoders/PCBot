@@ -16,6 +16,7 @@ public abstract class Teleport extends MethodProvider implements Prerequisites, 
 		super(ctx);
 		this.teleportationLocation = teleportationLocation;
 	}
+
 	public RSTile teleportationLocation() {
 		return teleportationLocation;
 	}

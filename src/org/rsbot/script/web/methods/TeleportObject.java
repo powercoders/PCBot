@@ -17,7 +17,7 @@ public class TeleportObject extends Teleport {
 		this.action = action;
 		comp = null;
 	}
-	
+
 	public TeleportObject(final MethodContext ctx, final RSTile teleportationLocation, final String action, final RSComponent comp, final int objectID) {
 		super(ctx, teleportationLocation);
 		this.objectID = objectID;
@@ -34,24 +34,24 @@ public class TeleportObject extends Teleport {
 	}
 
 	public boolean preform() {
-			RSObject obj = methods.objects.getNearest(objectID);
-			if (obj != null) {
-					if (obj.doAction(action)) {
-						if (methods.interfaces.canContinue()) {
-							methods.interfaces.clickContinue();
-							sleep(100);
-						}
-						if (comp != null) {
-							comp.doClick();
-						}
-						final long tO = System.currentTimeMillis();
-						while (System.currentTimeMillis() - tO < 10000) {
-							sleep(100);
-							if (methods.calc.distanceBetween(methods.players.getMyPlayer().getLocation(), teleportationLocation()) < 15) {
-								break;
-							}
-						}
+		RSObject obj = methods.objects.getNearest(objectID);
+		if (obj != null) {
+			if (obj.doAction(action)) {
+				if (methods.interfaces.canContinue()) {
+					methods.interfaces.clickContinue();
+					sleep(100);
+				}
+				if (comp != null) {
+					comp.doClick();
+				}
+				final long tO = System.currentTimeMillis();
+				while (System.currentTimeMillis() - tO < 10000) {
+					sleep(100);
+					if (methods.calc.distanceBetween(methods.players.getMyPlayer().getLocation(), teleportationLocation()) < 15) {
+						break;
 					}
+				}
+			}
 			return methods.calc.distanceBetween(methods.players.getMyPlayer().getLocation(), teleportationLocation()) < 15;
 		}
 		return false;
