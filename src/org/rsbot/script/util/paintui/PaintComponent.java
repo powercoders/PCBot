@@ -2,6 +2,7 @@ package org.rsbot.script.util.paintui;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -154,8 +155,13 @@ public class PaintComponent implements MouseListener, MouseMotionListener,
 	return mouseOverSheet;
     }
 
+    public Point getMouseLocation() {
+	return getInterface() != null ? getInterface().getMouseLocation()
+		: new Point(0, 0);
+    }
+
     protected PaintStyleSheet getCurrentStyle() {
-	if (getAbsoluteBounds().contains(getInterface().getMouseLocation())
+	if (getAbsoluteBounds().contains(getMouseLocation())
 		&& mouseOverSheet != null)
 	    return mouseOverSheet;
 	else
@@ -256,10 +262,22 @@ public class PaintComponent implements MouseListener, MouseMotionListener,
 
     @Override
     public void mouseEntered(MouseEvent e) {
+	MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(),
+		e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y,
+		e.getClickCount(), e.isPopupTrigger());
+	for (MouseListener l : getMouseListeners())
+	    l.mouseEntered(priv);
+	queuePaint();
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+	MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(),
+		e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y,
+		e.getClickCount(), e.isPopupTrigger());
+	for (MouseListener l : getMouseListeners())
+	    l.mouseExited(priv);
+	queuePaint();
     }
 
     @Override

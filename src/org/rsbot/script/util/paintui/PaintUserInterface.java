@@ -1,21 +1,15 @@
 package org.rsbot.script.util.paintui;
 
 import java.awt.Color;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.Transparency;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 
 import org.rsbot.event.listeners.PaintListener;
@@ -24,36 +18,10 @@ public class PaintUserInterface implements MouseListener, MouseMotionListener,
 	KeyListener, PaintListener {
     private Point mouseLocation = new Point(0, 0);
     private PaintCaret caret = null;
-    private Image buffer;
     private boolean shouldRepaint = false;
 
     public PaintCaret getCaret() {
 	return caret;
-    }
-
-    public static void main(String[] args) {
-	PaintUserInterface p = new PaintUserInterface();
-	PaintCheckBox chk = new PaintCheckBox("Checkbox");
-	chk.setLocation(100, 100);
-	PaintLabel lbl = new PaintLabel("Label");
-	lbl.setLocation(100, 200);
-	// lbl.setSize(200, 25);
-	PaintTextField field = new PaintTextField("Username");
-	field.setLocation(100, 300);
-	p.addChild(chk);
-	p.addChild(lbl);
-	p.addChild(field);
-	Frame fram = new Frame("Frame");
-	fram.setSize(500, 500);
-	fram.setLocation(0, 0);
-	fram.setVisible(true);
-	fram.addMouseListener(p);
-	fram.addKeyListener(p);
-	fram.addMouseMotionListener(p);
-	Graphics g = fram.getGraphics();
-	while (true) {
-	    p.onRepaint(fram.getGraphics());
-	}
     }
 
     public PaintUserInterface() {
@@ -76,10 +44,11 @@ public class PaintUserInterface implements MouseListener, MouseMotionListener,
 	return (id >= 0 && id < children.size()) ? children.get(id) : null;
     }
 
+
     @Override
     public void onRepaint(Graphics render) {
 	Graphics2D g = (Graphics2D) render;
-	if (shouldRepaint())
+	//if (shouldRepaint())
 	    for (PaintComponent comp : children) {
 		comp.onRepaint(g);
 	    }
@@ -112,6 +81,7 @@ public class PaintUserInterface implements MouseListener, MouseMotionListener,
 
     @Override
     public void mouseEntered(MouseEvent e) {
+
     }
 
     @Override
@@ -157,9 +127,17 @@ public class PaintUserInterface implements MouseListener, MouseMotionListener,
 
     @Override
     public void mouseMoved(MouseEvent e) {
-	mouseLocation = e.getPoint();
+	for (PaintComponent c : children) {
+	    Rectangle rect = c.getAbsoluteBounds();
+	    if (rect.contains(e.getPoint()) && !rect.contains(mouseLocation))
+		c.mouseEntered(e);
+	    else if (!rect.contains(e.getPoint())
+		    && rect.contains(mouseLocation))
+		c.mouseExited(e);
+	}
 	for (PaintComponent c : children)
 	    c.mouseMoved(e);
+	mouseLocation = e.getPoint();
     }
 
     public boolean shouldRepaint() {

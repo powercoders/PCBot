@@ -1,6 +1,7 @@
 package org.rsbot.script.util.paintui;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -97,8 +98,16 @@ public class PaintContainer extends PaintComponent {
 		    e.getClickCount(), e.isPopupTrigger());
 	    for (MouseMotionListener l : getMouseMotionListeners())
 		l.mouseMoved(priv);
-	    for (PaintComponent c : children)
+	    for (PaintComponent c : children) {
 		c.mouseMoved(priv);
+		Rectangle rect = c.getRelativeBounds();
+		if (rect.contains(priv.getPoint())
+			&& !rect.contains(getMouseLocation()))
+		    c.mouseEntered(priv);
+		else if (!rect.contains(priv.getPoint())
+			&& rect.contains(getMouseLocation()))
+		    c.mouseExited(priv);
+	    }
 	}
     }
 
