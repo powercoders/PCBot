@@ -13,19 +13,19 @@ import org.rsbot.service.Monitoring.Type;
 import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
-import org.rsbot.util.*;
+import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.GlobalConfiguration.OperatingSystem;
+import org.rsbot.util.ScreenshotUtil;
+import org.rsbot.util.ScriptDownloader;
+import org.rsbot.util.UpdateUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.TimerTask;
 import java.util.logging.Logger;
 
 /**
@@ -193,7 +193,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 								log.info("Shutdown cancelled");
 							} else if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
 								try {
-									Runtime.getRuntime().exec("shutdown.exe", new String[] {"-s"});
+									Runtime.getRuntime().exec("shutdown.exe", new String[]{"-s"});
 									cleanExit(true);
 								} catch (IOException ignored) {
 									log.severe("Could not shutdown system");
@@ -231,15 +231,17 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (option.equals("All Debugging")) {
 					for (final String key : BotMenuBar.DEBUG_MAP.keySet()) {
 						final Class<?> el = BotMenuBar.DEBUG_MAP.get(key);
-						final boolean wasSelected = menuBar.getCheckBox(key).isSelected();
-						menuBar.getCheckBox(key).setSelected(selected);
-						if (selected) {
-							if (!wasSelected) {
-								current.addListener(el);
-							}
-						} else {
-							if (wasSelected) {
-								current.removeListener(el);
+						if (menuBar.getCheckBox(key).isVisible()) {
+							final boolean wasSelected = menuBar.getCheckBox(key).isSelected();
+							menuBar.getCheckBox(key).setSelected(selected);
+							if (selected) {
+								if (!wasSelected) {
+									current.addListener(el);
+								}
+							} else {
+								if (wasSelected) {
+									current.removeListener(el);
+								}
 							}
 						}
 					}
@@ -608,15 +610,18 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			tray = new TrayIcon(image, GlobalConfiguration.NAME, null);
 			tray.setImageAutoSize(true);
 			tray.addMouseListener(new MouseListener() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) { }
-				@Override
-				public void mouseEntered(MouseEvent arg0) { }
-				@Override
-				public void mouseExited(MouseEvent arg0) { }
-				@Override
-				public void mouseReleased(MouseEvent arg0) { }
-				@Override
+				public void mouseClicked(MouseEvent arg0) {
+				}
+
+				public void mouseEntered(MouseEvent arg0) {
+				}
+
+				public void mouseExited(MouseEvent arg0) {
+				}
+
+				public void mouseReleased(MouseEvent arg0) {
+				}
+
 				public void mousePressed(MouseEvent arg0) {
 					SystemTray.getSystemTray().remove(tray);
 					setVisible(true);

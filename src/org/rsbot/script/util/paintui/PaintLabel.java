@@ -8,14 +8,14 @@ import java.awt.Rectangle;
 public class PaintLabel extends PaintComponent {
 	private String text = "";
 
-	public PaintLabel(final String text) {
+	public PaintLabel(String text) {
 		super();
 		this.text = text;
 		setStyle(getClass());
 	}
 
-	public void setLabel(final String lbl) {
-		text = lbl;
+	public void setLabel(String lbl) {
+		this.text = lbl;
 		queuePaint();
 	}
 
@@ -24,9 +24,9 @@ public class PaintLabel extends PaintComponent {
 	}
 
 	@Override
-	public void paint(final Graphics render) {
+	public void paint(Graphics render) {
 		super.paint(render);
-		final Graphics g = getClippedGraphics(render);
+		Graphics g = getClippedGraphics(render);
 		g.setFont(super.getCurrentStyle().font);
 		if (isItalic() && isBold()) {
 			g.setFont(g.getFont().deriveFont(Font.BOLD | Font.ITALIC));
@@ -36,19 +36,15 @@ public class PaintLabel extends PaintComponent {
 			g.setFont(g.getFont().deriveFont(Font.BOLD));
 		}
 		g.setColor(super.getCurrentStyle().fgColor);
-		final FontMetrics metrics = g.getFontMetrics();
-		final double centerX = super.getAbsoluteBounds().getCenterX(), centerY = super
-		.getAbsoluteBounds().getCenterY();
-		final Rectangle strBounds = metrics.getStringBounds(getDisplay(), g)
-		.getBounds();
-		g.drawString(getDisplay(), (int) centerX - strBounds.width / 2,
-				(int) centerY + strBounds.height / 2);
+		FontMetrics metrics = g.getFontMetrics();
+		double centerX = super.getAbsoluteBounds().getCenterX(), centerY = super.getAbsoluteBounds().getCenterY();
+		Rectangle strBounds = metrics.getStringBounds(getDisplay(), g).getBounds();
+		g.drawString(getDisplay(), (int) centerX - (strBounds.width / 2), (int) centerY + (strBounds.height / 2));
 		g.dispose();
 	}
 
 	private String getDisplay() {
-		return text.replace("[B]", "").replace("[I]", "").replace("[i]", "")
-		.replace("[b]", "");
+		return text.replace("[B]", "").replace("[I]", "").replace("[i]", "").replace("[b]", "");
 	}
 
 	private boolean isBold() {

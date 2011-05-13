@@ -8,12 +8,11 @@ import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.GlobalConfiguration.OperatingSystem;
 
 import javax.swing.*;
-
-import java.awt.Image;
-import java.awt.SystemTray;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
 
 public class BotMenuBar extends JMenuBar {
@@ -22,8 +21,10 @@ public class BotMenuBar extends JMenuBar {
 	public static final String[] TITLES;
 	public static final String[][] ELEMENTS;
 
-	static {
+	private static final String[] DEVELOPER_CHECK_FEATURES = {"Game State", "Current Tab", "Camera", "Floor Height",
+			"Mouse Position", "User Input Allowed", "Menu", "Menu Actions", "Cache", "Models", "Calc Test", "Settings"};
 
+	static {
 		// Text
 		DEBUG_MAP.put("Game State", TLoginIndex.class);
 		DEBUG_MAP.put("Current Tab", TTab.class);
@@ -36,7 +37,7 @@ public class BotMenuBar extends JMenuBar {
 		DEBUG_MAP.put("Menu Actions", TMenuActions.class);
 		DEBUG_MAP.put("Menu", TMenu.class);
 		DEBUG_MAP.put("FPS", TFPS.class);
-		DEBUG_MAP.put("Web Status", TWebStatus.class);
+		DEBUG_MAP.put("Cache", TWebStatus.class);
 
 		// Paint
 		DEBUG_MAP.put("Players", DrawPlayers.class);
@@ -140,6 +141,15 @@ public class BotMenuBar extends JMenuBar {
 		commandCheckMap.get("Disable Monitoring").setVisible(false);
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
 		commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
+		if (GlobalConfiguration.RUNNING_FROM_JAR) {
+			for (String disableFeature : DEVELOPER_CHECK_FEATURES) {
+				if (commandCheckMap.containsKey(disableFeature)) {
+					commandCheckMap.get(disableFeature).setVisible(false);
+				}
+			}
+			// disable auto-shutdown for release builds
+			disable(Messages.AUTOSHUTDOWN);
+		}
 	}
 
 	public void setOverrideInput(final boolean force) {

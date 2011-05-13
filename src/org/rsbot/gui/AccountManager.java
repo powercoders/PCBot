@@ -1,12 +1,16 @@
 package org.rsbot.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import org.rsbot.service.ScriptDeliveryNetwork;
+import org.rsbot.util.AccountStore;
+import org.rsbot.util.GlobalConfiguration;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -16,27 +20,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumnModel;
-
-import org.rsbot.service.ScriptDeliveryNetwork;
-import org.rsbot.util.AccountStore;
-import org.rsbot.util.GlobalConfiguration;
 
 /**
  * @author Tekk
@@ -50,12 +33,12 @@ public class AccountManager extends JDialog implements ActionListener {
 	private static final String FILE_NAME = GlobalConfiguration.Paths.getAccountsFile();
 
 	private static final String[] RANDOM_REWARDS = {"Cash", "Runes", "Coal", "Essence", "Ore", "Bars", "Gems", "Herbs",
-		"Seeds", "Charms", "Surprise", "Emote", "Costume", "Attack",
-		"Defence", "Strength", "Constitution", "Range", "Prayer", "Magic",
-		"Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking",
-		"Crafting", "Smithing", "Mining", "Herblore", "Agility", "Thieving",
-		"Slayer", "Farming", "Runecrafting", "Hunter", "Construction",
-		"Summoning", "Dungeoneering"};
+			"Seeds", "Charms", "Surprise", "Emote", "Costume", "Attack",
+			"Defence", "Strength", "Constitution", "Range", "Prayer", "Magic",
+			"Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking",
+			"Crafting", "Smithing", "Mining", "Herblore", "Agility", "Thieving",
+			"Slayer", "Farming", "Runecrafting", "Hunter", "Construction",
+			"Summoning", "Dungeoneering"};
 
 	private static final String[] VALID_KEYS = {"pin", "reward", "member", "take_breaks"};
 
@@ -100,7 +83,6 @@ public class AccountManager extends JDialog implements ActionListener {
 	}
 
 	private class TableSelectionListener implements ListSelectionListener {
-		@Override
 		public void valueChanged(final ListSelectionEvent evt) {
 			final int row = table.getSelectedRow();
 			if (!evt.getValueIsAdjusting()) {
@@ -110,17 +92,14 @@ public class AccountManager extends JDialog implements ActionListener {
 	}
 
 	private class AccountTableModel extends AbstractTableModel {
-		@Override
 		public int getRowCount() {
 			return accountStore.list().size();
 		}
 
-		@Override
 		public int getColumnCount() {
 			return VALID_KEYS.length + 2;
 		}
 
-		@Override
 		public Object getValueAt(final int row, final int column) {
 			if (column == 0) {
 				return userForRow(row);
@@ -214,7 +193,6 @@ public class AccountManager extends JDialog implements ActionListener {
 		super(Frame.getFrames()[0], "Account Manager", true);
 	}
 
-	@Override
 	public void actionPerformed(final ActionEvent e) {
 		if (e.getSource() instanceof JButton) {
 			final String label = ((JButton) e.getSource()).getText();

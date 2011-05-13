@@ -6,12 +6,12 @@ import java.awt.Image;
 public class PaintImage extends PaintContainer {
 	private Image image;
 
-	public PaintImage(final Image img) {
-		image = img;
+	public PaintImage(Image img) {
+		this.image = img;
 	}
 
-	public void setImage(final Image img) {
-		image = img;
+	public void setImage(Image img) {
+		this.image = img;
 		queuePaint();
 	}
 
@@ -20,9 +20,9 @@ public class PaintImage extends PaintContainer {
 	}
 
 	@Override
-	public void paint(final Graphics g) {
+	public void paint(Graphics g) {
 		super.paint(g);
-		final Graphics clipped = getClippedGraphics(g);
+		Graphics clipped = getClippedGraphics(g);
 		clipped.drawImage(image, 0, 0, null);
 		clipped.dispose();
 	}

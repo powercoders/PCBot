@@ -141,7 +141,6 @@ public class EventManager implements Runnable {
 	/**
 	 * The thread entry point.
 	 */
-	@Override
 	public void run() {
 		if (!isEventThread()) {
 			throw new IllegalThreadStateException();

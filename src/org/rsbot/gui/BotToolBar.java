@@ -75,7 +75,6 @@ public class BotToolBar extends JToolBar {
 		screenshotButton = new JButton("Screenshot", new ImageIcon(
 				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PHOTO)));
 		screenshotButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				menu.doClick(Messages.SAVESCREENSHOT);
 			}
@@ -86,7 +85,6 @@ public class BotToolBar extends JToolBar {
 
 		userInputButton = new JButton("Input", new ImageIcon(getInputImage(inputOverride, inputState)));
 		userInputButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				menu.doTick("Force Input");
 			}
@@ -98,7 +96,6 @@ public class BotToolBar extends JToolBar {
 		runScriptButton = new JButton("Run", new ImageIcon(
 				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PLAY)));
 		runScriptButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				switch (getScriptButton()) {
 				case RUN_SCRIPT:
@@ -141,7 +138,6 @@ public class BotToolBar extends JToolBar {
 		revalidate();
 		repaint();
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				setSelection(0);
 			}

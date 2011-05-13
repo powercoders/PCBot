@@ -10,54 +10,50 @@ public class PaintTextField extends PaintComponent {
 	Character mask = null;
 	String text = "";
 	final String name;
-	FontRenderContext frc = new FontRenderContext(new AffineTransform(), false,
-			false);
+	FontRenderContext frc = new FontRenderContext(new AffineTransform(), false, false);
 
 	public String getText() {
 		return text;
 	}
 
-	public void setText(final String s) {
-		text = s;
+	public void setText(String s) {
+		this.text = s;
 		queuePaint();
 	}
 
-	public PaintTextField(final String empty) {
+	public PaintTextField(String empty) {
 		this(empty, null);
 	}
 
-	public PaintTextField(final String empty, final Character mask) {
-		name = empty;
+	public PaintTextField(String empty, Character mask) {
+		this.name = empty;
 		this.mask = mask;
 		setStyle(getClass());
-		setSize(100,16);
+		setSize(100, 16);
 	}
 
-	public void setMask(final Character mask) {
+	public void setMask(Character mask) {
 		this.mask = mask;
 		queuePaint();
 	}
 
 	@Override
-	public void paint(final Graphics render) {
+	public void paint(Graphics render) {
 		super.paint(render);
-		final Graphics g = super.getClippedGraphics(render);
+		Graphics g = super.getClippedGraphics(render);
 		g.setColor(getCurrentStyle().fgColor);
 		g.setFont(getCurrentStyle().font);
 		frc = ((Graphics2D) g).getFontRenderContext();
 		if (text.isEmpty() && !selected()) {
-			g.drawString(name, getAbsoluteX() + 3, getAbsoluteY() + getHeight()
-					- 3);
+			g.drawString(name, getAbsoluteX() + 3, getAbsoluteY() + getHeight() - 3);
 		} else {
-			g.drawString(getDisplay(), getAbsoluteX() + 3, getAbsoluteY()
-					+ getHeight() - 3);
+			g.drawString(getDisplay(), getAbsoluteX() + 3, getAbsoluteY() + getHeight() - 3);
 		}
 		g.dispose();
 	}
 
 	private boolean selected() {
-		return getInterface().getCaret() != null
-		&& getInterface().getCaret().field == this;
+		return getInterface().getCaret() != null && getInterface().getCaret().field == this;
 	}
 
 	public String getDisplay() {
