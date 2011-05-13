@@ -1,12 +1,5 @@
 package org.rsbot.script;
 
-import java.io.File;
-import java.util.EventListener;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.event.EventMulticaster;
 import org.rsbot.event.listeners.PaintListener;
@@ -20,15 +13,19 @@ import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
 import org.rsbot.util.GlobalConfiguration;
 
-public abstract class Script extends Methods implements EventListener, Runnable {
+import java.io.File;
+import java.util.EventListener;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
 
+public abstract class Script extends Methods implements EventListener, Runnable {
 	Set<Script> delegates = new HashSet<Script>();
 	MethodContext ctx;
-
 	private volatile boolean running = false;
 	private volatile boolean paused = false;
 	private volatile boolean random = false;
-
 	private int id = -1;
 	private long lastNotice;
 
@@ -229,7 +226,7 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 		running = false;
 	}
 
-	public final void run() {
+	public void run() {
 		boolean start = false;
 		try {
 			start = onStart();
@@ -372,4 +369,5 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 		}
 		return dir;
 	}
+
 }

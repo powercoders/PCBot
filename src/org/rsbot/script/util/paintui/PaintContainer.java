@@ -1,114 +1,110 @@
 package org.rsbot.script.util.paintui;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 public class PaintContainer extends PaintComponent {
-	private final ArrayList<PaintComponent> children = new ArrayList<PaintComponent>();
+	private ArrayList<PaintComponent> children = new ArrayList<PaintComponent>();
 
-	public void addChild(final PaintComponent comp) {
+	public void addChild(PaintComponent comp) {
 		comp.setParent(this);
 		children.add(comp);
 		queuePaint();
 	}
 
-	public PaintComponent getChild(final int id) {
-		return id >= 0 && id < children.size() ? children.get(id) : null;
+	public PaintComponent getChild(int id) {
+		return (id >= 0 && id < children.size()) ? children.get(id) : null;
 	}
 
-	public void removeChild(final PaintComponent comp) {
+	public void removeChild(PaintComponent comp) {
 		children.remove(comp);
 		queuePaint();
 	}
 
 	@Override
-	public void paint(final Graphics g) {
+	public void paint(Graphics g) {
 		super.paint(g);
 		paintChildren(g);
 	}
 
-	public void paintChildren(final Graphics g) {
-		final Graphics myGraphics = getClippedGraphics(g);
-		for (final PaintComponent comp : children) {
+	public void paintChildren(Graphics g) {
+		Graphics myGraphics = getClippedGraphics(g);
+		for (PaintComponent comp : children) {
 			comp.onRepaint(myGraphics);
 		}
 		myGraphics.dispose();
 	}
 
 	@Override
-	public void mouseClicked(final MouseEvent e) {
+	public void mouseClicked(MouseEvent e) {
 		if (getRelativeBounds().contains(e.getPoint())) {
-			final MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(),
-					e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y,
-					e.getClickCount(), e.isPopupTrigger());
-			for (final MouseListener l : getMouseListeners()) {
+			MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y, e.getClickCount(), e.isPopupTrigger());
+			for (MouseListener l : getMouseListeners()) {
 				l.mouseClicked(priv);
 			}
-			for (final PaintComponent c : children) {
+			for (PaintComponent c : children) {
 				c.mouseClicked(priv);
 			}
 		}
 	}
 
 	@Override
-	public void mousePressed(final MouseEvent e) {
+	public void mousePressed(MouseEvent e) {
 		if (getRelativeBounds().contains(e.getPoint())) {
-			final MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(),
-					e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y,
-					e.getClickCount(), e.isPopupTrigger());
-			for (final MouseListener l : getMouseListeners()) {
+			MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y, e.getClickCount(), e.isPopupTrigger());
+			for (MouseListener l : getMouseListeners()) {
 				l.mousePressed(priv);
 			}
-			for (final PaintComponent c : children) {
+			for (PaintComponent c : children) {
 				c.mousePressed(priv);
 			}
 		}
 	}
 
 	@Override
-	public void mouseReleased(final MouseEvent e) {
+	public void mouseReleased(MouseEvent e) {
 		if (getRelativeBounds().contains(e.getPoint())) {
-			final MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(),
-					e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y,
-					e.getClickCount(), e.isPopupTrigger());
-			for (final MouseListener l : getMouseListeners()) {
+			MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y, e.getClickCount(), e.isPopupTrigger());
+			for (MouseListener l : getMouseListeners()) {
 				l.mouseReleased(priv);
 			}
-			for (final PaintComponent c : children) {
+			for (PaintComponent c : children) {
 				c.mouseReleased(priv);
 			}
 		}
 	}
 
 	@Override
-	public void mouseDragged(final MouseEvent e) {
+	public void mouseDragged(MouseEvent e) {
 		if (getRelativeBounds().contains(e.getPoint())) {
-			final MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(),
-					e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y,
-					e.getClickCount(), e.isPopupTrigger());
-			for (final MouseMotionListener l : getMouseMotionListeners()) {
+			MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y, e.getClickCount(), e.isPopupTrigger());
+			for (MouseMotionListener l : getMouseMotionListeners()) {
 				l.mouseDragged(priv);
 			}
-			for (final PaintComponent c : children) {
+			for (PaintComponent c : children) {
 				c.mouseDragged(priv);
 			}
 		}
 	}
 
 	@Override
-	public void mouseMoved(final MouseEvent e) {
+	public void mouseMoved(MouseEvent e) {
 		if (getRelativeBounds().contains(e.getPoint())) {
-			final MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(),
-					e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y,
-					e.getClickCount(), e.isPopupTrigger());
-			for (final MouseMotionListener l : getMouseMotionListeners()) {
+			MouseEvent priv = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX() - x, e.getY() - y, e.getClickCount(), e.isPopupTrigger());
+			for (MouseMotionListener l : getMouseMotionListeners()) {
 				l.mouseMoved(priv);
 			}
-			for (final PaintComponent c : children) {
+			for (PaintComponent c : children) {
 				c.mouseMoved(priv);
+				Rectangle rect = c.getRelativeBounds();
+				if (rect.contains(priv.getPoint()) && !rect.contains(getMouseLocation())) {
+					c.mouseEntered(priv);
+				} else if (!rect.contains(priv.getPoint()) && rect.contains(getMouseLocation())) {
+					c.mouseExited(priv);
+				}
 			}
 		}
 	}
@@ -118,7 +114,7 @@ public class PaintContainer extends PaintComponent {
 		if (super.shouldRepaint()) {
 			return true;
 		}
-		for (final PaintComponent c : children) {
+		for (PaintComponent c : children) {
 			if (c.shouldRepaint()) {
 				return true;
 			}

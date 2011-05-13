@@ -4,6 +4,8 @@ import org.rsbot.script.methods.Magic;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
 import org.rsbot.script.web.methods.TeleportItem;
+import org.rsbot.script.web.methods.TeleportNPC;
+import org.rsbot.script.web.methods.TeleportObject;
 import org.rsbot.script.web.methods.TeleportRunes;
 import org.rsbot.script.web.methods.TeleportRunes.Rune;
 import org.rsbot.script.wrappers.RSTile;
@@ -25,6 +27,8 @@ public class TransportationHandler extends MethodProvider {
 		super(ctx);
 		Items items = new Items();
 		Runes runes = new Runes();
+		Objects objects = new Objects();
+		NPCs npcs = new NPCs();
 		teleports.add(items.ARDOUGENE_TAB);
 		teleports.add(items.BRIMHAVEN_TAB);
 		teleports.add(items.CAMELOT_TAB);
@@ -42,6 +46,11 @@ public class TransportationHandler extends MethodProvider {
 		teleports.add(runes.CAMELOT);
 		teleports.add(runes.LUMBRIDGE_HOME);
 		teleports.add(runes.VARROCK);
+		teleports.add(objects.ARDYLEVER);
+		teleports.add(objects.EDGELEVER);
+		teleports.add(objects.ESSPORTAL);
+		teleports.add(objects.WILDLEVER);
+		teleports.add(npcs.AUBURY);
 	}
 
 	public boolean canTeleport(final RSTile destination) {
@@ -85,6 +94,17 @@ public class TransportationHandler extends MethodProvider {
 		public final TeleportItem LUMBER_YARD_SCROLL = new TeleportItem(methods, new RSTile(3308, 3492), "Read", 19480);
 		public final TeleportItem MISCELLANIA_SCROLL = new TeleportItem(methods, new RSTile(2513, 3858), "Read", 19477);
 		public final TeleportItem LLETYA_CRYSTAL = new TeleportItem(methods, new RSTile(2328, 3172), new String[]{"Activate", "Lletya"}, 6102, 6100, 6101);
+	}
+
+	private class Objects {
+		public final TeleportObject ARDYLEVER = new TeleportObject(methods, new RSTile(3154, 3924), "Pull", methods.interfaces.getComponent(230, 2), 1814);
+		public final TeleportObject EDGELEVER = new TeleportObject(methods, new RSTile(3154, 3924), "Pull", methods.interfaces.getComponent(230, 2), 1841);
+		public final TeleportObject ESSPORTAL = new TeleportObject(methods, new RSTile(3252, 3401), "Enter", 39831);
+		public final TeleportObject WILDLEVER = new TeleportObject(methods, new RSTile(2562, 3311), "Pull", 1815);
+	}
+
+	private class NPCs {
+		public final TeleportNPC AUBURY = new TeleportNPC(methods, new RSTile(7280, 2451), "Teleport", 5913);
 	}
 
 	private class Runes {
