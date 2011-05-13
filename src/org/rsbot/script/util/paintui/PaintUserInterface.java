@@ -4,18 +4,12 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.Transparency;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 
 import org.rsbot.event.listeners.PaintListener;
@@ -24,7 +18,6 @@ public class PaintUserInterface implements MouseListener, MouseMotionListener,
 	KeyListener, PaintListener {
     private Point mouseLocation = new Point(0, 0);
     private PaintCaret caret = null;
-    private Image buffer;
     private boolean shouldRepaint = false;
 
     public PaintCaret getCaret() {
@@ -50,7 +43,6 @@ public class PaintUserInterface implements MouseListener, MouseMotionListener,
 	fram.addMouseListener(p);
 	fram.addKeyListener(p);
 	fram.addMouseMotionListener(p);
-	Graphics g = fram.getGraphics();
 	while (true) {
 	    p.onRepaint(fram.getGraphics());
 	}
