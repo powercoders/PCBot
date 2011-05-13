@@ -60,21 +60,21 @@ public abstract class Mouse extends Focus implements MouseListener,
 		return clientPresent;
 	}
 
-	public final void mouseClicked(MouseEvent e) {
+	public final void mouseClicked(final MouseEvent e) {
 		clientX = e.getX();
 		clientY = e.getY();
 		_mouseClicked(e);
 		e.consume();
 	}
 
-	public final void mouseDragged(MouseEvent e) {
+	public final void mouseDragged(final MouseEvent e) {
 		clientX = e.getX();
 		clientY = e.getY();
 		_mouseDragged(e);
 		e.consume();
 	}
 
-	public final void mouseEntered(MouseEvent e) {
+	public final void mouseEntered(final MouseEvent e) {
 		clientPresent = true;
 		clientX = e.getX();
 		clientY = e.getY();
@@ -82,7 +82,7 @@ public abstract class Mouse extends Focus implements MouseListener,
 		e.consume();
 	}
 
-	public final void mouseExited(MouseEvent e) {
+	public final void mouseExited(final MouseEvent e) {
 		clientPresent = false;
 		clientX = e.getX();
 		clientY = e.getY();
@@ -90,14 +90,14 @@ public abstract class Mouse extends Focus implements MouseListener,
 		e.consume();
 	}
 
-	public final void mouseMoved(MouseEvent e) {
+	public final void mouseMoved(final MouseEvent e) {
 		clientX = e.getX();
 		clientY = e.getY();
 		_mouseMoved(e);
 		e.consume();
 	}
 
-	public final void mousePressed(MouseEvent e) {
+	public final void mousePressed(final MouseEvent e) {
 		clientPressed = true;
 		clientX = e.getX();
 		clientY = e.getY();
@@ -105,7 +105,7 @@ public abstract class Mouse extends Focus implements MouseListener,
 		e.consume();
 	}
 
-	public final void mouseReleased(MouseEvent e) {
+	public final void mouseReleased(final MouseEvent e) {
 		clientX = e.getX();
 		clientY = e.getY();
 		clientPressX = e.getX();
@@ -117,18 +117,18 @@ public abstract class Mouse extends Focus implements MouseListener,
 		e.consume();
 	}
 
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public void mouseWheelMoved(final MouseWheelEvent e) {
 		try {
 			_mouseWheelMoved(e);
-		} catch (AbstractMethodError ame) {
+		} catch (final AbstractMethodError ame) {
 			// it might not be implemented!
 		}
 		e.consume();
 	}
 
-	public final void sendEvent(MouseEvent e) {
-		this.clientX = e.getX();
-		this.clientY = e.getY();
+	public final void sendEvent(final MouseEvent e) {
+		clientX = e.getX();
+		clientY = e.getY();
 		try {
 			if (e.getID() == MouseEvent.MOUSE_CLICKED) {
 				_mouseClicked(e);
@@ -154,13 +154,13 @@ public abstract class Mouse extends Focus implements MouseListener,
 			} else if (e.getID() == MouseEvent.MOUSE_WHEEL) {
 				try {
 					_mouseWheelMoved((MouseWheelEvent) e);
-				} catch (AbstractMethodError ignored) {
+				} catch (final AbstractMethodError ignored) {
 					// it might not be implemented!
 				}
 			} else {
 				throw new InternalError(e.toString());
 			}
-		} catch (NullPointerException ignored) {
+		} catch (final NullPointerException ignored) {
 			// client may throw NPE when a listener
 			// is being re-instantiated.
 		}

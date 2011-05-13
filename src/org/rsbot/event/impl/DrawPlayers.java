@@ -1,20 +1,24 @@
 package org.rsbot.event.impl;
 
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Point;
+
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.wrappers.RSPlayer;
 
-import java.awt.*;
-
 public class DrawPlayers implements PaintListener {
 
 	private final MethodContext ctx;
 
-	public DrawPlayers(Bot bot) {
+	public DrawPlayers(final Bot bot) {
 		ctx = bot.getMethodContext();
 	}
 
+	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;
@@ -38,7 +42,7 @@ public class DrawPlayers implements PaintListener {
 			String s = "" + player.getName() + " (" + player.getCombatLevel() + ")";
 			render.setColor(player.isInCombat() ? Color.RED : player.isMoving() ? Color.GREEN : Color.WHITE);
 			render.drawString(s, location.x - metrics.stringWidth(s) / 2, location.y - metrics.getHeight() / 2);
-			String msg = player.getMessage();
+			final String msg = player.getMessage();
 			boolean raised = false;
 			if (player.getAnimation() != -1 || player.getGraphic() != -1 || player.getNPCID() != -1) {
 				if (player.getNPCID() != -1) {

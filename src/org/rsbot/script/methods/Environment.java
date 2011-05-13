@@ -1,10 +1,10 @@
 package org.rsbot.script.methods;
 
+import java.awt.image.BufferedImage;
+
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.util.ScreenshotUtil;
-
-import java.awt.image.BufferedImage;
 
 /**
  * Bot environment related operations.
@@ -16,7 +16,7 @@ public class Environment extends MethodProvider {
 	public static final int INPUT_MOUSE = 1;
 	public static final int INPUT_KEYBOARD = 2;
 
-	public Environment(MethodContext ctx) {
+	public Environment(final MethodContext ctx) {
 		super(ctx);
 	}
 
@@ -32,7 +32,7 @@ public class Environment extends MethodProvider {
 	 *
 	 * @param mask flags indicating which types of input to allow
 	 */
-	public void setUserInput(int mask) {
+	public void setUserInput(final int mask) {
 		methods.bot.getScriptHandler().updateInput(methods.bot, mask);
 	}
 
@@ -42,8 +42,12 @@ public class Environment extends MethodProvider {
 	 * @param hideUsername <tt>true</tt> to cover the player's username; otherwise
 	 *                     <tt>false</tt>
 	 */
-	public void saveScreenshot(boolean hideUsername) {
+	public void saveScreenshot(final boolean hideUsername) {
 		ScreenshotUtil.saveScreenshot(methods.bot, hideUsername);
+	}
+
+	public void saveScreenshot(final boolean hideUsername, final String filename) {
+		ScreenshotUtil.saveScreenshot(methods.bot, hideUsername, filename);
 	}
 
 	/**
@@ -53,7 +57,7 @@ public class Environment extends MethodProvider {
 	 *                     <tt>false</tt>
 	 * @return The screen capture image.
 	 */
-	public BufferedImage takeScreenshot(boolean hideUsername) {
+	public BufferedImage takeScreenshot(final boolean hideUsername) {
 		return ScreenshotUtil.takeScreenshot(methods.bot, hideUsername);
 	}
 
@@ -64,7 +68,7 @@ public class Environment extends MethodProvider {
 	 * @return <tt>true</tt> if random was found and set to enabled; otherwise
 	 *         <tt>false</tt>
 	 */
-	public boolean enableRandom(String name) {
+	public boolean enableRandom(final String name) {
 		for (final Random random : methods.bot.getScriptHandler().getRandoms()) {
 			if (random.getClass().getAnnotation(ScriptManifest.class).name().toLowerCase().equals(name.toLowerCase())) {
 				if (random.isEnabled()) {
@@ -85,7 +89,7 @@ public class Environment extends MethodProvider {
 	 * @return <tt>true</tt> if random was found and set to disabled; otherwise
 	 *         <tt>false</tt>
 	 */
-	public boolean disableRandom(String name) {
+	public boolean disableRandom(final String name) {
 		for (final Random random : methods.bot.getScriptHandler().getRandoms()) {
 			if (random.getClass().getAnnotation(ScriptManifest.class).name().toLowerCase().equals(name.toLowerCase())) {
 				if (!random.isEnabled()) {

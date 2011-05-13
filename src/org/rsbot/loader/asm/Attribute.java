@@ -99,7 +99,7 @@ public class Attribute {
 			final char[] buf,
 			final int codeOff,
 			final Label[] labels) {
-		Attribute attr = new Attribute(type);
+		final Attribute attr = new Attribute(type);
 		attr.value = new byte[len];
 		System.arraycopy(cr.b, off, attr.value, 0, len);
 		return attr;
@@ -131,7 +131,7 @@ public class Attribute {
 			final int len,
 			final int maxStack,
 			final int maxLocals) {
-		ByteVector v = new ByteVector();
+		final ByteVector v = new ByteVector();
 		v.data = value;
 		v.length = value.length;
 		return v;
@@ -217,7 +217,7 @@ public class Attribute {
 			final ByteVector out) {
 		Attribute attr = this;
 		while (attr != null) {
-			ByteVector b = attr.write(cw, code, len, maxStack, maxLocals);
+			final ByteVector b = attr.write(cw, code, len, maxStack, maxLocals);
 			out.putShort(cw.newUTF8(attr.type)).putInt(b.length);
 			out.putByteArray(b.data, 0, b.length);
 			attr = attr.next;

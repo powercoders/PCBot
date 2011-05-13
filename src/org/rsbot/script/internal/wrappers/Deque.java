@@ -8,7 +8,7 @@ public class Deque<N> {
 	private final NodeDeque nl;
 	private org.rsbot.client.Node current;
 
-	public Deque(NodeDeque nl) {
+	public Deque(final NodeDeque nl) {
 		this.nl = nl;
 	}
 
@@ -25,7 +25,7 @@ public class Deque<N> {
 	}
 
 	public N getHead() {
-		org.rsbot.client.Node node = nl.getTail().getNext();
+		final org.rsbot.client.Node node = nl.getTail().getNext();
 
 		if (node == nl.getTail()) {
 			current = null;
@@ -37,7 +37,7 @@ public class Deque<N> {
 	}
 
 	public N getTail() {
-		org.rsbot.client.Node node = nl.getTail().getPrevious();
+		final org.rsbot.client.Node node = nl.getTail().getPrevious();
 
 		if (node == nl.getTail()) {
 			current = null;
@@ -49,7 +49,7 @@ public class Deque<N> {
 	}
 
 	public N getNext() {
-		org.rsbot.client.Node node = current;
+		final org.rsbot.client.Node node = current;
 
 		if (node == nl.getTail()) {
 			current = null;

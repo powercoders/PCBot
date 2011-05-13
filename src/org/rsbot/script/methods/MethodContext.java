@@ -196,12 +196,17 @@ public class MethodContext {
 	 */
 	public final Client client;
 
+	/**
+	 * The Web
+	 */
+	public final Web web = new Web(this);
+
 	public final Bot bot;
 
-	public MethodContext(Bot bot) {
+	public MethodContext(final Bot bot) {
 		this.bot = bot;
-		this.client = bot.getClient();
-		this.inputManager = bot.getInputManager();
+		client = bot.getClient();
+		inputManager = bot.getInputManager();
 	}
 
 }

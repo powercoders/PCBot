@@ -17,22 +17,18 @@ class Crawler {
 	private static HashMap<String, String> parameters;
 	private final String world_prefix;
 
-	public Crawler(String root) {
-		final String index = firstMatch(
-				"<a id=\"continue\" class=\"barItem\" href=\"([^\"]+)\"\\s+onclick=\"[^\"]+\">Continue to Full Site for News and Game Help",
+	public Crawler(final String root) {
+		final String index = firstMatch("<a id=\"continue\" class=\"barItem\" href=\"([^\"]+)\"\\s+onclick=\"[^\"]+\">Continue to Full Site for News and Game Help",
 				downloadPage(root, null));
 
 		final String frame = root + "game.ws";
 
-		final String game = firstMatch(
-				"<frame id=\"[^\"]+\" style=\"[^\"]+\" src=\"([^\"]+)\"",
+		final String game = firstMatch("<frame id=\"[^\"]+\" style=\"[^\"]+\" src=\"([^\"]+)\"",
 				downloadPage(frame, index));
 
 		world_prefix = game.substring(12, game.indexOf(".runescape"));
 
-		final Pattern pattern = Pattern.compile(
-				"<param name=\"?([^\\s]+)\"?\\s+value=\"?([^>]*)\"?>",
-				Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+		final Pattern pattern = Pattern.compile("<param name=\"?([^\\s]+)\"?\\s+value=\"?([^>]*)\"?>", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 		final Matcher matcher = pattern.matcher(downloadPage(game, frame));
 		parameters = new HashMap<String, String>();
 		while (matcher.find()) {
@@ -54,7 +50,7 @@ class Crawler {
 
 	private String downloadPage(final String url, final String referer) {
 		try {
-			HttpURLConnection con = GlobalConfiguration.getHttpConnection(new URL(url));
+			final HttpURLConnection con = GlobalConfiguration.getHttpConnection(new URL(url));
 			if (referer != null && !referer.isEmpty()) {
 				con.addRequestProperty("Referer", referer);
 			}
@@ -90,7 +86,7 @@ class Crawler {
 	}
 
 	private String removeTrailingChar(final String str, final char ch) {
-		if ((str == null) || str.isEmpty()) {
+		if (str == null || str.isEmpty()) {
 			return str;
 		} else if (str.length() == 1) {
 			return str.charAt(0) == ch ? "" : str;

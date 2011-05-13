@@ -1,9 +1,8 @@
 package org.rsbot.util;
 
-import org.rsbot.bot.Bot;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
@@ -11,6 +10,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+
+import org.rsbot.bot.Bot;
 
 public class ScreenshotUtil {
 
@@ -25,9 +28,20 @@ public class ScreenshotUtil {
 		}
 	}
 
+	public static void saveScreenshot(final Bot bot, final boolean hideUsername, String filename) {
+		if (!filename.endsWith(".png")) {
+			filename = filename.concat(".png");
+		}
+
+		final File dir = new File(GlobalConfiguration.Paths.getScreenshotsDirectory());
+		if (dir.isDirectory() || dir.mkdirs()) {
+			ScreenshotUtil.saveScreenshot(bot, new File(dir, filename), "png", hideUsername);
+		}
+	}
+
 	private static void saveScreenshot(final Bot bot, final File file, final String type, final boolean hideUsername) {
 		try {
-			BufferedImage image = takeScreenshot(bot, hideUsername);
+			final BufferedImage image = takeScreenshot(bot, hideUsername);
 
 			ImageIO.write(image, type, file);
 			ScreenshotUtil.log.info("Screenshot saved to: " + file.getPath());
@@ -57,5 +71,4 @@ public class ScreenshotUtil {
 		}
 		return source;
 	}
-
 }

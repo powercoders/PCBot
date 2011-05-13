@@ -6,8 +6,10 @@ import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.security.RestrictedSecurityManager;
 import org.rsbot.util.Extractor;
+import org.rsbot.util.GlobalConfiguration;
 
 import java.awt.*;
+import java.io.File;
 import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,11 +19,26 @@ public class Application {
 
 	public static void main(final String[] args) throws Exception {
 		bootstrap();
-		new Extractor(args).run();
+		new Extractor().run();
+		commands(args);
 		System.setSecurityManager(new RestrictedSecurityManager());
+		System.setProperty("java.io.tmpdir", GlobalConfiguration.Paths.getGarbageDirectory());
 		gui = new BotGUI();
 		gui.setVisible(true);
 		gui.addBot();
+	}
+
+	private static void commands(final String[] args) {
+		if (args.length > 1) {
+			if (args[0].toLowerCase().endsWith("delete")) {
+				final File jarOld = new File(args[1]);
+				if (jarOld.exists()) {
+					if (!jarOld.delete()) {
+						jarOld.deleteOnExit();
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -31,7 +48,7 @@ public class Application {
 	 * @param o Any object from within the client.
 	 * @return The Bot for the client.
 	 */
-	public static Bot getBot(Object o) {
+	public static Bot getBot(final Object o) {
 		return gui.getBot(o);
 	}
 

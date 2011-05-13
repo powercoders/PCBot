@@ -15,7 +15,7 @@ public class UIDData {
 	private String lastUsed = "";
 
 	public UIDData() {
-		File fUIDs = new File(GlobalConfiguration.Paths.getUIDsFile());
+		final File fUIDs = new File(GlobalConfiguration.Paths.getUIDsFile());
 		if (!fUIDs.exists()) {
 			return;
 		}
@@ -28,15 +28,15 @@ public class UIDData {
 					continue;
 				}
 
-				String[] data = line.split(separator, 2);
+				final String[] data = line.split(separator, 2);
 				uids.put(data[0], data[1].getBytes());
 			}
-		} catch (Exception ignored) {
+		} catch (final Exception ignored) {
 		}
 	}
 
 	public String getLastUsed() {
-		return this.lastUsed;
+		return lastUsed;
 	}
 
 	public byte[] getUID(String name) {
@@ -46,7 +46,7 @@ public class UIDData {
 
 		lastUsed = name;
 
-		byte[] data = uids.get(name);
+		final byte[] data = uids.get(name);
 		if (data == null) {
 			return new byte[0];
 		}
@@ -54,7 +54,7 @@ public class UIDData {
 		return data;
 	}
 
-	public void setUID(String name, byte[] uid) {
+	public void setUID(String name, final byte[] uid) {
 		if (name.equals("")) {
 			name = "DEFAULT";
 		}
@@ -64,10 +64,10 @@ public class UIDData {
 
 	public void save() {
 		try {
-			File fUIDs = new File(GlobalConfiguration.Paths.getUIDsFile());
+			final File fUIDs = new File(GlobalConfiguration.Paths.getUIDsFile());
 			if (fUIDs.exists() || fUIDs.createNewFile()) {
 				final FileOutputStream out = new FileOutputStream(fUIDs);
-				for (String key : uids.keySet()) {
+				for (final String key : uids.keySet()) {
 					out.write(key.getBytes());
 					out.write(separator.getBytes());
 					out.write(uids.get(key));
@@ -76,7 +76,7 @@ public class UIDData {
 				}
 				out.close();
 			}
-		} catch (Exception ignored) {
+		} catch (final Exception ignored) {
 		}
 	}
 }

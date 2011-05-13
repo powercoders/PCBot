@@ -1,10 +1,10 @@
 package org.rsbot.script.util;
 
+import java.util.Arrays;
+
 import org.rsbot.bot.Bot;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Skills;
-
-import java.util.Arrays;
 
 
 /**
@@ -21,7 +21,6 @@ public class SkillTracker {
 	public int[] skills;
 	public int[] startExp, currentExp;
 
-	private final Bot bot;
 	private final MethodContext context;
 
 	public transient int firstIndex;
@@ -29,11 +28,10 @@ public class SkillTracker {
 	public long start;
 	public boolean started;
 
-	public SkillTracker(Bot bot, int... skills) {
-		this.bot = bot;
+	public SkillTracker(final Bot bot, final int... skills) {
 		context = bot.getMethodContext();
 		firstIndex = 0;
-		int size = skills.length;
+		final int size = skills.length;
 		if (size < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -69,14 +67,14 @@ public class SkillTracker {
 	 * Calculates the current runtime.
 	 */
 	public long getRuntime() {
-		return (long) (System.currentTimeMillis() - start);
+		return System.currentTimeMillis() - start;
 	}
 
 	/**
 	 * Updates all skills within the skills array.
 	 */
 	public void updateAll() {
-		int size = skills.length;
+		final int size = skills.length;
 		for (int i = 0; i < size; i++) {
 			currentExp[i] = context.skills.getCurrentExp(skills[i]);
 		}
@@ -86,10 +84,10 @@ public class SkillTracker {
 	 * Updates a single skill dependent on the index of the skill.
 	 */
 	public void update(final int index) {
-		int size = skills.length;
+		final int size = skills.length;
 		if (index >= 0 && index <= size) {
 			currentExp[getArrayIndex(index, skills)] = context.skills
-					.getCurrentExp(index);
+			.getCurrentExp(index);
 		} else {
 			throw new IndexOutOfBoundsException();
 		}
@@ -102,20 +100,20 @@ public class SkillTracker {
 	 * @param index
 	 */
 	public void remove(final int index) {
-		int size = lastIndex - firstIndex;
+		final int size = lastIndex - firstIndex;
 		if (0 <= index && index < size) {
 			if (index == size - 1) {
-				int l = --lastIndex;
+				final int l = --lastIndex;
 				skills[l] = 0;
 				currentExp[l] = 0;
 				startExp[l] = 0;
 			} else if (index == 0) {
-				int f = firstIndex++;
+				final int f = firstIndex++;
 				skills[f] = 0;
 				currentExp[f] = 0;
 				startExp[f] = 0;
 			} else {
-				int trueIndex = firstIndex + index;
+				final int trueIndex = firstIndex + index;
 				if (index < size / 2) {
 					System.arraycopy(skills, firstIndex, skills,
 							firstIndex + 1, index);
@@ -148,7 +146,7 @@ public class SkillTracker {
 	 * @return <tt>true</tt> If removed.
 	 */
 	public boolean removeSkill(final int index) {
-		int realIndex = getArrayIndex(index, skills);
+		final int realIndex = getArrayIndex(index, skills);
 		if (realIndex >= 0) {
 			remove(index);
 			return true;
@@ -166,7 +164,7 @@ public class SkillTracker {
 		if (lastIndex == skills.length) {
 			growAtEnd(1);
 		}
-		int l = lastIndex++;
+		final int l = lastIndex++;
 		skills[l] = skill;
 		currentExp[l] = 0;
 		startExp[l] = context.skills.getCurrentExp(skill);
@@ -202,12 +200,12 @@ public class SkillTracker {
 	 * Expands the current array (skillsList) by the specified growth.
 	 */
 	public void growAtEnd(final int growth) {
-		int size = lastIndex - firstIndex;
+		final int size = lastIndex - firstIndex;
 		if (firstIndex >= growth - (skills.length - lastIndex)) {
-			int newLast = lastIndex - firstIndex;
+			final int newLast = lastIndex - firstIndex;
 			if (size > 0) {
 				System.arraycopy(skills, firstIndex, skills, 0, size);
-				int start = newLast < firstIndex ? firstIndex : newLast;
+				final int start = newLast < firstIndex ? firstIndex : newLast;
 				Arrays.fill(skills, start, skills.length, 0);
 			}
 			firstIndex = 0;
@@ -220,7 +218,7 @@ public class SkillTracker {
 			if (increment < 12) {
 				increment = 12;
 			}
-			int[] newArray = new int[size + increment];
+			final int[] newArray = new int[size + increment];
 			if (size > 0) {
 				System.arraycopy(skills, firstIndex, newArray, 0, size);
 				firstIndex = 0;
@@ -242,8 +240,8 @@ public class SkillTracker {
 	 * experience)
 	 */
 	public int[] getGains() {
-		int size = skills.length;
-		int[] gains = new int[size];
+		final int size = skills.length;
+		final int[] gains = new int[size];
 		for (int i = 0; i < size; i++) {
 			update(skills[i]);
 			gains[i] = currentExp[i] - startExp[i];
@@ -255,12 +253,12 @@ public class SkillTracker {
 	 * Calculates the experience gained per hour. (Updates current experience)
 	 */
 	public int[] getHourlyGains() {
-		int size = skills.length;
-		int[] gains = new int[size];
+		final int size = skills.length;
+		final int[] gains = new int[size];
 		for (int i = 0; i < size; i++) {
 			update(skills[i]);
-			long time = getRuntime();
-			gains[i] = (time == 0L) ? 0 : (int) (3600L * (currentExp[i] - startExp[i]) / time);
+			final long time = getRuntime();
+			gains[i] = time == 0L ? 0 : (int) (3600L * (currentExp[i] - startExp[i]) / time);
 		}
 		return gains;
 	}
@@ -279,10 +277,10 @@ public class SkillTracker {
 	public int[] getSecTNL() {
 		final int[] gains = getHourlyGains();
 		final int size = skills.length;
-		int[] secTNL = new int[size];
+		final int[] secTNL = new int[size];
 		for (int i = 0; i < size; i++) {
-			long xpTNL = context.skills.getExpToNextLevel(skills[i]);
-			secTNL[i] = (gains[i] == 0) ? 0 : (int) ((3600L * xpTNL) / (long) gains[i]);
+			final long xpTNL = context.skills.getExpToNextLevel(skills[i]);
+			secTNL[i] = gains[i] == 0 ? 0 : (int) (3600L * xpTNL / gains[i]);
 		}
 		return secTNL;
 	}
@@ -293,7 +291,7 @@ public class SkillTracker {
 	public static String SecToHMS(int sec) {
 		int min = sec / 60;
 		sec %= 60;
-		int hour = min / 60;
+		final int hour = min / 60;
 		min %= 60;
 		return "" + hour + ":" + min + ":" + sec;
 	}

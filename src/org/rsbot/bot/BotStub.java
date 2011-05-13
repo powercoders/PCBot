@@ -1,21 +1,29 @@
 package org.rsbot.bot;
 
-import org.rsbot.util.GlobalConfiguration;
-
-import javax.swing.*;
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.applet.AudioClip;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
 import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
+
+import org.rsbot.util.GlobalConfiguration;
 
 public class BotStub implements AppletStub, AppletContext {
 	private final Map<URL, WeakReference<Image>> IMAGE_CACHE = new HashMap<URL, WeakReference<Image>>();
@@ -31,7 +39,7 @@ public class BotStub implements AppletStub, AppletContext {
 
 	public BotStub(final RSLoader applet) {
 		this.applet = applet;
-		Crawler c = new Crawler("http://www." + applet.getTargetName() + ".com/");
+		final Crawler c = new Crawler("http://www." + applet.getTargetName() + ".com/");
 		parameters = c.getParameters();
 		final String world_prefix = c.getWorldPrefix();
 		try {
@@ -82,7 +90,7 @@ public class BotStub implements AppletStub, AppletContext {
 		synchronized (IMAGE_CACHE) {
 			WeakReference<Image> ref = IMAGE_CACHE.get(url);
 			Image img;
-			if ((ref == null) || ((img = ref.get()) == null)) {
+			if (ref == null || (img = ref.get()) == null) {
 				img = Toolkit.getDefaultToolkit().createImage(url);
 				ref = new WeakReference<Image>(img);
 				IMAGE_CACHE.put(url, ref);
@@ -128,7 +136,7 @@ public class BotStub implements AppletStub, AppletContext {
 			final String message = GlobalConfiguration.NAME + " is currently outdated, please wait patiently for a new version.";
 			log.severe(message);
 			JOptionPane.showMessageDialog(null, message, "Outdated", JOptionPane.WARNING_MESSAGE);
-			File versionFile = new File(GlobalConfiguration.Paths.getVersionCache());
+			final File versionFile = new File(GlobalConfiguration.Paths.getVersionCache());
 			if (versionFile.exists() && !versionFile.delete()) {
 				log.warning("Unable to clear cache.");
 			}

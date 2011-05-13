@@ -1,15 +1,23 @@
 package org.rsbot.util;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.rsbot.security.RestrictedSecurityManager;
 
 /**
  * @author Jacmob
@@ -23,7 +31,7 @@ public class AccountStore {
 		private String password;
 		private final Map<String, String> attributes = new TreeMap<String, String>();
 
-		public Account(String username) {
+		public Account(final String username) {
 			this.username = username;
 		}
 
@@ -33,8 +41,8 @@ public class AccountStore {
 
 		public String getPassword() {
 			boolean safe = true;
-			StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-			for (StackTraceElement stackTraceElement : stackTraceElements) {
+			final StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+			for (final StackTraceElement stackTraceElement : stackTraceElements) {
 				safe = safe && (stackTraceElement.getClassName().contains("org.rsbot.") || stackTraceElement
 						.getClassName().contains("java.lang.T") || stackTraceElement
 						.getClassName().contains("java.awt.") || stackTraceElement
@@ -45,11 +53,11 @@ public class AccountStore {
 			return safe ? password : null;
 		}
 
-		public String getAttribute(String key) {
+		public String getAttribute(final String key) {
 			boolean safe = true;
-			StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+			final StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 			if (key.equalsIgnoreCase("pin")) {
-				for (StackTraceElement stackTraceElement : stackTraceElements) {
+				for (final StackTraceElement stackTraceElement : stackTraceElements) {
 					safe = safe && (stackTraceElement.getClassName().contains("org.rsbot.") || stackTraceElement
 							.getClassName().contains("java.lang.T") || stackTraceElement
 							.getClassName().contains("java.awt.") || stackTraceElement
@@ -61,14 +69,15 @@ public class AccountStore {
 			return safe ? attributes.get(key) : null;
 		}
 
-		public void setAttribute(String key, String value) {
+		public void setAttribute(final String key, final String value) {
 			attributes.put(key, value);
 		}
 
-		public void setPassword(String password) {
+		public void setPassword(final String password) {
 			this.password = password;
 		}
 
+		@Override
 		public String toString() {
 			return "Account[" + username + "]";
 		}
@@ -85,19 +94,22 @@ public class AccountStore {
 
 	private final Map<String, Account> accounts = new TreeMap<String, Account>();
 
-	public AccountStore(File file) {
+	public AccountStore(final File file) {
+		if (((RestrictedSecurityManager) System.getSecurityManager()).isCallerScript()) {
+			throw new SecurityException();
+		}
 		this.file = file;
 	}
 
-	public Account get(String username) {
+	public Account get(final String username) {
 		return accounts.get(username);
 	}
 
-	public void remove(String username) {
+	public void remove(final String username) {
 		accounts.remove(username);
 	}
 
-	public void add(Account account) {
+	public void add(final Account account) {
 		accounts.put(account.username, account);
 	}
 
@@ -113,19 +125,19 @@ public class AccountStore {
 			file.setReadable(true);
 			file.setWritable(true);
 		}
-		BufferedReader br = new BufferedReader(new FileReader(file));
+		final BufferedReader br = new BufferedReader(new FileReader(file));
 		try {
-			int v = Integer.parseInt(br.readLine());
+			final int v = Integer.parseInt(br.readLine());
 			if (v != FORMAT_VERSION) {
 				throw new IOException("unsupported format version: " + v);
 			}
-		} catch (NumberFormatException ex) {
+		} catch (final NumberFormatException ex) {
 			throw new IOException("bad format");
 		}
 		accounts.clear();
 		Account current = null;
 		for (; ;) {
-			String line = br.readLine();
+			final String line = br.readLine();
 			if (line == null) {
 				break;
 			}
@@ -133,12 +145,12 @@ public class AccountStore {
 				if (current != null) {
 					accounts.put(current.username, current);
 				}
-				String name = AccountStore.fixName(line.trim().substring(1).substring(0, line.length() - 2));
+				final String name = AccountStore.fixName(line.trim().substring(1).substring(0, line.length() - 2));
 				current = new Account(name);
 				continue;
 			}
 			if (current != null && line.matches("^\\w+=.+$")) {
-				String[] split = line.trim().split("=");
+				final String[] split = line.trim().split("=");
 				if (split[0].equals("password")) {
 					current.password = decrypt(split[1]);
 				} else {
@@ -159,17 +171,18 @@ public class AccountStore {
 		final BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 		bw.write(Integer.toString(FORMAT_VERSION));
 		bw.newLine();
-		for (String name : accounts.keySet()) {
+		for (final String name : accounts.keySet()) {
 			bw.append("[").append(AccountStore.fixName(name.trim())).append("]");
 			bw.newLine();
-			String password = accounts.get(name).password;
+			final String password = accounts.get(name).password;
 			if (password != null) {
 				bw.append("password=");
 				bw.append(encrypt(password));
 			}
 			bw.newLine();
-			for (Map.Entry<String, String> entry : accounts.get(name).attributes.entrySet()) {
-				String key = entry.getKey(), value = entry.getValue();
+			for (final Map.Entry<String, String> entry : accounts.get(name).attributes.entrySet()) {
+				final String key = entry.getKey();
+				String value = entry.getValue();
 				if (Arrays.asList(protectedAttributes).contains(key)) {
 					value = encrypt(value);
 				}
@@ -180,16 +193,16 @@ public class AccountStore {
 		bw.close();
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(final String password) {
 		if (password == null) {
 			digest = null;
 			return;
 		}
 		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-1");
+			final MessageDigest md = MessageDigest.getInstance("SHA-1");
 			md.update(password.getBytes("iso-8859-1"), 0, password.length());
 			digest = md.digest();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException("Unable to digest password!");
 		}
 		digest = Arrays.copyOf(digest, 24);
@@ -198,39 +211,39 @@ public class AccountStore {
 		}
 	}
 
-	private String encrypt(String data) {
+	private String encrypt(final String data) {
 		if (digest == null) {
-			byte[] enc = Base64.encodeBase64(StringUtil.getBytesUtf8(data));
+			final byte[] enc = Base64.encodeBase64(StringUtil.getBytesUtf8(data));
 			return StringUtil.newStringUtf8(enc);
 		}
-		SecretKey key = new SecretKeySpec(digest, KEY_ALGORITHM);
-		IvParameterSpec iv = new IvParameterSpec(new byte[8]);
+		final SecretKey key = new SecretKeySpec(digest, KEY_ALGORITHM);
+		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
 
 		byte[] enc;
 		try {
-			Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
+			final Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
 			cipher.init(Cipher.ENCRYPT_MODE, key, iv);
 			enc = cipher.doFinal(StringUtil.getBytesUtf8(data));
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException("Unable to encrypt data!");
 		}
 		return StringUtil.newStringUtf8(Base64.encodeBase64(enc));
 	}
 
-	private String decrypt(String data) throws IOException {
+	private String decrypt(final String data) throws IOException {
 		if (digest == null) {
-			byte[] enc = Base64.decodeBase64(StringUtil.getBytesUtf8(data));
+			final byte[] enc = Base64.decodeBase64(StringUtil.getBytesUtf8(data));
 			return StringUtil.newStringUtf8(enc);
 		}
-		SecretKey key = new SecretKeySpec(digest, KEY_ALGORITHM);
-		IvParameterSpec iv = new IvParameterSpec(new byte[8]);
+		final SecretKey key = new SecretKeySpec(digest, KEY_ALGORITHM);
+		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
 
 		byte[] dec;
 		try {
-			Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
+			final Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
 			cipher.init(Cipher.DECRYPT_MODE, key, iv);
 			dec = cipher.doFinal(Base64.decodeBase64(data));
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new IOException("Unable to decrypt data!");
 		}
 		return StringUtil.newStringUtf8(dec);

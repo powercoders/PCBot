@@ -2,7 +2,11 @@ package org.rsbot.script.randoms;
 
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.wrappers.*;
+import org.rsbot.script.wrappers.RSComponent;
+import org.rsbot.script.wrappers.RSGroundItem;
+import org.rsbot.script.wrappers.RSNPC;
+import org.rsbot.script.wrappers.RSObject;
+import org.rsbot.script.wrappers.RSTile;
 
 /*
  * Updated by Arbiter (Oct 19, 2010)
@@ -38,10 +42,10 @@ public class ScapeRuneIsland extends Random {
 		if (!activateCondition()) {
 			return -1;
 		}
-		RSObject statue1 = objects.getNearest(STATUE_IDS[0]);
-		RSObject statue2 = objects.getNearest(STATUE_IDS[1]);
-		RSObject statue3 = objects.getNearest(STATUE_IDS[2]);
-		RSObject statue4 = objects.getNearest(STATUE_IDS[3]);
+		final RSObject statue1 = objects.getNearest(STATUE_IDS[0]);
+		final RSObject statue2 = objects.getNearest(STATUE_IDS[1]);
+		final RSObject statue3 = objects.getNearest(STATUE_IDS[2]);
+		final RSObject statue4 = objects.getNearest(STATUE_IDS[3]);
 		if (getMyPlayer().isMoving() || getMyPlayer().getAnimation() != -1) {
 			return random(550, 700);
 		}
@@ -81,7 +85,7 @@ public class ScapeRuneIsland extends Random {
 			}
 		}
 		if (finished) {
-			RSObject portal = objects.getNearest(8987);
+			final RSObject portal = objects.getNearest(8987);
 			if (portal != null) {
 				if (!calc.tileOnScreen(portal.getLocation())) {
 					walking.walkTileMM(walking.getClosestTileOnMap(portal.getLocation()));
@@ -97,8 +101,8 @@ public class ScapeRuneIsland extends Random {
 			}
 		}
 		if (bank.isDepositOpen() && bank.getBoxCount() - bank.getBoxCount(6209, 6202, 6200) >= 27) {
-			RSComponent randomItem = interfaces.get(11).getComponent(17).getComponent(random(16, 26));
-			int randomID = randomItem.getComponentID();
+			final RSComponent randomItem = interfaces.get(11).getComponent(17).getComponent(random(16, 26));
+			final int randomID = randomItem.getComponentID();
 			if (randomID < 0) {
 				return random(50, 100);
 			}
@@ -113,7 +117,7 @@ public class ScapeRuneIsland extends Random {
 			return random(500, 1000);
 		}
 		if (inventory.getCountExcept(6209, 6202, 6200) >= 27) {
-			RSObject box = objects.getNearest(32930);
+			final RSObject box = objects.getNearest(32930);
 			if (!calc.tileOnScreen(box.getLocation())) {
 				walking.walkTileMM(walking.getClosestTileOnMap(box.getLocation()));
 				return random(1000, 2000);

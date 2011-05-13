@@ -20,13 +20,13 @@ public class IniParser {
 	private IniParser() {
 	}
 
-	public static void serialise(HashMap<String, HashMap<String, String>> data, BufferedWriter out) throws IOException {
+	public static void serialise(final HashMap<String, HashMap<String, String>> data, final BufferedWriter out) throws IOException {
 		if (data.containsKey(emptySection)) {
 			writeSection(emptySection, data.get(emptySection), out);
 			out.newLine();
 		}
-		for (Entry<String, HashMap<String, String>> entry : data.entrySet()) {
-			String section = entry.getKey();
+		for (final Entry<String, HashMap<String, String>> entry : data.entrySet()) {
+			final String section = entry.getKey();
 			if (section.equals(emptySection)) {
 				continue;
 			}
@@ -35,14 +35,14 @@ public class IniParser {
 		}
 	}
 
-	private static void writeSection(String section, HashMap<String, String> map, BufferedWriter out) throws IOException {
+	private static void writeSection(final String section, final HashMap<String, String> map, final BufferedWriter out) throws IOException {
 		if (!(section == null || section.isEmpty())) {
 			out.write(sectionOpen);
 			out.write(section);
 			out.write(sectionClose);
 			out.newLine();
 		}
-		for (Entry<String, String> entry : map.entrySet()) {
+		for (final Entry<String, String> entry : map.entrySet()) {
 			out.write(entry.getKey());
 			out.write(keyBound);
 			out.write(entry.getValue());
@@ -50,8 +50,8 @@ public class IniParser {
 		}
 	}
 
-	public static HashMap<String, HashMap<String, String>> deserialise(BufferedReader input) throws IOException {
-		HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
+	public static HashMap<String, HashMap<String, String>> deserialise(final BufferedReader input) throws IOException {
+		final HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
 		String line, section = emptySection;
 
 		while ((line = input.readLine()) != null) {
@@ -59,15 +59,16 @@ public class IniParser {
 			if (line.isEmpty()) {
 				continue;
 			}
-			int z, l = line.length();
-			char t = line.charAt(0);
+			int z;
+			final int l = line.length();
+			final char t = line.charAt(0);
 			if (t == sectionOpen) {
 				z = line.indexOf(sectionClose, 1);
 				z = z == -1 ? l : z;
 				section = z == 1 ? "" : line.substring(1, z - 1).trim();
 			} else {
 				boolean skip = false;
-				for (char c : comments) {
+				for (final char c : comments) {
 					if (t == c) {
 						skip = true;
 						break;

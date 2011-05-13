@@ -5,7 +5,6 @@ import org.rsbot.client.Loader;
 import org.rsbot.loader.ClientLoader;
 import org.rsbot.loader.script.ParseException;
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpClient;
 
 import java.applet.Applet;
 import java.awt.*;
@@ -63,13 +62,13 @@ public class RSLoader extends Applet implements Runnable, Loader {
 		if (client != null) {
 			client.paint(graphics);
 		} else {
-			Font font = new Font("Helvetica", 1, 13);
-			FontMetrics fontMetrics = getFontMetrics(font);
+			final Font font = new Font("Helvetica", 1, 13);
+			final FontMetrics fontMetrics = getFontMetrics(font);
 			graphics.setColor(Color.black);
 			graphics.fillRect(0, 0, 768, 503);
 			graphics.setColor(new Color(150, 0, 0));
-			graphics.drawRect(230, 233, 303, 33);
-			String s = "Loading...";
+			graphics.drawRect(230, 233, 304, 34);
+			final String s = "Loading...";
 			graphics.setFont(font);
 			graphics.setColor(Color.WHITE);
 			graphics.drawString(s, (768 - fontMetrics.stringWidth(s)) / 2, 255);
@@ -81,7 +80,7 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	 */
 	public void run() {
 		try {
-			Class<?> c = classLoader.loadClass("client");
+			final Class<?> c = classLoader.loadClass("client");
 			client = (Applet) c.newInstance();
 			loadedCallback.run();
 			c.getMethod("provideLoaderApplet", new Class[]{java.applet.Applet.class}).invoke(null, this);
@@ -89,7 +88,7 @@ public class RSLoader extends Applet implements Runnable, Loader {
 			client.start();
 		} catch (final Throwable e) {
 			log.severe("Unable to load client, please check your firewall and internet connection.");
-			File versionFile = new File(GlobalConfiguration.Paths.getVersionCache());
+			final File versionFile = new File(GlobalConfiguration.Paths.getVersionCache());
 			if (versionFile.exists() && !versionFile.delete()) {
 				log.warning("Unable to clear cache.");
 			}
@@ -104,23 +103,19 @@ public class RSLoader extends Applet implements Runnable, Loader {
 
 	public void load() {
 		try {
-			HttpClient.download(new URL(GlobalConfiguration.Paths.URLs.WEB),
-					new File(GlobalConfiguration.Paths.getWebCache()));
-		} catch (IOException wex) {
-			log.severe("Unable to load web matrix: " + wex.getMessage());
-		}
-		try {
-			ClientLoader cl = new ClientLoader();
-			cl.init(new URL(GlobalConfiguration.Paths.URLs.UPDATE), new File(
-					GlobalConfiguration.Paths.getModScriptCache()));
-			cl.load(new File(GlobalConfiguration.Paths.getClientCache()),
-					new File(GlobalConfiguration.Paths.getVersionCache()));
+			final ClientLoader cl = new ClientLoader();
+			cl.init(new URL(GlobalConfiguration.Paths.URLs.UPDATE), new File(GlobalConfiguration.Paths.getModScriptCache()));
+			cl.load(new File(GlobalConfiguration.Paths.getClientCache()), new File(GlobalConfiguration.Paths.getVersionCache()));
 			targetName = cl.getTargetName();
 			classLoader = new RSClassLoader(cl.getClasses(), new URL("http://" + targetName + ".com/"));
-		} catch (IOException ex) {
+		} catch (final IOException ex) {
 			log.severe("Unable to load client: " + ex.getMessage());
-		} catch (ParseException ex) {
-			log.severe("Unable to load client: " + ex.toString());
+		} catch (final ParseException ex) {
+			log.severe("Unable to load client: " + ex.toString() + "\nPlease restart RSBot to see if it solves the issue.");
+			final File ms = new File(GlobalConfiguration.Paths.getModScriptCache());
+			if (ms.exists()) {
+				ms.delete();
+			}
 		}
 	}
 
@@ -156,7 +151,7 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	 * Overridden void update(Graphics)
 	 */
 	@Override
-	public final void update(Graphics graphics) {
+	public final void update(final Graphics graphics) {
 		if (client != null) {
 			client.update(graphics);
 		} else {
@@ -164,11 +159,13 @@ public class RSLoader extends Applet implements Runnable, Loader {
 		}
 	}
 
-	public final void setSize(int width, int height) {
+	@Override
+	public final void setSize(final int width, final int height) {
 		super.setSize(width, height);
 		size = new Dimension(width, height);
 	}
 
+	@Override
 	public final Dimension getSize() {
 		return size;
 	}

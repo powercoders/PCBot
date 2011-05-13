@@ -1,9 +1,9 @@
 package org.rsbot.event.impl;
 
+import java.awt.Graphics;
+
 import org.rsbot.event.listeners.TextPaintListener;
 import org.rsbot.util.StringUtil;
-
-import java.awt.*;
 
 public class TFPS implements TextPaintListener {
 
@@ -13,6 +13,7 @@ public class TFPS implements TextPaintListener {
 
 	private int lastIdx = 0;
 
+	@Override
 	public int drawLine(final Graphics render, int idx) {
 		final int secTime = (int) (System.currentTimeMillis() / 1000);
 

@@ -1,13 +1,13 @@
 package org.rsbot.client;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.rsbot.Application;
 import org.rsbot.bot.Bot;
 import org.rsbot.util.PreferenceData;
 import org.rsbot.util.UIDData;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class RandomAccessFile {
 	private UIDData uidData = null;
@@ -18,19 +18,19 @@ public class RandomAccessFile {
 	private byte[] data = null;
 	private int offset = 0;
 
-	public RandomAccessFile(String name, String mode) throws FileNotFoundException {
+	public RandomAccessFile(final String name, final String mode) throws FileNotFoundException {
 		if (!shouldOverride(name, mode)) {
-			this.raf = new java.io.RandomAccessFile(name, mode);
+			raf = new java.io.RandomAccessFile(name, mode);
 		}
 	}
 
-	public RandomAccessFile(File file, String mode) throws FileNotFoundException {
+	public RandomAccessFile(final File file, final String mode) throws FileNotFoundException {
 		if (!shouldOverride(file.getName(), mode)) {
-			this.raf = new java.io.RandomAccessFile(file, mode);
+			raf = new java.io.RandomAccessFile(file, mode);
 		}
 	}
 
-	private boolean shouldOverride(String filename, String mode) throws FileNotFoundException {
+	private boolean shouldOverride(final String filename, final String mode) throws FileNotFoundException {
 		if (filename.equals("random.dat")) {
 			uidData = new UIDData();
 		} else if (filename.endsWith("preferences.dat")) {
@@ -48,11 +48,11 @@ public class RandomAccessFile {
 
 	private void checkData() {
 		if (uidData != null) {
-			if (this.client == null) {
-				Bot b = Application.getBot(this);
-				this.client = b.getClient();
+			if (client == null) {
+				final Bot b = Application.getBot(this);
+				client = b.getClient();
 			}
-			String accountName = client != null ? client.getCurrentUsername() : "";
+			final String accountName = client != null ? client.getCurrentUsername() : "";
 
 			if (!uidData.getLastUsed().equals(accountName) && data != null) {
 				uidData.setUID(uidData.getLastUsed(), data);
@@ -101,18 +101,18 @@ public class RandomAccessFile {
 					return -1;
 				}
 
-				return (0xFF & data[offset++]);
+				return 0xFF & data[offset++];
 			}
 
 			return raf.read();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 
 		return -1;
 	}
 
-	public int read(byte[] b, int off, int len) throws IOException {
+	public int read(final byte[] b, final int off, int len) throws IOException {
 		checkData();
 
 		if (data != null) {
@@ -134,7 +134,7 @@ public class RandomAccessFile {
 				}
 
 				return len;
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -142,7 +142,7 @@ public class RandomAccessFile {
 		return raf.read(b, off, len);
 	}
 
-	public void seek(long pos) throws IOException {
+	public void seek(final long pos) throws IOException {
 		checkData();
 
 		if (pos < 0) {
@@ -156,7 +156,7 @@ public class RandomAccessFile {
 		}
 	}
 
-	public void write(byte[] b, int off, int len) throws IOException {
+	public void write(final byte[] b, final int off, int len) throws IOException {
 		checkData();
 
 		if (data != null) {
@@ -171,7 +171,7 @@ public class RandomAccessFile {
 
 			//Increase buffer if needed
 			if (data.length < offset + len) {
-				byte[] tmp = data;
+				final byte[] tmp = data;
 				data = new byte[offset + len];
 				System.arraycopy(tmp, 0, data, 0, (offset <= tmp.length ? offset : tmp.length));
 			}
@@ -187,13 +187,13 @@ public class RandomAccessFile {
 		}
 	}
 
-	public void write(int b) throws IOException {
+	public void write(final int b) throws IOException {
 		checkData();
 
 		if (data != null) {
 			//Increase bufer if needed
 			if (data.length < offset + 1) {
-				byte[] tmp = data;
+				final byte[] tmp = data;
 				data = new byte[offset + 1];
 				System.arraycopy(tmp, 0, data, 0, (offset <= tmp.length ? offset : tmp.length));
 			}

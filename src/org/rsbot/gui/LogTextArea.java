@@ -1,19 +1,30 @@
 package org.rsbot.gui;
 
-import org.rsbot.log.LogFormatter;
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.StringUtil;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Rectangle;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+
+import javax.swing.AbstractListModel;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JTextPane;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+
+import org.rsbot.log.LogFormatter;
+import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.util.StringUtil;
 
 /**
  * Non swing methods are thread safe.
@@ -32,6 +43,7 @@ public class LogTextArea extends JList {
 	private final LogAreaListModel model = new LogAreaListModel();
 
 	private final Runnable scrollToBottom = new Runnable() {
+		@Override
 		public void run() {
 			scrollRectToVisible(LogTextArea.BOTTOM_OF_WINDOW);
 		}
@@ -39,7 +51,7 @@ public class LogTextArea extends JList {
 
 	private static final Formatter formatter = new Formatter() {
 		private final SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"hh:mm:ss");
+		"hh:mm:ss");
 
 		@Override
 		public String format(final LogRecord record) {
@@ -54,7 +66,7 @@ public class LogTextArea extends JList {
 					name.length() > maxLen ? name.substring(0,
 							maxLen - append.length())
 							+ append : name, record.getMessage(),
-					StringUtil.throwableToString(record.getThrown()));
+							StringUtil.throwableToString(record.getThrown()));
 		}
 	};
 
@@ -78,7 +90,7 @@ public class LogTextArea extends JList {
 	 *
 	 * @param logRecord The entry.
 	 */
-	public void log(LogRecord logRecord) {
+	public void log(final LogRecord logRecord) {
 		logQueue.queue(new WrappedLogRecord(logRecord));
 	}
 
@@ -88,7 +100,7 @@ public class LogTextArea extends JList {
 		private List<WrappedLogRecord> records = new ArrayList<WrappedLogRecord>(
 				LogTextArea.MAX_ENTRIES);
 
-		public void addAllElements(List<WrappedLogRecord> obj) {
+		public void addAllElements(final List<WrappedLogRecord> obj) {
 			records.addAll(obj);
 			if (getSize() > LogTextArea.MAX_ENTRIES) {
 				records = records.subList(
@@ -100,10 +112,12 @@ public class LogTextArea extends JList {
 			}
 		}
 
+		@Override
 		public Object getElementAt(final int index) {
 			return records.get(index);
 		}
 
+		@Override
 		public int getSize() {
 			return records.size();
 		}
@@ -128,6 +142,7 @@ public class LogTextArea extends JList {
 			}
 		}
 
+		@Override
 		public void run() {
 			while (true) {
 				List<WrappedLogRecord> toFlush = null;
@@ -157,12 +172,13 @@ public class LogTextArea extends JList {
 
 		private final Border EMPTY_BORDER = new EmptyBorder(1, 1, 1, 1);
 		private final Border SELECTED_BORDER = UIManager
-				.getBorder("List.focusCellHighlightBorder");
+		.getBorder("List.focusCellHighlightBorder");
 		private final Color DARK_GREEN = new Color(0, 90, 0);
 
+		@Override
 		public Component getListCellRendererComponent(final JList list,
-		                                              final Object value, final int index, final boolean isSelected,
-		                                              final boolean cellHasFocus) {
+				final Object value, final int index, final boolean isSelected,
+				final boolean cellHasFocus) {
 			if (!(value instanceof WrappedLogRecord)) {
 				return new JLabel();
 			}
@@ -188,15 +204,15 @@ public class LogTextArea extends JList {
 				result.setForeground(Color.RED);
 			}
 
-			if ((wlr.record.getLevel() == Level.FINE)
-					|| (wlr.record.getLevel() == Level.FINER)
-					|| (wlr.record.getLevel() == Level.FINEST)) {
+			if (wlr.record.getLevel() == Level.FINE
+					|| wlr.record.getLevel() == Level.FINER
+					|| wlr.record.getLevel() == Level.FINEST) {
 				result.setForeground(DARK_GREEN);
 			}
 
-			Object[] parameters = wlr.record.getParameters();
+			final Object[] parameters = wlr.record.getParameters();
 			if (parameters != null) {
-				for (Object parameter : parameters) {
+				for (final Object parameter : parameters) {
 					if (parameter == null) {
 						continue;
 					}

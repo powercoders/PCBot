@@ -34,7 +34,7 @@ public class SystemUpdate extends Random {
 	}
 
 	private void check() {
-		int logoutMinutes = random(1, getMinutes());
+		final int logoutMinutes = random(1, getMinutes());
 		// logoutSeconds = random(10, getSeconds());
 		systemTime.setEndIn(logoutMinutes);
 		while (!checkForLogout()) {

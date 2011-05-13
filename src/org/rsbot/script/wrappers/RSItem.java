@@ -41,13 +41,13 @@ public class RSItem extends MethodProvider {
 	 */
 	public RSItemDef getDefinition() {
 		try {
-			org.rsbot.client.Node ref = methods.nodes.lookup(methods.client.getRSItemDefLoader(), id);
+			final org.rsbot.client.Node ref = methods.nodes.lookup(methods.client.getRSItemDefLoader(), id);
 
 			if (ref != null) {
 				if (ref instanceof HardReference) {
-					return new RSItemDef((org.rsbot.client.RSItemDef) (((HardReference) ref).get()));
+					return new RSItemDef((org.rsbot.client.RSItemDef) ((HardReference) ref).get());
 				} else if (ref instanceof SoftReference) {
-					Object def = ((SoftReference) ref).getReference().get();
+					final Object def = ((SoftReference) ref).getReference().get();
 
 					if (def != null) {
 						return new RSItemDef((org.rsbot.client.RSItemDef) def);
@@ -114,11 +114,11 @@ public class RSItem extends MethodProvider {
 	 */
 	public String getName() {
 		if (component != null) {
-			return component.getComponentName();
+			return component.getComponentName().replaceAll("\\<.*?>", "");
 		} else {
-			RSItemDef definition = getDefinition();
+			final RSItemDef definition = getDefinition();
 			if (definition != null) {
-				return definition.getName();
+				return definition.getName().replaceAll("\\<.*?>", "");
 			}
 		}
 		return null;
@@ -157,7 +157,7 @@ public class RSItem extends MethodProvider {
 	 * @return <tt>true</tt> if the component was clicked
 	 *         successfully; otherwise <tt>false</tt>.
 	 */
-	public boolean doClick(boolean left) {
+	public boolean doClick(final boolean left) {
 		return component != null && component.doClick(left);
 	}
 

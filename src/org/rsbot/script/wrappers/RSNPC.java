@@ -1,8 +1,8 @@
 package org.rsbot.script.wrappers;
 
-import org.rsbot.script.methods.MethodContext;
-
 import java.lang.ref.SoftReference;
+
+import org.rsbot.script.methods.MethodContext;
 
 /**
  * Represents a non-player character.
@@ -22,7 +22,7 @@ public class RSNPC extends RSCharacter {
 	}
 
 	public String[] getActions() {
-		org.rsbot.client.RSNPCDef def = getDefInternal();
+		final org.rsbot.client.RSNPCDef def = getDefInternal();
 		if (def != null) {
 			return def.getActions();
 		}
@@ -30,7 +30,7 @@ public class RSNPC extends RSCharacter {
 	}
 
 	public int getID() {
-		org.rsbot.client.RSNPCDef def = getDefInternal();
+		final org.rsbot.client.RSNPCDef def = getDefInternal();
 		if (def != null) {
 			return def.getType();
 		}
@@ -39,7 +39,7 @@ public class RSNPC extends RSCharacter {
 
 	@Override
 	public String getName() {
-		org.rsbot.client.RSNPCDef def = getDefInternal();
+		final org.rsbot.client.RSNPCDef def = getDefInternal();
 		if (def != null) {
 			return def.getName();
 		}
@@ -48,7 +48,7 @@ public class RSNPC extends RSCharacter {
 
 	@Override
 	public int getLevel() {
-		org.rsbot.client.RSNPC c = npc.get();
+		final org.rsbot.client.RSNPC c = npc.get();
 		if (c == null) {
 			return -1;
 		} else {
@@ -62,14 +62,14 @@ public class RSNPC extends RSCharacter {
 	 */
 	@Override
 	public boolean isInteractingWithLocalPlayer() {
-		RSNPC npc = methods.npcs.getNearest(getID());
+		final RSNPC npc = methods.npcs.getNearest(getID());
 		return npc.getInteracting() != null && npc.getInteracting().equals(
 				methods.players.getMyPlayer());
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		for (final String act : getActions()) {
 			sb.append(act);
 			sb.append(",");
@@ -78,11 +78,11 @@ public class RSNPC extends RSCharacter {
 			sb.setLength(sb.length() - 1);
 		}
 		return "NPC[" + getName() + "],actions=[" + sb.toString() + "]"
-				+ super.toString();
+		+ super.toString();
 	}
 
 	org.rsbot.client.RSNPCDef getDefInternal() {
-		org.rsbot.client.RSNPC c = npc.get();
+		final org.rsbot.client.RSNPC c = npc.get();
 		if (c == null) {
 			return null;
 		} else {

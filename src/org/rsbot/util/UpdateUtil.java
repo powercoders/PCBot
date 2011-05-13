@@ -1,135 +1,73 @@
 package org.rsbot.util;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.logging.Logger;
 
-/*
-Update utility by TheShadow
- */
-public class UpdateUtil {
+import javax.swing.JOptionPane;
 
+import org.rsbot.gui.BotGUI;
+
+/**
+ * @author Paris
+ */
+public final class UpdateUtil {
 	private static final Logger log = Logger.getLogger(UpdateUtil.class.getName());
-	private final Window parent;
 	private static int latest = -1;
 
-	public UpdateUtil(final Window parent) {
-		this.parent = parent;
-	}
-
-	public void checkUpdate(final boolean verbose) {
-		if (verbose) {
-			UpdateUtil.log.info("Checking for update...");
+	public static void check(final BotGUI instance) {
+		if (GlobalConfiguration.getVersion() >= getLatestVersion()) {
+			return;
 		}
-		if (getLatestVersion() > GlobalConfiguration.getVersion()) {
-			UpdateUtil.log.info("New version available!");
-			final int update = JOptionPane.showConfirmDialog(parent,
-					"A newer version is available. Do you wish to update?",
-					"Update Found", JOptionPane.YES_NO_OPTION);
-			if (update != 0) {
-				UpdateUtil.log.info("Cancelled update");
-			}
-			if (update == 0) {
-				updateBot();
-			}
-		} else {
-			if (verbose) {
-				UpdateUtil.log.info("You have the latest version");
-			}
+		log.info("New version available");
+		final int update = JOptionPane.showConfirmDialog(instance,
+				"A newer version is available. Do you wish to update?", "Update Found", JOptionPane.YES_NO_OPTION);
+		if (update != 0) {
+			return;
 		}
-	}
-
-	@SuppressWarnings("finally")
-	public static boolean download(final String address, final String localFileName) {
-
-		OutputStream out = null;
-		URLConnection conn;
-		InputStream in = null;
 		try {
-			final URL url = new URL(address);
-
-			out = new BufferedOutputStream(new FileOutputStream(localFileName));
-			conn = url.openConnection();
-			in = conn.getInputStream();
-
-			final byte[] buffer = new byte[1024];
-			int numRead;
-			while ((numRead = in.read(buffer)) != -1) {
-				out.write(buffer, 0, numRead);
-			}
-		} catch (final Exception exception) {
-			UpdateUtil.log.info("Downloading failed!");
-			return false;
-		} finally {
-			try {
-				if (in != null) {
-					in.close();
-				}
-				if (out != null) {
-					out.close();
-				}
-			} catch (final IOException ioe) {
-				UpdateUtil.log.info("Downloading failed!");
-				return false;
-			}
-			return true;
+			update(instance);
+		} catch (final Exception e) {
+			log.warning("Unable to apply update");
 		}
-
 	}
 
 	public static int getLatestVersion() {
 		if (latest != -1) {
 			return latest;
 		}
-		InputStream is = null;
-		InputStreamReader isr = null;
+		final File cache = new File(GlobalConfiguration.Paths.getCacheDirectory(), "version-latest.txt");
 		BufferedReader reader = null;
 		try {
-			is = new URL(GlobalConfiguration.Paths.URLs.VERSION).openConnection().getInputStream();
-			isr = new InputStreamReader(is);
-			reader = new BufferedReader(isr);
-			String s = reader.readLine().trim();
+			HttpClient.download(new URL(GlobalConfiguration.Paths.URLs.VERSION), cache);
+			reader = new BufferedReader(new FileReader(cache));
+			final String s = reader.readLine().trim();
+			reader.close();
 			latest = Integer.parseInt(s);
 			return latest;
-		} catch (Exception e) {
+		} catch (final Exception ignored) {
 		} finally {
 			try {
-				if (is != null) {
-					is.close();
-				}
-				if (isr != null) {
-					isr.close();
-				}
 				if (reader != null) {
 					reader.close();
 				}
-			} catch (IOException ioe) {
+			} catch (final IOException ignored) {
 			}
 		}
-		UpdateUtil.log.info("Unable to download latest version information.");
+		log.warning("Unable to obtain latest version information");
 		return -1;
 	}
 
-	private void updateBot() {
-		UpdateUtil.log.info("Downloading update...");
-
-		final String jarNew = GlobalConfiguration.NAME + "-"
-				+ getLatestVersion() + ".jar";
-
-		download(GlobalConfiguration.Paths.URLs.DOWNLOAD, jarNew);
-
-		final String jarOld = GlobalConfiguration.NAME + "-"
-				+ GlobalConfiguration.getVersion() + ".jar";
-
-		final Runtime run = Runtime.getRuntime();
-
-		try {
-			run.exec("java -jar " + jarNew + " delete " + jarOld);
-			System.exit(0);
-		} catch (final IOException ignored) {
-		}
+	private static void update(final BotGUI instance) throws MalformedURLException, IOException {
+		log.info("Downloading update...");
+		final File jarNew = new File(GlobalConfiguration.NAME + "-" + getLatestVersion() + ".jar");
+		HttpClient.download(new URL(GlobalConfiguration.Paths.URLs.DOWNLOAD), jarNew);
+		final String jarOld = GlobalConfiguration.Paths.getRunningJarPath();
+		Runtime.getRuntime().exec("java -jar \"" + jarNew + "\" --delete \"" + jarOld + "\"");
+		instance.cleanExit(true);
 	}
 }
