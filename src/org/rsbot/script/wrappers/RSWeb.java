@@ -27,7 +27,7 @@ public class RSWeb {
 			Route route = routes.poll();
 			return route.execute();
 		}
-		return false;
+		return finished();
 	}
 
 	public boolean finished() {
