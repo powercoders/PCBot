@@ -61,7 +61,10 @@ public class ScriptDownloader {
 		}
 		String text = new String(bytes);
 		if (con.getContentType().contains("html")) {
-			text = text.replaceAll("\\<head.*\\<\\/head\\>", "");
+			final int z = text.indexOf("<body");
+			if (z != -1) {
+				text = text.substring(z);
+			}
 			text = text.replaceAll("\\<br\\s*\\/?\\s*\\>", "\r\n");
 			text = text.replaceAll("\\<.*?\\>", "");
 		}
