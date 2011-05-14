@@ -70,7 +70,7 @@ public final class UpdateUtil {
 		if (new File(GlobalConfiguration.Paths.ROOT, ".git").exists()) {
 			final String git = findGit();
 			if (git == null) {
-				log.severe("We couldn't find git, sorry.");
+				log.severe("You need git installed to perform this action.");
 				return;
 			}
 			final int update = JOptionPane.showConfirmDialog(instance, "Are you sure you want to update?  This might take a while to complete.", "Developers", JOptionPane.YES_NO_OPTION);
@@ -120,7 +120,7 @@ public final class UpdateUtil {
 				return;
 			}
 		} else {
-			log.severe("You need git installed to perform this action.");
+			log.severe("The JAR is not running from a git directory.");
 		}
 	}
 
