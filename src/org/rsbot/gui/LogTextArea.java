@@ -22,8 +22,8 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
+import org.rsbot.Configuration;
 import org.rsbot.log.LogFormatter;
-import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.StringUtil;
 
 /**
@@ -76,7 +76,7 @@ public class LogTextArea extends JList {
 		setModel(model);
 		setCellRenderer(new Renderer());
 		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.MAC) {
+		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.MAC) {
 			setFont(new Font("Monaco", Font.PLAIN, 10));
 		} else {
 			setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));

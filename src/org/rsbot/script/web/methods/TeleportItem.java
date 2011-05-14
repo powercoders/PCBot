@@ -42,7 +42,7 @@ public class TeleportItem extends Teleport {
 	}
 
 	/**
-	 * Performs the action on the item.
+	 * Preforms the action on the item.
 	 *
 	 * @return <tt>true</tt> if we succeeded.
 	 */

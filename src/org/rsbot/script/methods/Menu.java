@@ -1,12 +1,5 @@
 package org.rsbot.script.methods;
 
-import java.awt.Graphics;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.regex.Pattern;
-
 import org.rsbot.client.MenuGroupNode;
 import org.rsbot.client.MenuItemNode;
 import org.rsbot.event.EventMulticaster;
@@ -16,13 +9,18 @@ import org.rsbot.script.internal.wrappers.Queue;
 import org.rsbot.script.wrappers.RSItem;
 import org.rsbot.script.wrappers.RSItemDef;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.regex.Pattern;
+
 /**
  * Context menu related operations.
  */
 public class Menu extends MethodProvider {
 
-	private static final Pattern HTML_TAG = Pattern
-	.compile("(^[^<]+>|<[^>]+>|<[^>]+$)");
+	private static final Pattern HTML_TAG = Pattern.compile("(^[^<]+>|<[^>]+>|<[^>]+$)");
 
 	private final Object menuCacheLock = new Object();
 
@@ -140,18 +138,14 @@ public class Menu extends MethodProvider {
 			return false;
 		}
 		if (isCollapsed()) {
-			final Queue<MenuGroupNode> groups = new Queue<MenuGroupNode>(
-					methods.client.getCollapsedMenuItems());
+			final Queue<MenuGroupNode> groups = new Queue<MenuGroupNode>(methods.client.getCollapsedMenuItems());
 			int idx = 0, mainIdx = 0;
-			for (MenuGroupNode g = groups.getHead(); g != null; g = groups
-			.getNext(), ++mainIdx) {
-				final Queue<MenuItemNode> subItems = new Queue<MenuItemNode>(
-						g.getItems());
+			for (MenuGroupNode g = groups.getHead(); g != null; g = groups.getNext(), ++mainIdx) {
+				final Queue<MenuItemNode> subItems = new Queue<MenuItemNode>(g.getItems());
 				int subIdx = 0;
-				for (MenuItemNode item = subItems.getHead(); item != null; item = subItems
-				.getNext(), ++subIdx) {
+				for (MenuItemNode item = subItems.getHead(); item != null; item = subItems.getNext(), ++subIdx) {
 					if (idx++ == i) {
-						if (subItems.size() == 1) {
+						if (subIdx == 0 || subItems.size() == 1) {
 							return clickMain(items, mainIdx);
 						} else {
 							return clickSub(items, mainIdx, subIdx);
@@ -177,8 +171,7 @@ public class Menu extends MethodProvider {
 		return false;
 	}
 
-	private boolean clickSub(final String[] items, final int mIdx,
-			final int sIdx) {
+	private boolean clickSub(final String[] items, final int mIdx, final int sIdx) {
 		final Point menuLoc = getLocation();
 		int x = random(4, items[mIdx].length() * 4);
 		int y = 21 + 16 * mIdx + random(3, 12);
@@ -188,14 +181,12 @@ public class Menu extends MethodProvider {
 		if (isOpen()) {
 			final Point subLoc = getSubMenuLocation();
 			x = random(4, items[sIdx].length() * 4);
-			methods.mouse.move(subLoc.x + x, methods.mouse.getLocation().y, 2,
-					0);
+			methods.mouse.move(subLoc.x + x, methods.mouse.getLocation().y, 2, 0);
 			sleep(random(125, 150));
 
 			if (isOpen()) {
 				y = 16 * sIdx + random(3, 12) + 21;
-				methods.mouse.move(methods.mouse.getLocation().x, subLoc.y + y,
-						0, 2);
+				methods.mouse.move(methods.mouse.getLocation().x, subLoc.y + y, 0, 2);
 				sleep(random(125, 150));
 				if (isOpen()) {
 					methods.mouse.click(true);
@@ -252,8 +243,7 @@ public class Menu extends MethodProvider {
 		final String[] options = getOptions();
 		/* Throw exception if lenghts unequal? */
 		for (int i = 0; i < Math.min(actions.length, options.length); i++) {
-			if (actions[i].toLowerCase().contains(action) &&
-					options[i].toLowerCase().contains(option)) {
+			if (actions[i].toLowerCase().contains(action) && options[i].toLowerCase().contains(option)) {
 				return i;
 			}
 		}
@@ -300,8 +290,7 @@ public class Menu extends MethodProvider {
 	 */
 	public Point getLocation() {
 		if (isOpen()) {
-			return new Point(methods.client.getMenuX(),
-					methods.client.getMenuY());
+			return new Point(methods.client.getMenuX(), methods.client.getMenuY());
 		}
 		return null;
 	}
@@ -309,23 +298,16 @@ public class Menu extends MethodProvider {
 	private String[] getMenuItemPart(final boolean firstPart) {
 		final LinkedList<String> itemsList = new LinkedList<String>();
 		if (isCollapsed()) {
-			final Queue<MenuGroupNode> menu = new Queue<MenuGroupNode>(
-					methods.client.getCollapsedMenuItems());
-			for (MenuGroupNode mgn = menu.getHead(); mgn != null; mgn = menu
-			.getNext()) {
-				final Queue<MenuItemNode> submenu = new Queue<MenuItemNode>(
-						mgn.getItems());
-				for (MenuItemNode min = submenu.getHead(); min != null; min = submenu
-				.getNext()) {
-					itemsList
-					.add(firstPart ? min.getAction() : min.getOption());
+			final Queue<MenuGroupNode> menu = new Queue<MenuGroupNode>(methods.client.getCollapsedMenuItems());
+			for (MenuGroupNode mgn = menu.getHead(); mgn != null; mgn = menu.getNext()) {
+				final Queue<MenuItemNode> submenu = new Queue<MenuItemNode>(mgn.getItems());
+				for (MenuItemNode min = submenu.getHead(); min != null; min = submenu.getNext()) {
+					itemsList.add(firstPart ? min.getAction() : min.getOption());
 				}
 			}
 		} else {
-			final Deque<MenuItemNode> menu = new Deque<MenuItemNode>(
-					methods.client.getMenuItems());
-			for (MenuItemNode min = menu.getHead(); min != null; min = menu
-			.getNext()) {
+			final Deque<MenuItemNode> menu = new Deque<MenuItemNode>(methods.client.getMenuItems());
+			for (MenuItemNode min = menu.getHead(); min != null; min = menu.getNext()) {
 				itemsList.add(firstPart ? min.getAction() : min.getOption());
 			}
 		}

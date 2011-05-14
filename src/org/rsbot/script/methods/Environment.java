@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.util.ScreenshotUtil;
+import org.rsbot.util.io.ScreenshotUtil;
 
 /**
  * Bot environment related operations.

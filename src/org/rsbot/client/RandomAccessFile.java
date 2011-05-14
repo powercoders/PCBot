@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import org.rsbot.Application;
 import org.rsbot.bot.Bot;
-import org.rsbot.util.PreferenceData;
-import org.rsbot.util.UIDData;
+import org.rsbot.util.io.PreferenceData;
+import org.rsbot.util.io.UIDData;
 
 public class RandomAccessFile {
 	private UIDData uidData = null;

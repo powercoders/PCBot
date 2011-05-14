@@ -1,4 +1,4 @@
-package org.rsbot.util;
+package org.rsbot;
 
 import org.rsbot.log.LogFormatter;
 import org.rsbot.log.SystemConsoleHandler;
@@ -16,7 +16,7 @@ import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
 
-public class GlobalConfiguration {
+public class Configuration {
 	public enum OperatingSystem {
 		MAC, WINDOWS, LINUX, UNKNOWN
 	}
@@ -54,9 +54,6 @@ public class GlobalConfiguration {
 			public static final String ICON_SCRIPT_SRC = ROOT_IMG + "/script_src.png";
 			public static final String ICON_USEREDIT = ROOT_IMG + "/user_edit.png";
 			public static final String ICON_WEBLINK = ROOT_IMG + "/world_link.png";
-			public static final String ICON_ACCEPT = ROOT_IMG + "/accept.png";
-			public static final String ICON_BUG = ROOT_IMG + "/bug.png";
-			public static final String ICON_CHART_CURVE = ROOT_IMG + "/chart_curve.png";
 
 			public static final String VERSION = ROOT + "/version.txt";
 		}
@@ -84,20 +81,20 @@ public class GlobalConfiguration {
 
 		public static String getAccountsFile() {
 			final String path;
-			if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
-				path = System.getenv("APPDATA") + File.separator + GlobalConfiguration.NAME + "_Accounts.ini";
+			if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
+				path = System.getenv("APPDATA") + File.separator + Configuration.NAME + "_Accounts.ini";
 			} else {
-				path = Paths.getUnixHome() + File.separator + "." + GlobalConfiguration.NAME_LOWERCASE + "acct";
+				path = Paths.getUnixHome() + File.separator + "." + Configuration.NAME_LOWERCASE + "acct";
 			}
 			return path;
 		}
 
 		public static String getHomeDirectory() {
-			final String env = System.getenv(GlobalConfiguration.NAME.toUpperCase() + "_HOME");
+			final String env = System.getenv(Configuration.NAME.toUpperCase() + "_HOME");
 			if (env == null || env.isEmpty()) {
-				return (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS ?
+				return (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS ?
 						FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath() :
-						Paths.getUnixHome()) + File.separator + GlobalConfiguration.NAME;
+						Paths.getUnixHome()) + File.separator + Configuration.NAME;
 			} else {
 				return env;
 			}
@@ -151,10 +148,6 @@ public class GlobalConfiguration {
 			return getCacheDirectory() + File.separator + "Scripts";
 		}
 
-		public static String getScriptsExtractedCache() {
-			return Paths.getCacheDirectory() + File.separator + "script.dat";
-		}
-
 		public static String getVersionCache() {
 			return Paths.getCacheDirectory() + File.separator + "info.dat";
 		}
@@ -188,7 +181,7 @@ public class GlobalConfiguration {
 		}
 
 		public static String getGarbageDirectory() {
-			final File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory(), ".java");
+			final File dir = new File(Configuration.Paths.getScriptCacheDirectory(), ".java");
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
@@ -204,7 +197,7 @@ public class GlobalConfiguration {
 			if (!RUNNING_FROM_JAR) {
 				return null;
 			}
-			String path = new File(GlobalConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
+			String path = new File(Configuration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
 			try {
 				path = URLDecoder.decode(path, "UTF-8");
 			} catch (UnsupportedEncodingException ignored) {
@@ -233,9 +226,9 @@ public class GlobalConfiguration {
 	}
 
 	static {
-		final URL resource = GlobalConfiguration.class.getClassLoader().getResource(Paths.Resources.VERSION);
+		final URL resource = Configuration.class.getClassLoader().getResource(Paths.Resources.VERSION);
 		if (resource != null) {
-			GlobalConfiguration.RUNNING_FROM_JAR = true;
+			Configuration.RUNNING_FROM_JAR = true;
 		}
 		final String os = System.getProperty("os.name");
 		if (os.contains("Mac")) {
@@ -252,7 +245,7 @@ public class GlobalConfiguration {
 		dirs.add(Paths.getLogsDirectory());
 		dirs.add(Paths.getCacheDirectory());
 		dirs.add(Paths.getSettingsDirectory());
-		if (GlobalConfiguration.RUNNING_FROM_JAR) {
+		if (Configuration.RUNNING_FROM_JAR) {
 			dirs.add(Paths.getScriptsDirectory());
 			dirs.add(Paths.getScriptsSourcesDirectory());
 			dirs.add(Paths.getScriptsPrecompiledDirectory());
@@ -279,7 +272,7 @@ public class GlobalConfiguration {
 			LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(logout.toByteArray()));
 		} catch (final Exception ignored) {
 		}
-		if (GlobalConfiguration.RUNNING_FROM_JAR) {
+		if (Configuration.RUNNING_FROM_JAR) {
 			String path = resource.toString();
 			try {
 				path = URLDecoder.decode(path, "UTF-8");
@@ -309,7 +302,7 @@ public class GlobalConfiguration {
 	}
 
 	public static URL getResourceURL(final String path) throws MalformedURLException {
-		return RUNNING_FROM_JAR ? GlobalConfiguration.class.getResource("/" + path) : new File(path).toURI().toURL();
+		return RUNNING_FROM_JAR ? Configuration.class.getResource("/" + path) : new File(path).toURI().toURL();
 	}
 
 	public static Image getImage(final String resource) {
@@ -321,7 +314,7 @@ public class GlobalConfiguration {
 	}
 
 	public static OperatingSystem getCurrentOperatingSystem() {
-		return GlobalConfiguration.CURRENT_OS;
+		return Configuration.CURRENT_OS;
 	}
 
 	static String httpUserAgent = null;
@@ -331,9 +324,9 @@ public class GlobalConfiguration {
 			return httpUserAgent;
 		}
 		String os = "Windows NT 6.1";
-		if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.MAC) {
+		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.MAC) {
 			os = "Macintosh; Intel Mac OS X 10_6_6";
-		} else if (GlobalConfiguration.getCurrentOperatingSystem() != GlobalConfiguration.OperatingSystem.WINDOWS) {
+		} else if (Configuration.getCurrentOperatingSystem() != Configuration.OperatingSystem.WINDOWS) {
 			os = "X11; Linux x86_64";
 		}
 		final StringBuilder buf = new StringBuilder(125);
@@ -360,7 +353,7 @@ public class GlobalConfiguration {
 		BufferedReader reader = null;
 		try {
 			is = new InputStreamReader(RUNNING_FROM_JAR ?
-					GlobalConfiguration.class.getClassLoader().getResourceAsStream(
+					Configuration.class.getClassLoader().getResourceAsStream(
 							Paths.Resources.VERSION) : new FileInputStream(Paths.Resources.VERSION));
 			reader = new BufferedReader(is);
 			final String s = reader.readLine().trim();

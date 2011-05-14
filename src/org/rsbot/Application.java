@@ -5,27 +5,34 @@ import org.rsbot.gui.BotGUI;
 import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.security.RestrictedSecurityManager;
-import org.rsbot.util.Extractor;
-import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.util.io.IOHelper;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Application {
 	private static BotGUI gui;
 
-	public static void main(final String[] args) throws Exception {
-		bootstrap();
-		new Extractor().run();
-		commands(args);
-		System.setSecurityManager(new RestrictedSecurityManager());
-		System.setProperty("java.io.tmpdir", GlobalConfiguration.Paths.getGarbageDirectory());
-		gui = new BotGUI();
-		gui.setVisible(true);
-		gui.addBot();
+	public static void main(final String[] args) {
+		try {
+			bootstrap();
+			extractResources();
+			commands(args);
+			System.setSecurityManager(new RestrictedSecurityManager());
+			System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
+			gui = new BotGUI();
+			gui.setVisible(true);
+			gui.addBot();
+		} catch (final Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	private static void commands(final String[] args) {
@@ -38,6 +45,27 @@ public class Application {
 					}
 				}
 			}
+		}
+	}
+
+	public static void extractResources() {
+		final ArrayList<String> extract = new ArrayList<String>(2);
+		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.WINDOWS) {
+			extract.add(Configuration.Paths.COMPILE_SCRIPTS_BAT);
+			extract.add(Configuration.Paths.COMPILE_FIND_JDK);
+		} else {
+			extract.add(Configuration.Paths.COMPILE_SCRIPTS_SH);
+		}
+		for (final String item : extract) {
+			final String path = Configuration.Paths.Resources.ROOT + "/" + item;
+			final InputStream in;
+			try {
+				in = Configuration.getResourceURL(path).openStream();
+			} catch (IOException ignored) {
+				continue;
+			}
+			final File output = new File(Configuration.Paths.getHomeDirectory(), item);
+			IOHelper.write(in, output);
 		}
 	}
 

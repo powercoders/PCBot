@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
-import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.Configuration;
 
 public class BotStub implements AppletStub, AppletContext {
 	private final Map<URL, WeakReference<Image>> IMAGE_CACHE = new HashMap<URL, WeakReference<Image>>();
@@ -133,10 +133,10 @@ public class BotStub implements AppletStub, AppletContext {
 
 	public void showDocument(final URL url, final String target) {
 		if (url.toString().contains("outofdate")) {
-			final String message = GlobalConfiguration.NAME + " is currently outdated, please wait patiently for a new version.";
+			final String message = Configuration.NAME + " is currently outdated, please wait patiently for a new version.";
 			log.severe(message);
 			JOptionPane.showMessageDialog(null, message, "Outdated", JOptionPane.WARNING_MESSAGE);
-			final File versionFile = new File(GlobalConfiguration.Paths.getVersionCache());
+			final File versionFile = new File(Configuration.Paths.getVersionCache());
 			if (versionFile.exists() && !versionFile.delete()) {
 				log.warning("Unable to clear cache.");
 			}

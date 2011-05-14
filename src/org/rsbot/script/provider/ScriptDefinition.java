@@ -1,4 +1,5 @@
-package org.rsbot.service;
+package org.rsbot.script.provider;
+
 
 /**
  * @author Jacmob
