@@ -72,6 +72,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("vassdascripts.comuf.com");//Dandan Boy - ?
 		whitelist.add("doout.net84.net");
 		whitelist.add("doout5.webs.com");
+		whitelist.add("terrabubble.netai.net");
+		whitelist.add("terrabubble.webs.com");
 
 		return whitelist;
 	}
