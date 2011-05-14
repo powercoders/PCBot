@@ -257,15 +257,10 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				openURL(Configuration.Paths.URLs.SITE);
 			} else if (option.equals(Messages.PROJECT)) {
 				openURL(Configuration.Paths.URLs.PROJECT);
-<<<<<<< HEAD
 			} else if (option.equals("About")) {
 				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + Configuration.Paths.URLs.SITE + "/ for more information."}, "About", JOptionPane.INFORMATION_MESSAGE);
 			} else if (option.equals(Messages.DEVUPDATE)) {
 				UpdateChecker.internalDeveloperUpdate(BotGUI.this);
-=======
-			} else if (option.equals(Messages.ABOUT)) {
-				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + Configuration.Paths.URLs.SITE + "/ for more information."}, option, JOptionPane.INFORMATION_MESSAGE);
->>>>>>> rsbot_internal_update/master
 			}
 		} else if (menu.equals("Tab")) {
 			final Bot curr = getCurrentBot();
