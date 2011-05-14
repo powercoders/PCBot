@@ -17,6 +17,7 @@ public interface Messages {
 	public static final String SAVESCREENSHOT = "Screenshot";
 	public static final String EXIT = "Exit";
 
+	public static final String LESSCPU = "Less CPU";
 	public static final String AUTOSHUTDOWN = "Auto Shutdown";
 	public static final String DEVUPDATE = "Update Bot";
 
