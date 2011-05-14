@@ -29,6 +29,9 @@ public class TeleportRunes extends Teleport {
 	}
 
 	private boolean hasRunes() {
+		if (runes == null) {
+			return true;
+		}
 		int i = 0;
 		for (Rune rune : runes) {
 			if (getRuneCount(rune) < count[i++]) {

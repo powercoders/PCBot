@@ -1,6 +1,7 @@
 package org.rsbot.script.wrappers;
 
 import org.rsbot.script.web.Route;
+import org.rsbot.script.methods.*;
 
 import java.util.LinkedList;
 
@@ -9,11 +10,12 @@ import java.util.LinkedList;
  *
  * @author Timer
  */
-public class RSWeb {
+public class RSWeb extends MethodProvider {
 	private final LinkedList<Route> routes = new LinkedList<Route>();
 
-	public RSWeb(final Route[] routes) {
-		for (Route route : routes) {
+	public RSWeb(final MethodContext ctx, final Route[] routes) {
+		super(ctx);
+		for (final Route route : routes) {
 			this.routes.addLast(route);
 		}
 	}
@@ -27,10 +29,25 @@ public class RSWeb {
 			Route route = routes.poll();
 			return route.execute();
 		}
+		final Route[] routes = methods.web.getWeb(getStart(), getDestination()).getRoutes();
+		if (routes != null) {
+			this.routes.clear();
+			for (final Route route : routes) {
+				this.routes.addLast(route);
+			}
+		}
 		return finished();
 	}
 
 	public boolean finished() {
 		return routes.size() == 0;
+	}
+
+	public RSTile getDestination() {
+		return routes.getLast().getDestination();
+	}
+
+	public RSTile getStart() {
+		return routes.getFirst().getStart();
 	}
 }

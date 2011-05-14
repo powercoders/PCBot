@@ -43,6 +43,7 @@ public class RouteStep extends MethodProvider {
 			}
 			switch (type) {
 				case PATH:
+					int loops = 0;
 					if (rspath == null) {
 						rspath = methods.walking.newTilePath(path);
 					}
@@ -51,6 +52,12 @@ public class RouteStep extends MethodProvider {
 							break;
 						}
 						sleep(random(50, 150));
+						if (loops > 1) {
+							loops = 0;
+							updatePath();
+						} else {
+							loops++;
+						}
 					}
 					return !inSomeRandom() && !someScriptPaused() &&  methods.calc.distanceTo(rspath.getEnd()) < 5;
 				case TELEPORT:
@@ -69,6 +76,26 @@ public class RouteStep extends MethodProvider {
 		return path;
 	}
 
+	public RSTile getDestination() {
+		switch(type) {
+			case PATH:
+				return path[path.length - 1];
+			case TELEPORT:
+				return teleport.teleportationLocation();
+		}
+		return null;
+	}
+
+	public RSTile getStart() {
+		switch(type) {
+			case PATH:
+				return path[0];
+			case TELEPORT:
+				return teleport.teleportationBeginning();
+		}
+		return null;
+	}
+
 	private boolean inSomeRandom() {
 		if (methods.bot.disableRandoms) {
 			return false;
@@ -84,12 +111,23 @@ public class RouteStep extends MethodProvider {
 	}
 
 	private boolean someScriptPaused() {
-		for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
-			if (!checkScript.isActive()) {
+		for (final Script checkScript : methods.bot.getScriptHandler().getRunningScripts().values()) {
+			if (!checkScript.isActive() || !checkScript.isRunning() || checkScript.isPaused()) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	private void updatePath() {
+		if (path != null) {
+			final RSTile start = path[0], end = path[path.length - 1];
+			RSTile[] nodePath = methods.web.generateNodePath(start, end);
+			if (nodePath != null) {
+				path = nodePath;
+				rspath = methods.walking.newTilePath(path);
+			}
+		}
 	}
 
 }

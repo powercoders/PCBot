@@ -33,8 +33,7 @@ public class RSTilePath extends RSPath {
 			return false;
 		}
 		if (next.equals(getEnd())) {
-			if (methods.calc.distanceTo(next) <= 1 || end && methods.players.getMyPlayer().isMoving() || next.equals(
-					methods.walking.getDestination())) {
+			if (methods.calc.distanceTo(next) <= 1 || end && methods.players.getMyPlayer().isMoving() || next.equals(methods.walking.getDestination())) {
 				return false;
 			}
 			end = true;
@@ -70,24 +69,53 @@ public class RSTilePath extends RSPath {
 	 */
 	@Override
 	public RSTile getNext() {
-		RSTile lastOnMap = null;
+		//Slightly excessive, but traverse() goes haywire when the path to the next tile goes off screen.
+		int closest = -1;
+		int distance = Integer.MAX_VALUE;
 		for (int i = 0; i < tiles.length; i++) {
-			if (methods.calc.tileOnMap(tiles[i]) && methods.calc.canReach(tiles[i], false)) {
-				lastOnMap = tiles[i];
-			} else if (lastOnMap != null && !methods.calc.tileOnMap(tiles[i]) && methods.calc.canReach(tiles[i], false)) {
-				break;
+			if (methods.calc.distanceTo(tiles[i]) < distance) {
+				closest = i;
+				distance = methods.calc.distanceTo(tiles[i]);
 			}
 		}
-		lastOnMap = lastOnMap != null && !methods.calc.tileOnMap(lastOnMap) ? methods.walking.getClosestTileOnMap(lastOnMap) : lastOnMap;
-		if (lastOnMap == null || lastOnMap.equals(methods.players.getMyPlayer().getLocation())) {
-			for (int i = tiles.length - 1; i >= 0; --i) {
-				if (methods.calc.tileOnMap(tiles[i]) && methods.calc.canReach(tiles[i], false)) {
-					lastOnMap = tiles[i];
+		if (closest != -1) {
+			if (!methods.calc.tileOnMap(tiles[closest])) {
+				RSTile lastKnownOnScreen = null;
+				for (int i = 0; i < tiles.length; i++) {
+					if (methods.calc.tileOnMap(tiles[i])) {
+						lastKnownOnScreen = tiles[i];
+					} else if (lastKnownOnScreen != null && !methods.calc.tileOnMap(tiles[i])) {
+						break;
+					}
+				}
+				if (lastKnownOnScreen != null && methods.calc.tileOnMap(lastKnownOnScreen)) {
+					return lastKnownOnScreen;
+				}
+				for (int i = tiles.length - 1; i >= 0; --i) {
+					if (methods.calc.tileOnMap(tiles[i])) {
+						return tiles[i];
+					}
+				}
+				return null;
+			}
+			int tileidx = -1;
+			for (int i = closest; i < tiles.length; i++) {
+				if (i - closest > 18 || !methods.calc.tileOnMap(tiles[i])) {
 					break;
+				} else if (methods.calc.tileOnMap(tiles[i])) {
+					tileidx = i;
 				}
 			}
+			if (tileidx != -1) {
+				return tiles[tileidx];
+			}
 		}
-		return lastOnMap;
+		for (int i = tiles.length - 1; i >= 0; --i) {
+			if (methods.calc.tileOnMap(tiles[i])) {
+				return tiles[i];
+			}
+		}
+		return null;
 	}
 
 	/**
