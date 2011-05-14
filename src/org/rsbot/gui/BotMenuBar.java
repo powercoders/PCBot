@@ -63,7 +63,7 @@ public class BotMenuBar extends JMenuBar {
 				{"Accounts", Messages.MENUSEPERATOR,
 						"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", Messages.MENUSEPERATOR,
 						"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", Messages.MENUSEPERATOR,
-						"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations", Messages.MENUSEPERATOR, Messages.TOGGLEFALSE + " " + Messages.AUTOSHUTDOWN}, constructDebugs(),
+						"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations", Messages.TOGGLEFALSE + " " + Messages.AUTOSHUTDOWN}, constructDebugs(),
 				{"Site", "Project", "About"}};
 	}
 
@@ -147,8 +147,8 @@ public class BotMenuBar extends JMenuBar {
 					commandCheckMap.get(disableFeature).setVisible(false);
 				}
 			}
-			// disable auto-shutdown for release builds
-			disable(Messages.AUTOSHUTDOWN);
+			// hide auto-shutdown for release builds
+			commandMenuItem.get(Messages.AUTOSHUTDOWN).setVisible(false);
 		}
 	}
 
