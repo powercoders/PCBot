@@ -17,15 +17,20 @@ import java.util.logging.Logger;
 public class Application {
 	private static BotGUI gui;
 
-	public static void main(final String[] args) throws Exception {
-		bootstrap();
-		new Extractor().run();
-		commands(args);
-		System.setSecurityManager(new RestrictedSecurityManager());
-		System.setProperty("java.io.tmpdir", GlobalConfiguration.Paths.getGarbageDirectory());
-		gui = new BotGUI();
-		gui.setVisible(true);
-		gui.addBot();
+	public static void main(final String[] args) {
+		try {
+			bootstrap();
+			new Extractor().run();
+			commands(args);
+			System.setSecurityManager(new RestrictedSecurityManager());
+			System.setProperty("java.io.tmpdir", GlobalConfiguration.Paths.getGarbageDirectory());
+			gui = new BotGUI();
+			gui.setVisible(true);
+			gui.addBot();
+		} catch (final Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	private static void commands(final String[] args) {
