@@ -67,6 +67,11 @@ public class ScriptDownloader {
 			}
 			text = text.replaceAll("\\<br\\s*\\/?\\s*\\>", "\r\n");
 			text = text.replaceAll("\\<.*?\\>", "");
+			text = text.replaceAll("&nbsp;", " ");
+			text = text.replaceAll("&quot;", "\"");
+			text = text.replaceAll("&lt;", "<");
+			text = text.replaceAll("&gt;", ">");
+			text = text.replaceAll("&amp;", "&");
 		}
 		final Matcher m = Pattern.compile("public\\s+class\\s+(\\w+)\\s+extends\\s+Script").matcher(text);
 		if (!m.find()) {
