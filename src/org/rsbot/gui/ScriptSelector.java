@@ -86,6 +86,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	private void init() {
+		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT));
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		bot.getScriptHandler().addScriptListener(ScriptSelector.this);
@@ -161,7 +162,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		table.setShowGrid(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(new TableSelectionListener());
-		setColumnWidths(table, 30, 175, 50, 100);
+		setColumnWidths(table, 30, 175, 55, 95);
 		final JToolBar toolBar = new JToolBar();
 		toolBar.setMargin(new Insets(1, 1, 1, 1));
 		toolBar.setFloatable(false);
@@ -286,11 +287,11 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private static class ScriptTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
 		public static final ImageIcon ICON_SCRIPT_SRC = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_SRC));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_EDIT));
 		public static final ImageIcon ICON_SCRIPT_PRE = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_PRE));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_GEAR));
 		public static final ImageIcon ICON_SCRIPT_DRM = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_DRM));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_LIVE));
 		private final List<ScriptDefinition> scripts;
 		private final List<ScriptDefinition> matches;
 
