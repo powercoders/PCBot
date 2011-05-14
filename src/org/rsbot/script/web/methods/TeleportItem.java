@@ -42,11 +42,11 @@ public class TeleportItem extends Teleport {
 	}
 
 	/**
-	 * Performs the action on the item.
+	 * Preforms the action on the item.
 	 *
 	 * @return <tt>true</tt> if we succeeded.
 	 */
-	public boolean perform() {
+	public boolean preform() {
 		RSItem item = methods.inventory.getItem(itemIDs);
 		boolean equip = false;
 		if (item == null) {

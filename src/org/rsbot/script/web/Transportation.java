@@ -10,7 +10,7 @@ import org.rsbot.script.wrappers.RSTile;
 public interface Transportation {
 	boolean isApplicable(final RSTile base, final RSTile destination);
 
-	boolean perform();
+	boolean preform();
 
 	double getDistance(final RSTile destination);
 }

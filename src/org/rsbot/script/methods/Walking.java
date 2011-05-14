@@ -121,13 +121,16 @@ public class Walking extends MethodProvider {
 		}
 		final Point p = methods.calc.tileToMinimap(dest);
 		if (p.x != -1 && p.y != -1) {
-			methods.mouse.move(p, random(-7, 7) , random(-7, 7), random(5, 30));
+			methods.mouse.move(p);
 			final Point p2 = methods.calc.tileToMinimap(dest);
 			if (p2.x != -1 && p2.y != -1) {
-				if (!methods.mouse.getLocation().equals(p2)) {
+				if (!methods.mouse.getLocation().equals(p2)) {//We must've moved while walking, move again!
 					methods.mouse.move(p2);
 				}
-				methods.mouse.click(true, random(0, 20));
+				if (!methods.mouse.getLocation().equals(p2)) {//Get exact since we're moving... should be removed?
+					methods.mouse.hop(p2);
+				}
+				methods.mouse.click(true);
 				return true;
 			}
 		}

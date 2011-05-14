@@ -17,7 +17,7 @@ public class TeleportJewelry extends TeleportItem {
 	}
 
 	/**
-	 * Performs the usage on the jewelery.
+	 * Preforms the usage on the jewelery.
 	 *
 	 * @return <tt>true</tt> if succeeded.
 	 */
