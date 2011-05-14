@@ -50,7 +50,7 @@ public class BotMenuBar extends JMenuBar {
 
 		TITLES = new String[]{"File", "Edit", "View", "Help"};
 		ELEMENTS = new String[][]{
-				{"New Bot", "Close Bot", "-",
+				{"New Bot", "Close Bot","Snap to tray", "-",
 						/*"Service Key", "-",*/
 						"Run Script", "Stop Script", "Pause Script", "-",
 						"Save Screenshot", "-",
