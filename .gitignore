@@ -17,7 +17,7 @@
 /lib/*.jar
 /scripts/*.class
 /temp/*
-/scripts
+/scripts/
 /temp.txt
 /build.xml
 /manifest.mf
