@@ -37,15 +37,15 @@ public class TeleportObject extends Teleport {
 		RSObject obj = methods.objects.getNearest(objectID);
 		if (obj != null) {
 			if (obj.doAction(action)) {
-				if (methods.interfaces.canContinue()) {
-					methods.interfaces.clickContinue();
-					sleep(100);
-				}
-				if (comp != null) {
-					comp.doClick();
-				}
 				final long tO = System.currentTimeMillis();
 				while (System.currentTimeMillis() - tO < 10000) {
+					if (methods.interfaces.canContinue()) {
+						methods.interfaces.clickContinue();
+						sleep(100);
+					}
+					if (comp != null) {
+						comp.doClick();
+					}
 					sleep(100);
 					if (methods.calc.distanceBetween(methods.players.getMyPlayer().getLocation(), teleportationLocation()) < 15) {
 						break;

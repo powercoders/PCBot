@@ -58,6 +58,7 @@ public class BotToolBar extends JToolBar {
 	private final JButton screenshotButton;
 	private final JButton userInputButton;
 	private final JButton runScriptButton;
+	private final JButton stopScriptButton;
 
 	private final ActionListener listener;
 	private int idx;
@@ -82,6 +83,18 @@ public class BotToolBar extends JToolBar {
 		screenshotButton.setFocusable(false);
 		screenshotButton.setToolTipText(screenshotButton.getText());
 		screenshotButton.setText("");
+		
+
+		stopScriptButton = new JButton("Stop Script", new ImageIcon(
+				Configuration.getImage(Configuration.Paths.Resources.ICON_DELETE)));
+		stopScriptButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				menu.doClick(Messages.STOPSCRIPT);
+			}
+		});
+		stopScriptButton.setFocusable(false);
+		stopScriptButton.setToolTipText(stopScriptButton.getText());
+		stopScriptButton.setText("");
 
 		userInputButton = new JButton("Input", new ImageIcon(getInputImage(inputOverride, inputState)));
 		userInputButton.addActionListener(new ActionListener() {
@@ -121,13 +134,13 @@ public class BotToolBar extends JToolBar {
 		add(Box.createHorizontalGlue());
 		add(screenshotButton);
 		add(runScriptButton);
+		add(stopScriptButton);
 		add(userInputButton);
-
 		updateSelection(false);
 	}
 
 	public void addTab() {
-		final int idx = getComponentCount() - 4;
+		final int idx = getComponentCount() - 5;
 		add(new BotButton("RuneScape", ICON_BOT), idx);
 		validate();
 		setSelection(idx);
@@ -143,13 +156,23 @@ public class BotToolBar extends JToolBar {
 			}
 		});
 	}
+	
+	public void enableStopButton() {
+		stopScriptButton.setEnabled(true);
+		stopScriptButton.setVisible(true);
+	}
+	
+	public void disableStopButton() {
+		stopScriptButton.setEnabled(false);
+		stopScriptButton.setVisible(false);
+	}
 
 	public void setTabLabel(final int idx, final String label) {
 		((BotButton) getComponentAtIndex(idx)).setText(label);
 	}
 
 	public int getCurrentTab() {
-		if (idx > -1 && idx < getComponentCount() - 3) {
+		if (idx > -1 && idx < getComponentCount() - 4) {
 			return idx;
 		} else {
 			return -1;
@@ -170,7 +193,7 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void setHome(final boolean home) {
-		for (final JButton button : new JButton[] {screenshotButton, userInputButton, runScriptButton}) {
+		for (final JButton button : new JButton[] { screenshotButton, stopScriptButton, userInputButton, runScriptButton}) {
 			button.setEnabled(!home);
 			button.setVisible(!home);
 		}

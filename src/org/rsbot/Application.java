@@ -31,6 +31,7 @@ public class Application {
 			gui.addBot();
 		} catch (final Exception e) {
 			e.printStackTrace();
+			System.out.print(e.getMessage());
 			System.exit(1);
 		}
 	}
