@@ -1,76 +1,78 @@
 package org.rsbot.script.web;
 
-import org.rsbot.script.Random;
+import org.rsbot.script.Script;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
-import org.rsbot.script.randoms.LoginBot;
 import org.rsbot.script.wrappers.RSPath;
 import org.rsbot.script.wrappers.RSTile;
 
+import java.util.Map;
+
 public class RouteStep extends MethodProvider {
-	private final Type type;
-	private RSTile[] path = null;
-	private RSPath rspath = null;
-	private Teleport teleport = null;
+    private final Type type;
+    private RSTile[] path = null;
+    private RSPath rspath = null;
+    private Teleport teleport = null;
 
-	public static enum Type {
-		PATH, TELEPORT
-	}
+    public static enum Type {
+        PATH, TELEPORT
+    }
 
-	public RouteStep(final MethodContext ctx, final Object step) {
-		super(ctx);
-		if (step instanceof Teleport) {
-			this.type = Type.TELEPORT;
-			this.teleport = (Teleport) step;
-		} else if (step instanceof RSTile[]) {
-			this.type = Type.PATH;
-			this.path = (RSTile[]) step;
-		} else if (step instanceof RSTile) {
-			this.type = Type.PATH;
-			this.path = new RSTile[]{(RSTile) step};
-		} else {
-			throw new IllegalArgumentException("Step is of an invalid type!");
-		}
-	}
+    public RouteStep(final MethodContext ctx, final Object step) {
+        super(ctx);
+        if (step instanceof Teleport) {
+            this.type = Type.TELEPORT;
+            this.teleport = (Teleport) step;
+        } else if (step instanceof RSTile[]) {
+            this.type = Type.PATH;
+            this.path = (RSTile[]) step;
+        } else if (step instanceof RSTile) {
+            this.type = Type.PATH;
+            this.path = new RSTile[]{(RSTile) step};
+        } else {
+            throw new IllegalArgumentException("Step is of an invalid type!");
+        }
+    }
 
-	public boolean execute() {
-		switch (type) {
-			case PATH:
-				if (rspath == null) {
-					rspath = methods.walking.newTilePath(path);
-				}
-				while (!inSomeRandom()) {
-					if (!rspath.traverse() || methods.calc.distanceTo(rspath.getEnd()) < 5) {
-						break;
-					}
-					sleep(random(50, 150));
-				}
-				return !inSomeRandom() && methods.calc.distanceTo(rspath.getEnd()) < 5;
-			case TELEPORT:
-				return teleport != null && teleport.preform();
-		}
-		return false;
-	}
+    public boolean execute() {
+        switch (type) {
+            case PATH:
+                if (rspath == null && path != null) {
+                    rspath = methods.walking.newTilePath(path);
+                }
+                while (scriptActive()) {
+                    if (rspath == null || !rspath.isValid() || !rspath.traverse() || methods.calc.distanceTo(rspath.getEnd()) < 5) {
+                        break;
+                    }
+                    sleep(random(50, 150));
+                }
+                return scriptActive() && methods.calc.distanceTo(rspath.getEnd()) < 5;
+            case TELEPORT:
+                return teleport != null && teleport.perform();
+            default:
+                return false;
+        }
+    }
 
-	public Teleport getTeleport() {
-		return teleport;
-	}
+    public Teleport getTeleport() {
+        return teleport;
+    }
 
-	public RSTile[] getPath() {
-		return path;
-	}
+    public RSTile[] getPath() {
+        return path;
+    }
 
-	private boolean inSomeRandom() {
-		if (methods.bot.disableRandoms) {
-			return false;
-		}
-		for (final Random random : methods.bot.getScriptHandler().getRandoms()) {
-			if (random.isEnabled() && !(methods.bot.disableAutoLogin && random instanceof LoginBot)) {
-				if (random.activateCondition()) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    private boolean scriptActive() {
+        Map<Integer, Script> scriptsMap = methods.bot.getScriptHandler().getRunningScripts();
+        Script[] scripts = scriptsMap.values().toArray(new Script[scriptsMap.values().size()]);
+        for (final Script script : scripts) {
+            if (script.getBot().equals(methods.bot)) {
+                if (!script.isActive()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 }

@@ -33,7 +33,7 @@ public class TeleportObject extends Teleport {
 		return methods.calc.distanceBetween(base, teleportationLocation()) > 30 && methods.calc.distanceBetween(teleportationLocation(), destination) < methods.calc.distanceTo(destination);
 	}
 
-	public boolean preform() {
+	public boolean perform() {
 		RSObject obj = methods.objects.getNearest(objectID);
 		if (obj != null) {
 			if (obj.doAction(action)) {
