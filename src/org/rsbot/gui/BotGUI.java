@@ -17,7 +17,7 @@ import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
 import org.rsbot.util.io.ScreenshotUtil;
 import org.rsbot.util.ScriptDownloader;
-import org.rsbot.util.UpdateUtil;
+import org.rsbot.util.UpdateChecker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +66,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					new SplashAd(BotGUI.this).display();
 				}
 				if (Configuration.RUNNING_FROM_JAR) {
-					UpdateUtil.check(BotGUI.this);
+					UpdateChecker.notify(BotGUI.this);
 				}
 				if (Configuration.Twitter.ENABLED) {
 					TwitterUpdates.loadTweets(Configuration.Twitter.MESSAGES);
@@ -86,7 +86,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	@Override
 	public void setTitle(final String title) {
 		String t = Configuration.NAME + " v" + Configuration.getVersionFormatted();
-		final int v = Configuration.getVersion(), l = UpdateUtil.getLatestVersion();
+		final int v = Configuration.getVersion(), l = UpdateChecker.getLatestVersion();
 		if (v > l) {
 			t += " beta";
 		}
