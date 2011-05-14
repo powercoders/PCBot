@@ -64,7 +64,7 @@ public class BotMenuBar extends JMenuBar {
 						"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", Messages.MENUSEPERATOR,
 						"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", Messages.MENUSEPERATOR,
 						"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations", Messages.MENUSEPERATOR, Messages.TOGGLEFALSE + " " + Messages.AUTOSHUTDOWN}, constructDebugs(),
-				{"Site", "Project", "About", "Feedback"}};
+				{"Site", "Project", "About", "Feedback", Messages.DEVUPDATE}};
 	}
 
 	private static String[] constructDebugs() {
@@ -119,6 +119,7 @@ public class BotMenuBar extends JMenuBar {
 		map.put("Project", GlobalConfiguration.Paths.Resources.ICON_USEREDIT);
 		map.put("About", GlobalConfiguration.Paths.Resources.ICON_INFO);
 		map.put(Messages.FEEDBACK, GlobalConfiguration.Paths.Resources.ICON_CHART_CURVE);
+		map.put(Messages.DEVUPDATE, GlobalConfiguration.Paths.Resources.ICON_APPADD);
 		for (final Entry<String, String> item : map.entrySet()) {
 			final JMenuItem menu = commandMenuItem.get(item.getKey());
 			menu.setIcon(new ImageIcon(GlobalConfiguration.getImage(item.getValue())));
@@ -141,6 +142,7 @@ public class BotMenuBar extends JMenuBar {
 		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
 		commandCheckMap.get("Disable Monitoring").setVisible(false);
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
+		commandMenuItem.get(Messages.DEVUPDATE).setVisible(!GlobalConfiguration.RUNNING_FROM_JAR);
 		commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
 		if (GlobalConfiguration.RUNNING_FROM_JAR) {
 			for (String disableFeature : DEVELOPER_CHECK_FEATURES) {

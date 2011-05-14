@@ -265,6 +265,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + GlobalConfiguration.Paths.URLs.SITE + "/ for more information."}, "About", JOptionPane.INFORMATION_MESSAGE);
 			} else if (option.equals(Messages.FEEDBACK)) {
 				feedBack();
+			} else if (option.equals(Messages.DEVUPDATE)) {
+				UpdateUtil.internalDeveloperUpdate(BotGUI.this);
 			}
 		} else if (menu.equals("Tab")) {
 			final Bot curr = getCurrentBot();
