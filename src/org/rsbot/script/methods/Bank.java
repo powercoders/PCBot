@@ -616,10 +616,12 @@ public class Bank extends MethodProvider {
 		if (item == null) {
 			return false;
 		}
-		while (item.getRelativeX() == 0 && methods.bank.getCurrentTab() != 0) {
+		int t = 0;
+		while (item.getRelativeX() == 0 && methods.bank.getCurrentTab() != 0 && t < 5) {
 			if (methods.interfaces.getComponent(Bank.INTERFACE_BANK, Bank.INTERFACE_BANK_TAB[0]).doClick()) {
 				sleep(random(800, 1300));
 			}
+			t ++;
 		}
 		if (!methods.interfaces.scrollTo(item, (Bank.INTERFACE_BANK << 16) + Bank.INTERFACE_BANK_SCROLLBAR)) {
 			return false;
