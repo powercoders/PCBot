@@ -136,7 +136,7 @@ public final class UpdateChecker {
 		}
 	}
 
-	private static String findGit() {
+	public static String findGit() {
 		final File x64 = new File("C:\\Program Files (x86)\\Git\\bin\\git.exe");
 		final File x32 = new File("C:\\Program Files\\Git\\bin\\git.exe");
 		if (x64.exists()) {

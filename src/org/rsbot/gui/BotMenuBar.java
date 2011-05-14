@@ -6,6 +6,7 @@ import org.rsbot.bot.Bot;
 import org.rsbot.event.impl.*;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.event.listeners.TextPaintListener;
+import org.rsbot.util.UpdateChecker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,7 +142,7 @@ public class BotMenuBar extends JMenuBar {
 		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
 		commandCheckMap.get("Disable Monitoring").setVisible(false);
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
-		commandMenuItem.get(Messages.DEVUPDATE).setVisible(!Configuration.RUNNING_FROM_JAR);
+		commandMenuItem.get(Messages.DEVUPDATE).setVisible(new File(Configuration.Paths.ROOT, ".git").exists() && UpdateChecker.findGit() != null);
 		commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
 		if (Configuration.RUNNING_FROM_JAR) {
 			for (String disableFeature : DEVELOPER_CHECK_FEATURES) {
