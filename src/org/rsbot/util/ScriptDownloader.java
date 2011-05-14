@@ -13,7 +13,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.rsbot.util.GlobalConfiguration.OperatingSystem;
+import org.rsbot.Configuration;
+import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IOHelper;
 
@@ -36,7 +37,7 @@ public class ScriptDownloader {
 		}
 		source = normalisePastebin(source);
 		log.fine("Downloading: " + source);
-		final File output = new File(GlobalConfiguration.Paths.getGarbageDirectory(), Integer.toString(source.hashCode()) + ".script.bin");
+		final File output = new File(Configuration.Paths.getGarbageDirectory(), Integer.toString(source.hashCode()) + ".script.bin");
 		HttpURLConnection con = null;
 		try {
 			con = HttpClient.download(new URL(source), output);
@@ -45,7 +46,7 @@ public class ScriptDownloader {
 		}
 		String name = classFileName(output);
 		if (name != null) {
-			final File saveto = new File(GlobalConfiguration.Paths.getScriptsPrecompiledDirectory());
+			final File saveto = new File(Configuration.Paths.getScriptsPrecompiledDirectory());
 			if (output.renameTo(saveto)) {
 				log.info("Saved precompiled script " + name);
 			} else {
@@ -70,7 +71,7 @@ public class ScriptDownloader {
 			return;
 		}
 		name = m.group(1);
-		final File dir = new File(GlobalConfiguration.Paths.getScriptsSourcesDirectory());
+		final File dir = new File(Configuration.Paths.getScriptsSourcesDirectory());
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
@@ -84,10 +85,10 @@ public class ScriptDownloader {
 			return;
 		}
 		String classpath;
-		if (GlobalConfiguration.RUNNING_FROM_JAR) {
-			classpath = GlobalConfiguration.Paths.getRunningJarPath();
+		if (Configuration.RUNNING_FROM_JAR) {
+			classpath = Configuration.Paths.getRunningJarPath();
 		} else {
-			classpath = new File(GlobalConfiguration.Paths.ROOT + File.separator + "bin").getAbsolutePath();
+			classpath = new File(Configuration.Paths.ROOT + File.separator + "bin").getAbsolutePath();
 		}
 		try {
 			Runtime.getRuntime().exec(new String[]{javac, "-cp", classpath, saveto.getAbsolutePath()});
@@ -155,7 +156,7 @@ public class ScriptDownloader {
 
 	private static String findJavac() {
 		try {
-			if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
+			if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
 				String version = readProcess("REG QUERY \"HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\" /v CurrentVersion");
 				version = version.substring(version.indexOf("REG_SZ") + 6).trim();
 				String path = readProcess("REG QUERY \"HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\" + version + "\" /v JavaHome");

@@ -1,7 +1,7 @@
 package org.rsbot.script.util;
 
+import org.rsbot.Configuration;
 import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.io.IniParser;
 
 import java.io.*;
@@ -13,7 +13,7 @@ import java.util.HashMap;
  * @author Timer
  */
 public class BankCache {
-	private final static File cacheFile = new File(GlobalConfiguration.Paths.getBankCache());
+	private final static File cacheFile = new File(Configuration.Paths.getBankCache());
 	private final static HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
 	private static final Object lock = new Object();
 

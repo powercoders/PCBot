@@ -1,5 +1,7 @@
 package org.rsbot.gui;
 
+import org.rsbot.Configuration;
+import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.bot.Bot;
 import org.rsbot.log.TextAreaLogHandler;
 import org.rsbot.script.Script;
@@ -13,8 +15,6 @@ import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.GlobalConfiguration.OperatingSystem;
 import org.rsbot.util.io.ScreenshotUtil;
 import org.rsbot.util.ScriptDownloader;
 import org.rsbot.util.UpdateUtil;
@@ -65,11 +65,11 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (showAds) {
 					new SplashAd(BotGUI.this).display();
 				}
-				if (GlobalConfiguration.RUNNING_FROM_JAR) {
+				if (Configuration.RUNNING_FROM_JAR) {
 					UpdateUtil.check(BotGUI.this);
 				}
-				if (GlobalConfiguration.Twitter.ENABLED) {
-					TwitterUpdates.loadTweets(GlobalConfiguration.Twitter.MESSAGES);
+				if (Configuration.Twitter.ENABLED) {
+					TwitterUpdates.loadTweets(Configuration.Twitter.MESSAGES);
 				}
 				new Thread() {
 					@Override
@@ -85,8 +85,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	@Override
 	public void setTitle(final String title) {
-		String t = GlobalConfiguration.NAME + " v" + GlobalConfiguration.getVersionFormatted();
-		final int v = GlobalConfiguration.getVersion(), l = UpdateUtil.getLatestVersion();
+		String t = Configuration.NAME + " v" + Configuration.getVersionFormatted();
+		final int v = Configuration.getVersion(), l = UpdateUtil.getLatestVersion();
 		if (v > l) {
 			t += " beta";
 		}
@@ -191,7 +191,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 							}
 							if (!menuBar.isTicked(option)) {
 								log.info("Shutdown cancelled");
-							} else if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
+							} else if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
 								try {
 									Runtime.getRuntime().exec("shutdown.exe", new String[]{"-s"});
 									cleanExit(true);
@@ -258,11 +258,11 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			}
 		} else if (menu.equals(Messages.HELP)) {
 			if (option.equals("Site")) {
-				openURL(GlobalConfiguration.Paths.URLs.SITE);
+				openURL(Configuration.Paths.URLs.SITE);
 			} else if (option.equals("Project")) {
-				openURL(GlobalConfiguration.Paths.URLs.PROJECT);
+				openURL(Configuration.Paths.URLs.PROJECT);
 			} else if (option.equals("About")) {
-				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + GlobalConfiguration.Paths.URLs.SITE + "/ for more information."}, "About", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + Configuration.Paths.URLs.SITE + "/ for more information."}, "About", JOptionPane.INFORMATION_MESSAGE);
 			}
 		} else if (menu.equals("Tab")) {
 			final Bot curr = getCurrentBot();
@@ -355,7 +355,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	public void addBot() {
 		final int max = 6;
-		if (bots.size() >= max && GlobalConfiguration.RUNNING_FROM_JAR) {
+		if (bots.size() >= max && Configuration.RUNNING_FROM_JAR) {
 			log.warning("Cannot run more than " + Integer.toString(max) + " bots");
 			return;
 		}
@@ -464,7 +464,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				}
 			}
 		});
-		setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON));
+		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON));
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -534,13 +534,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	public static void openURL(final String url) {
-		final GlobalConfiguration.OperatingSystem os = GlobalConfiguration.getCurrentOperatingSystem();
+		final Configuration.OperatingSystem os = Configuration.getCurrentOperatingSystem();
 		try {
-			if (os == GlobalConfiguration.OperatingSystem.MAC) {
+			if (os == Configuration.OperatingSystem.MAC) {
 				final Class<?> fileMgr = Class.forName("com.apple.eio.FileManager");
 				final Method openURL = fileMgr.getDeclaredMethod("openURL", new Class[]{String.class});
 				openURL.invoke(null, url);
-			} else if (os == GlobalConfiguration.OperatingSystem.WINDOWS) {
+			} else if (os == Configuration.OperatingSystem.WINDOWS) {
 				Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
 			} else {
 				final String[] browsers = {"firefox", "opera", "konqueror", "epiphany", "mozilla", "netscape", "google-chrome", "chromium-browser"};
@@ -606,8 +606,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	public void setTray() {
 		if (tray == null) {
-			final Image image = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON);
-			tray = new TrayIcon(image, GlobalConfiguration.NAME, null);
+			final Image image = Configuration.getImage(Configuration.Paths.Resources.ICON);
+			tray = new TrayIcon(image, Configuration.NAME, null);
 			tray.setImageAutoSize(true);
 			tray.addMouseListener(new MouseListener() {
 				public void mouseClicked(MouseEvent arg0) {

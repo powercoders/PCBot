@@ -13,8 +13,8 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import org.rsbot.Configuration;
 import org.rsbot.bot.Bot;
-import org.rsbot.util.GlobalConfiguration;
 
 public class ScreenshotUtil {
 
@@ -23,7 +23,7 @@ public class ScreenshotUtil {
 
 	public static void saveScreenshot(final Bot bot, final boolean hideUsername) {
 		final String name = ScreenshotUtil.dateFormat.format(new Date()) + ".png";
-		final File dir = new File(GlobalConfiguration.Paths.getScreenshotsDirectory());
+		final File dir = new File(Configuration.Paths.getScreenshotsDirectory());
 		if (dir.isDirectory() || dir.mkdirs()) {
 			ScreenshotUtil.saveScreenshot(bot, new File(dir, name), "png", hideUsername);
 		}
@@ -34,7 +34,7 @@ public class ScreenshotUtil {
 			filename = filename.concat(".png");
 		}
 
-		final File dir = new File(GlobalConfiguration.Paths.getScreenshotsDirectory());
+		final File dir = new File(Configuration.Paths.getScreenshotsDirectory());
 		if (dir.isDirectory() || dir.mkdirs()) {
 			ScreenshotUtil.saveScreenshot(bot, new File(dir, filename), "png", hideUsername);
 		}

@@ -1,11 +1,11 @@
 package org.rsbot.gui;
 
+import org.rsbot.Configuration;
+import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.bot.Bot;
 import org.rsbot.event.impl.*;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.event.listeners.TextPaintListener;
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.GlobalConfiguration.OperatingSystem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -104,23 +104,23 @@ public class BotMenuBar extends JMenuBar {
 
 	private void constructItemIcons() {
 		final HashMap<String, String> map = new HashMap<String, String>(16);
-		map.put(Messages.NEWBOT, GlobalConfiguration.Paths.Resources.ICON_APPADD);
-		map.put(Messages.CLOSEBOT, GlobalConfiguration.Paths.Resources.ICON_APPDELETE);
-		map.put(Messages.SERVICEKEY, GlobalConfiguration.Paths.Resources.ICON_KEY);
-		map.put(Messages.ADDSCRIPT, GlobalConfiguration.Paths.Resources.ICON_SCRIPT_ADD);
-		map.put(Messages.RUNSCRIPT, GlobalConfiguration.Paths.Resources.ICON_PLAY);
-		map.put(Messages.STOPSCRIPT, GlobalConfiguration.Paths.Resources.ICON_DELETE);
-		map.put(Messages.PAUSESCRIPT, GlobalConfiguration.Paths.Resources.ICON_PAUSE);
-		map.put(Messages.SAVESCREENSHOT, GlobalConfiguration.Paths.Resources.ICON_PHOTO);
-		map.put(Messages.HIDEBOT, GlobalConfiguration.Paths.Resources.ICON_ARROWIN);
-		map.put(Messages.EXIT, GlobalConfiguration.Paths.Resources.ICON_CLOSE);
-		map.put("Accounts", GlobalConfiguration.Paths.Resources.ICON_REPORTKEY);
-		map.put("Site", GlobalConfiguration.Paths.Resources.ICON_WEBLINK);
-		map.put("Project", GlobalConfiguration.Paths.Resources.ICON_USEREDIT);
-		map.put("About", GlobalConfiguration.Paths.Resources.ICON_INFO);
+		map.put(Messages.NEWBOT, Configuration.Paths.Resources.ICON_APPADD);
+		map.put(Messages.CLOSEBOT, Configuration.Paths.Resources.ICON_APPDELETE);
+		map.put(Messages.SERVICEKEY, Configuration.Paths.Resources.ICON_KEY);
+		map.put(Messages.ADDSCRIPT, Configuration.Paths.Resources.ICON_SCRIPT_ADD);
+		map.put(Messages.RUNSCRIPT, Configuration.Paths.Resources.ICON_PLAY);
+		map.put(Messages.STOPSCRIPT, Configuration.Paths.Resources.ICON_DELETE);
+		map.put(Messages.PAUSESCRIPT, Configuration.Paths.Resources.ICON_PAUSE);
+		map.put(Messages.SAVESCREENSHOT, Configuration.Paths.Resources.ICON_PHOTO);
+		map.put(Messages.HIDEBOT, Configuration.Paths.Resources.ICON_ARROWIN);
+		map.put(Messages.EXIT, Configuration.Paths.Resources.ICON_CLOSE);
+		map.put("Accounts", Configuration.Paths.Resources.ICON_REPORTKEY);
+		map.put("Site", Configuration.Paths.Resources.ICON_WEBLINK);
+		map.put("Project", Configuration.Paths.Resources.ICON_USEREDIT);
+		map.put("About", Configuration.Paths.Resources.ICON_INFO);
 		for (final Entry<String, String> item : map.entrySet()) {
 			final JMenuItem menu = commandMenuItem.get(item.getKey());
-			menu.setIcon(new ImageIcon(GlobalConfiguration.getImage(item.getValue())));
+			menu.setIcon(new ImageIcon(Configuration.getImage(item.getValue())));
 		}
 	}
 
@@ -140,8 +140,8 @@ public class BotMenuBar extends JMenuBar {
 		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
 		commandCheckMap.get("Disable Monitoring").setVisible(false);
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
-		commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
-		if (GlobalConfiguration.RUNNING_FROM_JAR) {
+		commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
+		if (Configuration.RUNNING_FROM_JAR) {
 			for (String disableFeature : DEVELOPER_CHECK_FEATURES) {
 				if (commandCheckMap.containsKey(disableFeature)) {
 					commandCheckMap.get(disableFeature).setVisible(false);
@@ -159,7 +159,7 @@ public class BotMenuBar extends JMenuBar {
 	public void setPauseScript(final boolean pause) {
 		final JMenuItem item = commandMenuItem.get(Messages.PAUSESCRIPT);
 		item.setText(pause ? "Resume Script" : Messages.PAUSESCRIPT);
-		final Image image = GlobalConfiguration.getImage(pause ? GlobalConfiguration.Paths.Resources.ICON_START : GlobalConfiguration.Paths.Resources.ICON_PAUSE);
+		final Image image = Configuration.getImage(pause ? Configuration.Paths.Resources.ICON_START : Configuration.Paths.Resources.ICON_PAUSE);
 		item.setIcon(new ImageIcon(image));
 	}
 
@@ -232,7 +232,7 @@ public class BotMenuBar extends JMenuBar {
 	}
 
 	public void loadPrefs() {
-		final String path = GlobalConfiguration.Paths.getMenuBarPrefs();
+		final String path = Configuration.Paths.getMenuBarPrefs();
 		if (!new File(path).exists()) {
 			return;
 		}
@@ -262,7 +262,7 @@ public class BotMenuBar extends JMenuBar {
 	}
 
 	public void savePrefs() {
-		final String path = GlobalConfiguration.Paths.getMenuBarPrefs();
+		final String path = Configuration.Paths.getMenuBarPrefs();
 		FileWriter fstream = null;
 		BufferedWriter out = null;
 		try {

@@ -5,7 +5,6 @@ import org.rsbot.gui.BotGUI;
 import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.security.RestrictedSecurityManager;
-import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.io.IOHelper;
 
 import java.awt.*;
@@ -26,7 +25,7 @@ public class Application {
 			extractResources();
 			commands(args);
 			System.setSecurityManager(new RestrictedSecurityManager());
-			System.setProperty("java.io.tmpdir", GlobalConfiguration.Paths.getGarbageDirectory());
+			System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
 			gui = new BotGUI();
 			gui.setVisible(true);
 			gui.addBot();
@@ -51,21 +50,21 @@ public class Application {
 
 	public static void extractResources() {
 		final ArrayList<String> extract = new ArrayList<String>(2);
-		if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.WINDOWS) {
-			extract.add(GlobalConfiguration.Paths.COMPILE_SCRIPTS_BAT);
-			extract.add(GlobalConfiguration.Paths.COMPILE_FIND_JDK);
+		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.WINDOWS) {
+			extract.add(Configuration.Paths.COMPILE_SCRIPTS_BAT);
+			extract.add(Configuration.Paths.COMPILE_FIND_JDK);
 		} else {
-			extract.add(GlobalConfiguration.Paths.COMPILE_SCRIPTS_SH);
+			extract.add(Configuration.Paths.COMPILE_SCRIPTS_SH);
 		}
 		for (final String item : extract) {
-			final String path = GlobalConfiguration.Paths.Resources.ROOT + "/" + item;
+			final String path = Configuration.Paths.Resources.ROOT + "/" + item;
 			final InputStream in;
 			try {
-				in = GlobalConfiguration.getResourceURL(path).openStream();
+				in = Configuration.getResourceURL(path).openStream();
 			} catch (IOException ignored) {
 				continue;
 			}
-			final File output = new File(GlobalConfiguration.Paths.getHomeDirectory(), item);
+			final File output = new File(Configuration.Paths.getHomeDirectory(), item);
 			IOHelper.write(in, output);
 		}
 	}

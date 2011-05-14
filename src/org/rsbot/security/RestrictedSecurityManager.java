@@ -1,10 +1,10 @@
 package org.rsbot.security;
 
 import org.rsbot.Application;
+import org.rsbot.Configuration;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
-import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.ScriptDownloader;
 import org.rsbot.util.UpdateUtil;
 import sun.font.FontManager;
@@ -291,23 +291,23 @@ public class RestrictedSecurityManager extends SecurityManager {
 	private void checkFilePath(String path, final boolean readOnly) {
 		path = new File(path).getAbsolutePath();
 		if (isCallerScript()) {
-			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())) {
+			if (!path.startsWith(Configuration.Paths.getScriptCacheDirectory())) {
 				boolean fail = true;
-				if (!GlobalConfiguration.RUNNING_FROM_JAR) {
+				if (!Configuration.RUNNING_FROM_JAR) {
 					// allow project resource directory if not running from JAR (i.e. in eclipse)
-					String check = new File(GlobalConfiguration.Paths.ROOT).getAbsolutePath();
+					String check = new File(Configuration.Paths.ROOT).getAbsolutePath();
 					try {
 						check = new File(check).getCanonicalPath();
 					} catch (final IOException ignored) {
 					}
 					fail = !path.startsWith(check);
 				} else {
-					if (readOnly && path.equals(GlobalConfiguration.Paths.getRunningJarPath())) {
+					if (readOnly && path.equals(Configuration.Paths.getRunningJarPath())) {
 						fail = false;
 					}
 				}
-				for (final String prefix : new String[]{GlobalConfiguration.Paths.getScreenshotsDirectory(),
-						GlobalConfiguration.Paths.getScriptsDirectory(), GlobalConfiguration.Paths.getWebDatabase()}) {
+				for (final String prefix : new String[]{Configuration.Paths.getScreenshotsDirectory(),
+						Configuration.Paths.getScriptsDirectory(), Configuration.Paths.getWebDatabase()}) {
 					if (path.startsWith(prefix)) {
 						fail = false;
 						break;
@@ -330,7 +330,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 				}
 			}
 		}
-		if (path.equalsIgnoreCase(new File(GlobalConfiguration.Paths.getAccountsFile()).getAbsolutePath())) {
+		if (path.equalsIgnoreCase(new File(Configuration.Paths.getAccountsFile()).getAbsolutePath())) {
 			for (final StackTraceElement s : Thread.currentThread().getStackTrace()) {
 				final String name = s.getClassName();
 				if (name.equals(AccountStore.class.getName())) {

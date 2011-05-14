@@ -1,12 +1,12 @@
 package org.rsbot.script.background;
 
+import org.rsbot.Configuration;
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
-import org.rsbot.util.GlobalConfiguration;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -26,7 +26,7 @@ public class WebLoader extends BackgroundScript {
 		synchronized (lock) {
 			if (!Web.loaded) {
 				try {
-					final BufferedReader br = new BufferedReader(new FileReader(GlobalConfiguration.Paths.getWebDatabase()));
+					final BufferedReader br = new BufferedReader(new FileReader(Configuration.Paths.getWebDatabase()));
 					String line;
 					final HashMap<RSTile, TileFlags> theFlagsList = new HashMap<RSTile, TileFlags>();
 					while ((line = br.readLine()) != null) {

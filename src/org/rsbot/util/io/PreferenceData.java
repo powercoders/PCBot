@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.Configuration;
 
 public class PreferenceData {
 	private final int type;
@@ -12,7 +12,7 @@ public class PreferenceData {
 
 	public PreferenceData(final int type) {
 		this.type = type;
-		file = new File(GlobalConfiguration.Paths.getSettingsDirectory() + File.separator + "pref" + type + ".dat");
+		file = new File(Configuration.Paths.getSettingsDirectory() + File.separator + "pref" + type + ".dat");
 		try {
 			if (!file.exists()) {
 				file.createNewFile();

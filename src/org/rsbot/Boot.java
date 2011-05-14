@@ -3,7 +3,6 @@ package org.rsbot;
 import java.io.IOException;
 import java.net.URLDecoder;
 
-import org.rsbot.util.GlobalConfiguration;
 
 /**
  * @author Paris
@@ -18,7 +17,7 @@ public class Boot {
 		final char q = '"', s = ' ';
 		final StringBuilder param = new StringBuilder(64);
 
-		switch (GlobalConfiguration.getCurrentOperatingSystem()) {
+		switch (Configuration.getCurrentOperatingSystem()) {
 		case WINDOWS:
 			sh = false;
 			param.append("javaw");
@@ -32,12 +31,12 @@ public class Boot {
 			param.append(s);
 			param.append("-Xdock:name=");
 			param.append(q);
-			param.append(GlobalConfiguration.NAME);
+			param.append(Configuration.NAME);
 			param.append(q);
 			param.append(s);
 			param.append("-Xdock:icon=");
 			param.append(q);
-			param.append(GlobalConfiguration.Paths.Resources.ICON);
+			param.append(Configuration.Paths.Resources.ICON);
 			param.append(q);
 			break;
 		default:

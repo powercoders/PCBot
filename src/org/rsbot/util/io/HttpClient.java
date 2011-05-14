@@ -12,7 +12,7 @@ import java.net.URLConnection;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
-import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.Configuration;
 
 /**
  * @author Paris
@@ -64,7 +64,7 @@ public class HttpClient {
 	}
 
 	private static HttpURLConnection getConnection(final URL url) throws IOException {
-		final HttpURLConnection con = GlobalConfiguration.getHttpConnection(url);
+		final HttpURLConnection con = Configuration.getHttpConnection(url);
 		con.setUseCaches(true);
 		return con;
 	}

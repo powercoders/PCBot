@@ -1,9 +1,9 @@
 package org.rsbot.script.provider;
 
+import org.rsbot.Configuration;
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.service.ServiceException;
-import org.rsbot.util.GlobalConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,7 +120,7 @@ public class FileScriptSource implements ScriptSource {
 			def.clazz = clazz;
 			def.source = this;
 			def.path = path;
-			if (manifest.requiresVersion() <= GlobalConfiguration.getVersion()) {
+			if (manifest.requiresVersion() <= Configuration.getVersion()) {
 				scripts.add(def);
 			}
 		}

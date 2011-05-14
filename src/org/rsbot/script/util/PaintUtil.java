@@ -1,12 +1,12 @@
 package org.rsbot.script.util;
 
+import org.rsbot.Configuration;
 import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.methods.Game;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Skills;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.*;
-import org.rsbot.util.GlobalConfiguration;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -162,7 +162,7 @@ public class PaintUtil {
 	 */
 	public Image getImage(final String fileName, final boolean save, final String url) {
 		final Logger log = Logger.getLogger(this.getClass().getName());
-		final File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/image_io");
+		final File dir = new File(Configuration.Paths.getScriptCacheDirectory() + "/image_io");
 		try {
 			if (!dir.exists()) {
 				if (!dir.mkdir()) {
@@ -175,8 +175,8 @@ public class PaintUtil {
 		ImageIO.setCacheDirectory(dir);
 		if (save) {
 			try {
-				final File f = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/" + fileName);
-				final File loc = new File(GlobalConfiguration.Paths.getScriptCacheDirectory() + "/");
+				final File f = new File(Configuration.Paths.getScriptCacheDirectory() + "/" + fileName);
+				final File loc = new File(Configuration.Paths.getScriptCacheDirectory() + "/");
 				if (loc.exists()) {
 					if (f.exists()) {
 						log.info("Successfully loaded Image from scripts folder.");

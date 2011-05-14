@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.HashMap;
 
-import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.Configuration;
 
 public class UIDData {
 
@@ -17,7 +17,7 @@ public class UIDData {
 	private String lastUsed = "";
 
 	public UIDData() {
-		final File fUIDs = new File(GlobalConfiguration.Paths.getUIDsFile());
+		final File fUIDs = new File(Configuration.Paths.getUIDsFile());
 		if (!fUIDs.exists()) {
 			return;
 		}
@@ -66,7 +66,7 @@ public class UIDData {
 
 	public void save() {
 		try {
-			final File fUIDs = new File(GlobalConfiguration.Paths.getUIDsFile());
+			final File fUIDs = new File(Configuration.Paths.getUIDsFile());
 			if (fUIDs.exists() || fUIDs.createNewFile()) {
 				final FileOutputStream out = new FileOutputStream(fUIDs);
 				for (final String key : uids.keySet()) {
