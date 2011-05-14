@@ -28,7 +28,6 @@ public class Application {
 			System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
 			gui = new BotGUI();
 			gui.setVisible(true);
-			gui.addBot();
 		} catch (final Exception e) {
 			e.printStackTrace();
 			System.exit(1);

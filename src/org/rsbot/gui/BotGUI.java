@@ -78,6 +78,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					}
 				}.start();
 				Monitoring.start();
+				addBot();
 				updateScriptControls();
 			}
 		});
