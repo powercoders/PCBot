@@ -38,28 +38,28 @@ public class RouteStep extends MethodProvider {
 
 	public boolean execute() {
 		try {
-			for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
-				if (!checkScript.isActive()) {
-					return false;
-				}
+			if (someScriptPaused()) {
+				return false;
 			}
 			switch (type) {
 				case PATH:
+					int loops = 0;
 					if (rspath == null) {
 						rspath = methods.walking.newTilePath(path);
 					}
-					while (!inSomeRandom()) {
+					while (!inSomeRandom() && !someScriptPaused()) {
 						if (!rspath.traverse() || methods.calc.distanceTo(rspath.getEnd()) < 5) {
 							break;
 						}
-						for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
-							if (!checkScript.isActive()) {
-								return false;
-							}
-						}
 						sleep(random(50, 150));
+						if (loops > 1) {
+							loops = 0;
+							updatePath();
+						} else {
+							loops++;
+						}
 					}
-					return !inSomeRandom() && methods.calc.distanceTo(rspath.getEnd()) < 5;
+					return !inSomeRandom() && !someScriptPaused() &&  methods.calc.distanceTo(rspath.getEnd()) < 5;
 				case TELEPORT:
 					return teleport != null && teleport.perform();
 			}
@@ -76,6 +76,26 @@ public class RouteStep extends MethodProvider {
 		return path;
 	}
 
+	public RSTile getDestination() {
+		switch(type) {
+			case PATH:
+				return path[path.length - 1];
+			case TELEPORT:
+				return teleport.teleportationLocation();
+		}
+		return null;
+	}
+
+	public RSTile getStart() {
+		switch(type) {
+			case PATH:
+				return path[0];
+			case TELEPORT:
+				return teleport.teleportationBeginning();
+		}
+		return null;
+	}
+
 	private boolean inSomeRandom() {
 		if (methods.bot.disableRandoms) {
 			return false;
@@ -89,4 +109,25 @@ public class RouteStep extends MethodProvider {
 		}
 		return false;
 	}
+
+	private boolean someScriptPaused() {
+		for (final Script checkScript : methods.bot.getScriptHandler().getRunningScripts().values()) {
+			if (!checkScript.isActive() || !checkScript.isRunning() || checkScript.isPaused()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void updatePath() {
+		if (path != null) {
+			final RSTile start = path[0], end = path[path.length - 1];
+			RSTile[] nodePath = methods.web.generateNodePath(start, end);
+			if (nodePath != null) {
+				path = nodePath;
+				rspath = methods.walking.newTilePath(path);
+			}
+		}
+	}
+
 }
