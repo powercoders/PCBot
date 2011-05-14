@@ -31,6 +31,7 @@ public class Configuration {
 			public static final String ICON_APPDELETE = ROOT_IMG + "/application_delete.png";
 			public static final String ICON_ARROWIN = ROOT_IMG + "/arrow_in.png";
 			public static final String ICON_DELETE = ROOT_IMG + "/delete.png";
+			public static final String ICON_GITHUB = ROOT_IMG + "/github.png";
 			public static final String ICON_PLAY = ROOT_IMG + "/control_play_blue.png";
 			public static final String ICON_PAUSE = ROOT_IMG + "/control_pause.png";
 			public static final String ICON_ADD = ROOT_IMG + "/add.png";
@@ -51,7 +52,6 @@ public class Configuration {
 			public static final String ICON_SCRIPT_DRM = ROOT_IMG + "/script_drm.png";
 			public static final String ICON_SCRIPT_PRE = ROOT_IMG + "/script_pre.png";
 			public static final String ICON_SCRIPT_SRC = ROOT_IMG + "/script_src.png";
-			public static final String ICON_USEREDIT = ROOT_IMG + "/user_edit.png";
 			public static final String ICON_WEBLINK = ROOT_IMG + "/world_link.png";
 
 			public static final String VERSION = ROOT + "/version.txt";
