@@ -1,10 +1,6 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.wrappers.RSCharacter;
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSGroundItem;
-import org.rsbot.script.wrappers.RSInterface;
-import org.rsbot.script.wrappers.RSObject;
+import org.rsbot.script.wrappers.*;
 
 /**
  * Magic tab and spell related operations.
@@ -20,7 +16,6 @@ public class Magic extends MethodProvider {
 	 * @author Jacmob
 	 */
 	public static enum Book {
-
 		MODERN(192), ANCIENT(193), LUNAR(430), NULL(-1);
 
 		private final int id;
@@ -32,7 +27,6 @@ public class Magic extends MethodProvider {
 		public int getInterfaceID() {
 			return id;
 		}
-
 	}
 
 	// Buttons
@@ -296,8 +290,7 @@ public class Magic extends MethodProvider {
 	 * @return The current magic RSInterface.
 	 */
 	public RSInterface getInterface() {
-		RSInterface inter = methods.interfaces
-		.get(Book.MODERN.getInterfaceID());
+		RSInterface inter = methods.interfaces.get(Book.MODERN.getInterfaceID());
 		if (!inter.isValid()) {
 			inter = methods.interfaces.get(Book.ANCIENT.getInterfaceID());
 			if (!inter.isValid()) {
@@ -316,12 +309,8 @@ public class Magic extends MethodProvider {
 	 * @return The Book enum of your current spell book.
 	 */
 	public Book getCurrentSpellBook() {
-		return methods.interfaces.get(Book.MODERN.getInterfaceID()).isValid() ? Book.MODERN
-				:
-					methods.interfaces.get(Book.ANCIENT.getInterfaceID())
-					.isValid() ? Book.ANCIENT : methods.interfaces.get(
-							Book.LUNAR.getInterfaceID()).isValid() ? Book.LUNAR
-									: Book.NULL;
+		return methods.interfaces.get(Book.MODERN.getInterfaceID()).isValid() ? Book.MODERN : methods.interfaces.get(Book.ANCIENT.getInterfaceID()).isValid() ?
+				Book.ANCIENT : methods.interfaces.get(Book.LUNAR.getInterfaceID()).isValid() ? Book.LUNAR : Book.NULL;
 	}
 
 	/**
@@ -346,5 +335,4 @@ public class Magic extends MethodProvider {
 		}
 		return false;
 	}
-
 }

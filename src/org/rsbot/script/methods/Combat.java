@@ -52,8 +52,7 @@ public class Combat extends MethodProvider {
 			if (methods.game.getCurrentTab() != Game.TAB_ATTACK) {
 				methods.game.openTab(Game.TAB_ATTACK);
 			}
-			if (methods.game.getCurrentTab() == Game.TAB_ATTACK
-					&& autoRetal != null) {
+			if (methods.game.getCurrentTab() == Game.TAB_ATTACK && autoRetal != null) {
 				autoRetal.doClick();
 			}
 		}
@@ -65,7 +64,7 @@ public class Combat extends MethodProvider {
 	 * @return <tt>true</tt> if retaliate is enabled; otherwise <tt>false</tt>.
 	 */
 	public boolean isAutoRetaliateEnabled() {
-		return methods.settings.getSetting(172) == 0;
+		return methods.settings.getSetting(Settings.SETTING_AUTO_RETALIATE) == 0;
 	}
 
 	/**
@@ -94,8 +93,7 @@ public class Combat extends MethodProvider {
 				return methods.interfaces.getComponent(884, 11).doClick();
 			} else if (fightMode == 1) {
 				return methods.interfaces.getComponent(884, 12).doClick();
-			} else if (fightMode == 2 || fightMode == 3 && methods.interfaces.getComponent(884,
-					14).getActions() == null) {
+			} else if (fightMode == 2 || fightMode == 3 && methods.interfaces.getComponent(884, 14).getActions() == null) {
 				return methods.interfaces.getComponent(884, 13).doClick();
 			} else if (fightMode == 3) {
 				return methods.interfaces.getComponent(884, 14).doClick();
@@ -151,7 +149,7 @@ public class Combat extends MethodProvider {
 	 * @return The current spec energy.
 	 */
 	public int getSpecialBarEnergy() {
-		return methods.settings.getSetting(300);
+		return methods.settings.getSetting(300) / 10;
 	}
 
 	/**

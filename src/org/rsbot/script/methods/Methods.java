@@ -1,18 +1,13 @@
 package org.rsbot.script.methods;
 
-import java.awt.Color;
+import org.rsbot.Configuration;
+import org.rsbot.script.wrappers.*;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
-
-import org.rsbot.Configuration;
-import org.rsbot.script.wrappers.RSGroundItem;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSPlayer;
-import org.rsbot.script.wrappers.RSTile;
 
 
 /**
@@ -142,9 +137,17 @@ public class Methods {
 	 */
 	protected Prayer prayer;
 	/**
+	 * The singleton of Quests
+	 */
+	protected Quests quests;
+	/**
 	 * The singleton of FriendsChat
 	 */
 	protected FriendChat friendChat;
+	/**
+	 * The singleton of Lobby
+	 */
+	protected Lobby lobby;
 	/**
 	 * The singleton of Trade
 	 */
@@ -195,7 +198,9 @@ public class Methods {
 		summoning = ctx.summoning;
 		env = ctx.env;
 		prayer = ctx.prayer;
+		quests = ctx.quests;
 		friendChat = ctx.friendChat;
+		lobby = ctx.lobby;
 		trade = ctx.trade;
 		web = ctx.web;
 	}
