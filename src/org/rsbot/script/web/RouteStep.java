@@ -1,11 +1,14 @@
 package org.rsbot.script.web;
 
 import org.rsbot.script.Random;
+import org.rsbot.script.Script;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
 import org.rsbot.script.randoms.LoginBot;
 import org.rsbot.script.wrappers.RSPath;
 import org.rsbot.script.wrappers.RSTile;
+
+import java.util.Collections;
 
 public class RouteStep extends MethodProvider {
 	private final Type type;
@@ -34,20 +37,33 @@ public class RouteStep extends MethodProvider {
 	}
 
 	public boolean execute() {
-		switch (type) {
-			case PATH:
-				if (rspath == null) {
-					rspath = methods.walking.newTilePath(path);
+		try {
+			for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
+				if (!checkScript.isActive()) {
+					return false;
 				}
-				while (!inSomeRandom()) {
-					if (!rspath.traverse() || methods.calc.distanceTo(rspath.getEnd()) < 5) {
-						break;
+			}
+			switch (type) {
+				case PATH:
+					if (rspath == null) {
+						rspath = methods.walking.newTilePath(path);
 					}
-					sleep(random(50, 150));
-				}
-				return !inSomeRandom() && methods.calc.distanceTo(rspath.getEnd()) < 5;
-			case TELEPORT:
-				return teleport != null && teleport.preform();
+					while (!inSomeRandom()) {
+						if (!rspath.traverse() || methods.calc.distanceTo(rspath.getEnd()) < 5) {
+							break;
+						}
+						for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
+							if (!checkScript.isActive()) {
+								return false;
+							}
+						}
+						sleep(random(50, 150));
+					}
+					return !inSomeRandom() && methods.calc.distanceTo(rspath.getEnd()) < 5;
+				case TELEPORT:
+					return teleport != null && teleport.perform();
+			}
+		} catch (Exception e) {
 		}
 		return false;
 	}
