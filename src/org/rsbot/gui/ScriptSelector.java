@@ -286,11 +286,11 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private static class ScriptTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
 		public static final ImageIcon ICON_SCRIPT_SRC = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_SRC));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_EDIT));
 		public static final ImageIcon ICON_SCRIPT_PRE = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_PRE));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_GEAR));
 		public static final ImageIcon ICON_SCRIPT_DRM = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_DRM));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_LIVE));
 		private final List<ScriptDefinition> scripts;
 		private final List<ScriptDefinition> matches;
 

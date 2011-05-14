@@ -49,9 +49,9 @@ public class Configuration {
 			public static final String ICON_DISCONNECT = ROOT_IMG + "/disconnect.png";
 			public static final String ICON_START = ROOT_IMG + "/control_play.png";
 			public static final String ICON_SCRIPT_ADD = ROOT_IMG + "/script_add.png";
-			public static final String ICON_SCRIPT_DRM = ROOT_IMG + "/script_drm.png";
-			public static final String ICON_SCRIPT_PRE = ROOT_IMG + "/script_pre.png";
-			public static final String ICON_SCRIPT_SRC = ROOT_IMG + "/script_src.png";
+			public static final String ICON_SCRIPT_LIVE = ROOT_IMG + "/script_lightning.png";
+			public static final String ICON_SCRIPT_GEAR = ROOT_IMG + "/script_gear.png";
+			public static final String ICON_SCRIPT_EDIT = ROOT_IMG + "/script_edit.png";
 			public static final String ICON_WEBLINK = ROOT_IMG + "/world_link.png";
 
 			public static final String VERSION = ROOT + "/version.txt";
