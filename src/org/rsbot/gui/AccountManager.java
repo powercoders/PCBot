@@ -191,6 +191,7 @@ public class AccountManager extends JDialog implements ActionListener {
 
 	private AccountManager() {
 		super(Frame.getFrames()[0], "Account Manager", true);
+		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_REPORTKEY));
 	}
 
 	public void actionPerformed(final ActionEvent e) {
