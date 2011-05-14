@@ -1,4 +1,4 @@
-package org.rsbot.service;
+package org.rsbot.script.provider;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,9 +16,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpClient;
-import org.rsbot.util.IniParser;
+import org.rsbot.Configuration;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IniParser;
 
 /**
  * @author Paris
@@ -32,7 +32,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 	private URL base = null;
 
 	private ScriptDeliveryNetwork() {
-		super(new File(GlobalConfiguration.Paths.getScriptsNetworkDirectory()));
+		super(new File(Configuration.Paths.getScriptsNetworkDirectory()));
 		key = defaultKey;
 	}
 
@@ -60,7 +60,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		String error = "could not load control file";
 
 		try {
-			final URL source = new URL(GlobalConfiguration.Paths.URLs.SDN_CONTROL);
+			final URL source = new URL(Configuration.Paths.URLs.SDN_CONTROL);
 			final File cache = getChachedFile("control.txt");
 			HttpClient.download(source, cache);
 			final BufferedReader reader = new BufferedReader(new FileReader(cache));
@@ -105,13 +105,13 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 	}
 
 	private void init() throws MalformedURLException, IOException {
-		final File cache = new File(GlobalConfiguration.Paths.getScriptsNetworkDirectory());
+		final File cache = new File(Configuration.Paths.getScriptsNetworkDirectory());
 
 		if (!cache.exists()) {
 			cache.mkdirs();
 		}
 
-		if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.WINDOWS) {
+		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.WINDOWS) {
 			final String path = "\"" + cache.getAbsolutePath() + "\"";
 			try {
 				Runtime.getRuntime().exec("attrib +H " + path);
@@ -166,7 +166,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		}
 
 		int created = 0, deleted = 0, updated = 0;
-		final File dir = new File(GlobalConfiguration.Paths.getScriptsNetworkDirectory());
+		final File dir = new File(Configuration.Paths.getScriptsNetworkDirectory());
 		final ArrayList<File> delete = new ArrayList<File>(64);
 
 		for (final File f : dir.listFiles()) {
@@ -224,7 +224,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 	}
 
 	private File getChachedFile(final String name) {
-		return new File(GlobalConfiguration.Paths.getCacheDirectory(), "sdn-" + name);
+		return new File(Configuration.Paths.getCacheDirectory(), "sdn-" + name);
 	}
 
 	private boolean parseBool(final String mode) {

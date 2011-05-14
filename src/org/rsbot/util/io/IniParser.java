@@ -1,4 +1,4 @@
-package org.rsbot.util;
+package org.rsbot.util.io;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

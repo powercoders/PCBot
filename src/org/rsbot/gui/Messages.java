@@ -18,8 +18,7 @@ public interface Messages {
 	public static final String EXIT = "Exit";
 
 	public static final String AUTOSHUTDOWN = "Auto Shutdown";
-	public static final String FEEDBACK = "Feedback";
-	public static final String DEVUPDATE = "Developer Bot Update";
+	public static final String DEVUPDATE = "Update Bot";
 
 	public static final String TOGGLE = "Toggle";
 	public static final String TOGGLEFALSE = TOGGLE + "F";

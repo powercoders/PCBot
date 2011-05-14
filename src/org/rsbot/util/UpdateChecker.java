@@ -1,6 +1,8 @@
 package org.rsbot.util;
 
+import org.rsbot.Configuration;
 import org.rsbot.gui.BotGUI;
+import org.rsbot.util.io.HttpClient;
 
 import javax.swing.*;
 import java.io.*;
@@ -10,12 +12,12 @@ import java.util.logging.Logger;
 /**
  * @author Paris
  */
-public final class UpdateUtil {
-	private static final Logger log = Logger.getLogger(UpdateUtil.class.getName());
+public final class UpdateChecker {
+	private static final Logger log = Logger.getLogger(UpdateChecker.class.getName());
 	private static int latest = -1;
 
-	public static void check(final BotGUI instance) {
-		if (GlobalConfiguration.getVersion() >= getLatestVersion()) {
+	public static void notify(final BotGUI instance) {
+		if (Configuration.getVersion() >= getLatestVersion()) {
 			return;
 		}
 		log.info("New version available");
@@ -35,10 +37,10 @@ public final class UpdateUtil {
 		if (latest != -1) {
 			return latest;
 		}
-		final File cache = new File(GlobalConfiguration.Paths.getCacheDirectory(), "version-latest.txt");
+		final File cache = new File(Configuration.Paths.getCacheDirectory(), "version-latest.txt");
 		BufferedReader reader = null;
 		try {
-			HttpClient.download(new URL(GlobalConfiguration.Paths.URLs.VERSION), cache);
+			HttpClient.download(new URL(Configuration.Paths.URLs.VERSION), cache);
 			reader = new BufferedReader(new FileReader(cache));
 			final String s = reader.readLine().trim();
 			reader.close();
@@ -59,15 +61,15 @@ public final class UpdateUtil {
 
 	private static void update(final BotGUI instance) throws IOException {
 		log.info("Downloading update...");
-		final File jarNew = new File(GlobalConfiguration.NAME + "-" + getLatestVersion() + ".jar");
-		HttpClient.download(new URL(GlobalConfiguration.Paths.URLs.DOWNLOAD), jarNew);
-		final String jarOld = GlobalConfiguration.Paths.getRunningJarPath();
+		final File jarNew = new File(Configuration.NAME + "-" + getLatestVersion() + ".jar");
+		HttpClient.download(new URL(Configuration.Paths.URLs.DOWNLOAD), jarNew);
+		final String jarOld = Configuration.Paths.getRunningJarPath();
 		Runtime.getRuntime().exec("java -jar \"" + jarNew + "\" --delete \"" + jarOld + "\"");
 		instance.cleanExit(true);
 	}
 
 	public static void internalDeveloperUpdate(final BotGUI instance) {
-		if (new File(GlobalConfiguration.Paths.ROOT, ".git").exists()) {
+		if (new File(Configuration.Paths.ROOT, ".git").exists()) {
 			final String git = findGit();
 			if (git == null) {
 				log.severe("You need git installed to perform this action.");

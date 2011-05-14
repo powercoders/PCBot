@@ -1,5 +1,6 @@
 package org.rsbot.script;
 
+import org.rsbot.Configuration;
 import org.rsbot.bot.Bot;
 import org.rsbot.event.EventMulticaster;
 import org.rsbot.event.listeners.PaintListener;
@@ -11,7 +12,6 @@ import org.rsbot.script.randoms.LoginBot;
 import org.rsbot.script.util.Timer;
 import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
-import org.rsbot.util.GlobalConfiguration;
 
 import java.io.File;
 import java.util.EventListener;
@@ -363,7 +363,7 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 	}
 
 	public File getCacheDirectory() {
-		final File dir = new File(GlobalConfiguration.Paths.getScriptCacheDirectory(), getClass().getName());
+		final File dir = new File(Configuration.Paths.getScriptCacheDirectory(), getClass().getName());
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}

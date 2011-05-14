@@ -1,10 +1,10 @@
 package org.rsbot.bot;
 
 import org.rsbot.Application;
+import org.rsbot.Configuration;
 import org.rsbot.client.Loader;
 import org.rsbot.loader.ClientLoader;
 import org.rsbot.loader.script.ParseException;
-import org.rsbot.util.GlobalConfiguration;
 
 import java.applet.Applet;
 import java.awt.*;
@@ -88,7 +88,7 @@ public class RSLoader extends Applet implements Runnable, Loader {
 			client.start();
 		} catch (final Throwable e) {
 			log.severe("Unable to load client, please check your firewall and internet connection.");
-			final File versionFile = new File(GlobalConfiguration.Paths.getVersionCache());
+			final File versionFile = new File(Configuration.Paths.getVersionCache());
 			if (versionFile.exists() && !versionFile.delete()) {
 				log.warning("Unable to clear cache.");
 			}
@@ -104,15 +104,15 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	public void load() {
 		try {
 			final ClientLoader cl = new ClientLoader();
-			cl.init(new URL(GlobalConfiguration.Paths.URLs.UPDATE), new File(GlobalConfiguration.Paths.getModScriptCache()));
-			cl.load(new File(GlobalConfiguration.Paths.getClientCache()), new File(GlobalConfiguration.Paths.getVersionCache()));
+			cl.init(new URL(Configuration.Paths.URLs.UPDATE), new File(Configuration.Paths.getModScriptCache()));
+			cl.load(new File(Configuration.Paths.getClientCache()), new File(Configuration.Paths.getVersionCache()));
 			targetName = cl.getTargetName();
 			classLoader = new RSClassLoader(cl.getClasses(), new URL("http://" + targetName + ".com/"));
 		} catch (final IOException ex) {
 			log.severe("Unable to load client: " + ex.getMessage());
 		} catch (final ParseException ex) {
 			log.info("Unable to load client: " + ex.toString());
-			final File ms = new File(GlobalConfiguration.Paths.getModScriptCache());
+			final File ms = new File(Configuration.Paths.getModScriptCache());
 			if (ms.exists()) {
 				ms.delete();
 			}

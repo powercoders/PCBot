@@ -21,11 +21,11 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import org.rsbot.Configuration;
 import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpClient;
-import org.rsbot.util.IniParser;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IniParser;
 
 /**
  * @author Paris
@@ -54,7 +54,7 @@ public class SplashAd extends JDialog implements MouseListener {
 			return;
 		}
 
-		final File file = new File(GlobalConfiguration.Paths.getCacheDirectory(), CACHED_IMAGE);
+		final File file = new File(Configuration.Paths.getCacheDirectory(), CACHED_IMAGE);
 		try {
 			HttpClient.download(image, file);
 		} catch (final IOException ignored) {
@@ -84,8 +84,8 @@ public class SplashAd extends JDialog implements MouseListener {
 		HashMap<String, String> keys = null;
 
 		try {
-			final URL source = new URL(GlobalConfiguration.Paths.URLs.AD_INFO);
-			final File cache = new File(GlobalConfiguration.Paths.getCacheDirectory(), "ads.txt");
+			final URL source = new URL(Configuration.Paths.URLs.AD_INFO);
+			final File cache = new File(Configuration.Paths.getCacheDirectory(), "ads.txt");
 			HttpClient.download(source, cache);
 			final BufferedReader reader = new BufferedReader(new FileReader(cache));
 			keys = IniParser.deserialise(reader).get(IniParser.emptySection);

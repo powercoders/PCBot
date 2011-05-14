@@ -1,4 +1,4 @@
-package org.rsbot.util;
+package org.rsbot.script;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,6 +18,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.rsbot.security.RestrictedSecurityManager;
+import org.rsbot.util.Base64;
+import org.rsbot.util.StringUtil;
 
 /**
  * @author Jacmob

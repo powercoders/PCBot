@@ -32,8 +32,8 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import org.rsbot.Configuration;
 import org.rsbot.script.methods.Environment;
-import org.rsbot.util.GlobalConfiguration;
 
 public class BotToolBar extends JToolBar {
 
@@ -50,9 +50,9 @@ public class BotToolBar extends JToolBar {
 	public static final Image IMAGE_CLOSE_OVER;
 
 	static {
-		ICON_HOME = new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_HOME));
-		ICON_BOT = new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_BOT));
-		IMAGE_CLOSE_OVER = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CLOSE);
+		ICON_HOME = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_HOME));
+		ICON_BOT = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_BOT));
+		IMAGE_CLOSE_OVER = Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE);
 	}
 
 	private final JButton screenshotButton;
@@ -66,14 +66,14 @@ public class BotToolBar extends JToolBar {
 
 	public BotToolBar(final ActionListener listener, final BotMenuBar menu) {
 		try {
-			IMAGE_CLOSE = getTransparentImage(GlobalConfiguration.getResourceURL(GlobalConfiguration.Paths.Resources.ICON_CLOSE), 0.5f);
+			IMAGE_CLOSE = getTransparentImage(Configuration.getResourceURL(Configuration.Paths.Resources.ICON_CLOSE), 0.5f);
 		} catch (final MalformedURLException e) {
 		}
 
 		this.listener = listener;
 
 		screenshotButton = new JButton("Screenshot", new ImageIcon(
-				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PHOTO)));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_PHOTO)));
 		screenshotButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				menu.doClick(Messages.SAVESCREENSHOT);
@@ -94,7 +94,7 @@ public class BotToolBar extends JToolBar {
 		userInputButton.setText("");
 
 		runScriptButton = new JButton("Run", new ImageIcon(
-				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PLAY)));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
 		runScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switch (getScriptButton()) {
@@ -194,20 +194,20 @@ public class BotToolBar extends JToolBar {
 		switch (state) {
 		case RUN_SCRIPT:
 			text = "Run";
-			pathResource = GlobalConfiguration.Paths.Resources.ICON_PLAY;
+			pathResource = Configuration.Paths.Resources.ICON_PLAY;
 			break;
 		case PAUSE_SCRIPT:
 			text = "Pause";
-			pathResource = GlobalConfiguration.Paths.Resources.ICON_PAUSE;
+			pathResource = Configuration.Paths.Resources.ICON_PAUSE;
 			break;
 		case RESUME_SCRIPT:
 			text = "Resume";
-			pathResource = GlobalConfiguration.Paths.Resources.ICON_START;
+			pathResource = Configuration.Paths.Resources.ICON_START;
 			break;
 		}
 
 		runScriptButton.setToolTipText(text);
-		runScriptButton.setIcon(new ImageIcon(GlobalConfiguration.getImage(pathResource)));
+		runScriptButton.setIcon(new ImageIcon(Configuration.getImage(pathResource)));
 		runScriptButton.repaint();
 		revalidate();
 	}
@@ -229,13 +229,13 @@ public class BotToolBar extends JToolBar {
 
 	private Image getInputImage(final boolean override, final int state) {
 		if (override || state == (Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE)) {
-			return GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_TICK);
+			return Configuration.getImage(Configuration.Paths.Resources.ICON_TICK);
 		} else if (state == Environment.INPUT_KEYBOARD) {
-			return GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_KEYBOARD);
+			return Configuration.getImage(Configuration.Paths.Resources.ICON_KEYBOARD);
 		} else if (state == Environment.INPUT_MOUSE) {
-			return GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_MOUSE);
+			return Configuration.getImage(Configuration.Paths.Resources.ICON_MOUSE);
 		} else {
-			return GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_DELETE);
+			return Configuration.getImage(Configuration.Paths.Resources.ICON_DELETE);
 		}
 	}
 
@@ -396,13 +396,13 @@ public class BotToolBar extends JToolBar {
 		private boolean pressed = false;
 
 		static {
-			ICON_DOWN = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_ADD);
+			ICON_DOWN = Configuration.getImage(Configuration.Paths.Resources.ICON_ADD);
 		}
 
 		public AddButton(final ActionListener listener) {
 			URL src = null;
 			try {
-				src = GlobalConfiguration.getResourceURL(GlobalConfiguration.Paths.Resources.ICON_ADD);
+				src = Configuration.getResourceURL(Configuration.Paths.Resources.ICON_ADD);
 			} catch (final MalformedURLException e) {
 			}
 			ICON = getTransparentImage(src, 0.3f);

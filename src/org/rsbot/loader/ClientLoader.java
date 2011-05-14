@@ -25,11 +25,11 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import org.rsbot.Configuration;
 import org.rsbot.loader.asm.ClassReader;
 import org.rsbot.loader.script.ModScript;
 import org.rsbot.loader.script.ParseException;
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpClient;
+import org.rsbot.util.io.HttpClient;
 
 /**
  * @author Jacmob
@@ -137,7 +137,7 @@ public class ClientLoader {
 				client_version = checkVersion(new ByteArrayInputStream(classes.get("client")));
 			} finally {
 				if (client_version != 0) {
-					final FileWriter writer = new FileWriter(GlobalConfiguration.Paths.getVersionCache());
+					final FileWriter writer = new FileWriter(Configuration.Paths.getVersionCache());
 					writer.write(Integer.toString(client_version));
 					writer.close();
 				}

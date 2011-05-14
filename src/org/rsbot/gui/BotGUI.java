@@ -1,5 +1,7 @@
 package org.rsbot.gui;
 
+import org.rsbot.Configuration;
+import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.bot.Bot;
 import org.rsbot.log.TextAreaLogHandler;
 import org.rsbot.script.Script;
@@ -7,17 +9,15 @@ import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
 import org.rsbot.script.methods.Environment;
+import org.rsbot.script.provider.ScriptDeliveryNetwork;
+import org.rsbot.script.provider.ScriptDownloader;
 import org.rsbot.script.util.WindowUtil;
 import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
-import org.rsbot.service.ScriptDeliveryNetwork;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.GlobalConfiguration.OperatingSystem;
-import org.rsbot.util.ScreenshotUtil;
-import org.rsbot.util.ScriptDownloader;
-import org.rsbot.util.UpdateUtil;
+import org.rsbot.util.UpdateChecker;
+import org.rsbot.util.io.ScreenshotUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,11 +65,11 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (showAds) {
 					new SplashAd(BotGUI.this).display();
 				}
-				if (GlobalConfiguration.RUNNING_FROM_JAR) {
-					UpdateUtil.check(BotGUI.this);
+				if (Configuration.RUNNING_FROM_JAR) {
+					UpdateChecker.notify(BotGUI.this);
 				}
-				if (GlobalConfiguration.Twitter.ENABLED) {
-					TwitterUpdates.loadTweets(GlobalConfiguration.Twitter.MESSAGES);
+				if (Configuration.Twitter.ENABLED) {
+					TwitterUpdates.loadTweets(Configuration.Twitter.MESSAGES);
 				}
 				new Thread() {
 					@Override
@@ -85,8 +85,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	@Override
 	public void setTitle(final String title) {
-		String t = GlobalConfiguration.NAME + " v" + GlobalConfiguration.getVersionFormatted();
-		final int v = GlobalConfiguration.getVersion(), l = UpdateUtil.getLatestVersion();
+		String t = Configuration.NAME + " v" + Configuration.getVersionFormatted();
+		final int v = Configuration.getVersion(), l = UpdateChecker.getLatestVersion();
 		if (v > l) {
 			t += " beta";
 		}
@@ -191,7 +191,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 							}
 							if (!menuBar.isTicked(option)) {
 								log.info("Shutdown cancelled");
-							} else if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
+							} else if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
 								try {
 									Runtime.getRuntime().exec("shutdown.exe", new String[]{"-s"});
 									cleanExit(true);
@@ -258,15 +258,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			}
 		} else if (menu.equals(Messages.HELP)) {
 			if (option.equals("Site")) {
-				openURL(GlobalConfiguration.Paths.URLs.SITE);
+				openURL(Configuration.Paths.URLs.SITE);
 			} else if (option.equals("Project")) {
-				openURL(GlobalConfiguration.Paths.URLs.PROJECT);
+				openURL(Configuration.Paths.URLs.PROJECT);
 			} else if (option.equals("About")) {
-				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + GlobalConfiguration.Paths.URLs.SITE + "/ for more information."}, "About", JOptionPane.INFORMATION_MESSAGE);
-			} else if (option.equals(Messages.FEEDBACK)) {
-				feedBack();
+				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + Configuration.Paths.URLs.SITE + "/ for more information."}, "About", JOptionPane.INFORMATION_MESSAGE);
 			} else if (option.equals(Messages.DEVUPDATE)) {
-				UpdateUtil.internalDeveloperUpdate(BotGUI.this);
+				UpdateChecker.internalDeveloperUpdate(BotGUI.this);
 			}
 		} else if (menu.equals("Tab")) {
 			final Bot curr = getCurrentBot();
@@ -277,93 +275,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			setTitle(curr == null ? null : curr.getAccountName());
 			updateScriptControls();
 		}
-	}
-
-	private void feedBack() {
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		final JFrame feedBack = new JFrame();
-		feedBack.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) {
-				feedBack.dispose();
-			}
-		});
-		feedBack.setTitle("Feedback");
-		feedBack.setAlwaysOnTop(true);
-		feedBack.setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CHART_CURVE));
-		feedBack.setLayout(new BorderLayout());
-		JPanel inputPanel = new JPanel();
-		inputPanel.setLayout(new BorderLayout());
-		inputPanel.setMinimumSize(new Dimension(200, 30));
-		inputPanel.setPreferredSize(new Dimension(200, 30));
-		final JTextField input = new JTextField();
-		input.setText("Enter feedback [or bug].");
-		input.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {
-			}
-
-			public void mousePressed(MouseEvent e) {
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				if (input.getText().equals("Enter feedback [or bug].")) {
-					input.setText("");
-				}
-			}
-
-			public void mouseEntered(MouseEvent e) {
-			}
-
-			public void mouseExited(MouseEvent e) {
-			}
-		});
-		inputPanel.add(input, BorderLayout.SOUTH);
-		feedBack.add(inputPanel, BorderLayout.NORTH);
-		JPanel submitPanel = new JPanel();
-		submitPanel.setLayout(new BorderLayout());
-		submitPanel.setMinimumSize(new Dimension(200, 50));
-		submitPanel.setPreferredSize(new Dimension(200, 50));
-		JLabel approveIcon = new JLabel(new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_ACCEPT)));
-		JButton approveButton = new JButton("Send Feedback");
-		JLabel bugIcon = new JLabel(new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_BUG)));
-		JButton bugButton = new JButton("Send Bug");
-		JPanel approve = new JPanel();
-		approve.setMinimumSize(new Dimension(105, 50));
-		approve.setPreferredSize(new Dimension(105, 50));
-		approve.add(approveIcon, BorderLayout.NORTH);
-		approve.add(approveButton, BorderLayout.SOUTH);
-		JPanel bug = new JPanel();
-		bug.setMinimumSize(new Dimension(95, 50));
-		bug.setPreferredSize(new Dimension(95, 50));
-		bug.add(bugIcon, BorderLayout.NORTH);
-		bug.add(bugButton, BorderLayout.SOUTH);
-		final MouseListener button = new MouseListener() {
-			public void mouseClicked(MouseEvent e) {
-			}
-
-			public void mousePressed(MouseEvent e) {
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				Monitoring.pushState(Monitoring.Type.FEEDBACK, new String[]{((JButton) e.getSource()).getText(), input.getText()});
-				feedBack.dispose();
-				JOptionPane.showMessageDialog(getOwner(), "Thank you for your feedback!", "RSBot", JOptionPane.INFORMATION_MESSAGE);
-			}
-
-			public void mouseEntered(MouseEvent e) {
-			}
-
-			public void mouseExited(MouseEvent e) {
-			}
-		};
-		approveButton.addMouseListener(button);
-		bugButton.addMouseListener(button);
-		submitPanel.add(approve, BorderLayout.WEST);
-		submitPanel.add(bug, BorderLayout.EAST);
-		feedBack.add(submitPanel, BorderLayout.SOUTH);
-		feedBack.pack();
-		Dimension frameSize = feedBack.getSize();
-		feedBack.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-		feedBack.setVisible(true);
 	}
 
 	private void updateScriptControls() {
@@ -446,7 +357,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	public void addBot() {
 		final int max = 6;
-		if (bots.size() >= max && GlobalConfiguration.RUNNING_FROM_JAR) {
+		if (bots.size() >= max && Configuration.RUNNING_FROM_JAR) {
 			log.warning("Cannot run more than " + Integer.toString(max) + " bots");
 			return;
 		}
@@ -555,7 +466,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				}
 			}
 		});
-		setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON));
+		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON));
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -625,13 +536,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	public static void openURL(final String url) {
-		final GlobalConfiguration.OperatingSystem os = GlobalConfiguration.getCurrentOperatingSystem();
+		final Configuration.OperatingSystem os = Configuration.getCurrentOperatingSystem();
 		try {
-			if (os == GlobalConfiguration.OperatingSystem.MAC) {
+			if (os == Configuration.OperatingSystem.MAC) {
 				final Class<?> fileMgr = Class.forName("com.apple.eio.FileManager");
 				final Method openURL = fileMgr.getDeclaredMethod("openURL", new Class[]{String.class});
 				openURL.invoke(null, url);
-			} else if (os == GlobalConfiguration.OperatingSystem.WINDOWS) {
+			} else if (os == Configuration.OperatingSystem.WINDOWS) {
 				Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
 			} else {
 				final String[] browsers = {"firefox", "opera", "konqueror", "epiphany", "mozilla", "netscape", "google-chrome", "chromium-browser"};
@@ -697,8 +608,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	public void setTray() {
 		if (tray == null) {
-			final Image image = GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON);
-			tray = new TrayIcon(image, GlobalConfiguration.NAME, null);
+			final Image image = Configuration.getImage(Configuration.Paths.Resources.ICON);
+			tray = new TrayIcon(image, Configuration.NAME, null);
 			tray.setImageAutoSize(true);
 			tray.addMouseListener(new MouseListener() {
 				public void mouseClicked(MouseEvent arg0) {

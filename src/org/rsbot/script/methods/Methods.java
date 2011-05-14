@@ -7,12 +7,12 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import org.rsbot.Configuration;
 import org.rsbot.script.wrappers.RSGroundItem;
 import org.rsbot.script.wrappers.RSNPC;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSPlayer;
 import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.util.GlobalConfiguration;
 
 
 /**
@@ -166,7 +166,7 @@ public class Methods {
 	 * @param ctx The MethodContext.
 	 */
 	public void init(final MethodContext ctx) {
-		final File cache = new File(GlobalConfiguration.Paths.getScriptCacheDirectory());
+		final File cache = new File(Configuration.Paths.getScriptCacheDirectory());
 		if (!cache.exists()) {
 			cache.mkdirs();
 		}

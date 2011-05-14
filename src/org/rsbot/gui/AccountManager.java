@@ -1,8 +1,8 @@
 package org.rsbot.gui;
 
-import org.rsbot.service.ScriptDeliveryNetwork;
-import org.rsbot.util.AccountStore;
-import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.Configuration;
+import org.rsbot.script.AccountStore;
+import org.rsbot.script.provider.ScriptDeliveryNetwork;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 @SuppressWarnings("serial")
 public class AccountManager extends JDialog implements ActionListener {
 
-	private static final String FILE_NAME = GlobalConfiguration.Paths.getAccountsFile();
+	private static final String FILE_NAME = Configuration.Paths.getAccountsFile();
 
 	private static final String[] RANDOM_REWARDS = {"Cash", "Runes", "Coal", "Essence", "Ore", "Bars", "Gems", "Herbs",
 			"Seeds", "Charms", "Surprise", "Emote", "Costume", "Attack",

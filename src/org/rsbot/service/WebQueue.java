@@ -1,9 +1,9 @@
 package org.rsbot.service;
 
+import org.rsbot.Configuration;
 import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.util.GlobalConfiguration;
 
 import java.io.*;
 import java.util.*;
@@ -25,7 +25,7 @@ public class WebQueue {
 	private static final Object removeLock = new Object();
 
 	static {
-		writer = new QueueWriter(GlobalConfiguration.Paths.getWebDatabase());
+		writer = new QueueWriter(Configuration.Paths.getWebDatabase());
 		writer.start();
 	}
 

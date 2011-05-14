@@ -1,8 +1,6 @@
-package org.rsbot.util;
+package org.rsbot.script.provider;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +13,10 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.rsbot.util.GlobalConfiguration.OperatingSystem;
+import org.rsbot.Configuration;
+import org.rsbot.Configuration.OperatingSystem;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IOHelper;
 
 public class ScriptDownloader {
 	private static final Logger log = Logger.getLogger(ScriptDownloader.class.getName());
@@ -23,7 +24,6 @@ public class ScriptDownloader {
 	public static void save(String source) {
 		final String javac = findJavac();
 		if (javac == null || javac.length() == 0) {
-			log.info(javac);
 			log.warning("JDK is not installed");
 			return;
 		}
@@ -37,7 +37,7 @@ public class ScriptDownloader {
 		}
 		source = normalisePastebin(source);
 		log.fine("Downloading: " + source);
-		final File output = new File(GlobalConfiguration.Paths.getGarbageDirectory(), Integer.toString(source.hashCode()) + ".script.bin");
+		final File output = new File(Configuration.Paths.getGarbageDirectory(), Integer.toString(source.hashCode()) + ".script.bin");
 		HttpURLConnection con = null;
 		try {
 			con = HttpClient.download(new URL(source), output);
@@ -46,7 +46,7 @@ public class ScriptDownloader {
 		}
 		String name = classFileName(output);
 		if (name != null) {
-			final File saveto = new File(GlobalConfiguration.Paths.getScriptsPrecompiledDirectory());
+			final File saveto = new File(Configuration.Paths.getScriptsPrecompiledDirectory());
 			if (output.renameTo(saveto)) {
 				log.info("Saved precompiled script " + name);
 			} else {
@@ -54,13 +54,12 @@ public class ScriptDownloader {
 			}
 			return;
 		}
-		String text;
-		try {
-			text = new String(readFile(output));
-		} catch (IOException ignored) {
+		final byte[] bytes = IOHelper.read(output);
+		if (bytes == null) {
 			log.severe("Could not read downloaded file");
 			return;
 		}
+		String text = new String(bytes);
 		if (con.getContentType().contains("html")) {
 			text = text.replaceAll("\\<head.*\\<\\/head\\>", "");
 			text = text.replaceAll("\\<br\\s*\\/?\\s*\\>", "\r\n");
@@ -72,7 +71,7 @@ public class ScriptDownloader {
 			return;
 		}
 		name = m.group(1);
-		final File dir = new File(GlobalConfiguration.Paths.getScriptsSourcesDirectory());
+		final File dir = new File(Configuration.Paths.getScriptsSourcesDirectory());
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
@@ -86,10 +85,10 @@ public class ScriptDownloader {
 			return;
 		}
 		String classpath;
-		if (GlobalConfiguration.RUNNING_FROM_JAR) {
-			classpath = GlobalConfiguration.Paths.getRunningJarPath();
+		if (Configuration.RUNNING_FROM_JAR) {
+			classpath = Configuration.Paths.getRunningJarPath();
 		} else {
-			classpath = new File(GlobalConfiguration.Paths.ROOT + File.separator + "bin").getAbsolutePath();
+			classpath = new File(Configuration.Paths.ROOT + File.separator + "bin").getAbsolutePath();
 		}
 		try {
 			Runtime.getRuntime().exec(new String[]{javac, "-cp", classpath, saveto.getAbsolutePath()});
@@ -100,15 +99,20 @@ public class ScriptDownloader {
 		log.info("Compiled script " + name);
 	}
 
-	private static byte[] readFile(final File source) throws IOException {
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		InputStream is = new FileInputStream(source);
-		byte[] temp = new byte[(int) source.length()];
-		int read;
-		while ((read = is.read(temp)) > 0){
-		   buffer.write(temp, 0, read);
+	private static String readProcess(final String exec) throws IOException {
+		final Process process = Runtime.getRuntime().exec(exec);
+		final InputStream is = process.getInputStream();
+		try {
+			process.waitFor();
+		} catch (final InterruptedException ignored) {
+			return null;
 		}
-		return buffer.toByteArray();
+		final StringBuilder s = new StringBuilder(256);
+		int r;
+		while ((r = is.read()) != -1) {
+			s.append((char) r);
+		}
+		return s.toString();
 	}
 
 	private static String classFileName(final File path) {
@@ -152,7 +156,7 @@ public class ScriptDownloader {
 
 	private static String findJavac() {
 		try {
-			if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
+			if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
 				String version = readProcess("REG QUERY \"HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\" /v CurrentVersion");
 				version = version.substring(version.indexOf("REG_SZ") + 6).trim();
 				String path = readProcess("REG QUERY \"HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\" + version + "\" /v JavaHome");
@@ -163,25 +167,8 @@ public class ScriptDownloader {
 				return which == null || which.length() == 0 ? null : which.trim();
 			}
 		} catch (Exception ignored) {
-			ignored.printStackTrace();
 			return null;
 		}
-	}
-
-	private static String readProcess(final String exec) throws IOException {
-		Process process = Runtime.getRuntime().exec(exec);
-		InputStream reader = process.getInputStream();
-        try {
-			process.waitFor();
-		} catch (InterruptedException ignored) {
-			return null;
-		}
-        StringBuilder s = new StringBuilder(256);
-        int r;
-        while ((r = reader.read()) != -1) {
-        	s.append((char) r);
-        }
-        return s.toString();
 	}
 
 	private static String normalisePastebin(String source) {
