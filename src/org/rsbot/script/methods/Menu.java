@@ -151,7 +151,7 @@ public class Menu extends MethodProvider {
 				for (MenuItemNode item = subItems.getHead(); item != null; item = subItems
 				.getNext(), ++subIdx) {
 					if (idx++ == i) {
-						if (subItems.size() == 1) {
+						if (subIdx == 0 || subItems.size() == 1) {
 							return clickMain(items, mainIdx);
 						} else {
 							return clickSub(items, mainIdx, subIdx);
