@@ -64,7 +64,7 @@ public class BotMenuBar extends JMenuBar {
 						"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", Messages.MENUSEPERATOR,
 						"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", Messages.MENUSEPERATOR,
 						"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations", Messages.MENUSEPERATOR, Messages.TOGGLEFALSE + " " + Messages.AUTOSHUTDOWN}, constructDebugs(),
-				{"Site", "Project", "About", "Feedback"}};
+				{"Site", "Project", "About"}};
 	}
 
 	private static String[] constructDebugs() {
@@ -118,7 +118,6 @@ public class BotMenuBar extends JMenuBar {
 		map.put("Site", GlobalConfiguration.Paths.Resources.ICON_WEBLINK);
 		map.put("Project", GlobalConfiguration.Paths.Resources.ICON_USEREDIT);
 		map.put("About", GlobalConfiguration.Paths.Resources.ICON_INFO);
-		map.put(Messages.FEEDBACK, GlobalConfiguration.Paths.Resources.ICON_CHART_CURVE);
 		for (final Entry<String, String> item : map.entrySet()) {
 			final JMenuItem menu = commandMenuItem.get(item.getKey());
 			menu.setIcon(new ImageIcon(GlobalConfiguration.getImage(item.getValue())));

@@ -54,9 +54,6 @@ public class GlobalConfiguration {
 			public static final String ICON_SCRIPT_SRC = ROOT_IMG + "/script_src.png";
 			public static final String ICON_USEREDIT = ROOT_IMG + "/user_edit.png";
 			public static final String ICON_WEBLINK = ROOT_IMG + "/world_link.png";
-			public static final String ICON_ACCEPT = ROOT_IMG + "/accept.png";
-			public static final String ICON_BUG = ROOT_IMG + "/bug.png";
-			public static final String ICON_CHART_CURVE = ROOT_IMG + "/chart_curve.png";
 
 			public static final String VERSION = ROOT + "/version.txt";
 		}

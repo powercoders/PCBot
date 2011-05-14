@@ -263,8 +263,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				openURL(GlobalConfiguration.Paths.URLs.PROJECT);
 			} else if (option.equals("About")) {
 				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + GlobalConfiguration.Paths.URLs.SITE + "/ for more information."}, "About", JOptionPane.INFORMATION_MESSAGE);
-			} else if (option.equals(Messages.FEEDBACK)) {
-				feedBack();
 			}
 		} else if (menu.equals("Tab")) {
 			final Bot curr = getCurrentBot();
@@ -275,93 +273,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			setTitle(curr == null ? null : curr.getAccountName());
 			updateScriptControls();
 		}
-	}
-
-	private void feedBack() {
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		final JFrame feedBack = new JFrame();
-		feedBack.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) {
-				feedBack.dispose();
-			}
-		});
-		feedBack.setTitle("Feedback");
-		feedBack.setAlwaysOnTop(true);
-		feedBack.setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CHART_CURVE));
-		feedBack.setLayout(new BorderLayout());
-		JPanel inputPanel = new JPanel();
-		inputPanel.setLayout(new BorderLayout());
-		inputPanel.setMinimumSize(new Dimension(200, 30));
-		inputPanel.setPreferredSize(new Dimension(200, 30));
-		final JTextField input = new JTextField();
-		input.setText("Enter feedback [or bug].");
-		input.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {
-			}
-
-			public void mousePressed(MouseEvent e) {
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				if (input.getText().equals("Enter feedback [or bug].")) {
-					input.setText("");
-				}
-			}
-
-			public void mouseEntered(MouseEvent e) {
-			}
-
-			public void mouseExited(MouseEvent e) {
-			}
-		});
-		inputPanel.add(input, BorderLayout.SOUTH);
-		feedBack.add(inputPanel, BorderLayout.NORTH);
-		JPanel submitPanel = new JPanel();
-		submitPanel.setLayout(new BorderLayout());
-		submitPanel.setMinimumSize(new Dimension(200, 50));
-		submitPanel.setPreferredSize(new Dimension(200, 50));
-		JLabel approveIcon = new JLabel(new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_ACCEPT)));
-		JButton approveButton = new JButton("Send Feedback");
-		JLabel bugIcon = new JLabel(new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_BUG)));
-		JButton bugButton = new JButton("Send Bug");
-		JPanel approve = new JPanel();
-		approve.setMinimumSize(new Dimension(105, 50));
-		approve.setPreferredSize(new Dimension(105, 50));
-		approve.add(approveIcon, BorderLayout.NORTH);
-		approve.add(approveButton, BorderLayout.SOUTH);
-		JPanel bug = new JPanel();
-		bug.setMinimumSize(new Dimension(95, 50));
-		bug.setPreferredSize(new Dimension(95, 50));
-		bug.add(bugIcon, BorderLayout.NORTH);
-		bug.add(bugButton, BorderLayout.SOUTH);
-		final MouseListener button = new MouseListener() {
-			public void mouseClicked(MouseEvent e) {
-			}
-
-			public void mousePressed(MouseEvent e) {
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				Monitoring.pushState(Monitoring.Type.FEEDBACK, new String[]{((JButton) e.getSource()).getText(), input.getText()});
-				feedBack.dispose();
-				JOptionPane.showMessageDialog(getOwner(), "Thank you for your feedback!", "RSBot", JOptionPane.INFORMATION_MESSAGE);
-			}
-
-			public void mouseEntered(MouseEvent e) {
-			}
-
-			public void mouseExited(MouseEvent e) {
-			}
-		};
-		approveButton.addMouseListener(button);
-		bugButton.addMouseListener(button);
-		submitPanel.add(approve, BorderLayout.WEST);
-		submitPanel.add(bug, BorderLayout.EAST);
-		feedBack.add(submitPanel, BorderLayout.SOUTH);
-		feedBack.pack();
-		Dimension frameSize = feedBack.getSize();
-		feedBack.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-		feedBack.setVisible(true);
 	}
 
 	private void updateScriptControls() {
