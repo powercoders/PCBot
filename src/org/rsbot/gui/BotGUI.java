@@ -10,13 +10,13 @@ import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
 import org.rsbot.script.methods.Environment;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
+import org.rsbot.script.provider.ScriptDownloader;
 import org.rsbot.script.util.WindowUtil;
 import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
 import org.rsbot.util.io.ScreenshotUtil;
-import org.rsbot.util.ScriptDownloader;
 import org.rsbot.util.UpdateChecker;
 
 import javax.swing.*;

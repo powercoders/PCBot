@@ -4,8 +4,8 @@ import org.rsbot.Application;
 import org.rsbot.Configuration;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
+import org.rsbot.script.provider.ScriptDownloader;
 import org.rsbot.util.AccountStore;
-import org.rsbot.util.ScriptDownloader;
 import org.rsbot.util.UpdateChecker;
 import sun.font.FontManager;
 

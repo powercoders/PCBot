@@ -1,4 +1,4 @@
-package org.rsbot.util;
+package org.rsbot.script.provider;
 
 import java.io.File;
 import java.io.FileReader;
