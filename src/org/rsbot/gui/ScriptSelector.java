@@ -36,7 +36,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	private static final ScriptSource SRC_SOURCES;
 	private static final ScriptSource SRC_PRECOMPILED;
-	private static final ScriptSource SRC_BUNDLED;
 	private static final ScriptSource SRC_DRM;
 	private final Bot bot;
 	private JTable table;
@@ -50,11 +49,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	static {
 		SRC_SOURCES = new FileScriptSource(new File(Configuration.Paths.getScriptsSourcesDirectory()));
 		SRC_PRECOMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
-		if (Configuration.RUNNING_FROM_JAR) {
-			SRC_BUNDLED = null;
-		} else {
-			SRC_BUNDLED = new FileScriptSource(new File("." + File.separator + Configuration.Paths.SCRIPTS_NAME_SRC));
-		}
 		SRC_DRM = ScriptDeliveryNetwork.getInstance();
 	}
 
@@ -85,9 +79,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		scripts.clear();
 		if (connected) {
 			scripts.addAll(SRC_DRM.list());
-		}
-		if (SRC_BUNDLED != null) {
-			scripts.addAll(SRC_BUNDLED.list());
 		}
 		scripts.addAll(SRC_PRECOMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
@@ -300,8 +291,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_PRE));
 		public static final ImageIcon ICON_SCRIPT_DRM = new ImageIcon(
 				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_DRM));
-		public static final ImageIcon ICON_SCRIPT_BDL = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_BDL));
 		private final List<ScriptDefinition> scripts;
 		private final List<ScriptDefinition> matches;
 
@@ -354,9 +343,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					}
 					if (def.source == SRC_PRECOMPILED) {
 						return ICON_SCRIPT_PRE;
-					}
-					if (def.source == SRC_BUNDLED) {
-						return ICON_SCRIPT_BDL;
 					}
 					return ICON_SCRIPT_DRM;
 				}

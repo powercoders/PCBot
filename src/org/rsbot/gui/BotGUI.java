@@ -45,7 +45,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private boolean showAds = true;
 	private boolean disableConfirmations = false;
 	private static final ScriptDeliveryNetwork sdn = ScriptDeliveryNetwork.getInstance();
-	private final List<Bot> noModificationBots = new ArrayList<Bot>();
 	private final int botsIndex = 2;
 	private TrayIcon tray = null;
 	private java.util.Timer shutdown = null;
@@ -78,7 +77,9 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					}
 				}.start();
 				Monitoring.start();
+				addBot();
 				updateScriptControls();
+				System.gc();
 			}
 		});
 	}
@@ -209,10 +210,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 						final boolean selected = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 						current.overrideInput = selected;
 						updateScriptControls();
-					} else if (option.equals("Disable Rendering")) {
-						current.disableRendering = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
-					} else if (option.equals("Disable Canvas")) {
-						current.disableCanvas = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
+					} else if (option.equals(Messages.LESSCPU)) {
+						lessCpu(true);
 					} else if (option.equals("Disable Anti-Randoms")) {
 						current.disableRandoms = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals("Disable Auto Login")) {
@@ -320,21 +319,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 	}
 
-	public void lessCpu(final boolean enable) {
-		if (enable) {
-			noModificationBots.clear();
-			for (final Bot bot : bots) {
-				if (bot.disableCanvas || bot.disableRendering) {
-					noModificationBots.add(bot);
-				}
-			}
-		}
+	private void lessCpu(boolean on) {
+		disableRendering(on || menuBar.isTicked(Messages.LESSCPU));
+	}
+
+	public void disableRendering(final boolean mode) {
 		for (final Bot bot : bots) {
-			final boolean restore = !enable && noModificationBots.contains(bot);
-			final int botIndex = noModificationBots.indexOf(bot);
-			final Bot rBot = restore ? noModificationBots.get(botIndex) : null;
-			bot.disableCanvas = rBot != null ? rBot.disableCanvas : enable;
-			bot.disableRendering = rBot != null ? rBot.disableRendering : enable;
+			bot.disableRendering = mode;
 		}
 	}
 
