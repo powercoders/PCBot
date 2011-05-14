@@ -1,8 +1,6 @@
 package org.rsbot.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -54,13 +52,12 @@ public class ScriptDownloader {
 			}
 			return;
 		}
-		String text;
-		try {
-			text = new String(readFile(output));
-		} catch (IOException ignored) {
+		final byte[] bytes = IOHelper.read(output);
+		if (bytes == null) {
 			log.severe("Could not read downloaded file");
 			return;
 		}
+		String text = new String(bytes);
 		if (con.getContentType().contains("html")) {
 			text = text.replaceAll("\\<head.*\\<\\/head\\>", "");
 			text = text.replaceAll("\\<br\\s*\\/?\\s*\\>", "\r\n");
@@ -100,15 +97,20 @@ public class ScriptDownloader {
 		log.info("Compiled script " + name);
 	}
 
-	private static byte[] readFile(final File source) throws IOException {
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		InputStream is = new FileInputStream(source);
-		byte[] temp = new byte[(int) source.length()];
-		int read;
-		while ((read = is.read(temp)) > 0){
-		   buffer.write(temp, 0, read);
+	private static String readProcess(final String exec) throws IOException {
+		final Process process = Runtime.getRuntime().exec(exec);
+		final InputStream is = process.getInputStream();
+		try {
+			process.waitFor();
+		} catch (final InterruptedException ignored) {
+			return null;
 		}
-		return buffer.toByteArray();
+		final StringBuilder s = new StringBuilder(256);
+		int r;
+		while ((r = is.read()) != -1) {
+			s.append((char) r);
+		}
+		return s.toString();
 	}
 
 	private static String classFileName(final File path) {
@@ -163,25 +165,8 @@ public class ScriptDownloader {
 				return which == null || which.length() == 0 ? null : which.trim();
 			}
 		} catch (Exception ignored) {
-			ignored.printStackTrace();
 			return null;
 		}
-	}
-
-	private static String readProcess(final String exec) throws IOException {
-		Process process = Runtime.getRuntime().exec(exec);
-		InputStream reader = process.getInputStream();
-        try {
-			process.waitFor();
-		} catch (InterruptedException ignored) {
-			return null;
-		}
-        StringBuilder s = new StringBuilder(256);
-        int r;
-        while ((r = reader.read()) != -1) {
-        	s.append((char) r);
-        }
-        return s.toString();
 	}
 
 	private static String normalisePastebin(String source) {
