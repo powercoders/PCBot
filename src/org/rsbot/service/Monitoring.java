@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpClient;
-import org.rsbot.util.IniParser;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IniParser;
 
 
 /**

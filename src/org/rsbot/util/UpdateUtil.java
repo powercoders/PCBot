@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 import org.rsbot.gui.BotGUI;
+import org.rsbot.util.io.HttpClient;
 
 /**
  * @author Paris

@@ -29,7 +29,7 @@ import org.rsbot.loader.asm.ClassReader;
 import org.rsbot.loader.script.ModScript;
 import org.rsbot.loader.script.ParseException;
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpClient;
+import org.rsbot.util.io.HttpClient;
 
 /**
  * @author Jacmob

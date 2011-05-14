@@ -15,7 +15,7 @@ import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.GlobalConfiguration.OperatingSystem;
-import org.rsbot.util.ScreenshotUtil;
+import org.rsbot.util.io.ScreenshotUtil;
 import org.rsbot.util.ScriptDownloader;
 import org.rsbot.util.UpdateUtil;
 

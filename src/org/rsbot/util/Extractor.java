@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import org.rsbot.util.io.IOHelper;
+
 public class Extractor implements Runnable {
 
 	public Extractor() {

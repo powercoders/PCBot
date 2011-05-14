@@ -2,7 +2,7 @@ package org.rsbot.script.util;
 
 import org.rsbot.script.wrappers.RSItem;
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.IniParser;
+import org.rsbot.util.io.IniParser;
 
 import java.io.*;
 import java.util.HashMap;

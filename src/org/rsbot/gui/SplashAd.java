@@ -24,8 +24,8 @@ import javax.swing.JLabel;
 import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
 import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpClient;
-import org.rsbot.util.IniParser;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IniParser;
 
 /**
  * @author Paris

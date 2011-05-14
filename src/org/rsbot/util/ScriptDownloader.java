@@ -14,6 +14,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.rsbot.util.GlobalConfiguration.OperatingSystem;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IOHelper;
 
 public class ScriptDownloader {
 	private static final Logger log = Logger.getLogger(ScriptDownloader.class.getName());

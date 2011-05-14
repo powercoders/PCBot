@@ -1,4 +1,4 @@
-package org.rsbot.util;
+package org.rsbot.util.io;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,6 +11,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
+
+import org.rsbot.util.GlobalConfiguration;
 
 /**
  * @author Paris
