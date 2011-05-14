@@ -150,11 +150,6 @@ public class Methods {
 	 */
 	protected Trade trade;
 	/**
-	 * The singleton of Trade
-	 */
-	protected Paint paint;
-
-	/**
 	 * The singleton of Web
 	 */
 	protected Web web;
@@ -202,7 +197,6 @@ public class Methods {
 		prayer = ctx.prayer;
 		friendChat = ctx.friendChat;
 		trade = ctx.trade;
-		paint = ctx.paint;
 		web = ctx.web;
 	}
 
