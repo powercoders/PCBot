@@ -61,7 +61,7 @@ public class BotMenuBar extends JMenuBar {
 						Messages.SAVESCREENSHOT, Messages.MENUSEPERATOR,
 						Messages.HIDEBOT, Messages.EXIT},
 				{"Accounts", Messages.MENUSEPERATOR,
-						"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", Messages.MENUSEPERATOR,
+						"ToggleF Force Input", Messages.TOGGLEFALSE + " " + Messages.LESSCPU, Messages.MENUSEPERATOR,
 						"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", Messages.MENUSEPERATOR,
 						"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations", Messages.TOGGLEFALSE + " " + Messages.AUTOSHUTDOWN}, constructDebugs(),
 				{"Site", "Project", "About"}};
@@ -178,7 +178,7 @@ public class BotMenuBar extends JMenuBar {
 				item.setSelected(false);
 				item.setEnabled(false);
 			}
-			disable("All Debugging", "Force Input", "Disable Rendering", "Disable Canvas", "Disable Anti-Randoms", "Disable Auto Login");
+			disable("All Debugging", "Force Input", Messages.LESSCPU, "Disable Anti-Randoms", "Disable Auto Login");
 		} else {
 			commandMenuItem.get(Messages.CLOSEBOT).setEnabled(true);
 			commandMenuItem.get(Messages.RUNSCRIPT).setEnabled(true);
@@ -196,8 +196,7 @@ public class BotMenuBar extends JMenuBar {
 			}
 			enable("All Debugging", selections == eventCheckMap.size());
 			enable("Force Input", bot.overrideInput);
-			enable("Disable Rendering", bot.disableRendering);
-			enable("Disable Canvas", bot.disableCanvas);
+			enable(Messages.LESSCPU, bot.disableRendering);
 			enable("Disable Anti-Randoms", bot.disableRandoms);
 			enable("Disable Auto Login", bot.disableAutoLogin);
 		}

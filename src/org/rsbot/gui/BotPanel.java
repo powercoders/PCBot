@@ -6,8 +6,6 @@ import static org.rsbot.script.methods.Environment.INPUT_MOUSE;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -172,19 +170,8 @@ public class BotPanel extends JPanel {
 		super.paintComponent(g);
 		if (bot == null) {
 			home.paint(g);
-		} else if (!bot.disableCanvas) {
-			g.drawImage(bot.getImage(), offX, 0, null);
 		} else {
-			final Font font = new Font("Helvetica", 1, 13);
-			final FontMetrics fontMetrics = getFontMetrics(font);
-			g.setColor(Color.black);
-			g.fillRect(0, 0, 768, 503);
-			g.setColor(new Color(150, 0, 0));
-			g.drawRect(230, 233, 303, 33);
-			final String s = "Graphics disabled...";
-			g.setFont(font);
-			g.setColor(Color.WHITE);
-			g.drawString(s, (768 - fontMetrics.stringWidth(s)) / 2, 255);
+			g.drawImage(bot.getImage(), offX, 0, null);
 		}
 	}
 

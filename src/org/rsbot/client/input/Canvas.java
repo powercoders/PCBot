@@ -21,7 +21,6 @@ import org.rsbot.bot.Bot;
 public class Canvas extends java.awt.Canvas {
 	public static final int GRAPHICS_DELAY = 6;
 	public static final int SLOW_GRAPHICS_DELAY = 50;
-	public static final int DISABLE_GRAPHICS_DELAY = 150;
 
 	private static final long serialVersionUID = -2276037172265300477L;
 
@@ -51,7 +50,7 @@ public class Canvas extends java.awt.Canvas {
 			}
 		}
 		try {
-			Thread.sleep(bot.disableCanvas ? DISABLE_GRAPHICS_DELAY : bot.disableRendering ? SLOW_GRAPHICS_DELAY : GRAPHICS_DELAY);
+			Thread.sleep(bot.disableRendering ? SLOW_GRAPHICS_DELAY : GRAPHICS_DELAY);
 		} catch (final InterruptedException ignored) {
 		}
 		return bot.getBufferGraphics();
