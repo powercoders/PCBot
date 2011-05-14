@@ -64,9 +64,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (showAds) {
 					new SplashAd(BotGUI.this).display();
 				}
-				if (Configuration.RUNNING_FROM_JAR) {
-					UpdateChecker.notify(BotGUI.this);
-				}
+				UpdateChecker.notify(BotGUI.this);
 				if (Configuration.Twitter.ENABLED) {
 					TwitterUpdates.loadTweets(Configuration.Twitter.MESSAGES);
 				}

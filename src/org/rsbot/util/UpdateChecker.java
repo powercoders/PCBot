@@ -17,19 +17,22 @@ public final class UpdateChecker {
 	private static int latest = -1;
 
 	public static void notify(final BotGUI instance) {
-		if (Configuration.getVersion() >= getLatestVersion()) {
-			return;
-		}
-		log.info("New version available");
-		final int update = JOptionPane.showConfirmDialog(instance,
-				"A newer version is available. Do you wish to update?", "Update Found", JOptionPane.YES_NO_OPTION);
-		if (update != 0) {
-			return;
-		}
-		try {
-			update(instance);
-		} catch (final Exception e) {
-			log.warning("Unable to apply update");
+		if (new File(Configuration.Paths.ROOT, ".git").exists() && findGit() != null) {
+			log.info("You can check for an update by clicking \"Update Bot\" in the About tab.");
+		} else {
+			if (Configuration.getVersion() >= getLatestVersion()) {
+				return;
+			}
+			log.info("New version available");
+			final int update = JOptionPane.showConfirmDialog(instance, "A newer version is available. Do you wish to update?", "Update Found", JOptionPane.YES_NO_OPTION);
+			if (update != 0) {
+				return;
+			}
+			try {
+				update(instance);
+			} catch (final Exception e) {
+				log.warning("Unable to apply update");
+			}
 		}
 	}
 
