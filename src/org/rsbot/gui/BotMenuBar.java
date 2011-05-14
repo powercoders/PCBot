@@ -124,9 +124,9 @@ public class BotMenuBar extends JMenuBar {
 		map.put(Messages.HIDEBOT, Configuration.Paths.Resources.ICON_ARROWIN);
 		map.put(Messages.EXIT, Configuration.Paths.Resources.ICON_CLOSE);
 		map.put(Messages.ACCOUNTS, Configuration.Paths.Resources.ICON_REPORTKEY);
-		map.put("Site", Configuration.Paths.Resources.ICON_WEBLINK);
-		map.put("Project", Configuration.Paths.Resources.ICON_USEREDIT);
-		map.put("About", Configuration.Paths.Resources.ICON_INFO);
+		map.put(Messages.SITE, Configuration.Paths.Resources.ICON_WEBLINK);
+		map.put(Messages.PROJECT, Configuration.Paths.Resources.ICON_USEREDIT);
+		map.put(Messages.ABOUT, Configuration.Paths.Resources.ICON_INFO);
 		for (final Entry<String, String> item : map.entrySet()) {
 			final JMenuItem menu = commandMenuItem.get(item.getKey());
 			menu.setIcon(new ImageIcon(Configuration.getImage(item.getValue())));
