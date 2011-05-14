@@ -55,23 +55,32 @@ public class BotMenuBar extends JMenuBar {
 		DEBUG_MAP.put("Log Messages", MessageLogger.class);
 
 		TITLES = new String[]{Messages.FILE, Messages.EDIT, Messages.VIEW, Messages.HELP};
-		ELEMENTS = new String[][]{
-				{Messages.NEWBOT, Messages.CLOSEBOT, Messages.MENUSEPERATOR,
-						Messages.SERVICEKEY, Messages.ADDSCRIPT, Messages.RUNSCRIPT, Messages.STOPSCRIPT, Messages.PAUSESCRIPT, Messages.MENUSEPERATOR,
+		ELEMENTS = new String[][] {
+				{ Messages.NEWBOT, Messages.CLOSEBOT, Messages.MENUSEPERATOR,
+						Messages.SERVICEKEY, Messages.ADDSCRIPT,
+						Messages.RUNSCRIPT, Messages.STOPSCRIPT,
+						Messages.PAUSESCRIPT, Messages.MENUSEPERATOR,
 						Messages.SAVESCREENSHOT, Messages.MENUSEPERATOR,
-						Messages.HIDEBOT, Messages.EXIT},
-				{"Accounts", Messages.MENUSEPERATOR,
-						"ToggleF Force Input", Messages.TOGGLEFALSE + " " + Messages.LESSCPU, Messages.MENUSEPERATOR,
-						"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", Messages.MENUSEPERATOR,
-						"ToggleF Disable Advertisements", "ToggleF Disable Monitoring", "ToggleF Disable Confirmations", Messages.TOGGLEFALSE + " " + Messages.AUTOSHUTDOWN}, constructDebugs(),
-				{"Site", "Project", "About"}};
+						Messages.HIDEBOT, Messages.EXIT },
+				{ Messages.ACCOUNTS, Messages.MENUSEPERATOR,
+						Messages.TOGGLEFALSE + Messages.FORCEINPUT,
+						Messages.TOGGLEFALSE + Messages.LESSCPU,
+						Messages.MENUSEPERATOR,
+						Messages.TOGGLEFALSE + Messages.DISABLEANTIRANDOMS,
+						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN,
+						Messages.MENUSEPERATOR,
+						Messages.TOGGLEFALSE + Messages.DISABLEADS,
+						Messages.TOGGLEFALSE + Messages.DISABLEMONITORING,
+						Messages.TOGGLEFALSE + Messages.DISABLECONFIRMATIONS,
+						Messages.TOGGLEFALSE + Messages.AUTOSHUTDOWN },
+				constructDebugs(), { Messages.SITE, Messages.PROJECT, Messages.ABOUT}};
 	}
 
 	private static String[] constructDebugs() {
 		final List<String> debugItems = new ArrayList<String>();
-		debugItems.add("Hide Toolbar");
-		debugItems.add("Hide Log Window");
-		debugItems.add("All Debugging");
+		debugItems.add(Messages.HIDETOOLBAR);
+		debugItems.add(Messages.HIDELOGPANE);
+		debugItems.add(Messages.ALLDEBUGGING);
 		debugItems.add(Messages.MENUSEPERATOR);
 		for (final String key : DEBUG_MAP.keySet()) {
 			final Class<?> el = DEBUG_MAP.get(key);
@@ -96,7 +105,7 @@ public class BotMenuBar extends JMenuBar {
 		for (final ListIterator<String> it = debugItems.listIterator(); it.hasNext();) {
 			final String s = it.next();
 			if (!s.equals(Messages.MENUSEPERATOR)) {
-				it.set("ToggleF " + s);
+				it.set(Messages.TOGGLEFALSE + s);
 			}
 		}
 		return debugItems.toArray(new String[debugItems.size()]);
@@ -114,7 +123,7 @@ public class BotMenuBar extends JMenuBar {
 		map.put(Messages.SAVESCREENSHOT, Configuration.Paths.Resources.ICON_PHOTO);
 		map.put(Messages.HIDEBOT, Configuration.Paths.Resources.ICON_ARROWIN);
 		map.put(Messages.EXIT, Configuration.Paths.Resources.ICON_CLOSE);
-		map.put("Accounts", Configuration.Paths.Resources.ICON_REPORTKEY);
+		map.put(Messages.ACCOUNTS, Configuration.Paths.Resources.ICON_REPORTKEY);
 		map.put("Site", Configuration.Paths.Resources.ICON_WEBLINK);
 		map.put("Project", Configuration.Paths.Resources.ICON_USEREDIT);
 		map.put("About", Configuration.Paths.Resources.ICON_INFO);
@@ -138,7 +147,7 @@ public class BotMenuBar extends JMenuBar {
 		}
 		constructItemIcons();
 		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
-		commandCheckMap.get("Disable Monitoring").setVisible(false);
+		commandCheckMap.get(Messages.DISABLEMONITORING).setVisible(false);
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
 		commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
 		if (Configuration.RUNNING_FROM_JAR) {
@@ -153,12 +162,12 @@ public class BotMenuBar extends JMenuBar {
 	}
 
 	public void setOverrideInput(final boolean force) {
-		commandCheckMap.get("Force Input").setSelected(force);
+		commandCheckMap.get(Messages.FORCEINPUT).setSelected(force);
 	}
 
 	public void setPauseScript(final boolean pause) {
 		final JMenuItem item = commandMenuItem.get(Messages.PAUSESCRIPT);
-		item.setText(pause ? "Resume Script" : Messages.PAUSESCRIPT);
+		item.setText(pause ? Messages.RESUMESCRIPT : Messages.PAUSESCRIPT);
 		final Image image = Configuration.getImage(pause ? Configuration.Paths.Resources.ICON_START : Configuration.Paths.Resources.ICON_PAUSE);
 		item.setIcon(new ImageIcon(image));
 	}
@@ -178,7 +187,7 @@ public class BotMenuBar extends JMenuBar {
 				item.setSelected(false);
 				item.setEnabled(false);
 			}
-			disable("All Debugging", "Force Input", Messages.LESSCPU, "Disable Anti-Randoms", "Disable Auto Login");
+			disable(Messages.ALLDEBUGGING, Messages.FORCEINPUT, Messages.LESSCPU, Messages.DISABLEANTIRANDOMS, Messages.DISABLEAUTOLOGIN);
 		} else {
 			commandMenuItem.get(Messages.CLOSEBOT).setEnabled(true);
 			commandMenuItem.get(Messages.RUNSCRIPT).setEnabled(true);
@@ -194,11 +203,11 @@ public class BotMenuBar extends JMenuBar {
 					++selections;
 				}
 			}
-			enable("All Debugging", selections == eventCheckMap.size());
-			enable("Force Input", bot.overrideInput);
+			enable(Messages.ALLDEBUGGING, selections == eventCheckMap.size());
+			enable(Messages.FORCEINPUT, bot.overrideInput);
 			enable(Messages.LESSCPU, bot.disableRendering);
-			enable("Disable Anti-Randoms", bot.disableRandoms);
-			enable("Disable Auto Login", bot.disableAutoLogin);
+			enable(Messages.DISABLEANTIRANDOMS, bot.disableRandoms);
+			enable(Messages.DISABLEAUTOLOGIN, bot.disableAutoLogin);
 		}
 	}
 

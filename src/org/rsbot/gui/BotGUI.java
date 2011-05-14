@@ -155,16 +155,16 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				cleanExit(false);
 			}
 		} else if (menu.equals(Messages.EDIT)) {
-			if (option.equals("Accounts")) {
+			if (option.equals(Messages.ACCOUNTS)) {
 				AccountManager.getInstance().showGUI();
-			} else if (option.equals("Disable Advertisements")) {
+			} else if (option.equals(Messages.DISABLEADS)) {
 				showAds = !((JCheckBoxMenuItem) evt.getSource()).isSelected();
-			} else if (option.equals("Disable Monitoring")) {
+			} else if (option.equals(Messages.DISABLEMONITORING)) {
 				Monitoring.setEnabled(!((JCheckBoxMenuItem) evt.getSource()).isSelected());
 				if (!Monitoring.isEnabled()) {
 					log.info("Monitoring data is used to improve development, please enable it to help us");
 				}
-			} else if (option.equals("Disable Confirmations")) {
+			} else if (option.equals(Messages.DISABLECONFIRMATIONS)) {
 				disableConfirmations = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 			} else if (option.equals(Messages.AUTOSHUTDOWN)) {
 				final boolean enabled = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
@@ -206,15 +206,15 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			} else {
 				final Bot current = getCurrentBot();
 				if (current != null) {
-					if (option.equals("Force Input")) {
+					if (option.equals(Messages.FORCEINPUT)) {
 						final boolean selected = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 						current.overrideInput = selected;
 						updateScriptControls();
 					} else if (option.equals(Messages.LESSCPU)) {
 						lessCpu(true);
-					} else if (option.equals("Disable Anti-Randoms")) {
+					} else if (option.equals(Messages.DISABLEANTIRANDOMS)) {
 						current.disableRandoms = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
-					} else if (option.equals("Disable Auto Login")) {
+					} else if (option.equals(Messages.DISABLEAUTOLOGIN)) {
 						current.disableAutoLogin = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					}
 				}
@@ -222,12 +222,12 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		} else if (menu.equals(Messages.VIEW)) {
 			final Bot current = getCurrentBot();
 			final boolean selected = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
-			if (option.equals("Hide Toolbar")) {
+			if (option.equals(Messages.HIDETOOLBAR)) {
 				toggleViewState(toolBar, selected);
-			} else if (option.equals("Hide Log Window")) {
+			} else if (option.equals(Messages.HIDELOGPANE)) {
 				toggleViewState(textScroll, selected);
 			} else if (current != null) {
-				if (option.equals("All Debugging")) {
+				if (option.equals(Messages.ALLDEBUGGING)) {
 					for (final String key : BotMenuBar.DEBUG_MAP.keySet()) {
 						final Class<?> el = BotMenuBar.DEBUG_MAP.get(key);
 						if (menuBar.getCheckBox(key).isVisible()) {
@@ -250,18 +250,18 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					if (selected) {
 						current.addListener(el);
 					} else {
-						menuBar.getCheckBox("All Debugging").setSelected(false);
+						menuBar.getCheckBox(Messages.ALLDEBUGGING).setSelected(false);
 						current.removeListener(el);
 					}
 				}
 			}
 		} else if (menu.equals(Messages.HELP)) {
-			if (option.equals("Site")) {
+			if (option.equals(Messages.SITE)) {
 				openURL(Configuration.Paths.URLs.SITE);
-			} else if (option.equals("Project")) {
+			} else if (option.equals(Messages.PROJECT)) {
 				openURL(Configuration.Paths.URLs.PROJECT);
-			} else if (option.equals("About")) {
-				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + Configuration.Paths.URLs.SITE + "/ for more information."}, "About", JOptionPane.INFORMATION_MESSAGE);
+			} else if (option.equals(Messages.ABOUT)) {
+				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + Configuration.Paths.URLs.SITE + "/ for more information."}, option, JOptionPane.INFORMATION_MESSAGE);
 			}
 		} else if (menu.equals("Tab")) {
 			final Bot curr = getCurrentBot();
