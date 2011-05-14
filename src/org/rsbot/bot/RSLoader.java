@@ -111,11 +111,12 @@ public class RSLoader extends Applet implements Runnable, Loader {
 		} catch (final IOException ex) {
 			log.severe("Unable to load client: " + ex.getMessage());
 		} catch (final ParseException ex) {
-			log.severe("Unable to load client: " + ex.toString() + "\nPlease restart RSBot to see if it solves the issue.");
+			log.info("Unable to load client: " + ex.toString());
 			final File ms = new File(GlobalConfiguration.Paths.getModScriptCache());
 			if (ms.exists()) {
 				ms.delete();
 			}
+			log.severe("Restart RSBot to solve this issue!");
 		}
 	}
 

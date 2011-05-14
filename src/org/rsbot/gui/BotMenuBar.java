@@ -163,7 +163,9 @@ public class BotMenuBar extends JMenuBar {
 		final JMenuItem item = commandMenuItem.get(Messages.PAUSESCRIPT);
 		item.setText(pause ? "Resume Script" : Messages.PAUSESCRIPT);
 		final Image image = GlobalConfiguration.getImage(pause ? GlobalConfiguration.Paths.Resources.ICON_START : GlobalConfiguration.Paths.Resources.ICON_PAUSE);
-		item.setIcon(new ImageIcon(image));
+		if (image != null) {
+			item.setIcon(new ImageIcon(image));
+		}
 	}
 
 	public JMenuItem getMenuItem(final String name) {
