@@ -30,6 +30,7 @@ public class Application {
 			gui.setVisible(true);
 		} catch (final Exception e) {
 			e.printStackTrace();
+			System.out.print(e.getMessage());
 			System.exit(1);
 		}
 	}

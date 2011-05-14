@@ -353,6 +353,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		final Bot bot = new Bot();
 		bots.add(bot);
 		toolBar.addTab();
+		toolBar.disableStopButton();
 		bot.getScriptHandler().addScriptListener(this);
 		new Thread(new Runnable() {
 			public void run() {
@@ -367,6 +368,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		if (idx >= 0) {
 			toolBar.removeTab(idx + botsIndex);
 		}
+		toolBar.disableStopButton();
 		bots.remove(idx);
 		bot.getScriptHandler().stopAllScripts();
 		bot.getScriptHandler().removeScriptListener(this);
@@ -484,6 +486,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			public void run() {
 				final Bot bot = handler.getBot();
 				if (bot == getCurrentBot()) {
+					toolBar.enableStopButton();
 					bot.inputFlags = Environment.INPUT_KEYBOARD;
 					bot.overrideInput = false;
 					updateScriptControls();
@@ -498,6 +501,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public void scriptStopped(final ScriptHandler handler, final Script script) {
 		final Bot bot = handler.getBot();
 		if (bot == getCurrentBot()) {
+			toolBar.disableStopButton();
 			bot.inputFlags = Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE;
 			bot.overrideInput = false;
 			updateScriptControls();
