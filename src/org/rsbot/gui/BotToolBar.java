@@ -83,9 +83,8 @@ public class BotToolBar extends JToolBar {
 		screenshotButton.setFocusable(false);
 		screenshotButton.setToolTipText(screenshotButton.getText());
 		screenshotButton.setText("");
-		
 
-		stopScriptButton = new JButton("Stop Script", new ImageIcon(
+		stopScriptButton = new JButton("Stop", new ImageIcon(
 				Configuration.getImage(Configuration.Paths.Resources.ICON_DELETE)));
 		stopScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -156,16 +155,6 @@ public class BotToolBar extends JToolBar {
 			}
 		});
 	}
-	
-	public void enableStopButton() {
-		stopScriptButton.setEnabled(true);
-		stopScriptButton.setVisible(true);
-	}
-	
-	public void disableStopButton() {
-		stopScriptButton.setEnabled(false);
-		stopScriptButton.setVisible(false);
-	}
 
 	public void setTabLabel(final int idx, final String label) {
 		((BotButton) getComponentAtIndex(idx)).setText(label);
@@ -213,11 +202,13 @@ public class BotToolBar extends JToolBar {
 
 	public void setScriptButton(final int state) {
 		String text = null, pathResource = null;
+		boolean running = true;
 
 		switch (state) {
 		case RUN_SCRIPT:
 			text = "Run";
 			pathResource = Configuration.Paths.Resources.ICON_PLAY;
+			running = false;
 			break;
 		case PAUSE_SCRIPT:
 			text = "Pause";
@@ -229,6 +220,7 @@ public class BotToolBar extends JToolBar {
 			break;
 		}
 
+		stopScriptButton.setVisible(running);
 		runScriptButton.setToolTipText(text);
 		runScriptButton.setIcon(new ImageIcon(Configuration.getImage(pathResource)));
 		runScriptButton.repaint();
