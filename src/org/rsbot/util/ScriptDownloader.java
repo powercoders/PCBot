@@ -21,7 +21,6 @@ public class ScriptDownloader {
 	public static void save(String source) {
 		final String javac = findJavac();
 		if (javac == null || javac.length() == 0) {
-			log.info(javac);
 			log.warning("JDK is not installed");
 			return;
 		}
