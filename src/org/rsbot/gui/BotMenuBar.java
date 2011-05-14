@@ -6,7 +6,6 @@ import org.rsbot.bot.Bot;
 import org.rsbot.event.impl.*;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.event.listeners.TextPaintListener;
-import org.rsbot.util.UpdateChecker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,7 +73,7 @@ public class BotMenuBar extends JMenuBar {
 						Messages.TOGGLEFALSE + Messages.DISABLEMONITORING,
 						Messages.TOGGLEFALSE + Messages.DISABLECONFIRMATIONS,
 						Messages.TOGGLEFALSE + Messages.AUTOSHUTDOWN },
-				constructDebugs(), { Messages.SITE, Messages.PROJECT, Messages.ABOUT, Messages.DEVUPDATE}};
+				constructDebugs(), { Messages.SITE, Messages.PROJECT, Messages.ABOUT}};
 	}
 
 	private static String[] constructDebugs() {
@@ -125,10 +124,9 @@ public class BotMenuBar extends JMenuBar {
 		map.put(Messages.HIDEBOT, Configuration.Paths.Resources.ICON_ARROWIN);
 		map.put(Messages.EXIT, Configuration.Paths.Resources.ICON_CLOSE);
 		map.put(Messages.ACCOUNTS, Configuration.Paths.Resources.ICON_REPORTKEY);
-		map.put("Site", Configuration.Paths.Resources.ICON_WEBLINK);
-		map.put("Project", Configuration.Paths.Resources.ICON_USEREDIT);
-		map.put("About", Configuration.Paths.Resources.ICON_INFO);
-		map.put(Messages.DEVUPDATE, Configuration.Paths.Resources.ICON_APPADD);
+		map.put(Messages.SITE, Configuration.Paths.Resources.ICON_WEBLINK);
+		map.put(Messages.PROJECT, Configuration.Paths.Resources.ICON_USEREDIT);
+		map.put(Messages.ABOUT, Configuration.Paths.Resources.ICON_INFO);
 		for (final Entry<String, String> item : map.entrySet()) {
 			final JMenuItem menu = commandMenuItem.get(item.getKey());
 			menu.setIcon(new ImageIcon(Configuration.getImage(item.getValue())));
@@ -151,7 +149,6 @@ public class BotMenuBar extends JMenuBar {
 		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
 		commandCheckMap.get(Messages.DISABLEMONITORING).setVisible(false);
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
-		commandMenuItem.get(Messages.DEVUPDATE).setVisible(new File(Configuration.Paths.ROOT, ".git").exists() && UpdateChecker.findGit() != null);
 		commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
 		if (Configuration.RUNNING_FROM_JAR) {
 			for (String disableFeature : DEVELOPER_CHECK_FEATURES) {

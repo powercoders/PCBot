@@ -257,10 +257,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				openURL(Configuration.Paths.URLs.SITE);
 			} else if (option.equals(Messages.PROJECT)) {
 				openURL(Configuration.Paths.URLs.PROJECT);
-			} else if (option.equals("About")) {
-				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + Configuration.Paths.URLs.SITE + "/ for more information."}, "About", JOptionPane.INFORMATION_MESSAGE);
-			} else if (option.equals(Messages.DEVUPDATE)) {
-				UpdateChecker.internalDeveloperUpdate(BotGUI.this);
+			} else if (option.equals(Messages.ABOUT)) {
+				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + Configuration.Paths.URLs.SITE + "/ for more information."}, option, JOptionPane.INFORMATION_MESSAGE);
 			}
 		} else if (menu.equals("Tab")) {
 			final Bot curr = getCurrentBot();
@@ -582,21 +580,12 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				doExit = false;
 			}
 		}
+		WebQueue.Destroy();
 		setVisible(false);
-		try {
-			WebQueue.Destroy();
-		} catch (NoClassDefFoundError ignored) {
-		}
-		try {
-			Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(showAds));
-		} catch (NoClassDefFoundError ignored) {
-		}
+		Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(showAds));
 		if (doExit) {
 			menuBar.savePrefs();
-			try {
-				Monitoring.stop();
-			} catch (NoClassDefFoundError ignored) {
-			}
+			Monitoring.stop();
 			System.exit(0);
 		} else {
 			setVisible(true);
