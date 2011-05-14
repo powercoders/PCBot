@@ -182,12 +182,17 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 									return;
 								}
 							}
-							log.info("Shutting down in 1 minute...");
+							final int delay = 3;
+							log.info("Shutdown pending in " + delay + " minutes...");
+							final Point[] mouse = new Point[] {MouseInfo.getPointerInfo().getLocation(), null};
 							try {
-								Thread.sleep(1 * 60 * 1000);
+								Thread.sleep(delay * 60 * 1000);
 							} catch (InterruptedException ignored) {
 							}
-							if (!menuBar.isTicked(option)) {
+							mouse[1] = MouseInfo.getPointerInfo().getLocation();
+							if (mouse[0].x != mouse[1].x || mouse[0].y != mouse[1].y) {
+								log.info("Mouse activity detected, delaying shutdown");
+							} else if (!menuBar.isTicked(option)) {
 								log.info("Shutdown cancelled");
 							} else if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
 								try {
