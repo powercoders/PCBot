@@ -1,6 +1,6 @@
 package org.rsbot.gui;
 
-import org.rsbot.service.ScriptDeliveryNetwork;
+import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
 

@@ -1,4 +1,4 @@
-package org.rsbot.service;
+package org.rsbot.script.provider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

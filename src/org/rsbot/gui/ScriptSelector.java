@@ -4,6 +4,10 @@ import org.rsbot.bot.Bot;
 import org.rsbot.script.Script;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
+import org.rsbot.script.provider.FileScriptSource;
+import org.rsbot.script.provider.ScriptDefinition;
+import org.rsbot.script.provider.ScriptDeliveryNetwork;
+import org.rsbot.script.provider.ScriptSource;
 import org.rsbot.service.*;
 import org.rsbot.util.GlobalConfiguration;
 

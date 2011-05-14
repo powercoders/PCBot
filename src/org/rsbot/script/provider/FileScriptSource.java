@@ -1,7 +1,8 @@
-package org.rsbot.service;
+package org.rsbot.script.provider;
 
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
+import org.rsbot.service.ServiceException;
 import org.rsbot.util.GlobalConfiguration;
 
 import java.io.File;

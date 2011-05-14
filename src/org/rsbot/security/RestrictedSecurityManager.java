@@ -2,7 +2,7 @@ package org.rsbot.security;
 
 import org.rsbot.Application;
 import org.rsbot.gui.BotGUI;
-import org.rsbot.service.ScriptDeliveryNetwork;
+import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.util.AccountStore;
 import org.rsbot.util.GlobalConfiguration;
 import org.rsbot.util.ScriptDownloader;
