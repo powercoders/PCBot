@@ -86,6 +86,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	private void init() {
+		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT));
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		bot.getScriptHandler().addScriptListener(ScriptSelector.this);

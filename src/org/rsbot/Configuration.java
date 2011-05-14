@@ -48,6 +48,7 @@ public class Configuration {
 			public static final String ICON_CONNECT = ROOT_IMG + "/connect.png";
 			public static final String ICON_DISCONNECT = ROOT_IMG + "/disconnect.png";
 			public static final String ICON_START = ROOT_IMG + "/control_play.png";
+			public static final String ICON_SCRIPT = ROOT_IMG + "/script.png";
 			public static final String ICON_SCRIPT_ADD = ROOT_IMG + "/script_add.png";
 			public static final String ICON_SCRIPT_LIVE = ROOT_IMG + "/script_lightning.png";
 			public static final String ICON_SCRIPT_GEAR = ROOT_IMG + "/script_gear.png";
