@@ -2,8 +2,6 @@ package org.rsbot.script.web;
 
 import java.util.LinkedList;
 
-import org.rsbot.script.wrappers.RSTile;
-
 public class Route {
 	private LinkedList<RouteStep> subRoutes = new LinkedList<RouteStep>();
 
@@ -21,13 +19,4 @@ public class Route {
 		}
 		return true;
 	}
-
-	public RSTile getDestination() {
-		return subRoutes.getLast().getDestination();
-	}
-
-	public RSTile getStart() {
-		return subRoutes.getFirst().getStart();
-	}
-
 }

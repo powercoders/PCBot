@@ -95,59 +95,42 @@ public class Walking extends MethodProvider {
 	 * Walks to the given tile using the minimap with given randomness.
 	 *
 	 * @param t The tile to walk to.
-	 * @param x The max x randomness
-	 * @param y The max y randomness
+	 * @param x The x randomness (between 0 and x-1).
+	 * @param y The y randomness (between 0 and y-1).
 	 * @return <tt>true</tt> if the tile was clicked; otherwise <tt>false</tt>.
 	 */
 	public boolean walkTileMM(final RSTile t, final int x, final int y) {
-		return walkTileMM(t, x, y, 0, 0, 0);
-	}
-
-	/**
-	 * Walks to the given tile using the minimap with given randomness
-	 *
-	 * @param t The tile to walk to.
-	 * @param x The max x randomness of the tile
-	 * @param y The max y randomness of the tile
-	 * @param xx The max x randomness of the calculated point. (This does not effect the final point to be clicked!)
-	 * @param yy The max y randomness of the calculated point. (This does not effect the final point to be clicked!)
-	 * @param maxAfterOffset The maximum number of pixels for both axes to move shortly after moving/clicking
-	 * @return <tt>true</tt> if the tile was clicked; otherwise <tt>false</tt>.
-	 */
-	public boolean walkTileMM(final RSTile t, final int x, final int y, final int xx, final int yy, final int maxAfterOffset) {
-		int x2 = t.getX(), y2 = t.getY();
+		int xx = t.getX(), yy = t.getY();
 		if (x > 0) {
-			if (random(1, 3) == random(1, 3)) {
-				x2 += random(0, x + 1);
+			if (random(1, 2) == random(1, 2)) {
+				xx += random(0, x);
 			} else {
-				x2 -= random(0, x + 1);
+				xx -= random(0, x);
 			}
 		}
 		if (y > 0) {
-			if (random(1, 3) == random(1, 3)) {
-				y2 = +random(0, y + 1);
+			if (random(1, 2) == random(1, 2)) {
+				yy += random(0, y);
 			} else {
-				y2 -= random(0, y + 1);
+				yy -= random(0, y);
 			}
 		}
-		RSTile dest = new RSTile(x2, y2);
+		RSTile dest = new RSTile(xx, yy);
 		if (!methods.calc.tileOnMap(dest)) {
 			dest = getClosestTileOnMap(dest);
 		}
 		final Point p = methods.calc.tileToMinimap(dest);
 		if (p.x != -1 && p.y != -1) {
-			methods.mouse.move(p, random(-xx, xx + 1), random(-yy, yy + 1), random(0, maxAfterOffset + 1));
+			methods.mouse.move(p);
 			final Point p2 = methods.calc.tileToMinimap(dest);
 			if (p2.x != -1 && p2.y != -1) {
-				if (!methods.mouse.getLocation().equals(p2)) {
+				if (!methods.mouse.getLocation().equals(p2)) {//We must've moved while walking, move again!
 					methods.mouse.move(p2);
 				}
-				final Point p3 = methods.calc.tileToMinimap(dest);
-				if (p3.x != -1 && p3.y != -1 && !methods.mouse.getLocation().equals(p3)) {
-					methods.mouse.hop(p3); //If it really makes you happy, Timer.
+				if (!methods.mouse.getLocation().equals(p2)) {//Get exact since we're moving... should be removed?
+					methods.mouse.hop(p2);
 				}
-				Point point = p3.x != -1 && p3.y != -1 ? p3 : p2;
-				methods.mouse.click(point.x, point.y, 0, 0, true, random(0, maxAfterOffset + 1));
+				methods.mouse.click(true);
 				return true;
 			}
 		}
@@ -164,15 +147,15 @@ public class Walking extends MethodProvider {
 	public boolean walkTileMM(final RSTile t, final int r) {
 		int x = t.getX();
 		int y = t.getY();
-		if (random(1, 3) == random(1, 3)) { //Remember: random(int, int)'s 2nd param is EXCLUSIVE (random(1, 2) will always return 1).
-			x += random(0, r  + 1);
+		if (random(1, 2) == random(1, 2)) {
+			x += random(0, r);
 		} else {
-			x -= random(0, r + 1);
+			x -= random(0, r);
 		}
-		if (random(1, 3) == random(1, 3)) {
-			y += random(0, r + 1);
+		if (random(1, 2) == random(1, 2)) {
+			y += random(0, r);
 		} else {
-			y -= random(0, r + 1);
+			y -= random(0, r);
 		}
 		final RSTile dest = new RSTile(x, y);
 		return !methods.players.getMyPlayer().getLocation().equals(dest) && walkTileMM(dest, 0, 0);
@@ -346,7 +329,7 @@ public class Walking extends MethodProvider {
 	 */
 	public RSTile getCollisionOffset(final int plane) {
 		final org.rsbot.client.RSGroundData data = methods.client
-				.getRSGroundDataArray()[plane];
+		.getRSGroundDataArray()[plane];
 		return new RSTile(data.getX(), data.getY());
 	}
 
@@ -364,7 +347,8 @@ public class Walking extends MethodProvider {
 	 *             .
 	 */
 	@Deprecated
-	public RSTile randomizeTile(final RSTile tile, final int maxXDeviation, final int maxYDeviation) {
+	public RSTile randomizeTile(final RSTile tile, final int maxXDeviation,
+			final int maxYDeviation) {
 		return randomize(tile, maxXDeviation, maxYDeviation);
 	}
 
@@ -543,7 +527,7 @@ public class Walking extends MethodProvider {
 	 */
 	@Deprecated
 	public RSTile[] randomizePath(final RSTile[] path, final int maxXDeviation,
-	                              final int maxYDeviation) {
+			final int maxYDeviation) {
 		final RSTile[] rez = new RSTile[path.length];
 		for (int i = 0; i < path.length; i++) {
 			rez[i] = randomize(path[i], maxXDeviation, maxYDeviation);

@@ -10,8 +10,7 @@ import org.rsbot.script.wrappers.RSTile;
  * @author Timer
  */
 public abstract class Teleport extends MethodProvider implements Prerequisites, Transportation {
-	private final RSTile teleportationLocation;
-	private RSTile teleportationStart = null;
+	public final RSTile teleportationLocation;
 
 	public Teleport(final MethodContext ctx, final RSTile teleportationLocation) {
 		super(ctx);
@@ -20,13 +19,5 @@ public abstract class Teleport extends MethodProvider implements Prerequisites, 
 
 	public RSTile teleportationLocation() {
 		return teleportationLocation;
-	}
-
-	public void setBeginning(RSTile start) {
-		teleportationStart = start;
-	}
-
-	public RSTile teleportationBeginning() {
-		return teleportationStart;
 	}
 }

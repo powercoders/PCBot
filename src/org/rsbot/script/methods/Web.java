@@ -96,7 +96,6 @@ public class Web extends MethodProvider {
 		if (transportationHandler.canTeleport(end)) {
 			Teleport teleport = transportationHandler.getTeleport(end);
 			if (teleport.teleportationLocation().getZ() == end.getZ()) {
-				teleport.setBeginning(methods.players.getMyPlayer().getLocation());
 				RouteStep teleportStep = new RouteStep(methods, transportationHandler.getTeleport(end));
 				start = teleport.teleportationLocation();
 				routeSteps.add(teleportStep);
@@ -113,7 +112,7 @@ public class Web extends MethodProvider {
 
 	public RSWeb getWeb(RSTile start, final RSTile end) {
 		Route onlyRoute = generateRoute(start, end);
-		return new RSWeb(methods, new Route[]{onlyRoute});
+		return new RSWeb(new Route[]{onlyRoute});
 	}
 
 	/**
