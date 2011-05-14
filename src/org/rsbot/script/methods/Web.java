@@ -26,7 +26,17 @@ public class Web extends MethodProvider {
 	}
 
 	public RSTile getNearestBank(final RSTile tile) {
-		return null;
+		double dist = -1.0D;
+		RSTile finalTile = null;
+		final RSTile[] BANKS = {new RSTile(3093, 3243, 0)};
+		for (RSTile bank : BANKS) {
+			double cdist = methods.calc.distanceBetween(tile, bank);
+			if (dist < cdist || dist == -1.0D) {
+				dist = cdist;
+				finalTile = bank;
+			}
+		}
+		return finalTile;
 	}
 
 	/**
