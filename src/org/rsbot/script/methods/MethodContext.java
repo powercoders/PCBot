@@ -182,11 +182,6 @@ public class MethodContext {
 	public final Lobby lobby = new Lobby(this);
 
 	/**
-	 * The singleton of Paint
-	 */
-	public final Paint paint = new Paint(this);
-
-	/**
 	 * The Bot's input manager
 	 */
 	public final InputManager inputManager;

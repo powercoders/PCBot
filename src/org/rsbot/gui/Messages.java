@@ -27,6 +27,7 @@ public interface Messages {
 	public static final String DISABLECONFIRMATIONS = "Disable Confirmations";
 	public static final String LESSCPU = "Less CPU";
 	public static final String AUTOSHUTDOWN = "Auto Shutdown";
+	public static final String DEVUPDATE = "Update Bot";
 
 	public static final String HIDETOOLBAR = "Hide Toolbar";
 	public static final String HIDELOGPANE = "Hide Log Pane";

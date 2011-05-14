@@ -16,8 +16,8 @@ import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
-import org.rsbot.util.io.ScreenshotUtil;
 import org.rsbot.util.UpdateChecker;
+import org.rsbot.util.io.ScreenshotUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,9 +63,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (showAds) {
 					new SplashAd(BotGUI.this).display();
 				}
-				if (Configuration.RUNNING_FROM_JAR) {
-					UpdateChecker.notify(BotGUI.this);
-				}
+				UpdateChecker.notify(BotGUI.this);
 				if (Configuration.Twitter.ENABLED) {
 					TwitterUpdates.loadTweets(Configuration.Twitter.MESSAGES);
 				}
@@ -261,6 +259,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				openURL(Configuration.Paths.URLs.PROJECT);
 			} else if (option.equals(Messages.ABOUT)) {
 				JOptionPane.showMessageDialog(this, new String[]{"An open source bot developed by the community.", "Visit " + Configuration.Paths.URLs.SITE + "/ for more information."}, option, JOptionPane.INFORMATION_MESSAGE);
+			} else if (option.equals(Messages.DEVUPDATE)) {
+				UpdateChecker.internalDeveloperUpdate(BotGUI.this);
 			}
 		} else if (menu.equals("Tab")) {
 			final Bot curr = getCurrentBot();

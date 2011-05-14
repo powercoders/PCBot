@@ -6,6 +6,7 @@ import org.rsbot.bot.Bot;
 import org.rsbot.event.impl.*;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.event.listeners.TextPaintListener;
+import org.rsbot.util.UpdateChecker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -127,6 +128,7 @@ public class BotMenuBar extends JMenuBar {
 		map.put("Site", Configuration.Paths.Resources.ICON_WEBLINK);
 		map.put("Project", Configuration.Paths.Resources.ICON_USEREDIT);
 		map.put("About", Configuration.Paths.Resources.ICON_INFO);
+		map.put(Messages.DEVUPDATE, Configuration.Paths.Resources.ICON_APPADD);
 		for (final Entry<String, String> item : map.entrySet()) {
 			final JMenuItem menu = commandMenuItem.get(item.getKey());
 			menu.setIcon(new ImageIcon(Configuration.getImage(item.getValue())));
@@ -149,6 +151,7 @@ public class BotMenuBar extends JMenuBar {
 		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
 		commandCheckMap.get(Messages.DISABLEMONITORING).setVisible(false);
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
+		commandMenuItem.get(Messages.DEVUPDATE).setVisible(new File(Configuration.Paths.ROOT, ".git").exists() && UpdateChecker.findGit() != null);
 		commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
 		if (Configuration.RUNNING_FROM_JAR) {
 			for (String disableFeature : DEVELOPER_CHECK_FEATURES) {
@@ -169,7 +172,9 @@ public class BotMenuBar extends JMenuBar {
 		final JMenuItem item = commandMenuItem.get(Messages.PAUSESCRIPT);
 		item.setText(pause ? Messages.RESUMESCRIPT : Messages.PAUSESCRIPT);
 		final Image image = Configuration.getImage(pause ? Configuration.Paths.Resources.ICON_START : Configuration.Paths.Resources.ICON_PAUSE);
-		item.setIcon(new ImageIcon(image));
+		if (image != null) {
+			item.setIcon(new ImageIcon(image));
+		}
 	}
 
 	public JMenuItem getMenuItem(final String name) {
