@@ -30,19 +30,6 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 	private long lastNotice;
 
 	/**
-	 * Finalized to cause errors intentionally to avoid confusion
-	 * (yea I know how to deal with these script writers ;)).
-	 *
-	 * @param map The arguments passed in from the description.
-	 * @return <tt>true</tt> if the script can start.
-	 * @deprecated Use {@link #onStart()} instead.
-	 */
-	@Deprecated
-	public final boolean onStart(final Map<String, String> map) {
-		return true;
-	}
-
-	/**
 	 * Called before loop() is first called, after this script has
 	 * been initialized with all method providers. Override to
 	 * perform any initialization or prevent script start.

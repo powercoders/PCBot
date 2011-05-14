@@ -109,7 +109,6 @@ final class FieldWriter implements FieldVisitor {
 	// Implementation of the FieldVisitor interface
 	// ------------------------------------------------------------------------
 
-	@Override
 	public AnnotationVisitor visitAnnotation(
 			final String desc,
 			final boolean visible) {
@@ -130,13 +129,11 @@ final class FieldWriter implements FieldVisitor {
 		return aw;
 	}
 
-	@Override
 	public void visitAttribute(final Attribute attr) {
 		attr.next = attrs;
 		attrs = attr;
 	}
 
-	@Override
 	public void visitEnd() {
 	}
 

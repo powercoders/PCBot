@@ -9,7 +9,8 @@ import org.rsbot.script.wrappers.RSObject;
 /**
  * Magic tab and spell related operations.
  *
- * @author Jacmob, Aut0r, Timer
+ * @author Jacmob
+ * @author Timer
  */
 public class Magic extends MethodProvider {
 
