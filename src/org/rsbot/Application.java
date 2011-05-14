@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
 public class Application {
 	private static BotGUI gui;
 
@@ -31,6 +33,23 @@ public class Application {
 		} catch (final Exception e) {
 			e.printStackTrace();
 			System.out.print(e.getMessage());
+			try {
+				if (gui != null) {
+					gui.setVisible(false);
+				}
+			} catch (final Exception ignored) {
+			}
+			final String msg = "Error: " + e.toString() + "\nUnable to start.";
+			try {
+				JOptionPane.showMessageDialog(null, msg, Configuration.NAME, JOptionPane.ERROR_MESSAGE);
+			} catch (final HeadlessException ignored) {
+			}
+			try {
+				if (gui != null) {
+					gui.cleanExit(false);
+				}
+			} catch (final Exception ignored) {
+			}
 			System.exit(1);
 		}
 	}
