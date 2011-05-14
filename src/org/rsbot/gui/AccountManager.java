@@ -1,8 +1,8 @@
 package org.rsbot.gui;
 
 import org.rsbot.Configuration;
+import org.rsbot.script.AccountStore;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
-import org.rsbot.util.AccountStore;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
