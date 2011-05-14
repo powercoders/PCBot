@@ -66,9 +66,10 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("zaszmedia.com"); // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
 		whitelist.add("pumyscript.orgfree.com"); // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
 		whitelist.add("noneevr2.r00t.la"); // noneevr2 - TakeBury
-		whitelist.add("testscriptsecurity.host22.com");//Marneus901
+		whitelist.add("testscriptsecurity.host22.com");//Marneus901 - Runite miner
 		whitelist.add("massacrescripting.net");//ShizZznit - Aviansie Massacre.
 		whitelist.add(".ownagebots.com"); //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
+		whitelist.add("vassdascripts.comuf.com");//Dandan Boy - ?
 
 		return whitelist;
 	}
