@@ -177,13 +177,11 @@ public class Menu extends MethodProvider {
 		int y = 21 + 16 * mIdx + random(3, 12);
 		methods.mouse.move(menuLoc.x + x, menuLoc.y + y, 2, 2);
 		sleep(random(125, 150));
-
 		if (isOpen()) {
 			final Point subLoc = getSubMenuLocation();
 			x = random(4, items[sIdx].length() * 4);
 			methods.mouse.move(subLoc.x + x, methods.mouse.getLocation().y, 2, 0);
 			sleep(random(125, 150));
-
 			if (isOpen()) {
 				y = 16 * sIdx + random(3, 12) + 21;
 				methods.mouse.move(methods.mouse.getLocation().x, subLoc.y + y, 0, 2);
@@ -241,7 +239,6 @@ public class Menu extends MethodProvider {
 		option = option.toLowerCase();
 		final String[] actions = getActions();
 		final String[] options = getOptions();
-		/* Throw exception if lenghts unequal? */
 		for (int i = 0; i < Math.min(actions.length, options.length); i++) {
 			if (actions[i].toLowerCase().contains(action) && options[i].toLowerCase().contains(option)) {
 				return i;
@@ -258,14 +255,11 @@ public class Menu extends MethodProvider {
 	public String[] getItems() {
 		String[] options;
 		String[] actions;
-
 		synchronized (menuCacheLock) {
 			options = menuOptionsCache;
 			actions = menuActionsCache;
 		}
-
 		final ArrayList<String> output = new ArrayList<String>();
-
 		final int len = Math.min(options.length, actions.length);
 		for (int i = 0; i < len; i++) {
 			final String option = options[i];
@@ -275,11 +269,9 @@ public class Menu extends MethodProvider {
 				output.add(text.trim());
 			}
 		}
-
 		if (output.size() > 1 && output.get(0).equals("Cancel")) {
 			Collections.reverse(output);
 		}
-
 		return output.toArray(new String[output.size()]);
 	}
 
@@ -353,8 +345,7 @@ public class Menu extends MethodProvider {
 	 */
 	public Point getSubMenuLocation() {
 		if (isCollapsed()) {
-			return new Point(methods.client.getSubMenuX() + 4,
-					methods.client.getSubMenuY() + 4);
+			return new Point(methods.client.getSubMenuX() + 4, methods.client.getSubMenuY() + 4);
 		}
 		return null;
 	}
