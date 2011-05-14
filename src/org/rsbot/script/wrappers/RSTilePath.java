@@ -70,12 +70,24 @@ public class RSTilePath extends RSPath {
 	 */
 	@Override
 	public RSTile getNext() {
-		for (int i = tiles.length - 1; i >= 0; --i) {
+		RSTile lastOnMap = null;
+		for (int i = 0; i < tiles.length; i++) {
 			if (methods.calc.tileOnMap(tiles[i]) && methods.calc.canReach(tiles[i], false)) {
-				return tiles[i];
+				lastOnMap = tiles[i];
+			} else if (lastOnMap != null && !methods.calc.tileOnMap(tiles[i]) && methods.calc.canReach(tiles[i], false)) {
+				break;
 			}
 		}
-		return null;
+		lastOnMap = lastOnMap != null && !methods.calc.tileOnMap(lastOnMap) ? methods.walking.getClosestTileOnMap(lastOnMap) : lastOnMap;
+		if (lastOnMap == null || lastOnMap.equals(methods.players.getMyPlayer().getLocation())) {
+			for (int i = tiles.length - 1; i >= 0; --i) {
+				if (methods.calc.tileOnMap(tiles[i]) && methods.calc.canReach(tiles[i], false)) {
+					lastOnMap = tiles[i];
+					break;
+				}
+			}
+		}
+		return lastOnMap;
 	}
 
 	/**

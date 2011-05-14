@@ -164,15 +164,15 @@ public class Walking extends MethodProvider {
 	public boolean walkTileMM(final RSTile t, final int r) {
 		int x = t.getX();
 		int y = t.getY();
-		if (random(1, 2) == random(1, 2)) {
-			x += random(0, r);
+		if (random(1, 3) == random(1, 3)) { //Remember: random(int, int)'s 2nd param is EXCLUSIVE (random(1, 2) will always return 1).
+			x += random(0, r  + 1);
 		} else {
-			x -= random(0, r);
+			x -= random(0, r + 1);
 		}
-		if (random(1, 2) == random(1, 2)) {
-			y += random(0, r);
+		if (random(1, 3) == random(1, 3)) {
+			y += random(0, r + 1);
 		} else {
-			y -= random(0, r);
+			y -= random(0, r + 1);
 		}
 		final RSTile dest = new RSTile(x, y);
 		return !methods.players.getMyPlayer().getLocation().equals(dest) && walkTileMM(dest, 0, 0);
@@ -364,8 +364,7 @@ public class Walking extends MethodProvider {
 	 *             .
 	 */
 	@Deprecated
-	public RSTile randomizeTile(final RSTile tile, final int maxXDeviation,
-	                            final int maxYDeviation) {
+	public RSTile randomizeTile(final RSTile tile, final int maxXDeviation, final int maxYDeviation) {
 		return randomize(tile, maxXDeviation, maxYDeviation);
 	}
 

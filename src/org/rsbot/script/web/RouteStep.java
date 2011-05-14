@@ -38,28 +38,21 @@ public class RouteStep extends MethodProvider {
 
 	public boolean execute() {
 		try {
-			for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
-				if (!checkScript.isActive()) {
-					return false;
-				}
+			if (someScriptPaused()) {
+				return false;
 			}
 			switch (type) {
 				case PATH:
 					if (rspath == null) {
 						rspath = methods.walking.newTilePath(path);
 					}
-					while (!inSomeRandom()) {
+					while (!inSomeRandom() && !someScriptPaused()) {
 						if (!rspath.traverse() || methods.calc.distanceTo(rspath.getEnd()) < 5) {
 							break;
 						}
-						for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
-							if (!checkScript.isActive()) {
-								return false;
-							}
-						}
 						sleep(random(50, 150));
 					}
-					return !inSomeRandom() && methods.calc.distanceTo(rspath.getEnd()) < 5;
+					return !inSomeRandom() && !someScriptPaused() &&  methods.calc.distanceTo(rspath.getEnd()) < 5;
 				case TELEPORT:
 					return teleport != null && teleport.perform();
 			}
@@ -89,4 +82,14 @@ public class RouteStep extends MethodProvider {
 		}
 		return false;
 	}
+
+	private boolean someScriptPaused() {
+		for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
+			if (!checkScript.isActive()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
