@@ -162,7 +162,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		table.setShowGrid(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(new TableSelectionListener());
-		setColumnWidths(table, 30, 175, 50, 100);
+		setColumnWidths(table, 30, 175, 55, 95);
 		final JToolBar toolBar = new JToolBar();
 		toolBar.setMargin(new Insets(1, 1, 1, 1));
 		toolBar.setFloatable(false);
