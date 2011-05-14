@@ -100,48 +100,17 @@ public class Walking extends MethodProvider {
 	 * @return <tt>true</tt> if the tile was clicked; otherwise <tt>false</tt>.
 	 */
 	public boolean walkTileMM(final RSTile t, final int x, final int y) {
-		int xx = t.getX(), yy = t.getY();
-		if (x > 0) {
-			if (random(1, 3) == random(1, 3)) { //random(int, int)'s max param IS EXCLUSIVE: random(1, 2) will always return 1.
-				xx += random(0, x + 1);
-			} else {
-				xx -= random(0, x + 1);
-			}
-		}
-		if (y > 0) {
-			if (random(1, 3) == random(1, 3)) {
-				yy += random(0, y + 1);
-			} else {
-				yy -= random(0, y + 1);
-			}
-		}
-		RSTile dest = new RSTile(xx, yy);
-		if (!methods.calc.tileOnMap(dest)) {
-			dest = getClosestTileOnMap(dest);
-		}
-		final Point p = methods.calc.tileToMinimap(dest);
-		if (p.x != -1 && p.y != -1) {
-			methods.mouse.move(p);
-			final Point p2 = methods.calc.tileToMinimap(dest);
-			if (p2.x != -1 && p2.y != -1) {
-				if (!methods.mouse.getLocation().equals(p2)) {
-					methods.mouse.move(p2);
-				}
-				methods.mouse.click(true);
-				return true;
-			}
-		}
-		return false;
+		return walkTileMM(t, x, y, 0, 0, 0);
 	}
 
 	/**
 	 * Walks to the given tile using the minimap with given randomness
 	 *
-	 * @param t              The tile to walk to.
-	 * @param x              The max x randomness of the tile
-	 * @param y              The max y randomness of the tile
-	 * @param xx             The max x randomness of the calculated point. (This does not effect the final point to be clicked!)
-	 * @param yy             The max y randomness of the calculated point. (This does not effect the final point to be clicked!)
+	 * @param t The tile to walk to.
+	 * @param x The max x randomness of the tile
+	 * @param y The max y randomness of the tile
+	 * @param xx The max x randomness of the calculated point. (This does not effect the final point to be clicked!)
+	 * @param yy The max y randomness of the calculated point. (This does not effect the final point to be clicked!)
 	 * @param maxAfterOffset The maximum number of pixels for both axes to move shortly after moving/clicking
 	 * @return <tt>true</tt> if the tile was clicked; otherwise <tt>false</tt>.
 	 */
@@ -173,7 +142,12 @@ public class Walking extends MethodProvider {
 				if (!methods.mouse.getLocation().equals(p2)) {
 					methods.mouse.move(p2);
 				}
-				methods.mouse.click(true, random(0, maxAfterOffset + 1));
+				final Point p3 = methods.calc.tileToMinimap(dest);
+				if (p3.x != -1 && p3.y != -1 && !methods.mouse.getLocation().equals(p3)) {
+					methods.mouse.hop(p3); //If it really makes you happy, Timer.
+				}
+				Point point = p3.x != -1 && p3.y != -1 ? p3 : p2;
+				methods.mouse.click(point.x, point.y, 0, 0, true, random(0, maxAfterOffset + 1));
 				return true;
 			}
 		}
