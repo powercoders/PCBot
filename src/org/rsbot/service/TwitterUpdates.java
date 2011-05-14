@@ -24,7 +24,7 @@ public class TwitterUpdates {
 		url.append("http://api.twitter.com/1/statuses/user_timeline.xml?screen_name=");
 		url.append(Configuration.Twitter.NAME);
 		url.append("&count=");
-		url.append(count * 5);
+		url.append(count * 25);
 
 		InputStreamReader stream = null;
 		BufferedReader reader = null;
