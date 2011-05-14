@@ -70,6 +70,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("massacrescripting.net");//ShizZznit - Aviansie Massacre.
 		whitelist.add(".ownagebots.com"); //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
 		whitelist.add("vassdascripts.comuf.com");//Dandan Boy - ?
+		whitelist.add("doout.net84.net");
+		whitelist.add("doout5.webs.com");
 
 		return whitelist;
 	}
@@ -155,7 +157,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	@Override
 	public void checkExec(final String cmd) {
 		final String calling = getCallingClass();
-		for (final Class<?> c : new Class<?>[] {ScriptDeliveryNetwork.class, BotGUI.class, UpdateChecker.class, ScriptDownloader.class} ) {
+		for (final Class<?> c : new Class<?>[]{ScriptDeliveryNetwork.class, BotGUI.class, UpdateChecker.class, ScriptDownloader.class}) {
 			if (calling.equals(c.getName())) {
 				super.checkExec(cmd);
 				return;
