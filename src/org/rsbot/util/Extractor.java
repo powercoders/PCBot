@@ -2,28 +2,32 @@ package org.rsbot.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
+import java.util.ArrayList;
 
 public class Extractor implements Runnable {
-	private static void saveTo(final InputStream in, final String outPath) {
+	private static void saveTo(final InputStream in, final File output) {
+		OutputStream out = null;
 		try {
-			final OutputStream out = new FileOutputStream(new File(outPath));
+			out = new FileOutputStream(output);
 			final byte[] buf = new byte[1024];
 			int len;
 			while ((len = in.read(buf)) > 0) {
 				out.write(buf, 0, len);
 			}
-			in.close();
-			out.close();
-		} catch (final Exception ignored) {
+		} catch (final IOException ignored) {
+		} finally {
+			try {
+				if (out != null) {
+					out.close();
+				}
+				if (in != null) {
+					in.close();
+				}
+			} catch (final IOException ignored) {
+			}
 		}
 	}
 
@@ -31,54 +35,23 @@ public class Extractor implements Runnable {
 	}
 
 	public void run() {
-		final ClassLoader loader = getClass().getClassLoader();
-		final String root = GlobalConfiguration.Paths.Resources.ROOT + "/";
-		if (GlobalConfiguration.RUNNING_FROM_JAR) {
+		final ArrayList<String> extract = new ArrayList<String>(2);
+		if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.WINDOWS) {
+			extract.add(GlobalConfiguration.Paths.COMPILE_SCRIPTS_BAT);
+			extract.add(GlobalConfiguration.Paths.COMPILE_FIND_JDK);
+		} else {
+			extract.add(GlobalConfiguration.Paths.COMPILE_SCRIPTS_SH);
+		}
+		for (final String item : extract) {
+			final String path = GlobalConfiguration.Paths.Resources.ROOT + "/" + item;
+			final InputStream in;
 			try {
-				if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.WINDOWS) {
-					Extractor.saveTo(loader.getResourceAsStream(root + GlobalConfiguration.Paths.COMPILE_SCRIPTS_BAT), GlobalConfiguration.Paths.getHomeDirectory() + File.separator + GlobalConfiguration.Paths.COMPILE_SCRIPTS_BAT);
-					Extractor.saveTo(loader.getResourceAsStream(root + GlobalConfiguration.Paths.COMPILE_FIND_JDK), GlobalConfiguration.Paths.getHomeDirectory() + File.separator + GlobalConfiguration.Paths.COMPILE_FIND_JDK);
-				} else {
-					Extractor.saveTo(loader.getResourceAsStream(root + GlobalConfiguration.Paths.COMPILE_SCRIPTS_SH), GlobalConfiguration.Paths.getHomeDirectory() + File.separator + GlobalConfiguration.Paths.COMPILE_SCRIPTS_SH);
-				}
-				final URL version = GlobalConfiguration.class.getClassLoader().getResource(GlobalConfiguration.Paths.Resources.VERSION);
-				String p = version.toString().replace("jar:file:", "").replace("!/" + GlobalConfiguration.Paths.Resources.VERSION, "");
-				try {
-					p = URLDecoder.decode(p, "UTF-8");
-				} catch (final UnsupportedEncodingException ignored) {
-				}
-				final JarFile jar = new JarFile(new File(p));
-				final File out = new File(GlobalConfiguration.Paths.getScriptsExtractedCache());
-				FileOutputStream fos = null;
-				JarOutputStream jos = null;
-				final Enumeration<JarEntry> entries = jar.entries();
-				while (entries.hasMoreElements()) {
-					final JarEntry e = entries.nextElement();
-					if (e.getName().startsWith("scripts/")) {
-						if (fos == null) {
-							fos = new FileOutputStream(out);
-							jos = new JarOutputStream(fos);
-						}
-						final InputStream in = loader.getResourceAsStream(e.getName());
-						jos.putNextEntry(new JarEntry(e.getName().substring(8)));
-						final byte[] buffer = new byte[256];
-						while (true) {
-							final int nRead = in.read(buffer, 0, buffer.length);
-							if (nRead < 0) {
-								break;
-							}
-							jos.write(buffer, 0, nRead);
-						}
-						in.close();
-					}
-				}
-				if (fos != null) {
-					jos.close();
-					fos.close();
-				}
-			} catch (final Exception e) {
-				e.printStackTrace();
+				in = GlobalConfiguration.getResourceURL(path).openStream();
+			} catch (IOException ignored) {
+				continue;
 			}
+			final File output = new File(GlobalConfiguration.Paths.getHomeDirectory(), item);
+			saveTo(in, output);
 		}
 	}
 

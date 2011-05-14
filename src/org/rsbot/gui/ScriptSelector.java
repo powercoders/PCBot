@@ -47,7 +47,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		SRC_SOURCES = new FileScriptSource(new File(GlobalConfiguration.Paths.getScriptsSourcesDirectory()));
 		SRC_PRECOMPILED = new FileScriptSource(new File(GlobalConfiguration.Paths.getScriptsPrecompiledDirectory()));
 		if (GlobalConfiguration.RUNNING_FROM_JAR) {
-			SRC_BUNDLED = new FileScriptSource(new File(GlobalConfiguration.Paths.getScriptsExtractedCache()));
+			SRC_BUNDLED = null;
 		} else {
 			SRC_BUNDLED = new FileScriptSource(new File("." + File.separator + GlobalConfiguration.Paths.SCRIPTS_NAME_SRC));
 		}
@@ -82,7 +82,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		if (connected) {
 			scripts.addAll(SRC_DRM.list());
 		}
-		scripts.addAll(SRC_BUNDLED.list());
+		if (SRC_BUNDLED != null) {
+			scripts.addAll(SRC_BUNDLED.list());
+		}
 		scripts.addAll(SRC_PRECOMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
 		model.search("");
