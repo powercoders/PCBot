@@ -95,11 +95,14 @@ public final class UpdateChecker {
 				p = Runtime.getRuntime().exec(new String[]{git, "merge", "rsbot_internal_update/master"});
 				BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				String line;
+				boolean doNotPop = false;
 				while ((line = in.readLine()) != null) {
 					if (line.contains("Already") && line.contains("date")) {
 						log.info("Bot is already up to date, replaying changes.");
 						Runtime.getRuntime().exec(new String[]{git, "stash", "pop"});
 						return;
+					} else if (line.contains("CONFLICT")) {
+						doNotPop = true;
 					}
 				}
 				log.fine("Removing the update remote.");
@@ -108,8 +111,12 @@ public final class UpdateChecker {
 				log.fine("Running make.bat.");
 				p = Runtime.getRuntime().exec("make.bat");
 				p.waitFor();
-				log.fine("Poping the change from stash, let's hope there's no conflicts");
-				Runtime.getRuntime().exec(new String[]{git, "stash", "pop"});
+				if (!doNotPop) {
+					log.fine("Poping the change from stash, let's hope there's no conflicts.");
+					Runtime.getRuntime().exec(new String[]{git, "stash", "pop"});
+				} else {
+					log.fine("We didn't pop changes because of conflicts, resolve then pop yourself!");
+				}
 				log.fine("Starting new bot.");
 				Runtime.getRuntime().exec(new String[]{"java", "-jar", "\"RSBot.jar\""});
 				log.fine("Closing old bot.");
