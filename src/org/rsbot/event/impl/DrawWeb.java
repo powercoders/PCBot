@@ -28,10 +28,10 @@ public class DrawWeb implements PaintListener {
 	 * @param player Your player.
 	 * @return The point of the tile.
 	 */
-	private Point tileToMap(final RSTile tile, final RSPlayer player) {
+	private Point tileToMap(final RSTile tile, final RSTile player) {
 		final double minimapAngle = -1 * Math.toRadians(ctx.camera.getAngle());
-		final int x = (tile.getX() - player.getLocation().getX()) * 4 - 2;
-		final int y = (player.getLocation().getY() - tile.getY()) * 4 - 2;
+		final int x = (tile.getX() - player.getX()) * 4 - 2;
+		final int y = (player.getY() - tile.getY()) * 4 - 2;
 		return new Point((int) Math.round(x * Math.cos(minimapAngle) + y * Math.sin(minimapAngle) + 628), (int) Math.round(y * Math.cos(minimapAngle) - x * Math.sin(minimapAngle) + 87));
 	}
 
@@ -47,13 +47,14 @@ public class DrawWeb implements PaintListener {
 		if (player == null) {
 			return;
 		}
+		final RSTile oT = player.getLocation();
 		final int plane = ctx.game.getPlane();
 		final Iterator<Map.Entry<RSTile, TileFlags>> rs = Web.map.entrySet().iterator();
 		while (rs.hasNext()) {
 			final TileFlags t = rs.next().getValue();
-			if (t.getZ() == plane) {
+			if (t.getZ() == plane && ctx.calc.distanceBetween(t, oT) < 105) {
 				render.setColor(t.isQuestionable() ? Color.yellow : t.isWater() ? Color.cyan : Color.red);
-				final Point p = tileToMap(t, player);
+				final Point p = tileToMap(t, oT);
 				render.drawLine(p.x, p.y, p.x, p.y);
 			}
 		}

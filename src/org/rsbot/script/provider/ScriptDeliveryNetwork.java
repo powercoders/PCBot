@@ -104,7 +104,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		return enabled;
 	}
 
-	private void init() throws MalformedURLException, IOException {
+	private void init() throws IOException {
 		final File cache = new File(Configuration.Paths.getScriptsNetworkDirectory());
 
 		if (!cache.exists()) {
