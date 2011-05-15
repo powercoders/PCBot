@@ -105,19 +105,15 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				ScriptDefinition def = model.getDefinition(row);
 				if (def != null) {
 					StringBuilder b = new StringBuilder();
-					if (def.authors.length > 1) {
-						b.append("Authors: ");
-					} else {
-						b.append("Author: ");
-					}
-					boolean prefix = false;
-					for (String author : def.authors) {
-						if (prefix) {
-							b.append(", ");
-						} else {
-							prefix = true;
+					b.append(def.name);
+					b.append(" v");
+					b.append(def.version);
+					b.append(" by ");
+					for (int i = 0; i < def.authors.length; i++) {
+						if (i > 0) {
+							b.append(i == def.authors.length - 1 ? " and " : ", ");
 						}
-						b.append(author);
+						b.append(def.authors[i]);
 					}
 					return b.toString();
 				}
