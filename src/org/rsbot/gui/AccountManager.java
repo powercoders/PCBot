@@ -70,12 +70,12 @@ public class AccountManager extends JDialog implements ActionListener {
 		@Override
 		protected void setValue(final Object value) {
 			if (value == null) {
-				setText("<none>");
+				setText("");
 			} else {
 				final String str = value.toString();
 				final StringBuilder b = new StringBuilder();
 				for (int i = 0; i < str.length(); ++i) {
-					b.append("*");
+					b.append("\u25CF");
 				}
 				setText(b.toString());
 			}
