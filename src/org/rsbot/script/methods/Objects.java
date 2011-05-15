@@ -23,6 +23,7 @@ public class Objects extends MethodProvider {
 	 * A filter that accepts all matches.
 	 */
 	public static final Filter<RSObject> ALL_FILTER = new Filter<RSObject>() {
+		@Override
 		public boolean accept(final RSObject npc) {
 			return true;
 		}
@@ -109,6 +110,7 @@ public class Objects extends MethodProvider {
 	 */
 	public RSObject getNearest(final int... ids) {
 		return getNearest(new Filter<RSObject>() {
+			@Override
 			public boolean accept(final RSObject o) {
 				for (final int id : ids) {
 					if (o.getID() == id) {
@@ -131,6 +133,7 @@ public class Objects extends MethodProvider {
 	 */
 	public RSObject getNearest(final String... names) {
 		return getNearest(new Filter<RSObject>() {
+			@Override
 			public boolean accept(final RSObject o) {
 				final RSObjectDef def = o.getDef();
 				if (def != null) {
