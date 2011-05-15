@@ -85,7 +85,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		model.search("");
 	}
 
-	@SuppressWarnings("serial")
 	private void init() {
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT));
 		setLayout(new BorderLayout());
@@ -99,6 +98,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			}
 		});
 		table = new JTable(model) {
+			private static final long serialVersionUID = 6969410339933692133L;
+
 			@Override
 			public String getToolTipText(MouseEvent e) {
 				int row = rowAtPoint(e.getPoint());
