@@ -39,8 +39,12 @@ public class RouteStep extends MethodProvider {
 	public boolean execute() {
 		try {
 			for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
-				if (!checkScript.isActive()) {
+				if (!checkScript.isActive() || !checkScript.isRunning()) {
 					return false;
+				}
+				if (checkScript.isPaused()) {
+					sleep(500);
+					return true;
 				}
 			}
 			switch (type) {
@@ -48,24 +52,33 @@ public class RouteStep extends MethodProvider {
 					if (rspath == null) {
 						rspath = methods.walking.newTilePath(path);
 					}
-					while (!inSomeRandom()) {
-						if (!rspath.traverse() || methods.calc.distanceTo(rspath.getEnd()) < 5) {
-							break;
-						}
-						for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
-							if (!checkScript.isActive()) {
-								return false;
-							}
-						}
-						sleep(random(50, 150));
+					if (inSomeRandom()) {
+						return false;
 					}
-					return !inSomeRandom() && methods.calc.distanceTo(rspath.getEnd()) < 5;
+					if (methods.calc.distanceTo(rspath.getEnd()) < 5) {
+						rspath = null;
+						path = null;
+						return true;
+					}
+					sleep(random(50, 150));
+					return !inSomeRandom() && rspath.traverse();
 				case TELEPORT:
-					return teleport != null && teleport.perform();
+					if (inSomeRandom()) {
+						return false;
+					}
+					if (teleport != null && teleport.perform()) {
+						teleport = null;
+						return true;
+					}
+					return false;
 			}
 		} catch (Exception e) {
 		}
 		return false;
+	}
+
+	public boolean finished() {
+		return path == null && teleport == null;
 	}
 
 	public Teleport getTeleport() {

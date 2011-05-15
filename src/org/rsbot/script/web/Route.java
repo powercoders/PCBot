@@ -12,11 +12,20 @@ public class Route {
 	}
 
 	public boolean execute() {
-		while (subRoutes.size() > 0) {
-			if (!subRoutes.poll().execute()) {
+		if (subRoutes.size() > 0) {
+			RouteStep routeStep = subRoutes.poll();
+			if (!routeStep.execute()) {
 				return false;
+			} else {
+				if (!routeStep.finished()) {
+					subRoutes.addFirst(routeStep);
+				}
 			}
 		}
 		return true;
+	}
+
+	public boolean finished() {
+		return subRoutes.size() == 0;
 	}
 }
