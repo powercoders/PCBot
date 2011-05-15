@@ -39,8 +39,9 @@ public class RSLocalPath extends RSPath {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean traverse(final EnumSet<TraversalOption> options) {
-		return getNext() != null && tilePath.traverse(options);
+	public boolean traverse(final EnumSet<TraversalOption> options) throws NullPointerException {
+		getNext();
+		return tilePath.traverse(options);
 	}
 
 	/**

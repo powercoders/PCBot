@@ -33,20 +33,20 @@ public abstract class RSPath extends MethodProvider {
 	 * on the given options).
 	 *
 	 * @param options Walking style options.
-	 * @return <tt>true</tt> if this path is currently
-	 *         valid for the player; otherwise <tt>false</tt>.
+	 * @return <tt>true</tt> if this path is currently valid for the player; otherwise <tt>false</tt>.
+	 * @throws <code>NullPointerException</code> if there is no valid next tile
 	 */
-	public abstract boolean traverse(EnumSet<TraversalOption> options);
+	public abstract boolean traverse(EnumSet<TraversalOption> options) throws NullPointerException;
 
 	/**
 	 * Takes a step along this path if appropriate.
-	 * Specifies only TraversalOption.SPACE_ACTIONS.
+	 * Specifies both TraversalOption.SPACE_ACTIONS and TraversalOption.HANDLE_RUN.
 	 *
 	 * @return <tt>true</tt> if this path is currently
 	 *         valid for the player; otherwise <tt>false</tt>.
 	 * @see #traverse(EnumSet)
 	 */
-	public boolean traverse() {
+	public boolean traverse() throws NullPointerException {
 		return traverse(EnumSet.of(
 				TraversalOption.HANDLE_RUN,
 				TraversalOption.SPACE_ACTIONS));
