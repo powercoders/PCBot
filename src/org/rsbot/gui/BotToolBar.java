@@ -118,7 +118,7 @@ public class BotToolBar extends JToolBar {
 
 	public void addTab() {
 		final int idx = getComponentCount() - 5;
-		add(new BotButton("RuneScape", ICON_BOT), idx);
+		add(new BotButton(Messages.TABDEFAULTTEXT, ICON_BOT), idx);
 		validate();
 		setSelection(idx);
 	}

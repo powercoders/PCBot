@@ -21,6 +21,7 @@ import org.rsbot.util.io.ScreenshotUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.TrayIcon.MessageType;
 import java.awt.event.*;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -300,11 +301,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			menuBar.setOverrideInput(false);
 			toolBar.setInputState(Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE);
 			toolBar.setScriptButton(BotToolBar.RUN_SCRIPT);
+			menuBar.setEnabled(Messages.FORCEINPUT, false);
 		} else {
 			toolBar.setOverrideInput(bot.overrideInput);
 			toolBar.setOverrideInput(bot.overrideInput);
 			toolBar.setInputState(bot.inputFlags);
 			toolBar.setScriptButton(paused ? BotToolBar.RESUME_SCRIPT : BotToolBar.PAUSE_SCRIPT);
+			menuBar.setEnabled(Messages.FORCEINPUT, true);
 		}
 
 		toolBar.updateInputButton();
@@ -350,7 +353,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public void addBot() {
 		final int max = 6;
 		if (bots.size() >= max && Configuration.RUNNING_FROM_JAR) {
-			log.warning("Cannot run more than " + Integer.toString(max) + " bots");
+			log.warning("Cannot run more than " + Integer.toString(max) + " bots!");
 			return;
 		}
 		final Bot bot = new Bot();
@@ -367,13 +370,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	public void removeBot(final Bot bot) {
 		final int idx = bots.indexOf(bot);
+		bot.getScriptHandler().stopAllScripts();
+		bot.getScriptHandler().removeScriptListener(this);
+		bot.getBackgroundScriptHandler().stopAllScripts();
 		if (idx >= 0) {
 			toolBar.removeTab(idx + botsIndex);
 		}
 		bots.remove(idx);
-		bot.getScriptHandler().stopAllScripts();
-		bot.getScriptHandler().removeScriptListener(this);
-		bot.getBackgroundScriptHandler().stopAllScripts();
 		home.setBots(bots);
 		new Thread(new Runnable() {
 			public void run() {
@@ -491,7 +494,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					bot.overrideInput = false;
 					updateScriptControls();
 					final String acct = bot.getAccountName();
-					toolBar.setTabLabel(bots.indexOf(bot) + botsIndex, acct == null ? "RuneScape" : acct);
+					toolBar.setTabLabel(bots.indexOf(bot) + botsIndex, acct == null ? Messages.TABDEFAULTTEXT : acct);
 					setTitle(acct);
 				}
 			}
@@ -504,7 +507,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			bot.inputFlags = Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE;
 			bot.overrideInput = false;
 			updateScriptControls();
-			toolBar.setTabLabel(bots.indexOf(bot) + botsIndex, "RuneScape");
+			toolBar.setTabLabel(bots.indexOf(bot) + botsIndex, Messages.TABDEFAULTTEXT);
 			setTitle(null);
 		}
 	}
@@ -634,6 +637,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 		try {
 			SystemTray.getSystemTray().add(tray);
+			final String msg = "Bots are still running in the background.\nClick this icon to restore the window.";
+			tray.displayMessage(Configuration.NAME + " Hidden", msg, MessageType.INFO);
 		} catch (Exception ignored) {
 			log.warning("Unable to hide window");
 		}

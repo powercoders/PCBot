@@ -42,6 +42,7 @@ public class Configuration {
 			public static final String ICON_MOUSE = ROOT_IMG + "/mouse.png";
 			public static final String ICON_PHOTO = ROOT_IMG + "/photo.png";
 			public static final String ICON_REPORTKEY = ROOT_IMG + "/report_key.png";
+			public static final String ICON_REPORT_DISK = ROOT_IMG + "/report_disk.png";
 			public static final String ICON_INFO = ROOT_IMG + "/information.png";
 			public static final String ICON_KEY = ROOT_IMG + "/key.png";
 			public static final String ICON_KEYBOARD = ROOT_IMG + "/keyboard.png";

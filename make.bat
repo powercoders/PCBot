@@ -47,7 +47,7 @@ GOTO :eof
 
 :Scripts
 CALL :mostlyclean
-"%cc%" %cflags% -cp "%out%" %scripts%\*.java
+IF EXIST "%scripts%" "%cc%" %cflags% -cp "%out%" %scripts%\*.java
 GOTO :eof
 
 :pack
@@ -72,8 +72,8 @@ ECHO %gx% >> %lstf%
 GOTO :eof
 
 :mostlyclean
-ECHO. > "%scripts%\.class"
-DEL /F /Q %scripts%\*.class
+IF EXIST "%scripts%" ECHO. > "%scripts%\.class"
+IF EXIST "%scripts%" DEL /F /Q %scripts%\*.class
 GOTO :eof
 
 :clean

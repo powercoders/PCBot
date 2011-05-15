@@ -2,6 +2,7 @@ package org.rsbot.script.provider;
 
 import org.rsbot.Configuration;
 import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IOHelper;
 import org.rsbot.util.io.IniParser;
 
 import java.io.BufferedReader;
@@ -104,7 +105,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		return enabled;
 	}
 
-	private void init() throws MalformedURLException, IOException {
+	private void init() throws IOException {
 		final File cache = new File(Configuration.Paths.getScriptsNetworkDirectory());
 
 		if (!cache.exists()) {
@@ -155,6 +156,8 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 	}
 
 	private void sync(final HashMap<String, URL> scripts) {
+		IOHelper.recursiveDelete(new File(Configuration.Paths.getScriptsNetworkDirectory()), false);
+
 		int n = 0;
 		for (final String name : scripts.keySet()) {
 			if (!name.contains("$")) {

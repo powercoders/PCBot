@@ -97,7 +97,30 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				dispose();
 			}
 		});
-		table = new JTable(model);
+		table = new JTable(model) {
+			private static final long serialVersionUID = 6969410339933692133L;
+
+			@Override
+			public String getToolTipText(MouseEvent e) {
+				int row = rowAtPoint(e.getPoint());
+				ScriptDefinition def = model.getDefinition(row);
+				if (def != null) {
+					StringBuilder b = new StringBuilder();
+					b.append(def.name);
+					b.append(" v");
+					b.append(def.version);
+					b.append(" by ");
+					for (int i = 0; i < def.authors.length; i++) {
+						if (i > 0) {
+							b.append(i == def.authors.length - 1 ? " and " : ", ");
+						}
+						b.append(def.authors[i]);
+					}
+					return b.toString();
+				}
+				return super.getToolTipText(e);
+			}
+		};
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(final MouseEvent e) {

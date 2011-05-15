@@ -227,6 +227,10 @@ public class BotMenuBar extends JMenuBar {
 		commandCheckMap.get(item).setEnabled(true);
 	}
 
+	public void setEnabled(final String item, final boolean mode) {
+		commandCheckMap.get(item).setEnabled(mode);
+	}
+
 	public void doClick(final String item) {
 		commandMenuItem.get(item).doClick();
 	}

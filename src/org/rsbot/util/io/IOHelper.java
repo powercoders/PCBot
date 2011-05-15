@@ -56,7 +56,7 @@ public class IOHelper {
 		}
 	}
 
-	public void recursiveDelete(final File path, final boolean deleteParent) {
+	public static void recursiveDelete(final File path, final boolean deleteParent) {
 		if (!path.exists()) {
 			return;
 		}

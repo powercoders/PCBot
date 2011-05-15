@@ -40,4 +40,6 @@ public interface Messages {
 	public static final String TOGGLEFALSE = TOGGLE + "F ";
 	public static final String TOGGLETRUE = TOGGLE + "T ";
 	public static final String MENUSEPERATOR = "-";
+
+	public static final String TABDEFAULTTEXT = "Game";
 }
