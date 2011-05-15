@@ -42,7 +42,7 @@ public class Equipment extends MethodProvider {
 			equips = methods.equipment.getItems();
 			Equipment.lastSet = System.currentTimeMillis();
 		} else {
-			if (System.currentTimeMillis() - lastSet > 600000) {
+			if (Math.round((System.currentTimeMillis() - lastSet) / 1000 / 60) > 90) {
 				equips = methods.equipment.getItems();
 				Equipment.lastSet = System.currentTimeMillis();
 			}
