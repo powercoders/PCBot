@@ -84,9 +84,9 @@ public class RSTilePath extends RSPath {
 			for (int i = closest; i < tiles.length; i++) { //Start finding the tile at the closest one.
 				if (methods.calc.tileOnMap(tiles[i]) && methods.calc.canReach(tiles[i], false)) {
 					lastOnMap = tiles[i]; //If tile is on the map and reachable, then it is lastOnMap
-				} else if (!methods.calc.tileOnMap(tiles[i])) {
-					if (lastOnMap != null && methods.calc.distanceBetween(tiles[closest], tiles[i]) > 16) {
-						break; //If the distance between the closest and current tile is too large, break
+				} else if (!methods.calc.tileOnMap(tiles[i]) && methods.calc.canReach(tiles[i], false)) {
+					if (lastOnMap != null && methods.calc.pathLengthBetween(tiles[closest], tiles[i], false) > 16) {
+						break; //If the path distance between the closest and current tile is too large, break
 					} else if (lastOnMap == null) {
 						break; //If the current tile isn't on map and lastOnMap was only declared null, break
 					}
