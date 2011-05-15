@@ -21,6 +21,7 @@ import org.rsbot.util.io.ScreenshotUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.TrayIcon.MessageType;
 import java.awt.event.*;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -636,6 +637,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 		try {
 			SystemTray.getSystemTray().add(tray);
+			final String msg = "Bots are still running in the background.\nClick this icon to restore the window.";
+			tray.displayMessage(Configuration.NAME + " Hidden", msg, MessageType.INFO);
 		} catch (Exception ignored) {
 			log.warning("Unable to hide window");
 		}
