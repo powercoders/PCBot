@@ -496,7 +496,6 @@ public class ClassWriter implements ClassVisitor {
 	// Implementation of the ClassVisitor interface
 	// ------------------------------------------------------------------------
 
-	@Override
 	public void visit(
 			final int version,
 			final int access,
@@ -521,7 +520,6 @@ public class ClassWriter implements ClassVisitor {
 		}
 	}
 
-	@Override
 	public void visitSource(final String file, final String debug) {
 		if (file != null) {
 			sourceFile = newUTF8(file);
@@ -531,7 +529,6 @@ public class ClassWriter implements ClassVisitor {
 		}
 	}
 
-	@Override
 	public void visitOuterClass(
 			final String owner,
 			final String name,
@@ -542,7 +539,6 @@ public class ClassWriter implements ClassVisitor {
 		}
 	}
 
-	@Override
 	public AnnotationVisitor visitAnnotation(
 			final String desc,
 			final boolean visible) {
@@ -563,13 +559,11 @@ public class ClassWriter implements ClassVisitor {
 		return aw;
 	}
 
-	@Override
 	public void visitAttribute(final Attribute attr) {
 		attr.next = attrs;
 		attrs = attr;
 	}
 
-	@Override
 	public void visitInnerClass(
 			final String name,
 			final String outerName,
@@ -585,7 +579,6 @@ public class ClassWriter implements ClassVisitor {
 		innerClasses.putShort(access);
 	}
 
-	@Override
 	public FieldVisitor visitField(
 			final int access,
 			final String name,
@@ -595,7 +588,6 @@ public class ClassWriter implements ClassVisitor {
 		return new FieldWriter(this, access, name, desc, signature, value);
 	}
 
-	@Override
 	public MethodVisitor visitMethod(
 			final int access,
 			final String name,
@@ -612,7 +604,6 @@ public class ClassWriter implements ClassVisitor {
 				computeFrames);
 	}
 
-	@Override
 	public void visitEnd() {
 	}
 

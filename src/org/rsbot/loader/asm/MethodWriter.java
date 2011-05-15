@@ -436,7 +436,6 @@ class MethodWriter implements MethodVisitor {
 	// Implementation of the MethodVisitor interface
 	// ------------------------------------------------------------------------
 
-	@Override
 	public AnnotationVisitor visitAnnotationDefault() {
 		if (!ClassReader.ANNOTATIONS) {
 			return null;
@@ -445,7 +444,6 @@ class MethodWriter implements MethodVisitor {
 		return new AnnotationWriter(cw, false, annd, null, 0);
 	}
 
-	@Override
 	public AnnotationVisitor visitAnnotation(
 			final String desc,
 			final boolean visible) {
@@ -466,7 +464,6 @@ class MethodWriter implements MethodVisitor {
 		return aw;
 	}
 
-	@Override
 	public AnnotationVisitor visitParameterAnnotation(
 			final int parameter,
 			final String desc,
@@ -500,7 +497,6 @@ class MethodWriter implements MethodVisitor {
 		return aw;
 	}
 
-	@Override
 	public void visitAttribute(final Attribute attr) {
 		if (attr.isCodeAttribute()) {
 			attr.next = cattrs;
@@ -511,11 +507,9 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitCode() {
 	}
 
-	@Override
 	public void visitFrame(
 			final int type,
 			final int nLocal,
@@ -616,7 +610,6 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitInsn(final int opcode) {
 		// adds the instruction to the bytecode of the method
 		code.putByte(opcode);
@@ -641,7 +634,6 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitIntInsn(final int opcode, final int operand) {
 		// Label currentBlock = this.currentBlock;
 		if (currentBlock != null) {
@@ -665,7 +657,6 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitVarInsn(final int opcode, final int var) {
 		// Label currentBlock = this.currentBlock;
 		if (currentBlock != null) {
@@ -723,7 +714,6 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitTypeInsn(final int opcode, final String type) {
 		final Item i = cw.newClassItem(type);
 		// Label currentBlock = this.currentBlock;
@@ -744,7 +734,6 @@ class MethodWriter implements MethodVisitor {
 		code.put12(opcode, i.index);
 	}
 
-	@Override
 	public void visitFieldInsn(
 			final int opcode,
 			final String owner,
@@ -785,7 +774,6 @@ class MethodWriter implements MethodVisitor {
 		code.put12(opcode, i.index);
 	}
 
-	@Override
 	public void visitMethodInsn(
 			final int opcode,
 			final String owner,
@@ -845,7 +833,6 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
 		Label nextInsn = null;
 		// Label currentBlock = this.currentBlock;
@@ -936,7 +923,6 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitLabel(final Label label) {
 		// resolves previous forward references to label, if any
 		resize |= label.resolve(this, code.length, code.data);
@@ -991,7 +977,6 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitLdcInsn(final Object cst) {
 		final Item i = cw.newConstItem(cst);
 		// Label currentBlock = this.currentBlock;
@@ -1024,7 +1009,6 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitIincInsn(final int var, final int increment) {
 		if (currentBlock != null) {
 			if (compute == FRAMES) {
@@ -1048,7 +1032,6 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitTableSwitchInsn(
 			final int min,
 			final int max,
@@ -1067,7 +1050,6 @@ class MethodWriter implements MethodVisitor {
 		visitSwitchInsn(dflt, labels);
 	}
 
-	@Override
 	public void visitLookupSwitchInsn(
 			final Label dflt,
 			final int[] keys,
@@ -1112,7 +1094,6 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitMultiANewArrayInsn(final String desc, final int dims) {
 		final Item i = cw.newClassItem(desc);
 		// Label currentBlock = this.currentBlock;
@@ -1129,7 +1110,6 @@ class MethodWriter implements MethodVisitor {
 		code.put12(Opcodes.MULTIANEWARRAY, i.index).putByte(dims);
 	}
 
-	@Override
 	public void visitTryCatchBlock(
 			final Label start,
 			final Label end,
@@ -1150,7 +1130,6 @@ class MethodWriter implements MethodVisitor {
 		lastHandler = h;
 	}
 
-	@Override
 	public void visitLocalVariable(
 			final String name,
 			final String desc,
@@ -1188,7 +1167,6 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitLineNumber(final int line, final Label start) {
 		if (lineNumber == null) {
 			lineNumber = new ByteVector();
@@ -1198,7 +1176,6 @@ class MethodWriter implements MethodVisitor {
 		lineNumber.putShort(line);
 	}
 
-	@Override
 	public void visitMaxs(final int maxStack, final int maxLocals) {
 		if (ClassReader.FRAMES && compute == FRAMES) {
 			// completes the control flow graph with exception handler blocks
@@ -1429,7 +1406,6 @@ class MethodWriter implements MethodVisitor {
 		}
 	}
 
-	@Override
 	public void visitEnd() {
 	}
 

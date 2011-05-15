@@ -14,9 +14,7 @@ import java.util.List;
  * Provides access to ground items.
  */
 public class GroundItems extends MethodProvider {
-
 	public static final Filter<RSGroundItem> ALL_FILTER = new Filter<RSGroundItem>() {
-		@Override
 		public boolean accept(final RSGroundItem item) {
 			return true;
 		}
@@ -123,7 +121,6 @@ public class GroundItems extends MethodProvider {
 	 */
 	public RSGroundItem getNearest(final int... ids) {
 		return getNearest(new Filter<RSGroundItem>() {
-			@Override
 			public boolean accept(final RSGroundItem item) {
 				final int iid = item.getItem().getID();
 				for (final int id : ids) {

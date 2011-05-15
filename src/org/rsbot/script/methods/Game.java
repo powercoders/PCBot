@@ -107,110 +107,6 @@ public class Game extends MethodProvider {
 	}
 
 	/**
-	 * Sets the trade accept mode
-	 *
-	 * @param mode The <tt>ChatMode</tt> to set the trade button to.
-	 * @return <tt>true</tt> if item in menu was clicked; otherwise
-	 *         <tt>false</tt>.
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public boolean setTradeMode(final Game.ChatMode mode) {
-		if (mode.equals(Game.ChatMode.HIDE)) {
-			throw new IllegalArgumentException("Bad mode: HIDE");
-		}
-		mouseChatButton(CHAT_OPTION_TRADE, false);
-		return methods.menu.doAction(mode.toString());
-	}
-
-	/**
-	 * Left clicks the first chat button at the bottom of the screen to turn on
-	 * the showing of all chat messages.
-	 *
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public void showAllChatMessages() {
-		mouseChatButton(CHAT_OPTION_ALL, true);
-	}
-
-	/**
-	 * Left clicks the game chat messages button at the bottom of the screen to
-	 * enable the showing of all game messages.
-	 *
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public void showGameChatMessages() {
-		mouseChatButton(CHAT_OPTION_GAME, true);
-	}
-
-	/**
-	 * Set private chat mode.
-	 *
-	 * @param mode The <tt>ChatMode</tt> to set the private chat button to.
-	 * @return <tt>true</tt> if item in menu was clicked; otherwise
-	 *         <tt>false</tt>.
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public boolean setPrivateChat(final Game.ChatMode mode) {
-		if (mode.equals(Game.ChatMode.HIDE)) {
-			throw new IllegalArgumentException("Bad mode: HIDE");
-		}
-		mouseChatButton(CHAT_OPTION_PRIVATE, false);
-		return methods.menu.doAction(mode.toString());
-	}
-
-	/**
-	 * Sets the public chat mode.
-	 *
-	 * @param mode The <tt>ChatMode</tt> to set the public chat button to.
-	 * @return <tt>true</tt> if item in menu was clicked; otherwise
-	 *         <tt>false</tt>.
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public boolean setPublicChat(final Game.ChatMode mode) {
-		mouseChatButton(CHAT_OPTION_PUBLIC, false);
-		return methods.menu.doAction(mode.toString());
-	}
-
-	/**
-	 * Sets the request assistance mode.
-	 *
-	 * @param mode The <tt>ChatMode</tt> to set the assist button to.
-	 * @return <tt>true</tt> if item in menu was clicked; otherwise
-	 *         <tt>false</tt>.
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public boolean setAssistMode(final Game.ChatMode mode) {
-		if (mode.equals(Game.ChatMode.HIDE)) {
-			throw new IllegalArgumentException("Bad mode: HIDE");
-		}
-		mouseChatButton(CHAT_OPTION_ASSIST, false);
-		return methods.menu.doAction(mode.toString());
-	}
-
-	/**
-	 * Sets the clan chat mode
-	 *
-	 * @param mode The <tt>ChatMode</tt> to set the clan button to.
-	 * @return <tt>true</tt> if item in menu was clicked; otherwise
-	 *         <tt>false</tt>.
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public boolean setClanMode(final Game.ChatMode mode) {
-		if (mode.equals(Game.ChatMode.HIDE)) {
-			throw new IllegalArgumentException("Bad mode: HIDE");
-		}
-		mouseChatButton(CHAT_OPTION_CLAN, false);
-		return methods.menu.doAction(mode.toString());
-	}
-
-	/**
 	 * Set the specified chat mode
 	 *
 	 * @param chatOption one of CHAT_OPTION_
@@ -371,18 +267,6 @@ public class Game extends MethodProvider {
 
 		return -1; // no selected ones. (never happens, always return
 		// TAB_LOGOUT)
-	}
-
-	/**
-	 * Gets the current run energy.
-	 * <p/>
-	 * Deprecated : use walking.getEnergy()
-	 *
-	 * @return An <tt>int</tt> representation of the players current energy.
-	 */
-	@Deprecated
-	public int getEnergy() {
-		return methods.walking.getEnergy();
 	}
 
 	/**

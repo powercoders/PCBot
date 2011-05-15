@@ -1,7 +1,5 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.util.SkillTracker;
-
 /**
  * This class is for all the skill calculations.
  * <p/>
@@ -95,7 +93,6 @@ public class Skills extends MethodProvider {
 	 *
 	 * @param statName The skill's name.
 	 * @return The index of the specified skill; otherwise -1.
-	 * @see #Skills.SKILL_NAMES
 	 */
 	public static int getIndex(final String statName) {
 		for (int i = 0; i < Skills.SKILL_NAMES.length; i++) {
@@ -485,17 +482,5 @@ public class Skills extends MethodProvider {
 		sleep(random(10, 100));
 		return methods.interfaces.getComponent(INTERFACE_TAB_STATS, component)
 				.doHover();
-	}
-
-	/**
-	 * Creates a new SkillTracker.
-	 *
-	 * @param skills Skills to track.
-	 * @return New instance of SkillTracker.
-	 * @see SkillTracker
-	 */
-	@Deprecated
-	public SkillTracker createTracker(final int... skills) {
-		return new SkillTracker(methods.bot, skills);
 	}
 }

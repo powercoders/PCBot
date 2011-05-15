@@ -16,7 +16,6 @@ import org.rsbot.service.Monitoring.Type;
 import java.io.File;
 import java.util.EventListener;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -28,19 +27,6 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 	private volatile boolean random = false;
 	private int id = -1;
 	private long lastNotice;
-
-	/**
-	 * Finalized to cause errors intentionally to avoid confusion
-	 * (yea I know how to deal with these script writers ;)).
-	 *
-	 * @param map The arguments passed in from the description.
-	 * @return <tt>true</tt> if the script can start.
-	 * @deprecated Use {@link #onStart()} instead.
-	 */
-	@Deprecated
-	public final boolean onStart(final Map<String, String> map) {
-		return true;
-	}
 
 	/**
 	 * Called before loop() is first called, after this script has

@@ -29,7 +29,6 @@ public class EventMulticaster implements EventListener {
 	/**
 	 * Gets the default mask for an event listener.
 	 */
-	@SuppressWarnings("deprecation")
 	public static long getDefaultMask(final EventListener el) {
 		if (el instanceof EventMulticaster) {
 			final EventMulticaster em = (EventMulticaster) el;
@@ -51,13 +50,8 @@ public class EventMulticaster implements EventListener {
 		if (el instanceof FocusListener) {
 			mask |= EventMulticaster.FOCUS_EVENT;
 		}
-
 		if (el instanceof CharacterMovedListener) {
 			mask |= EventMulticaster.CHARACTER_MOVED_EVENT;
-		}
-		//noinspection deprecation
-		if (el instanceof org.rsbot.event.listeners.ServerMessageListener) {
-			mask |= EventMulticaster.SERVER_MESSAGE_EVENT;
 		}
 		if (el instanceof MessageListener) {
 			mask |= EventMulticaster.MESSAGE_EVENT;

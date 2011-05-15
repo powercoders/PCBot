@@ -17,7 +17,6 @@ public class NPCs extends MethodProvider {
 	 * A filter that accepts all matches.
 	 */
 	public static final Filter<RSNPC> ALL_FILTER = new Filter<RSNPC>() {
-		@Override
 		public boolean accept(final RSNPC npc) {
 			return true;
 		}
@@ -101,7 +100,6 @@ public class NPCs extends MethodProvider {
 	 */
 	public RSNPC getNearest(final int... ids) {
 		return getNearest(new Filter<RSNPC>() {
-			@Override
 			public boolean accept(final RSNPC npc) {
 				for (final int id : ids) {
 					if (npc.getID() == id) {
@@ -124,7 +122,6 @@ public class NPCs extends MethodProvider {
 	 */
 	public RSNPC getNearest(final String... names) {
 		return getNearest(new Filter<RSNPC>() {
-			@Override
 			public boolean accept(final RSNPC npc) {
 				for (final String name : names) {
 					if (npc.getName().equals(name)) {
