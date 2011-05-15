@@ -243,6 +243,7 @@ public class AccountManager extends JDialog implements ActionListener {
 		setTitle("Account Manager");
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(new TableSelectionListener());
+		table.setShowGrid(false);
 		final TableColumnModel cm = table.getColumnModel();
 		cm.getColumn(cm.getColumnIndex("Password")).setCellRenderer(new PasswordCellRenderer());
 		cm.getColumn(cm.getColumnIndex("Password")).setCellEditor(new PasswordCellEditor());
