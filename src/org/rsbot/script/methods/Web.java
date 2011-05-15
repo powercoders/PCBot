@@ -33,7 +33,7 @@ public class Web extends MethodProvider {
 				new RSTile(3097, 3496, 0), new RSTile(2946, 3369, 0), new RSTile(3012, 3356, 0)};
 		for (RSTile bank : BANKS) {
 			double cdist = methods.calc.distanceBetween(tile, bank);
-			if ((dist < cdist || dist == -1.0D) && (tile.getZ() == bank.getZ())) {
+			if ((dist > cdist || dist == -1.0D) && (tile.getZ() == bank.getZ())) {
 				dist = cdist;
 				finalTile = bank;
 			}

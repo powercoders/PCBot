@@ -585,12 +585,21 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				doExit = false;
 			}
 		}
-		WebQueue.Destroy();
+		try {
+			WebQueue.Destroy();
+		} catch (NoClassDefFoundError ncdfe) {
+		}
 		setVisible(false);
-		Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(showAds));
+		try {
+			Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(showAds));
+		} catch (NoClassDefFoundError ncdfe) {
+		}
 		if (doExit) {
 			menuBar.savePrefs();
-			Monitoring.stop();
+			try {
+				Monitoring.stop();
+			} catch (NoClassDefFoundError ncdfe) {
+			}
 			System.exit(0);
 		} else {
 			setVisible(true);
