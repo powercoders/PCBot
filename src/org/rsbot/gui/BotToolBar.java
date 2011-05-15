@@ -1,39 +1,17 @@
 package org.rsbot.gui;
 
-import java.awt.AlphaComposite;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.Transparency;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import org.rsbot.Configuration;
+import org.rsbot.script.methods.Environment;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.imageio.ImageIO;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
-
-import org.rsbot.Configuration;
-import org.rsbot.script.methods.Environment;
 
 public class BotToolBar extends JToolBar {
 
@@ -110,13 +88,13 @@ public class BotToolBar extends JToolBar {
 		runScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switch (getScriptButton()) {
-				case RUN_SCRIPT:
-					menu.doClick(Messages.RUNSCRIPT);
-					break;
-				case RESUME_SCRIPT:
-				case PAUSE_SCRIPT:
-					menu.doClick(Messages.PAUSESCRIPT);
-					break;
+					case RUN_SCRIPT:
+						menu.doClick(Messages.RUNSCRIPT);
+						break;
+					case RESUME_SCRIPT:
+					case PAUSE_SCRIPT:
+						menu.doClick(Messages.PAUSESCRIPT);
+						break;
 				}
 			}
 		});
@@ -182,7 +160,7 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void setHome(final boolean home) {
-		for (final JButton button : new JButton[] { screenshotButton, stopScriptButton, userInputButton, runScriptButton}) {
+		for (final JButton button : new JButton[]{screenshotButton, stopScriptButton, userInputButton, runScriptButton}) {
 			button.setEnabled(!home);
 			button.setVisible(!home);
 		}
@@ -205,19 +183,19 @@ public class BotToolBar extends JToolBar {
 		boolean running = true;
 
 		switch (state) {
-		case RUN_SCRIPT:
-			text = "Run";
-			pathResource = Configuration.Paths.Resources.ICON_PLAY;
-			running = false;
-			break;
-		case PAUSE_SCRIPT:
-			text = "Pause";
-			pathResource = Configuration.Paths.Resources.ICON_PAUSE;
-			break;
-		case RESUME_SCRIPT:
-			text = "Resume";
-			pathResource = Configuration.Paths.Resources.ICON_START;
-			break;
+			case RUN_SCRIPT:
+				text = "Run";
+				pathResource = Configuration.Paths.Resources.ICON_PLAY;
+				running = false;
+				break;
+			case PAUSE_SCRIPT:
+				text = "Pause";
+				pathResource = Configuration.Paths.Resources.ICON_PAUSE;
+				break;
+			case RESUME_SCRIPT:
+				text = "Resume";
+				pathResource = Configuration.Paths.Resources.ICON_START;
+				break;
 		}
 
 		stopScriptButton.setVisible(running);

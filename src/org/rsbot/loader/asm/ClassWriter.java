@@ -428,9 +428,9 @@ public class ClassWriter implements ClassVisitor {
 		int i;
 		final byte[] b = new byte[220];
 		final String s = "AAAAAAAAAAAAAAAABCKLLDDDDDEEEEEEEEEEEEEEEEEEEEAAAAAAAADD"
-			+ "DDDEEEEEEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-			+ "AAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAIIIIIIIIIIIIIIIIDNOAA"
-			+ "AAAAGGGGGGGHHFBFAAFFAAQPIIJJIIIIIIIIIIIIIIIIII";
+				+ "DDDEEEEEEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+				+ "AAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAIIIIIIIIIIIIIIIIDNOAA"
+				+ "AAAAGGGGGGGHHFBFAAFFAAQPIIJJIIIIIIIIIIIIIIIIII";
 		for (i = 0; i < b.length; ++i) {
 			b[i] = (byte) (s.charAt(i) - 'A');
 		}
@@ -691,8 +691,8 @@ public class ClassWriter implements ClassVisitor {
 		out.putInt(0xCAFEBABE).putInt(version);
 		out.putShort(index).putByteArray(pool.data, 0, pool.length);
 		final int mask = Opcodes.ACC_DEPRECATED
-		| ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
-		| (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) / (ClassWriter.ACC_SYNTHETIC_ATTRIBUTE / Opcodes.ACC_SYNTHETIC);
+				| ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
+				| (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) / (ClassWriter.ACC_SYNTHETIC_ATTRIBUTE / Opcodes.ACC_SYNTHETIC);
 		out.putShort(access & ~mask).putShort(name).putShort(superName);
 		out.putShort(interfaceCount);
 		for (int i = 0; i < interfaceCount; ++i) {
@@ -802,7 +802,7 @@ public class ClassWriter implements ClassVisitor {
 			final Type t = (Type) cst;
 			return newClassItem(t.getSort() == Type.OBJECT
 					? t.getInternalName()
-							: t.getDescriptor());
+					: t.getDescriptor());
 		} else {
 			throw new IllegalArgumentException("value " + cst);
 		}

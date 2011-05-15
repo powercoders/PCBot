@@ -74,6 +74,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("doout5.webs.com");
 		whitelist.add("terrabubble.netai.net");
 		whitelist.add("terrabubble.webs.com");
+		whitelist.add("aaimister.webs.com");
 
 		return whitelist;
 	}

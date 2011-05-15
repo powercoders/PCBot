@@ -184,7 +184,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 							}
 							final int delay = 3;
 							log.info("Shutdown pending in " + delay + " minutes...");
-							final Point[] mouse = new Point[] {MouseInfo.getPointerInfo().getLocation(), null};
+							final Point[] mouse = new Point[]{MouseInfo.getPointerInfo().getLocation(), null};
 							try {
 								Thread.sleep(delay * 60 * 1000);
 							} catch (InterruptedException ignored) {

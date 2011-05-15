@@ -16,7 +16,6 @@ import org.rsbot.service.Monitoring.Type;
 import java.io.File;
 import java.util.EventListener;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 

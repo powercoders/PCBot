@@ -1,10 +1,10 @@
 package org.rsbot.util.io;
 
+import org.rsbot.Configuration;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-
-import org.rsbot.Configuration;
 
 public class PreferenceData {
 	private final int type;
@@ -17,36 +17,36 @@ public class PreferenceData {
 			if (!file.exists()) {
 				file.createNewFile();
 				switch (type) {
-				case 1:
-					set(new byte[]{
-							24, 0, 0, 3, 0, 0, 0, 0,
-							0, 0, 0, 0, 0, 0, 1, 2,
-							0, 0, 0, 3, 1, 0, 1, 0,
-							0, 4, 8, 0, 0, 0, 127, 0,
-							1, 1, 0, 0, 0, 0, 0, 0,
-							0, 4, 0, 1, 2, 0
-					});
-					break;
+					case 1:
+						set(new byte[]{
+								24, 0, 0, 3, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 1, 2,
+								0, 0, 0, 3, 1, 0, 1, 0,
+								0, 4, 8, 0, 0, 0, 127, 0,
+								1, 1, 0, 0, 0, 0, 0, 0,
+								0, 4, 0, 1, 2, 0
+						});
+						break;
 
-				case 2:
-					set(new byte[]{
-							1, 0, 19, 3, -38, 0, 0, 0,
-							1, 3, -37, 0, 0, 0, 1, 3,
-							-30, 0, 0, 0, 2, 3, -28, -1,
-							-1, -1, -1, 3, -27, -1, -1, -1,
-							-1, 3, -26, -1, -1, -1, -1, 3,
-							-25, -1, -1, -1, -1, 4, 11, 0,
-							0, 0, 79, 4, 12, 0, 0, 0,
-							74, 4, 13, -1, -1, -1, -1, 4,
-							28, -1, -1, -1, -1, 4, -40, 0,
-							0, 0, 3, 4, -6, 0, 0, 0,
-							67, 4, -3, 0, 0, 0, 0, 5,
-							35, -1, -1, -1, -1, 5, 36, -1,
-							-1, -1, -1, 5, -122, 0, 0, 0,
-							1, 5, -115, -1, -1, -1, -1, 5,
-							-107, -1, -1, -1, -1
-					});
-					break;
+					case 2:
+						set(new byte[]{
+								1, 0, 19, 3, -38, 0, 0, 0,
+								1, 3, -37, 0, 0, 0, 1, 3,
+								-30, 0, 0, 0, 2, 3, -28, -1,
+								-1, -1, -1, 3, -27, -1, -1, -1,
+								-1, 3, -26, -1, -1, -1, -1, 3,
+								-25, -1, -1, -1, -1, 4, 11, 0,
+								0, 0, 79, 4, 12, 0, 0, 0,
+								74, 4, 13, -1, -1, -1, -1, 4,
+								28, -1, -1, -1, -1, 4, -40, 0,
+								0, 0, 3, 4, -6, 0, 0, 0,
+								67, 4, -3, 0, 0, 0, 0, 5,
+								35, -1, -1, -1, -1, 5, 36, -1,
+								-1, -1, -1, 5, -122, 0, 0, 0,
+								1, 5, -115, -1, -1, -1, -1, 5,
+								-107, -1, -1, -1, -1
+						});
+						break;
 				}
 			}
 		} catch (final IOException ignored) {
@@ -78,13 +78,13 @@ public class PreferenceData {
 	private byte[] checkPrefs(final byte[] data) {
 		switch (type) {
 
-		case 1: {
-			if (data.length <= 40) {
-				break;
-			}
+			case 1: {
+				if (data.length <= 40) {
+					break;
+				}
 
-			data[19] = 3; //Graphics Mode
-		}
+				data[19] = 3; //Graphics Mode
+			}
 
 		}
 

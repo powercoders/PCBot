@@ -35,10 +35,10 @@ public class SetSignatureAdapter extends ClassAdapter {
 			if (s.name.equals(name) && s.desc.equals("") || s.desc.equals(desc)) {
 				return cv.visitMethod(
 						s.new_access == -1 ? access : s.new_access,
-								s.new_name,
-								s.new_desc.equals("") ? desc : s.new_desc,
-										signature,
-										exceptions);
+						s.new_name,
+						s.new_desc.equals("") ? desc : s.new_desc,
+						signature,
+						exceptions);
 			}
 		}
 		return cv.visitMethod(access, name, desc, signature, exceptions);

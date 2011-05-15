@@ -9,7 +9,7 @@ import org.rsbot.script.provider.FileScriptSource;
 import org.rsbot.script.provider.ScriptDefinition;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.script.provider.ScriptSource;
-import org.rsbot.service.*;
+import org.rsbot.service.ServiceException;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -126,7 +126,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				final JMenuItem start = new JMenuItem();
 				start.setText(submit.getText());
 				start.setIcon(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
-				start.addActionListener(new ActionListener(){
+				start.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						submit.doClick();
 					}

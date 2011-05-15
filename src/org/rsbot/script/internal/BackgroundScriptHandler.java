@@ -1,13 +1,13 @@
 package org.rsbot.script.internal;
 
+import org.rsbot.bot.Bot;
+import org.rsbot.script.BackgroundScript;
+import org.rsbot.script.ScriptManifest;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.rsbot.bot.Bot;
-import org.rsbot.script.BackgroundScript;
-import org.rsbot.script.ScriptManifest;
 
 public class BackgroundScriptHandler {
 	private final HashMap<Integer, BackgroundScript> scripts = new HashMap<Integer, BackgroundScript>();

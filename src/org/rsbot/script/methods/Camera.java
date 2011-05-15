@@ -1,11 +1,11 @@
 package org.rsbot.script.methods;
 
-import java.awt.event.KeyEvent;
-
 import org.rsbot.script.util.Timer;
 import org.rsbot.script.wrappers.RSCharacter;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSTile;
+
+import java.awt.event.KeyEvent;
 
 /**
  * Camera related operations.
@@ -203,21 +203,21 @@ public class Camera extends MethodProvider {
 	 */
 	public void setCompass(final char direction) {
 		switch (direction) {
-		case 'n':
-			setAngle(359);
-			break;
-		case 'w':
-			setAngle(89);
-			break;
-		case 's':
-			setAngle(179);
-			break;
-		case 'e':
-			setAngle(269);
-			break;
-		default:
-			setAngle(359);
-			break;
+			case 'n':
+				setAngle(359);
+				break;
+			case 'w':
+				setAngle(89);
+				break;
+			case 's':
+				setAngle(179);
+				break;
+			case 'e':
+				setAngle(269);
+				break;
+			default:
+				setAngle(359);
+				break;
 		}
 	}
 

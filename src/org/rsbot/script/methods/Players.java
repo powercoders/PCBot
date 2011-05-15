@@ -1,10 +1,10 @@
 package org.rsbot.script.methods;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.rsbot.script.util.Filter;
 import org.rsbot.script.wrappers.RSPlayer;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Player related operations.

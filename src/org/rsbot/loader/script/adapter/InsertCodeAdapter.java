@@ -1,14 +1,9 @@
 package org.rsbot.loader.script.adapter;
 
-import java.util.Map;
-
-import org.rsbot.loader.asm.AnnotationVisitor;
-import org.rsbot.loader.asm.Attribute;
-import org.rsbot.loader.asm.ClassAdapter;
-import org.rsbot.loader.asm.ClassVisitor;
-import org.rsbot.loader.asm.Label;
-import org.rsbot.loader.asm.MethodVisitor;
+import org.rsbot.loader.asm.*;
 import org.rsbot.loader.script.CodeReader;
+
+import java.util.Map;
 
 /**
  * @author Jacmob

@@ -1,14 +1,14 @@
 package org.rsbot.script.methods;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.rsbot.client.HashTable;
 import org.rsbot.script.internal.wrappers.Deque;
 import org.rsbot.script.util.Filter;
 import org.rsbot.script.wrappers.RSGroundItem;
 import org.rsbot.script.wrappers.RSItem;
 import org.rsbot.script.wrappers.RSTile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides access to ground items.
@@ -150,7 +150,7 @@ public class GroundItems extends MethodProvider {
 		final int id = x | y << 14 | methods.client.getPlane() << 28;
 
 		final org.rsbot.client.NodeListCache itemNLC = (org.rsbot.client.NodeListCache) methods.nodes
-		.lookup(itemNC, id);
+				.lookup(itemNC, id);
 
 		if (itemNLC == null) {
 			return new RSGroundItem[0];
@@ -159,7 +159,7 @@ public class GroundItems extends MethodProvider {
 		final Deque<org.rsbot.client.RSItem> itemNL = new Deque<org.rsbot.client.RSItem>(
 				itemNLC.getNodeList());
 		for (org.rsbot.client.RSItem item = itemNL.getHead(); item != null; item = itemNL
-		.getNext()) {
+				.getNext()) {
 			list.add(new RSGroundItem(methods, new RSTile(x, y), new RSItem(
 					methods, item)));
 		}
