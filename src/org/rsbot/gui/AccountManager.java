@@ -196,8 +196,8 @@ public class AccountManager extends JDialog implements ActionListener {
 
 	public void actionPerformed(final ActionEvent e) {
 		if (e.getSource() instanceof JButton) {
-			final String label = ((JButton) e.getSource()).getText();
-			if (label.equals("Done")) {
+			final JButton button = (JButton) e.getSource();
+			if (button.getText().equals("Done")) {
 				try {
 					accountStore.save();
 				} catch (final IOException ioe) {
@@ -214,7 +214,7 @@ public class AccountManager extends JDialog implements ActionListener {
 				accountStore.get(str).setAttribute("reward", RANDOM_REWARDS[0]);
 				final int row = table.getRowCount();
 				((AccountTableModel) table.getModel()).fireTableRowsInserted(row, row);
-			} else if (label.equals("Remove")) {
+			} else if (button.getToolTipText().equals("Remove")) {
 				final int row = table.getSelectedRow();
 				final String user = ((AccountTableModel) table.getModel()).userForRow(row);
 				if (user != null) {
@@ -232,9 +232,11 @@ public class AccountManager extends JDialog implements ActionListener {
 		final JScrollPane scrollPane = new JScrollPane();
 		table = new JTable(new AccountTableModel());
 		final JPanel bar = new JPanel();
-		removeButton = new JButton();
-		final JButton newButton = new JButton();
-		final JButton doneButton = new JButton();
+		removeButton = new JButton("Remove", new ImageIcon(
+				Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE)));
+		final JButton newButton = new JButton("Add", new ImageIcon(
+				Configuration.getImage(Configuration.Paths.Resources.ICON_ADD)));
+		final JButton doneButton = new JButton("Done");
 		setTitle("Account Manager");
 		final Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout(5, 5));
@@ -253,11 +255,14 @@ public class AccountManager extends JDialog implements ActionListener {
 		bar.setLayout(gbl);
 		gbl.rowHeights = new int[]{0, 0};
 		gbl.rowWeights = new double[]{0.0, 1.0E-4};
-		newButton.setText("Add");
+		newButton.setFocusable(false);
+		newButton.setToolTipText(newButton.getText());
+		newButton.setText("");
 		bar.add(newButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
-		removeButton.setText("Remove");
+		removeButton.setFocusable(false);
+		removeButton.setToolTipText(removeButton.getText());
+		removeButton.setText("");
 		bar.add(removeButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
-		doneButton.setText("Done");
 		bar.add(doneButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 		newButton.addActionListener(this);
 		doneButton.addActionListener(this);
