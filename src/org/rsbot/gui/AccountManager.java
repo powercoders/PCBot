@@ -205,8 +205,8 @@ public class AccountManager extends JDialog implements ActionListener {
 					log.info("Failed to save accounts...  Please report this.");
 				}
 				dispose();
-			} else if (label.equals("Add")) {
-				final String str = JOptionPane.showInputDialog(getParent(), "Enter the account username.", "New Account", JOptionPane.QUESTION_MESSAGE);
+			} else if (button.getToolTipText().equals("Add")) {
+				final String str = JOptionPane.showInputDialog(getParent(), "Enter the account username:", "New Account", JOptionPane.QUESTION_MESSAGE);
 				if (str == null || str.isEmpty()) {
 					return;
 				}
