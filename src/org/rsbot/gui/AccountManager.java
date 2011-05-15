@@ -197,7 +197,7 @@ public class AccountManager extends JDialog implements ActionListener {
 	public void actionPerformed(final ActionEvent e) {
 		if (e.getSource() instanceof JButton) {
 			final JButton button = (JButton) e.getSource();
-			if (button.getText().equals("Done")) {
+			if (button.getText().equals("Save")) {
 				try {
 					accountStore.save();
 				} catch (final IOException ioe) {
@@ -231,15 +231,16 @@ public class AccountManager extends JDialog implements ActionListener {
 	public void showGUI() {
 		final JScrollPane scrollPane = new JScrollPane();
 		table = new JTable(new AccountTableModel());
-		final JPanel bar = new JPanel();
+		final JToolBar bar = new JToolBar();
+		bar.setMargin(new Insets(1, 1, 1, 1));
+		bar.setFloatable(false);
 		removeButton = new JButton("Remove", new ImageIcon(
 				Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE)));
 		final JButton newButton = new JButton("Add", new ImageIcon(
 				Configuration.getImage(Configuration.Paths.Resources.ICON_ADD)));
-		final JButton doneButton = new JButton("Done");
+		final JButton doneButton = new JButton("Save", new ImageIcon(
+				Configuration.getImage(Configuration.Paths.Resources.ICON_REPORT_DISK)));
 		setTitle("Account Manager");
-		final Container contentPane = getContentPane();
-		contentPane.setLayout(new BorderLayout(5, 5));
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(new TableSelectionListener());
 		final TableColumnModel cm = table.getColumnModel();
@@ -250,24 +251,21 @@ public class AccountManager extends JDialog implements ActionListener {
 		cm.getColumn(cm.getColumnIndex("Reward")).setCellEditor(new RandomRewardEditor());
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setViewportView(table);
-		contentPane.add(scrollPane, BorderLayout.CENTER);
-		final GridBagLayout gbl = new GridBagLayout();
-		bar.setLayout(gbl);
-		gbl.rowHeights = new int[]{0, 0};
-		gbl.rowWeights = new double[]{0.0, 1.0E-4};
+		add(scrollPane, BorderLayout.CENTER);
 		newButton.setFocusable(false);
 		newButton.setToolTipText(newButton.getText());
 		newButton.setText("");
-		bar.add(newButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
+		bar.add(newButton);
 		removeButton.setFocusable(false);
 		removeButton.setToolTipText(removeButton.getText());
 		removeButton.setText("");
-		bar.add(removeButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
-		bar.add(doneButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
+		bar.add(removeButton);
+		bar.add(Box.createHorizontalGlue());
+		bar.add(doneButton);
 		newButton.addActionListener(this);
-		doneButton.addActionListener(this);
 		removeButton.addActionListener(this);
-		contentPane.add(bar, BorderLayout.SOUTH);
+		doneButton.addActionListener(this);
+		add(bar, BorderLayout.SOUTH);
 		final int row = table.getSelectedRow();
 		removeButton.setEnabled(row >= 0 && row < table.getRowCount());
 		table.clearSelection();
