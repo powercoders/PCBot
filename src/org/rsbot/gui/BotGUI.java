@@ -350,7 +350,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public void addBot() {
 		final int max = 6;
 		if (bots.size() >= max && Configuration.RUNNING_FROM_JAR) {
-			log.warning("Cannot run more than " + Integer.toString(max) + " bots");
+			log.warning("Cannot run more than " + Integer.toString(max) + " bots!");
 			return;
 		}
 		final Bot bot = new Bot();
@@ -367,13 +367,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	public void removeBot(final Bot bot) {
 		final int idx = bots.indexOf(bot);
+		bot.getScriptHandler().stopAllScripts();
+		bot.getScriptHandler().removeScriptListener(this);
+		bot.getBackgroundScriptHandler().stopAllScripts();
 		if (idx >= 0) {
 			toolBar.removeTab(idx + botsIndex);
 		}
 		bots.remove(idx);
-		bot.getScriptHandler().stopAllScripts();
-		bot.getScriptHandler().removeScriptListener(this);
-		bot.getBackgroundScriptHandler().stopAllScripts();
 		home.setBots(bots);
 		new Thread(new Runnable() {
 			public void run() {

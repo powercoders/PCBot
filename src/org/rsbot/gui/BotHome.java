@@ -19,8 +19,6 @@ public class BotHome {
 
 	public void setBots(final Collection<Bot> col) {
 		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
 			public void run() {
 				bots = col.toArray(new Bot[col.size()]);
 			}
