@@ -322,7 +322,7 @@ public class Type {
 			if (car == ')') {
 				car = desc.charAt(c);
 				return n << 2
-				| (car == 'V' ? 0 : car == 'D' || car == 'J' ? 2 : 1);
+						| (car == 'V' ? 0 : car == 'D' || car == 'J' ? 2 : 1);
 			} else if (car == 'L') {
 				while (desc.charAt(c++) != ';') {
 				}
@@ -352,43 +352,43 @@ public class Type {
 	private static Type getType(final char[] buf, final int off) {
 		int len;
 		switch (buf[off]) {
-		case 'V':
-			return VOID_TYPE;
-		case 'Z':
-			return BOOLEAN_TYPE;
-		case 'C':
-			return CHAR_TYPE;
-		case 'B':
-			return BYTE_TYPE;
-		case 'S':
-			return SHORT_TYPE;
-		case 'I':
-			return INT_TYPE;
-		case 'F':
-			return FLOAT_TYPE;
-		case 'J':
-			return LONG_TYPE;
-		case 'D':
-			return DOUBLE_TYPE;
-		case '[':
-			len = 1;
-			while (buf[off + len] == '[') {
-				++len;
-			}
-			if (buf[off + len] == 'L') {
-				++len;
+			case 'V':
+				return VOID_TYPE;
+			case 'Z':
+				return BOOLEAN_TYPE;
+			case 'C':
+				return CHAR_TYPE;
+			case 'B':
+				return BYTE_TYPE;
+			case 'S':
+				return SHORT_TYPE;
+			case 'I':
+				return INT_TYPE;
+			case 'F':
+				return FLOAT_TYPE;
+			case 'J':
+				return LONG_TYPE;
+			case 'D':
+				return DOUBLE_TYPE;
+			case '[':
+				len = 1;
+				while (buf[off + len] == '[') {
+					++len;
+				}
+				if (buf[off + len] == 'L') {
+					++len;
+					while (buf[off + len] != ';') {
+						++len;
+					}
+				}
+				return new Type(ARRAY, buf, off, len + 1);
+			// case 'L':
+			default:
+				len = 1;
 				while (buf[off + len] != ';') {
 					++len;
 				}
-			}
-			return new Type(ARRAY, buf, off, len + 1);
-			// case 'L':
-		default:
-			len = 1;
-			while (buf[off + len] != ';') {
-				++len;
-			}
-			return new Type(OBJECT, buf, off + 1, len - 1);
+				return new Type(OBJECT, buf, off + 1, len - 1);
 		}
 	}
 
@@ -440,33 +440,33 @@ public class Type {
 	 */
 	public String getClassName() {
 		switch (sort) {
-		case VOID:
-			return "void";
-		case BOOLEAN:
-			return "boolean";
-		case CHAR:
-			return "char";
-		case BYTE:
-			return "byte";
-		case SHORT:
-			return "short";
-		case INT:
-			return "int";
-		case FLOAT:
-			return "float";
-		case LONG:
-			return "long";
-		case DOUBLE:
-			return "double";
-		case ARRAY:
-			final StringBuffer b = new StringBuffer(getElementType().getClassName());
-			for (int i = getDimensions(); i > 0; --i) {
-				b.append("[]");
-			}
-			return b.toString();
+			case VOID:
+				return "void";
+			case BOOLEAN:
+				return "boolean";
+			case CHAR:
+				return "char";
+			case BYTE:
+				return "byte";
+			case SHORT:
+				return "short";
+			case INT:
+				return "int";
+			case FLOAT:
+				return "float";
+			case LONG:
+				return "long";
+			case DOUBLE:
+				return "double";
+			case ARRAY:
+				final StringBuffer b = new StringBuffer(getElementType().getClassName());
+				for (int i = getDimensions(); i > 0; --i) {
+					b.append("[]");
+				}
+				return b.toString();
 			// case OBJECT:
-		default:
-			return new String(buf, off, len).replace('/', '.');
+			default:
+				return new String(buf, off, len).replace('/', '.');
 		}
 	}
 

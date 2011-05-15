@@ -7,15 +7,12 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.rsbot.script.wrappers.GEItemInfo;
-
 /**
  * Obtains information on tradeable items from the Grand Exchange website and
  * Grand Exchange ingame interaction.
  *
  * @author Aion, Boolean, Debauchery
  */
-@SuppressWarnings("deprecation")
 public class GrandExchange extends MethodProvider {
 
 	private static final String HOST = "http://services.runescape.com";
@@ -25,18 +22,18 @@ public class GrandExchange extends MethodProvider {
 	public static final int INTERFACE_GRAND_EXCHANGE_SELL_INVENTORY = 107;
 	public static final int INTERFACE_BUY_SEARCH_BOX = 389;
 	public static final int[] GRAND_EXCHANGE_SELL_BUTTON = {29, 45, 61, 77,
-		93, 109};
+			93, 109};
 	public static final int[] GRAND_EXCHANGE_BUY_BUTTON = {30, 46, 62, 78, 94,
-		110};
+			110};
 	public static final int[] GRAND_EXCHANGE_OFFER_BOXES = {19, 35, 51, 67,
-		83, 99};
+			83, 99};
 	public static final int GRAND_EXCHANGE_COLLECT_BOX_ONE = 209;
 	public static final int GRAND_EXCHANGE_COLLECT_BOX_TWO = 211;
 
 	public static final int[] GRAND_EXCHANGE_CLERK = {6528, 6529};
 
 	private static final Pattern PATTERN = Pattern
-	.compile("(?i)<td><img src=\".+obj_sprite\\.gif\\?id=(\\d+)\" alt=\"(.+)\"");
+			.compile("(?i)<td><img src=\".+obj_sprite\\.gif\\?id=(\\d+)\" alt=\"(.+)\"");
 
 	GrandExchange() {
 		super(null);
@@ -49,7 +46,7 @@ public class GrandExchange extends MethodProvider {
 	 */
 	public boolean isOpen() {
 		return methods.interfaces.get(INTERFACE_GRAND_EXCHANGE_WINDOW)
-		.isValid();
+				.isValid();
 	}
 
 	/**
@@ -62,7 +59,7 @@ public class GrandExchange extends MethodProvider {
 			methods.npcs.getNearest(GRAND_EXCHANGE_CLERK).doAction("Exchange");
 		}
 		return methods.interfaces.get(INTERFACE_GRAND_EXCHANGE_WINDOW)
-		.isValid();
+				.isValid();
 	}
 
 	/**
@@ -164,7 +161,7 @@ public class GrandExchange extends MethodProvider {
 			if (slot != 0) {
 				final int slotComponent = GRAND_EXCHANGE_OFFER_BOXES[slot];
 				if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW, slotComponent).containsAction(
-				"Abort Offer")) {
+						"Abort Offer")) {
 					return false;
 				} else {
 					return true;
@@ -187,7 +184,7 @@ public class GrandExchange extends MethodProvider {
 		if (isOpen()) {
 			final int slotComponent = GRAND_EXCHANGE_OFFER_BOXES[slot];
 			methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW, slotComponent).containsAction(
-			"Veiw Offer");
+					"Veiw Offer");
 			sleep(random(700, 1200));
 			if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW,
 					GRAND_EXCHANGE_COLLECT_BOX_TWO).containsAction("Collect")) {
@@ -322,7 +319,7 @@ public class GrandExchange extends MethodProvider {
 					return Double.parseDouble(str);
 				}
 				return Double.parseDouble(str.substring(0, str.length() - 1))
-				* (str.endsWith("b") ? 1000000000 : str.endsWith("m") ? 1000000 : 1000);
+						* (str.endsWith("b") ? 1000000000 : str.endsWith("m") ? 1000000 : 1000);
 			}
 			final int k = str.startsWith("+") ? 1 : -1;
 			str = str.substring(1);
@@ -428,26 +425,5 @@ public class GrandExchange extends MethodProvider {
 		public String getDescription() {
 			return examine;
 		}
-
-		@Deprecated
-		public int getMarketPrice() {
-			return guidePrice;
-		}
-
-		@Deprecated
-		public int getMaxPrice() {
-			return guidePrice;
-		}
-
-		@Deprecated
-		public int getMinPrice() {
-			return guidePrice;
-		}
-	}
-
-	@Deprecated
-	public GEItemInfo loadItemInfo(final int i) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

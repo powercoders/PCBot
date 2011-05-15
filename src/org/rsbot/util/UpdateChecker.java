@@ -5,7 +5,10 @@ import org.rsbot.gui.BotGUI;
 import org.rsbot.util.io.HttpClient;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Logger;
 

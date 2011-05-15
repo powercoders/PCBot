@@ -1,15 +1,11 @@
 package org.rsbot.script.methods;
 
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
+
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 /**
  * Provides access to interfaces.
@@ -32,7 +28,7 @@ public class Interfaces extends MethodProvider {
 	public synchronized RSInterface[] getAll() {
 		enlargeCache();
 		final org.rsbot.client.RSInterface[][] inters = methods.client
-		.getRSInterfaceCache();
+				.getRSInterfaceCache();
 		if (inters == null) {
 			return new RSInterface[0];
 		}
@@ -95,8 +91,8 @@ public class Interfaces extends MethodProvider {
 	 */
 	public RSComponent getComponent(final int id) {
 		final int x = id >> 16;
-				final int y = id & 0xFFFF;
-				return get(x).getComponent(y);
+		final int y = id & 0xFFFF;
+		return get(x).getComponent(y);
 	}
 
 	/**
@@ -277,7 +273,7 @@ public class Interfaces extends MethodProvider {
 
 		int pos = (int) ((float) scrollBarArea.getRealHeight() / contentHeight * (component
 				.getRelativeY() + random(-areaHeight / 2, areaHeight / 2
-						- component.getRealHeight())));
+				- component.getRealHeight())));
 		if (pos < 0) // inner
 		{
 			pos = 0;
@@ -288,7 +284,7 @@ public class Interfaces extends MethodProvider {
 		// Click on the scrollbar
 		methods.mouse.click(
 				scrollBarArea.getAbsoluteX()
-				+ random(0, scrollBarArea.getRealWidth()),
+						+ random(0, scrollBarArea.getRealWidth()),
 				scrollBarArea.getAbsoluteY() + pos, true);
 
 		// Wait a bit
@@ -306,8 +302,8 @@ public class Interfaces extends MethodProvider {
 
 		// Return whether or not the component is visible now.
 		return component.getAbsoluteY() >= areaY
-		&& component.getAbsoluteY() <= areaY + areaHeight
-		- component.getRealHeight();
+				&& component.getAbsoluteY() <= areaY + areaHeight
+				- component.getRealHeight();
 	}
 
 	/**
@@ -315,7 +311,7 @@ public class Interfaces extends MethodProvider {
 	 */
 	private synchronized void enlargeCache() {
 		final org.rsbot.client.RSInterface[][] inters = methods.client
-		.getRSInterfaceCache();
+				.getRSInterfaceCache();
 		if (inters != null && mainCache.length < inters.length) { // enlarge
 			// cache
 			mainCache = Arrays.copyOf(mainCache, inters.length);

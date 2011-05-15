@@ -1,13 +1,13 @@
 package org.rsbot.script.methods;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.rsbot.client.RSAnimableNode;
 import org.rsbot.script.util.Filter;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSObjectDef;
 import org.rsbot.script.wrappers.RSTile;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Provides access to in-game physical objects.
@@ -23,7 +23,6 @@ public class Objects extends MethodProvider {
 	 * A filter that accepts all matches.
 	 */
 	public static final Filter<RSObject> ALL_FILTER = new Filter<RSObject>() {
-		@Override
 		public boolean accept(final RSObject npc) {
 			return true;
 		}
@@ -110,7 +109,6 @@ public class Objects extends MethodProvider {
 	 */
 	public RSObject getNearest(final int... ids) {
 		return getNearest(new Filter<RSObject>() {
-			@Override
 			public boolean accept(final RSObject o) {
 				for (final int id : ids) {
 					if (o.getID() == id) {
@@ -133,7 +131,6 @@ public class Objects extends MethodProvider {
 	 */
 	public RSObject getNearest(final String... names) {
 		return getNearest(new Filter<RSObject>() {
-			@Override
 			public boolean accept(final RSObject o) {
 				final RSObjectDef def = o.getDef();
 				if (def != null) {
@@ -222,7 +219,7 @@ public class Objects extends MethodProvider {
 				// Interactable (e.g. Trees)
 				if ((mask & TYPE_INTERACTABLE) != 0) {
 					for (RSAnimableNode node = rsGround.getRSAnimableList(); node != null; node = node
-					.getNext()) {
+							.getNext()) {
 						obj = node.getRSAnimable();
 						if (obj != null
 								&& obj instanceof org.rsbot.client.RSObject) {

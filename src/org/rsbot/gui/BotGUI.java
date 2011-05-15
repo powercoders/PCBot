@@ -184,7 +184,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 							}
 							final int delay = 3;
 							log.info("Shutdown pending in " + delay + " minutes...");
-							final Point[] mouse = new Point[] {MouseInfo.getPointerInfo().getLocation(), null};
+							final Point[] mouse = new Point[]{MouseInfo.getPointerInfo().getLocation(), null};
 							try {
 								Thread.sleep(delay * 60 * 1000);
 							} catch (InterruptedException ignored) {
@@ -585,12 +585,21 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				doExit = false;
 			}
 		}
-		WebQueue.Destroy();
+		try {
+			WebQueue.Destroy();
+		} catch (NoClassDefFoundError ncdfe) {
+		}
 		setVisible(false);
-		Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(showAds));
+		try {
+			Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(showAds));
+		} catch (NoClassDefFoundError ncdfe) {
+		}
 		if (doExit) {
 			menuBar.savePrefs();
-			Monitoring.stop();
+			try {
+				Monitoring.stop();
+			} catch (NoClassDefFoundError ncdfe) {
+			}
 			System.exit(0);
 		} else {
 			setVisible(true);

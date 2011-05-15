@@ -1,5 +1,9 @@
 package org.rsbot.script.provider;
 
+import org.rsbot.Configuration;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IniParser;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -15,10 +19,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
-
-import org.rsbot.Configuration;
-import org.rsbot.util.io.HttpClient;
-import org.rsbot.util.io.IniParser;
 
 /**
  * @author Paris

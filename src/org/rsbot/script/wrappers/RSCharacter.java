@@ -1,12 +1,12 @@
 package org.rsbot.script.wrappers;
 
-import java.awt.Point;
-
 import org.rsbot.client.Model;
 import org.rsbot.client.Node;
 import org.rsbot.client.RSNPCNode;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
+
+import java.awt.*;
 
 public abstract class RSCharacter extends MethodProvider {
 
@@ -156,13 +156,13 @@ public abstract class RSCharacter extends MethodProvider {
 
 	public boolean isInCombat() {
 		return methods.game.isLoggedIn()
-		&& methods.client.getLoopCycle() < getAccessor()
-		.getLoopCycleStatus();
+				&& methods.client.getLoopCycle() < getAccessor()
+				.getLoopCycleStatus();
 	}
 
 	public boolean isInteractingWithLocalPlayer() {
 		return getAccessor().getInteracting() - 32768 == methods.client
-		.getSelfInteracting();
+				.getSelfInteracting();
 	}
 
 	public boolean isMoving() {
@@ -200,11 +200,11 @@ public abstract class RSCharacter extends MethodProvider {
 	public String toString() {
 		final RSCharacter inter = getInteracting();
 		return "[anim="
-		+ getAnimation()
-		+ ",msg="
-		+ getMessage()
-		+ ",interact="
-		+ (inter == null ? "null" : inter.isValid() ? inter
+				+ getAnimation()
+				+ ",msg="
+				+ getMessage()
+				+ ",interact="
+				+ (inter == null ? "null" : inter.isValid() ? inter
 				.getMessage() : "Invalid") + "]";
 	}
 

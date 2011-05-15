@@ -28,10 +28,12 @@ public class Web extends MethodProvider {
 	public RSTile getNearestBank(final RSTile tile) {
 		double dist = -1.0D;
 		RSTile finalTile = null;
-		final RSTile[] BANKS = {new RSTile(3093, 3243, 0)};
+		final RSTile[] BANKS = {new RSTile(3093, 3243, 0), new RSTile(3209, 3219, 2), new RSTile(3270, 3167, 0),
+				new RSTile(3253, 3421, 0), new RSTile(3188, 3437, 0), new RSTile(3094, 3491, 0),
+				new RSTile(3097, 3496, 0), new RSTile(2946, 3369, 0), new RSTile(3012, 3356, 0)};
 		for (RSTile bank : BANKS) {
 			double cdist = methods.calc.distanceBetween(tile, bank);
-			if (dist < cdist || dist == -1.0D) {
+			if ((dist > cdist || dist == -1.0D) && (tile.getZ() == bank.getZ())) {
 				dist = cdist;
 				finalTile = bank;
 			}

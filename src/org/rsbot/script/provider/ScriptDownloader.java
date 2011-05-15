@@ -1,10 +1,11 @@
 package org.rsbot.script.provider;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import org.rsbot.Configuration;
+import org.rsbot.Configuration.OperatingSystem;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IOHelper;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -12,11 +13,6 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.rsbot.Configuration;
-import org.rsbot.Configuration.OperatingSystem;
-import org.rsbot.util.io.HttpClient;
-import org.rsbot.util.io.IOHelper;
 
 public class ScriptDownloader {
 	private static final Logger log = Logger.getLogger(ScriptDownloader.class.getName());
@@ -155,7 +151,7 @@ public class ScriptDownloader {
 			if (reader != null) {
 				try {
 					reader.close();
-				} catch (IOException ignored){
+				} catch (IOException ignored) {
 				}
 			}
 		}

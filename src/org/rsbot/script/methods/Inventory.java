@@ -1,21 +1,17 @@
 package org.rsbot.script.methods;
 
-import java.awt.Point;
-import java.util.LinkedList;
+import org.rsbot.script.wrappers.*;
 
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSItemDef;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSTile;
+import java.awt.*;
+import java.util.LinkedList;
 
 /**
  * Inventory related operations.
  *
- * @author Jacmob, Aut0r, kiko
+ * @author Jacmob
+ * @author kiko
  */
 public class Inventory extends MethodProvider {
-
 	public static final int INTERFACE_INVENTORY = 149;
 	public static final int INTERFACE_INVENTORY_BANK = 763;
 	public static final int INTERFACE_INVENTORY_SHOP = 621;
@@ -349,8 +345,7 @@ public class Inventory extends MethodProvider {
 	 *         <tt>Point</tt>.
 	 */
 	public Point randomizeItemPoint(final Point inventoryPoint) {
-		return new Point(inventoryPoint.x + random(-10, 10), inventoryPoint.y
-				+ random(-10, 10));
+		return new Point(inventoryPoint.x + random(-10, 10), inventoryPoint.y + random(-10, 10));
 	}
 
 	/**
@@ -361,8 +356,7 @@ public class Inventory extends MethodProvider {
 	 */
 	public String getSelectedItemName() {
 		final String name = methods.client.getSelectedItemName();
-		return !isItemSelected() || name == null ? null : name.replaceAll(
-				"<[\\w\\d]+=[\\w\\d]+>", "");
+		return !isItemSelected() || name == null ? null : name.replaceAll("<[\\w\\d]+=[\\w\\d]+>", "");
 	}
 
 	/**
@@ -659,8 +653,6 @@ public class Inventory extends MethodProvider {
 				}
 			}
 		}
-
 		return count;
 	}
-
 }

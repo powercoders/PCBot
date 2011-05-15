@@ -1,10 +1,10 @@
 package org.rsbot.script.methods;
 
-import java.awt.image.BufferedImage;
-
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.util.io.ScreenshotUtil;
+
+import java.awt.image.BufferedImage;
 
 /**
  * Bot environment related operations.
@@ -12,7 +12,6 @@ import org.rsbot.util.io.ScreenshotUtil;
  * @author Jacmob
  */
 public class Environment extends MethodProvider {
-
 	public static final int INPUT_MOUSE = 1;
 	public static final int INPUT_KEYBOARD = 2;
 
@@ -112,16 +111,6 @@ public class Environment extends MethodProvider {
 				random.setEnabled(true);
 			}
 		}
-	}
-
-	/**
-	 * Disables all randoms.
-	 *
-	 * @deprecated Use {@link org.rsbot.script.methods.Environment#disableRandoms()}
-	 */
-	@Deprecated
-	public void disbleRandoms() {
-		disableRandoms();
 	}
 
 	public void disableRandoms() {

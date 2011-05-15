@@ -1,8 +1,8 @@
 package org.rsbot.script.methods;
 
-import java.awt.Point;
-
 import org.rsbot.script.internal.MouseHandler;
+
+import java.awt.*;
 
 /**
  * Mouse related operations.
@@ -89,22 +89,22 @@ public class Mouse extends MethodProvider {
 	public void moveOffScreen() {
 		if (isPresent()) {
 			switch (random(0, 4)) {
-			case 0: // up
-				move(random(-10, methods.game.getWidth() + 10),
-						random(-100, -10));
-				break;
-			case 1: // down
-				move(random(-10, methods.game.getWidth() + 10),
-						methods.game.getHeight() + random(10, 100));
-				break;
-			case 2: // left
-				move(random(-100, -10),
-						random(-10, methods.game.getHeight() + 10));
-				break;
-			case 3: // right
-				move(random(10, 100) + methods.game.getWidth(),
-						random(-10, methods.game.getHeight() + 10));
-				break;
+				case 0: // up
+					move(random(-10, methods.game.getWidth() + 10),
+							random(-100, -10));
+					break;
+				case 1: // down
+					move(random(-10, methods.game.getWidth() + 10),
+							methods.game.getHeight() + random(10, 100));
+					break;
+				case 2: // left
+					move(random(-100, -10),
+							random(-10, methods.game.getHeight() + 10));
+					break;
+				case 3: // right
+					move(random(10, 100) + methods.game.getWidth(),
+							random(-10, methods.game.getHeight() + 10));
+					break;
 			}
 		}
 	}
@@ -139,7 +139,7 @@ public class Mouse extends MethodProvider {
 	}
 
 	public synchronized void click(final boolean leftClick,
-			final int moveAfterDist) {
+	                               final int moveAfterDist) {
 		methods.inputManager.clickMouse(leftClick);
 		if (moveAfterDist > 0) {
 			sleep(random(50, 350));
@@ -171,7 +171,7 @@ public class Mouse extends MethodProvider {
 	 * @see #move(int, int, int, int)
 	 */
 	public synchronized void click(final int x, final int y, final int randX,
-			final int randY, final boolean leftClick) {
+	                               final int randY, final boolean leftClick) {
 		move(x, y, randX, randY);
 		sleep(random(50, 350));
 		click(leftClick, MouseHandler.DEFAULT_MAX_MOVE_AFTER);
@@ -190,7 +190,7 @@ public class Mouse extends MethodProvider {
 	 *                      after moving to the destination.
 	 */
 	public synchronized void click(final int x, final int y, final int randX,
-			final int randY, final boolean leftClick, final int moveAfterDist) {
+	                               final int randY, final boolean leftClick, final int moveAfterDist) {
 		move(x, y, randX, randY);
 		sleep(random(50, 350));
 		click(leftClick, moveAfterDist);
@@ -207,7 +207,7 @@ public class Mouse extends MethodProvider {
 	}
 
 	public void click(final Point p, final int x, final int y,
-			final boolean leftClick) {
+	                  final boolean leftClick) {
 		click(p.x, p.y, x, y, leftClick);
 	}
 
@@ -223,7 +223,7 @@ public class Mouse extends MethodProvider {
 	 *                      after moving to the destination.
 	 */
 	public void click(final Point p, final int x, final int y,
-			final boolean leftClick, final int moveAfterDist) {
+	                  final boolean leftClick, final int moveAfterDist) {
 		click(p.x, p.y, x, y, leftClick, moveAfterDist);
 	}
 
@@ -234,8 +234,8 @@ public class Mouse extends MethodProvider {
 		final Point p = new Point(
 				(int) (getLocation().getX() + (Math.random() * 50 > 25 ? 1 : -1)
 						* (30 + Math.random() * 90)), (int) (getLocation()
-								.getY() + (Math.random() * 50 > 25 ? 1 : -1)
-								* (30 + Math.random() * 90)));
+						.getY() + (Math.random() * 50 > 25 ? 1 : -1)
+						* (30 + Math.random() * 90)));
 		if (p.getX() < 1 || p.getY() < 1 || p.getX() > 761 || p.getY() > 499) {
 			clickSlightly();
 			return;
@@ -308,7 +308,7 @@ public class Mouse extends MethodProvider {
 	 * @see #move(int, int, int, int, int, int)
 	 */
 	public void move(final int speed, final int x, final int y,
-			final int randX, final int randY) {
+	                 final int randX, final int randY) {
 		move(speed, x, y, randX, randY, 0);
 	}
 
@@ -325,7 +325,7 @@ public class Mouse extends MethodProvider {
 	 *                    after moving to the destination.
 	 */
 	public synchronized void move(final int speed, final int x, final int y,
-			final int randX, final int randY, final int afterOffset) {
+	                              final int randX, final int randY, final int afterOffset) {
 		if (x != -1 || y != -1) {
 			methods.inputManager.moveMouse(speed, x, y, randX, randY);
 			if (afterOffset > 0) {
@@ -369,7 +369,7 @@ public class Mouse extends MethodProvider {
 	 * @see #move(int, int, int, int, int, int)
 	 */
 	public void move(final Point p, final int randX, final int randY,
-			final int afterOffset) {
+	                 final int afterOffset) {
 		move(getSpeed(), p.x, p.y, randX, randY, afterOffset);
 	}
 
@@ -425,8 +425,8 @@ public class Mouse extends MethodProvider {
 		final Point p = new Point(
 				(int) (getLocation().getX() + (Math.random() * 50 > 25 ? 1 : -1)
 						* (30 + Math.random() * 90)), (int) (getLocation()
-								.getY() + (Math.random() * 50 > 25 ? 1 : -1)
-								* (30 + Math.random() * 90)));
+						.getY() + (Math.random() * 50 > 25 ? 1 : -1)
+						* (30 + Math.random() * 90)));
 		if (p.getX() < 1 || p.getY() < 1 || p.getX() > 761 || p.getY() > 499) {
 			moveSlightly();
 			return;
@@ -449,7 +449,7 @@ public class Mouse extends MethodProvider {
 		} else {
 			final int dist = methods.game.getWidth() - p.x;
 			return p.x
-			+ random(1, dist < maxDistance && dist > 0 ? dist
+					+ random(1, dist < maxDistance && dist > 0 ? dist
 					: maxDistance);
 		}
 	}
@@ -469,7 +469,7 @@ public class Mouse extends MethodProvider {
 		} else {
 			final int dist = methods.game.getHeight() - p.y;
 			return p.y
-			+ random(1, dist < maxDistance && dist > 0 ? dist
+					+ random(1, dist < maxDistance && dist > 0 ? dist
 					: maxDistance);
 		}
 	}
