@@ -300,11 +300,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			menuBar.setOverrideInput(false);
 			toolBar.setInputState(Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE);
 			toolBar.setScriptButton(BotToolBar.RUN_SCRIPT);
+			menuBar.setEnabled(Messages.FORCEINPUT, false);
 		} else {
 			toolBar.setOverrideInput(bot.overrideInput);
 			toolBar.setOverrideInput(bot.overrideInput);
 			toolBar.setInputState(bot.inputFlags);
 			toolBar.setScriptButton(paused ? BotToolBar.RESUME_SCRIPT : BotToolBar.PAUSE_SCRIPT);
+			menuBar.setEnabled(Messages.FORCEINPUT, true);
 		}
 
 		toolBar.updateInputButton();
