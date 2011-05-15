@@ -85,6 +85,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		model.search("");
 	}
 
+	@SuppressWarnings("serial")
 	private void init() {
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT));
 		setLayout(new BorderLayout());
@@ -97,7 +98,32 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				dispose();
 			}
 		});
-		table = new JTable(model);
+		table = new JTable(model) {
+			@Override
+			public String getToolTipText(MouseEvent e) {
+				int row = rowAtPoint(e.getPoint());
+				ScriptDefinition def = model.getDefinition(row);
+				if (def != null) {
+					StringBuilder b = new StringBuilder();
+					if (def.authors.length > 1) {
+						b.append("Authors: ");
+					} else {
+						b.append("Author: ");
+					}
+					boolean prefix = false;
+					for (String author : def.authors) {
+						if (prefix) {
+							b.append(", ");
+						} else {
+							prefix = true;
+						}
+						b.append(author);
+					}
+					return b.toString();
+				}
+				return super.getToolTipText(e);
+			}
+		};
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(final MouseEvent e) {
