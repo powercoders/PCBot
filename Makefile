@@ -36,7 +36,7 @@ Bundle: Scripts
 	@rm -f "$(LSTF)"
 
 mostlyclean:
-	@if [ -d "$(SCRIPTS)" ]; then @rm -fv "$(SCRIPTS)"/*.class; fi
+	@if [ -d "$(SCRIPTS)" ]; then rm -fv "$(SCRIPTS)"/*.class; fi
 
 clean: mostlyclean
 	@rm -fv "$(DIST)"
