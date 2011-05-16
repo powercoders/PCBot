@@ -6,6 +6,7 @@ import org.rsbot.script.methods.Magic;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.web.Teleport;
 import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.RSWeb;
 
 public class TeleportRunes extends Teleport {
 	public final int spell;
@@ -90,7 +91,13 @@ public class TeleportRunes extends Teleport {
 	}
 
 	public double getDistance(RSTile destination) {
-		return methods.calc.distanceBetween(teleportationLocation(), destination);// TODO use web distancing.
+		RSWeb tempWeb = methods.web.getWeb(teleportationLocation(), destination);
+		double d = 0.0D;
+		if (tempWeb != null) {
+			d = tempWeb.getDistance();
+			tempWeb = null;
+		}
+		return d;
 	}
 
 	private boolean deepWilderness() {
