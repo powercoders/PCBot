@@ -9,14 +9,29 @@ public class Hook {
 		this.fieldName = fieldName;
 	}
 
+	/**
+	 * Gets the name of the hook.
+	 *
+	 * @return The name of the hook.
+	 */
 	public String getHookName() {
 		return this.hookName;
 	}
 
+	/**
+	 * Gets the class name.
+	 *
+	 * @return The class name.
+	 */
 	public String getClassName() {
 		return this.className;
 	}
 
+	/**
+	 * Gets the field name.
+	 *
+	 * @return The field name.
+	 */
 	public String getFieldName() {
 		return this.fieldName;
 	}

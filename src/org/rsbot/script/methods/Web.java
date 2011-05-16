@@ -25,6 +25,12 @@ public class Web extends MethodProvider {
 		super(ctx);
 	}
 
+	/**
+	 * Gets the closest supported bank in runescape that is usable.
+	 *
+	 * @param tile The tile to look off of.
+	 * @return The closest bank's tile.
+	 */
 	public RSTile getNearestBank(final RSTile tile) {
 		double dist = -1.0D;
 		RSTile finalTile = null;
@@ -39,6 +45,15 @@ public class Web extends MethodProvider {
 			}
 		}
 		return finalTile;
+	}
+
+	/**
+	 * Gets the closest supported bank in runescape that is usable.
+	 *
+	 * @return The closest bank's tile.
+	 */
+	public RSTile getNearestBank() {
+		return getNearestBank(methods.players.getMyPlayer().getLocation());
 	}
 
 	/**
@@ -92,6 +107,13 @@ public class Web extends MethodProvider {
 		return null;
 	}
 
+	/**
+	 * Generates a route between two tiles.
+	 *
+	 * @param start The start tile.
+	 * @param end   The ending tile.
+	 * @return The generated route.
+	 */
 	public Route generateRoute(RSTile start, final RSTile end) {
 		TransportationHandler transportationHandler = new TransportationHandler(methods);
 		List<RouteStep> routeSteps = new ArrayList<RouteStep>();
@@ -112,9 +134,26 @@ public class Web extends MethodProvider {
 		return null;
 	}
 
+	/**
+	 * Returns a web instance to traverse.
+	 *
+	 * @param start The starting tile.
+	 * @param end   The end tile.
+	 * @return The web constructed.  <code>null</code> if it cannot be done.
+	 */
 	public RSWeb getWeb(RSTile start, final RSTile end) {
 		Route onlyRoute = generateRoute(start, end);
 		return new RSWeb(new Route[]{onlyRoute});
+	}
+
+	/**
+	 * Returns a web instance to traverse.
+	 *
+	 * @param end The end tile.
+	 * @return The web constructed.  <code>null</code> if it cannot be done.
+	 */
+	public RSWeb getWeb(final RSTile end) {
+		return getWeb(methods.players.getMyPlayer().getLocation(), end);
 	}
 
 	/**

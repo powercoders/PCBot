@@ -11,6 +11,13 @@ public class Reflection {
 		hooks = new Hooks(bot);
 	}
 
+	/**
+	 * Gets an integer from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The integer.
+	 */
 	public int invokeInt(Object parent, String hookName) {
 		try {
 			return (Integer) hooks.getHookValue(parent, hookName);
@@ -19,6 +26,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets long from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The long.
+	 */
 	public long invokeLong(Object parent, String hookName) {
 		try {
 			return (Long) hooks.getHookValue(parent, hookName);
@@ -27,6 +41,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets a float from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The float.
+	 */
 	public float invokeFloat(Object parent, String hookName) {
 		try {
 			return (Float) hooks.getHookValue(parent, hookName);
@@ -35,6 +56,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets an integer array from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The integer array.
+	 */
 	public int[] invokeIntArray(Object parent, String hookName) {
 		try {
 			return (int[]) hooks.getHookValue(parent, hookName);
@@ -43,6 +71,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets an integer[][] from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The integer[][].
+	 */
 	public int[][] invokeInt2DArray(Object parent, String hookName) {
 		try {
 			return (int[][]) hooks.getHookValue(parent, hookName);
@@ -51,6 +86,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets a string from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The string.
+	 */
 	public String invokeString(Object parent, String hookName) {
 		try {
 			return (String) hooks.getHookValue(parent, hookName);
@@ -59,6 +101,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets a string array from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The string array.
+	 */
 	public String[] invokeStringArray(Object parent, String hookName) {
 		try {
 			return (String[]) hooks.getHookValue(parent, hookName);
@@ -67,6 +116,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets a short from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The short.
+	 */
 	public short invokeShort(Object parent, String hookName) {
 		try {
 			return (Short) hooks.getHookValue(parent, hookName);
@@ -75,6 +131,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets a short array from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The short.
+	 */
 	public short[] invokeShortArray(Object parent, String hookName) {
 		try {
 			return (short[]) hooks.getHookValue(parent, hookName);
@@ -83,6 +146,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets a byte from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The byte.
+	 */
 	public byte invokeByte(Object parent, String hookName) {
 		try {
 			return (Byte) hooks.getHookValue(parent, hookName);
@@ -91,6 +161,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets a boolean from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The boolean.
+	 */
 	public boolean invokeBoolean(Object parent, String hookName) {
 		try {
 			return (Boolean) hooks.getHookValue(parent, hookName);
@@ -99,6 +176,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets a boolean array from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The boolean array.
+	 */
 	public boolean[] invokeBooleanArray(Object parent, String hookName) {
 		try {
 			return (boolean[]) hooks.getHookValue(parent, hookName);
@@ -107,6 +191,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets an object from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The object.
+	 */
 	public Object invokeObject(Object parent, String hookName) {
 		try {
 			return hooks.getHookValue(parent, hookName);
@@ -115,6 +206,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets an object array from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The object array.
+	 */
 	public Object[] invokeObjectArray(Object parent, String hookName) {
 		try {
 			return (Object[]) hooks.getHookValue(parent, hookName);
@@ -123,6 +221,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets an object[][] from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The object[][].
+	 */
 	public Object[][] invokeObject2DArray(Object parent, String hookName) {
 		try {
 			return (Object[][]) hooks.getHookValue(parent, hookName);
@@ -131,6 +236,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets an object[][][] from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The object[][][].
+	 */
 	public Object[][][] invokeObject3DArray(Object parent, String hookName) {
 		try {
 			return (Object[][][]) hooks.getHookValue(parent, hookName);
@@ -139,6 +251,13 @@ public class Reflection {
 		}
 	}
 
+	/**
+	 * Gets a rectangle array from the runescape client.
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The name of the field.
+	 * @return The rectange array.
+	 */
 	public Rectangle[] invokeRectangleArray(Object parent, String hookName) {
 		try {
 			return (Rectangle[]) hooks.getHookValue(parent, hookName);

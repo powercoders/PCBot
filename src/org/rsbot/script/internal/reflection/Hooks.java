@@ -13,6 +13,13 @@ public class Hooks {
 		this.bot = bot;
 	}
 
+	/**
+	 * Gets the Object value of an object in (a) class[es].
+	 *
+	 * @param parent   The parent class.
+	 * @param hookName The object's name.
+	 * @return The object.
+	 */
 	Object getHookValue(Object parent, String hookName) {
 		Field field = getHookField(hookName);
 		if (field == null) {
@@ -26,16 +33,34 @@ public class Hooks {
 		}
 	}
 
+	/**
+	 * Checks if the hook exists in the map yet.
+	 *
+	 * @param hookName The hook's name.
+	 * @return <tt>true</tt> if it exists, otherwise <tt>false</tt>.
+	 */
 	public static boolean isHookValid(String hookName) {
 		return Hooks.hooks.containsKey(hookName);
 	}
 
+	/**
+	 * Adds a hook to the map.
+	 *
+	 * @param hook The hook to add.
+	 */
 	public static void addHook(Hook hook) {
 		if (!isHookValid(hook.getHookName())) {
 			Hooks.hooks.put(hook.getHookName(), hook);
 		}
 	}
 
+	/**
+	 * Gets the hook's field.
+	 *
+	 * @param className The class.
+	 * @param fieldName The field.
+	 * @return The field from the class.
+	 */
 	private Field getHookField(String className, String fieldName) {
 		try {
 			if (className == null || fieldName == null) {
@@ -50,6 +75,12 @@ public class Hooks {
 		}
 	}
 
+	/**
+	 * Gets the hook field.
+	 *
+	 * @param hookName The name of the hook.
+	 * @return The field from the class.
+	 */
 	private Field getHookField(String hookName) {
 		if (hookName == null || !isHookValid(hookName)) {
 			return null;
