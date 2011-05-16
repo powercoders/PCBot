@@ -1,6 +1,6 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.internal.wrappers.GameTile;
+import org.rsbot.script.wrappers.GameTile;
 import org.rsbot.script.web.Route;
 import org.rsbot.script.web.RouteStep;
 import org.rsbot.script.web.Teleport;

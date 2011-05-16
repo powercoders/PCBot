@@ -2,7 +2,7 @@ package org.rsbot.event.impl;
 
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
-import org.rsbot.script.internal.wrappers.GameTile;
+import org.rsbot.script.wrappers.GameTile;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSPlayer;

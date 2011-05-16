@@ -3,7 +3,7 @@ package org.rsbot.script.background;
 import org.rsbot.Configuration;
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.internal.wrappers.GameTile;
+import org.rsbot.script.wrappers.GameTile;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
@@ -40,7 +40,7 @@ public class WebLoader extends BackgroundScript {
 					String line;
 					final List<GameTile> flagsArray = new ArrayList<GameTile>();
 					while ((line = br.readLine()) != null) {
-						final String[] d = line.split("tile=data");
+						final String[] d = line.split("k");
 						if (d.length == 2) {
 							final String[] tD = d[0].split(",");
 							if (tD.length == 3) {

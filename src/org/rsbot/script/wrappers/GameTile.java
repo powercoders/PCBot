@@ -1,6 +1,4 @@
-package org.rsbot.script.internal.wrappers;
-
-import org.rsbot.script.wrappers.RSTile;
+package org.rsbot.script.wrappers;
 
 /**
  * A class that handles flags of tiles.
@@ -58,7 +56,7 @@ public class GameTile extends RSTile {
 
 	@Override
 	public String toString() {
-		return getX() + "," + getY() + "," + getZ() + "tile=data" + key;
+		return getX() + "," + getY() + "," + getZ() + "k" + key;
 	}
 
 	public int getKey() {
