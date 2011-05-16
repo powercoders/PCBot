@@ -7,6 +7,9 @@ import org.rsbot.script.web.Teleport;
 import org.rsbot.script.web.TransportationHandler;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.script.wrappers.RSWeb;
+import org.rsbot.script.wrappers.RSObject;
+import org.rsbot.script.wrappers.RSNPC;
+import org.rsbot.script.util.Filter;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -21,7 +24,7 @@ public class Web extends MethodProvider {
 	public static boolean loaded = false;
 	private final Logger log = Logger.getLogger("Web");
 
-	Web(final MethodContext ctx) {
+	public Web(final MethodContext ctx) {
 		super(ctx);
 	}
 
@@ -37,6 +40,26 @@ public class Web extends MethodProvider {
 				dist = cdist;
 				finalTile = bank;
 			}
+		}
+		RSObject nearestChest = methods.objects.getNearest(Bank.BANK_CHESTS);
+		if (nearestChest != null && methods.calc.distanceBetween(tile, nearestChest.getLocation()) < dist) {
+			dist = methods.calc.distanceBetween(tile, nearestChest.getLocation());
+			finalTile = nearestChest.getLocation();
+		}
+		RSObject nearestDeposit = methods.objects.getNearest(Bank.BANK_DEPOSIT_BOX);
+		if (nearestDeposit != null && methods.calc.distanceBetween(tile, nearestDeposit.getLocation()) < dist) {
+			dist = methods.calc.distanceBetween(tile, nearestDeposit.getLocation());
+			finalTile = nearestDeposit.getLocation();
+		}
+		RSNPC nearestBanker = methods.npcs.getNearest(Bank.BANKERS);
+		if (nearestBanker != null && methods.calc.distanceBetween(tile, nearestBanker.getLocation()) < dist) {
+			dist = methods.calc.distanceBetween(tile, nearestBanker.getLocation());
+			finalTile = nearestBanker.getLocation();
+		}
+		RSObject nearestBooth = methods.objects.getNearest(Bank.BANK_BOOTHS);
+		if (nearestBooth != null && methods.calc.distanceBetween(tile, nearestBooth.getLocation()) < dist) {
+			dist = methods.calc.distanceBetween(tile, nearestBooth.getLocation());
+			finalTile = nearestBooth.getLocation();
 		}
 		return finalTile;
 	}
@@ -88,7 +111,6 @@ public class Web extends MethodProvider {
 				}
 			}
 		}
-		log.info("We did not find a path, how is that possible?");
 		return null;
 	}
 

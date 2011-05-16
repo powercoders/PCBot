@@ -90,7 +90,7 @@ public class TeleportItem extends Teleport {
 	 * @return The distance.
 	 */
 	public double getDistance(RSTile destination) {
-		return methods.calc.distanceBetween(teleportationLocation(), destination);// TODO use web distancing.
+		return methods.web.generateNodePath(methods.players.getMyPlayer().getLocation(), destination).length;
 	}
 
 	/**

@@ -41,6 +41,6 @@ public class TeleportNPC extends Teleport {
 	}
 
 	public double getDistance(RSTile destination) {
-		return methods.calc.distanceBetween(teleportationLocation(), destination);// TODO use web distancing.
+		return methods.web.generateNodePath(methods.players.getMyPlayer().getLocation(), destination).length;
 	}
 }
