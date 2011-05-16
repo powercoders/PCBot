@@ -9,6 +9,7 @@ import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,16 @@ public class WebLoader extends BackgroundScript {
 	@Override
 	public int loop() {
 		synchronized (lock) {
+			if (Web.loaded) {
+				deactivate(getID());
+			}
 			if (!Web.loaded) {
 				try {
+					if (!new File(Configuration.Paths.getWebDatabase()).exists()) {
+						Web.loaded = true;
+						deactivate(getID());
+						return -1;
+					}
 					final BufferedReader br = new BufferedReader(new FileReader(Configuration.Paths.getWebDatabase()));
 					String line;
 					final List<GameTile> flagsArray = new ArrayList<GameTile>();
