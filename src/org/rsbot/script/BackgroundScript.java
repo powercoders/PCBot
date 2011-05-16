@@ -45,7 +45,7 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 		running = true;
 		try {
 			while (running) {
-				if (activateCondition() && isLoggedIn()) {
+				if (activateCondition()) {
 					final boolean start = onStart();
 					if (start) {
 						while (running) {
