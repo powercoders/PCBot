@@ -15,7 +15,6 @@ public class RouteStep extends MethodProvider {
 	private RSTile[] path = null;
 	private RSPath rspath = null;
 	private Teleport teleport = null;
-	private int loops = 0;
 
 	public static enum Type {
 		PATH, TELEPORT
@@ -39,42 +38,47 @@ public class RouteStep extends MethodProvider {
 
 	public boolean execute() {
 		try {
-			for (final Script checkScript : methods.bot.getScriptHandler().getRunningScripts().values()) {
-				if (!checkScript.isActive() || !checkScript.isRunning() || checkScript.isPaused()) {
+			for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
+				if (!checkScript.isActive() || !checkScript.isRunning()) {
 					return false;
+				}
+				if (checkScript.isPaused()) {
+					sleep(500);
+					return true;
 				}
 			}
 			switch (type) {
 				case PATH:
-					update();
-					while (!inSomeRandom()) {
-						loops++;
-						try {
-							if (!rspath.traverse() || methods.calc.distanceTo(rspath.getEnd()) < 5) {
-								break;
-							}
-						} catch (NullPointerException npe) {
-							npe.printStackTrace();
-							return false;
-						}
-						for (final Script checkScript : methods.bot.getScriptHandler().getRunningScripts().values()) {
-							if (!checkScript.isActive() || !checkScript.isRunning() || checkScript.isPaused()) {
-								return false;
-							}
-						}
-						sleep(random(50, 150));
-						if (loops > (methods.bot.disableRendering ? 1 : 0)) {
-							update();
-							loops = 0;
-						}
+					if (rspath == null) {
+						rspath = methods.walking.newTilePath(path);
 					}
-					return !inSomeRandom() && methods.calc.distanceTo(rspath.getEnd()) < 5;
+					if (inSomeRandom()) {
+						return false;
+					}
+					if (methods.calc.distanceTo(rspath.getEnd()) < 5) {
+						rspath = null;
+						path = null;
+						return true;
+					}
+					sleep(random(50, 150));
+					return !inSomeRandom() && rspath.traverse();
 				case TELEPORT:
-					return !inSomeRandom() && teleport != null && teleport.perform();
+					if (inSomeRandom()) {
+						return false;
+					}
+					if (teleport != null && teleport.perform()) {
+						teleport = null;
+						return true;
+					}
+					return false;
 			}
 		} catch (Exception e) {
 		}
 		return false;
+	}
+
+	public boolean finished() {
+		return path == null && teleport == null;
 	}
 
 	public Teleport getTeleport() {
@@ -97,16 +101,5 @@ public class RouteStep extends MethodProvider {
 			}
 		}
 		return false;
-	}
-
-	private void update() {
-		if (type.equals(Type.TELEPORT) || path == null) {
-			return;
-		}
-		RSTile[] nodes = methods.web.generateNodePath(path[0], path[path.length - 1]);
-		if (nodes != null) {
-			path = nodes;
-			rspath = methods.walking.newTilePath(path);
-		}
 	}
 }

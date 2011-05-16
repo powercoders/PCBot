@@ -25,9 +25,16 @@ public class RSWeb {
 	public boolean step() {
 		if (routes.size() > 0) {
 			Route route = routes.poll();
-			return route.execute();
+			if (route.execute()) {
+				if (!route.finished()) {
+					routes.addFirst(route);
+				}
+				return true;
+			} else {
+				return false;
+			}
 		}
-		return finished();
+		return true;
 	}
 
 	public boolean finished() {
