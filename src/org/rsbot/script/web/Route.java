@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Route {
-	private LinkedList<RouteStep> subRoutes = new LinkedList<RouteStep>();
+	private final LinkedList<RouteStep> subRoutes = new LinkedList<RouteStep>();
 
 	public Route(final RouteStep[] steps) {
 		for (RouteStep step : steps) {
@@ -41,5 +41,11 @@ public class Route {
 			}
 		}
 		return l;
+	}
+
+	public void updateRoute() {
+		for (RouteStep route : subRoutes) {
+			route.update();
+		}
 	}
 }

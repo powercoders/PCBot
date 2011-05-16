@@ -1,5 +1,6 @@
 package org.rsbot.script.wrappers;
 
+import org.rsbot.script.methods.Web;
 import org.rsbot.script.web.Route;
 
 import java.util.ArrayList;
@@ -13,11 +14,13 @@ import java.util.List;
  */
 public class RSWeb {
 	private final LinkedList<Route> routes = new LinkedList<Route>();
+	private int oldCount = 0;
 
 	public RSWeb(final Route[] routes) {
 		for (Route route : routes) {
 			this.routes.addLast(route);
 		}
+		oldCount = Web.map.size();
 	}
 
 	public Route[] getRoutes() {
@@ -26,6 +29,10 @@ public class RSWeb {
 
 	public boolean step() {
 		if (routes.size() > 0) {
+			if (Web.map.size() != oldCount) {
+				oldCount = Web.map.size();
+				update();
+			}
 			Route route = routes.poll();
 			if (route.execute()) {
 				if (!route.finished()) {
@@ -68,5 +75,13 @@ public class RSWeb {
 			}
 		}
 		return d;
+	}
+
+	public void update() {
+		for (Route route : getRoutes()) {
+			if (route != null) {
+				route.updateRoute();
+			}
+		}
 	}
 }

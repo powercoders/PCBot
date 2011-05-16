@@ -49,6 +49,9 @@ public class RouteStep extends MethodProvider {
 			}
 			switch (type) {
 				case PATH:
+					if (path == null) {//Recalculation says path is a no-go.
+						return false;
+					}
 					if (rspath == null) {
 						rspath = methods.walking.newTilePath(path);
 					}
@@ -101,5 +104,13 @@ public class RouteStep extends MethodProvider {
 			}
 		}
 		return false;
+	}
+
+	void update() {
+		if (path != null && path.length > 1) {
+			RSTile startTile = path[0];
+			RSTile endTile = path[path.length - 1];
+			path = methods.web.generateNodePath(startTile, endTile);
+		}
 	}
 }
