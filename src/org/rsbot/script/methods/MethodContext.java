@@ -3,6 +3,7 @@ package org.rsbot.script.methods;
 import org.rsbot.bot.Bot;
 import org.rsbot.client.Client;
 import org.rsbot.script.internal.InputManager;
+import org.rsbot.script.internal.reflection.Reflection;
 
 /**
  * For internal use to link MethodProviders.
@@ -201,10 +202,16 @@ public class MethodContext {
 	 */
 	public final Web web = new Web(this);
 
+	/**
+	 * Reflection providers.
+	 */
+	public final Reflection reflection;
+
 	public final Bot bot;
 
 	public MethodContext(final Bot bot) {
 		this.bot = bot;
+		this.reflection = new Reflection(bot);
 		client = bot.getClient();
 		inputManager = bot.getInputManager();
 	}
