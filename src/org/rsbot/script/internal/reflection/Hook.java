@@ -1,7 +1,6 @@
 package org.rsbot.script.internal.reflection;
 
 public class Hook {
-
 	private final String hookName, className, fieldName;
 
 	public Hook(final String hookName, final String className, final String fieldName) {
@@ -21,5 +20,4 @@ public class Hook {
 	public String getFieldName() {
 		return this.fieldName;
 	}
-
 }
