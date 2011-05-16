@@ -1,4 +1,4 @@
-package org.rsbot.reflection;
+package org.rsbot.script.internal.reflection;
 
 import org.rsbot.bot.Bot;
 
