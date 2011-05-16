@@ -37,7 +37,7 @@ public class GameTile extends RSTile {
 
 	public boolean isWalkable() {
 		return (key & Flags.WALL_NORTH_WEST) == 0 && (key & Flags.WALL_NORTH) == 0 && (key & Flags.WALL_NORTH_EAST) == 0
-				&& (key & Flags.WALL_EAST) == 0 && (key & Flags.WALL_SOUTH_EAST) == 0 & (key & Flags.WALL_SOUTH) == 0
+				&& (key & Flags.WALL_EAST) == 0 && (key & Flags.WALL_SOUTH_EAST) == 0 && (key & Flags.WALL_SOUTH) == 0
 				&& (key & Flags.WALL_SOUTH_WEST) == 0 && (key & Flags.WALL_WEST) == 0 && (key & Flags.BLOCKED) == 0
 				&& (key & Flags.WATER) == 0;
 	}
