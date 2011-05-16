@@ -27,10 +27,8 @@ import java.util.logging.Logger;
  * @author Aion
  * @author Timer
  */
-@SuppressWarnings("serial")
 public class AccountManager extends JDialog implements ActionListener {
-
-	private static final String FILE_NAME = Configuration.Paths.getAccountsFile();
+	private static final String FILE_ACCOUNT_STORAGE = Configuration.Paths.getAccountsFile();
 
 	private static final String[] RANDOM_REWARDS = {"Cash", "Runes", "Coal", "Essence", "Ore", "Bars", "Gems", "Herbs",
 			"Seeds", "Charms", "Surprise", "Emote", "Costume", "Attack",
@@ -44,7 +42,7 @@ public class AccountManager extends JDialog implements ActionListener {
 
 	private static final Logger log = Logger.getLogger(AccountManager.class.getName());
 
-	private static final AccountStore accountStore = new AccountStore(new File(FILE_NAME));
+	private static final AccountStore accountStore = new AccountStore(new File(FILE_ACCOUNT_STORAGE));
 
 	static {
 		accountStore.setPassword(ScriptDeliveryNetwork.getInstance().getKey());

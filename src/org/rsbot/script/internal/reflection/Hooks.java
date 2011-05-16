@@ -20,8 +20,8 @@ public class Hooks {
 	 * @param hookName The object's name.
 	 * @return The object.
 	 */
-	Object getHookValue(Object parent, String hookName) {
-		Field field = getHookField(hookName);
+	Object getValue(final Object parent, final String hookName) {
+		Field field = getField(hookName);
 		if (field == null) {
 			return null;
 		}
@@ -39,7 +39,7 @@ public class Hooks {
 	 * @param hookName The hook's name.
 	 * @return <tt>true</tt> if it exists, otherwise <tt>false</tt>.
 	 */
-	public static boolean isHookValid(String hookName) {
+	public static boolean isValid(final String hookName) {
 		return Hooks.hooks.containsKey(hookName);
 	}
 
@@ -48,9 +48,9 @@ public class Hooks {
 	 *
 	 * @param hook The hook to add.
 	 */
-	public static void addHook(Hook hook) {
-		if (!isHookValid(hook.getHookName())) {
-			Hooks.hooks.put(hook.getHookName(), hook);
+	public static void add(final Hook hook) {
+		if (!isValid(hook.getHook())) {
+			Hooks.hooks.put(hook.getHook(), hook);
 		}
 	}
 
@@ -61,7 +61,7 @@ public class Hooks {
 	 * @param fieldName The field.
 	 * @return The field from the class.
 	 */
-	private Field getHookField(String className, String fieldName) {
+	private Field getField(final String className, final String fieldName) {
 		try {
 			if (className == null || fieldName == null) {
 				return null;
@@ -81,14 +81,14 @@ public class Hooks {
 	 * @param hookName The name of the hook.
 	 * @return The field from the class.
 	 */
-	private Field getHookField(String hookName) {
-		if (hookName == null || !isHookValid(hookName)) {
+	private Field getField(final String hookName) {
+		if (hookName == null || !isValid(hookName)) {
 			return null;
 		}
 		Hook hook = Hooks.hooks.get(hookName);
 		if (hook == null) {
 			return null;
 		}
-		return getHookField(hook.getClassName(), hook.getFieldName());
+		return getField(hook.getParentClass(), hook.getField());
 	}
 }

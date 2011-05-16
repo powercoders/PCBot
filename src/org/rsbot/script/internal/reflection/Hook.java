@@ -14,7 +14,7 @@ public class Hook {
 	 *
 	 * @return The name of the hook.
 	 */
-	public String getHookName() {
+	public String getHook() {
 		return this.hookName;
 	}
 
@@ -23,7 +23,7 @@ public class Hook {
 	 *
 	 * @return The class name.
 	 */
-	public String getClassName() {
+	public String getParentClass() {
 		return this.className;
 	}
 
@@ -32,7 +32,7 @@ public class Hook {
 	 *
 	 * @return The field name.
 	 */
-	public String getFieldName() {
+	public String getField() {
 		return this.fieldName;
 	}
 }

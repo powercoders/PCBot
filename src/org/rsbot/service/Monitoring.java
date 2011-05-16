@@ -33,7 +33,7 @@ public class Monitoring {
 		}
 
 		events = new ConcurrentLinkedQueue<Event>();
-		HashMap<String, String> keys = null;
+		HashMap<String, String> keys;
 
 		try {
 			final URL source = new URL(Configuration.Paths.URLs.MONITORING_CONTROL);

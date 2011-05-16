@@ -17,106 +17,106 @@ import java.util.regex.Pattern;
 public class ScriptDownloader {
 	private static final Logger log = Logger.getLogger(ScriptDownloader.class.getName());
 
-	public static void save(String source) {
-		final String javac = findJavac();
-		if (javac == null || javac.length() == 0) {
+	public static void save(String sourceURL) {
+		final String javacPath = findJavac();
+		if (javacPath == null || javacPath.length() == 0) {
 			log.warning("JDK is not installed");
 			return;
 		}
-		source = source.trim();
-		if (source.startsWith("https:")) {
-			source = "http" + source.substring(5);
+		sourceURL = sourceURL.trim();
+		if (sourceURL.startsWith("https:")) {
+			sourceURL = "http" + sourceURL.substring(5);
 		}
-		if (!source.startsWith("http://")) {
+		if (!sourceURL.startsWith("http://")) {
 			log.warning("Invalid URL");
 			return;
 		}
-		source = normalisePastebin(source);
-		log.fine("Downloading: " + source);
-		final File output = new File(Configuration.Paths.getGarbageDirectory(), Integer.toString(source.hashCode()) + ".script.bin");
-		HttpURLConnection con = null;
+		sourceURL = normalisePastebin(sourceURL);
+		log.fine("Downloading: " + sourceURL);
+		final File temporaryFile = new File(Configuration.Paths.getGarbageDirectory(), Integer.toString(sourceURL.hashCode()) + ".script.bin");
+		HttpURLConnection httpURLConnection = null;
 		try {
-			con = HttpClient.download(new URL(source), output);
+			httpURLConnection = HttpClient.download(new URL(sourceURL), temporaryFile);
 		} catch (Exception e) {
 			log.warning("Could not download script");
 		}
-		String name = classFileName(output);
-		if (name != null) {
-			final File saveto = new File(Configuration.Paths.getScriptsPrecompiledDirectory());
-			if (output.renameTo(saveto)) {
-				log.info("Saved precompiled script " + name);
+		String className = classFileName(temporaryFile);
+		if (className != null) {
+			final File saveTo = new File(Configuration.Paths.getScriptsPrecompiledDirectory());
+			if (temporaryFile.renameTo(saveTo)) {
+				log.info("Saved precompiled script " + className);
 			} else {
-				log.warning("Could not save precompiled script " + name);
+				log.warning("Could not save precompiled script " + className);
 			}
 			return;
 		}
-		final byte[] bytes = IOHelper.read(output);
-		if (bytes == null) {
+		final byte[] scriptBytes = IOHelper.read(temporaryFile);
+		if (scriptBytes == null) {
 			log.severe("Could not read downloaded file");
 			return;
 		}
-		String text = new String(bytes);
-		if (con.getContentType().contains("html")) {
-			final int z = text.indexOf("<body");
+		String source = new String(scriptBytes);
+		if (httpURLConnection.getContentType().contains("html")) {
+			final int z = source.indexOf("<body");
 			if (z != -1) {
-				text = text.substring(z);
+				source = source.substring(z);
 			}
-			text = text.replaceAll("\\<br\\s*\\/?\\s*\\>", "\r\n");
-			text = text.replaceAll("\\<.*?\\>", "");
-			text = text.replaceAll("&nbsp;", " ");
-			text = text.replaceAll("&quot;", "\"");
-			text = text.replaceAll("&lt;", "<");
-			text = text.replaceAll("&gt;", ">");
-			text = text.replaceAll("&amp;", "&");
+			source = source.replaceAll("\\<br\\s*\\/?\\s*\\>", "\r\n");
+			source = source.replaceAll("\\<.*?\\>", "");
+			source = source.replaceAll("&nbsp;", " ");
+			source = source.replaceAll("&quot;", "\"");
+			source = source.replaceAll("&lt;", "<");
+			source = source.replaceAll("&gt;", ">");
+			source = source.replaceAll("&amp;", "&");
 		}
-		final Matcher m = Pattern.compile("public\\s+class\\s+(\\w+)\\s+extends\\s+Script").matcher(text);
+		final Matcher m = Pattern.compile("public\\s+class\\s+(\\w+)\\s+extends\\s+Script").matcher(source);
 		if (!m.find()) {
 			log.severe("Specified URL is not a script");
 			return;
 		}
-		name = m.group(1);
-		final File dir = new File(Configuration.Paths.getScriptsSourcesDirectory());
-		if (!dir.exists()) {
-			dir.mkdirs();
+		className = m.group(1);
+		final File saveDirectory = new File(Configuration.Paths.getScriptsSourcesDirectory());
+		if (!saveDirectory.exists()) {
+			saveDirectory.mkdirs();
 		}
-		final File saveto = new File(dir, name + ".java");
+		final File classFile = new File(saveDirectory, className + ".java");
 		try {
-			final FileWriter out = new FileWriter(saveto);
-			out.write(text);
-			out.close();
+			final FileWriter fileWriterOut = new FileWriter(classFile);
+			fileWriterOut.write(source);
+			fileWriterOut.close();
 		} catch (IOException ignored) {
-			log.severe("Could not save script " + name);
+			log.severe("Could not save script " + className);
 			return;
 		}
-		String classpath;
+		String compileClassPath;
 		if (Configuration.RUNNING_FROM_JAR) {
-			classpath = Configuration.Paths.getRunningJarPath();
+			compileClassPath = Configuration.Paths.getRunningJarPath();
 		} else {
-			classpath = new File(Configuration.Paths.ROOT + File.separator + "bin").getAbsolutePath();
+			compileClassPath = new File(Configuration.Paths.ROOT + File.separator + "bin").getAbsolutePath();
 		}
 		try {
-			Runtime.getRuntime().exec(new String[]{javac, "-cp", classpath, saveto.getAbsolutePath()});
+			Runtime.getRuntime().exec(new String[]{javacPath, "-cp", compileClassPath, classFile.getAbsolutePath()});
 		} catch (IOException e) {
-			log.severe("Could not compile script " + name);
+			log.severe("Could not compile script " + className);
 			return;
 		}
-		log.info("Compiled script " + name);
+		log.info("Compiled script " + className);
 	}
 
 	private static String readProcess(final String exec) throws IOException {
-		final Process process = Runtime.getRuntime().exec(exec);
-		final InputStream is = process.getInputStream();
+		final Process compiler = Runtime.getRuntime().exec(exec);
+		final InputStream is = compiler.getInputStream();
 		try {
-			process.waitFor();
+			compiler.waitFor();
 		} catch (final InterruptedException ignored) {
 			return null;
 		}
-		final StringBuilder s = new StringBuilder(256);
+		final StringBuilder result = new StringBuilder(256);
 		int r;
 		while ((r = is.read()) != -1) {
-			s.append((char) r);
+			result.append((char) r);
 		}
-		return s.toString();
+		return result.toString();
 	}
 
 	private static String classFileName(final File path) {
@@ -125,7 +125,7 @@ public class ScriptDownloader {
 			return null;
 		}
 		FileReader reader = null;
-		int header = -1;
+		int header;
 		try {
 			reader = new FileReader(path);
 			header = reader.read();
@@ -161,23 +161,23 @@ public class ScriptDownloader {
 	private static String findJavac() {
 		try {
 			if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
-				String version = readProcess("REG QUERY \"HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\" /v CurrentVersion");
-				version = version.substring(version.indexOf("REG_SZ") + 6).trim();
-				String path = readProcess("REG QUERY \"HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\" + version + "\" /v JavaHome");
-				path = path.substring(path.indexOf("REG_SZ") + 6).trim() + "\\bin\\javac.exe";
-				return new File(path).exists() ? path : null;
+				String currentVersion = readProcess("REG QUERY \"HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\" /v CurrentVersion");
+				currentVersion = currentVersion.substring(currentVersion.indexOf("REG_SZ") + 6).trim();
+				String binPath = readProcess("REG QUERY \"HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\" + currentVersion + "\" /v JavaHome");
+				binPath = binPath.substring(binPath.indexOf("REG_SZ") + 6).trim() + "\\bin\\javac.exe";
+				return new File(binPath).exists() ? binPath : null;
 			} else {
-				String which = readProcess("which javac");
-				return which == null || which.length() == 0 ? null : which.trim();
+				String whichQuery = readProcess("which javac");
+				return whichQuery == null || whichQuery.length() == 0 ? null : whichQuery.trim();
 			}
 		} catch (Exception ignored) {
 			return null;
 		}
 	}
 
-	private static String normalisePastebin(String source) {
-		if (source.contains("gist.github.com")) {
-			return gistRaw(source);
+	private static String normalisePastebin(String sourceURL) {
+		if (sourceURL.contains("gist.github.com")) {
+			return gistRaw(sourceURL);
 		}
 		final HashMap<String, String> map = new HashMap<String, String>(8);
 		map.put("pastebin\\.com/(\\w+)", "pastebin.com/raw.php?i=$1");
@@ -186,26 +186,26 @@ public class ScriptDownloader {
 		map.put("sprunge\\.us/(\\w+)(?:\\?.*)?", "sprunge.us/$1");
 		map.put("codepad\\.org/(\\w+)", "codepad.org/$1/raw.txt");
 		for (final Entry<String, String> entry : map.entrySet()) {
-			source = source.replaceAll(entry.getKey(), entry.getValue());
+			sourceURL = sourceURL.replaceAll(entry.getKey(), entry.getValue());
 		}
-		return source;
+		return sourceURL;
 	}
 
-	private static String gistRaw(final String source) {
-		Matcher m = Pattern.compile("gist\\.github\\.com/(\\d+)", Pattern.CASE_INSENSITIVE).matcher(source);
+	private static String gistRaw(final String gistURL) {
+		Matcher m = Pattern.compile("gist\\.github\\.com/(\\d+)", Pattern.CASE_INSENSITIVE).matcher(gistURL);
 		if (!m.find()) {
-			return source;
+			return gistURL;
 		}
 		final String id = m.group(1);
 		String meta;
 		try {
 			meta = HttpClient.downloadAsString(new URL("http://gist.github.com/api/v1/json/" + id));
 		} catch (final Exception ignored) {
-			return source;
+			return gistURL;
 		}
 		m = Pattern.compile("\"files\":\\s*\\[\\s*\"([^\"]+)\"", Pattern.CASE_INSENSITIVE).matcher(meta);
 		if (!m.find()) {
-			return source;
+			return gistURL;
 		}
 		final String file = m.group(1);
 		return "http://gist.github.com/raw/" + id + "/" + file;

@@ -11,7 +11,6 @@ import java.util.Collection;
  * @author Jacmob
  */
 public class BotHome {
-
 	private static final Font FONT = new Font("Helvetica", 1, 13);
 	private int width;
 	private int height;
