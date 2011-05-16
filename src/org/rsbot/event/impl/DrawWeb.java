@@ -2,7 +2,7 @@ package org.rsbot.event.impl;
 
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
-import org.rsbot.script.internal.wrappers.TileFlags;
+import org.rsbot.script.internal.wrappers.GameTile;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSPlayer;
@@ -10,7 +10,6 @@ import org.rsbot.script.wrappers.RSTile;
 
 import java.awt.*;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Draws the web.
@@ -49,9 +48,9 @@ public class DrawWeb implements PaintListener {
 		}
 		final RSTile oT = player.getLocation();
 		final int plane = ctx.game.getPlane();
-		final Iterator<Map.Entry<RSTile, TileFlags>> rs = Web.map.entrySet().iterator();
+		final Iterator<GameTile> rs = Web.map.listIterator();
 		while (rs.hasNext()) {
-			final TileFlags t = rs.next().getValue();
+			final GameTile t = rs.next();
 			if (t.getZ() == plane && ctx.calc.distanceBetween(t, oT) < 105) {
 				render.setColor(t.isQuestionable() ? Color.yellow : t.isWater() ? Color.cyan : Color.red);
 				final Point p = tileToMap(t, oT);

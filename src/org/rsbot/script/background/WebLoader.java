@@ -3,14 +3,15 @@ package org.rsbot.script.background;
 import org.rsbot.Configuration;
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.internal.wrappers.TileFlags;
+import org.rsbot.script.internal.wrappers.GameTile;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 @ScriptManifest(name = "Web Data Loader", authors = {"Timer"})
 public class WebLoader extends BackgroundScript {
@@ -28,32 +29,19 @@ public class WebLoader extends BackgroundScript {
 				try {
 					final BufferedReader br = new BufferedReader(new FileReader(Configuration.Paths.getWebDatabase()));
 					String line;
-					final HashMap<RSTile, TileFlags> theFlagsList = new HashMap<RSTile, TileFlags>();
+					final List<GameTile> flagsArray = new ArrayList<GameTile>();
 					while ((line = br.readLine()) != null) {
-						final String[] data = line.split("tile=data");
-						if (data.length == 2) {
-							final String[] tileData = data[0].split(",");
-							final String[] abbData = data[1].split("=");
-							if (tileData.length == 3) {
+						final String[] d = line.split("tile=data");
+						if (d.length == 2) {
+							final String[] tD = d[0].split(",");
+							if (tD.length == 3) {
 								try {
-									final RSTile tile = new RSTile(Integer.parseInt(tileData[0]), Integer.parseInt(tileData[1]), Integer.parseInt(tileData[2]));
-									final TileFlags tileFlags = new TileFlags(tile, null);
-									for (final String abb : abbData) {
-										if (abb.length() > 0) {
-											try {
-												tileFlags.addKey(Integer.parseInt(abb));
-											} catch (final Exception e) {
-											}
-										}
-									}
-									if (tileFlags.containsKey(0)) {
-										WebQueue.Remove(line);//Line is redundant as of Thursday, May 5, 2011.
+									final RSTile tile = new RSTile(Integer.parseInt(tD[0]), Integer.parseInt(tD[1]), Integer.parseInt(tD[2]));
+									final GameTile gameTile = new GameTile(tile, Integer.parseInt(d[1]));
+									if (flagsArray.contains(tile)) {
+										WebQueue.Remove(line);//Line is double, remove from file--bad collection.
 									} else {
-										if (theFlagsList.containsKey(tile)) {
-											WebQueue.Remove(line);//Line is double, remove from file--bad collection.
-										} else {
-											theFlagsList.put(tile, tileFlags);
-										}
+										flagsArray.add(gameTile);
 									}
 								} catch (final Exception e) {
 								}
@@ -64,7 +52,7 @@ public class WebLoader extends BackgroundScript {
 							WebQueue.Remove(line);//Line is bad, remove from file.
 						}
 					}
-					Web.map.putAll(theFlagsList);
+					Web.map.addAll(flagsArray);
 					Web.loaded = true;
 				} catch (final Exception e) {
 					log("Failed to load the web.. trying again.");

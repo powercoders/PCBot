@@ -1,12 +1,15 @@
 package org.rsbot.service;
 
 import org.rsbot.Configuration;
-import org.rsbot.script.internal.wrappers.TileFlags;
+import org.rsbot.script.internal.wrappers.GameTile;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -32,22 +35,22 @@ public class WebQueue {
 	/**
 	 * Adds collected data to the queue.
 	 *
-	 * @param theFlagsList The data.
+	 * @param gameTiles The data.
 	 */
-	public static void Add(final HashMap<RSTile, TileFlags> theFlagsList) {
-		Web.map.putAll(theFlagsList);
-		final int count = theFlagsList.size();
+	public static void Add(final List<GameTile> gameTiles) {
+		Web.map.addAll(gameTiles);
+		final int count = gameTiles.size();
 		new Thread() {
 			@Override
 			public void run() {
 				try {
-					final HashMap<RSTile, TileFlags> theFlagsList2 = new HashMap<RSTile, TileFlags>();
-					theFlagsList2.putAll(theFlagsList);
-					final Map<RSTile, TileFlags> tl = Collections.unmodifiableMap(theFlagsList2);
+					final List<GameTile> gTList = new ArrayList<GameTile>();
+					gTList.addAll(gameTiles);
+					final List<GameTile> tl = Collections.unmodifiableList(gTList);
 					bufferingCount = bufferingCount + count;
-					final Iterator<Map.Entry<RSTile, TileFlags>> tileFlagsIterator = tl.entrySet().iterator();
+					final Iterator<GameTile> tileFlagsIterator = tl.listIterator();
 					while (tileFlagsIterator.hasNext()) {
-						final TileFlags tileFlags = tileFlagsIterator.next().getValue();
+						final GameTile tileFlags = tileFlagsIterator.next();
 						if (tileFlags != null) {
 							synchronized (queueLock) {
 								queue.add(tileFlags.toString() + "\n");
@@ -67,7 +70,7 @@ public class WebQueue {
 					if (bufferingCount < 0) {
 						bufferingCount = 0;
 					}
-					theFlagsList2.clear();
+					gTList.clear();
 					weAreBuffering = false;
 				} catch (final Exception e) {
 					bufferingCount = count;

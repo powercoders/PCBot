@@ -2,18 +2,19 @@ package org.rsbot.script.background;
 
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.internal.wrappers.TileFlags;
+import org.rsbot.script.internal.wrappers.GameTile;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 @ScriptManifest(name = "Web Data Collector", authors = {"Timer"})
 public class WebData extends BackgroundScript {
 	private RSTile lb = null;
 	private int lp = -1;
-	public final HashMap<RSTile, TileFlags> rs_map = new HashMap<RSTile, TileFlags>();
+	public final List<GameTile> rs_map = new ArrayList<GameTile>();
 	private static final Object lock = new Object();
 
 	@Override
@@ -49,44 +50,14 @@ public class WebData extends BackgroundScript {
 					final int x = t.x, y = t.y;
 					final int f_x = x - off_x, f_y = y - off_y;
 					final int here = flags[f_x][f_y];
-					final TileFlags tI = new TileFlags(start, null);
-					if ((here & TileFlags.Flags.WALL_EAST) != 0) {
-						tI.addKey(TileFlags.Keys.WALL_EAST);
-					}
-					if ((here & TileFlags.Flags.WALL_WEST) != 0) {
-						tI.addKey(TileFlags.Keys.WALL_WEST);
-					}
-					if ((here & TileFlags.Flags.WALL_NORTH) != 0) {
-						tI.addKey(TileFlags.Keys.WALL_NORTH);
-					}
-					if ((here & TileFlags.Flags.WALL_SOUTH) != 0) {
-						tI.addKey(TileFlags.Keys.WALL_SOUTH);
-					}
-					if ((here & TileFlags.Flags.WALL_NORTH_EAST) != 0) {
-						tI.addKey(TileFlags.Keys.WALL_NORTH_EAST);
-					}
-					if ((here & TileFlags.Flags.WALL_NORTH_WEST) != 0) {
-						tI.addKey(TileFlags.Keys.WALL_NORTH_WEST);
-					}
-					if ((here & TileFlags.Flags.WALL_SOUTH_EAST) != 0) {
-						tI.addKey(TileFlags.Keys.WALL_SOUTH_EAST);
-					}
-					if ((here & TileFlags.Flags.WALL_SOUTH_WEST) != 0) {
-						tI.addKey(TileFlags.Keys.WALL_SOUTH_WEST);
-					}
-					if ((here & TileFlags.Flags.BLOCKED) != 0) {
-						tI.addKey(TileFlags.Keys.BLOCKED);
-					} else {
-						if ((here & TileFlags.Flags.WATER) != 0) {
-							tI.addKey(TileFlags.Keys.TILE_WATER);
-						}
-					}
+					GameTile gameTile = new GameTile(start, here);
 					synchronized (lock) {
-						if (!Web.map.containsKey(start) && !tI.isWalkable()) {
-							rs_map.put(start, tI);
+						if (!Web.map.contains(start) && !gameTile.isWalkable()) {
+							rs_map.add(gameTile);
 						} else {
 							try {
-								if (!Web.map.get(start).equals(tI)) {
+								int indexOf = Web.map.indexOf(start);
+								if (indexOf != -1 && !Web.map.get(indexOf).equals(gameTile)) {
 									WebQueue.Remove(start);
 									lb = null;
 									lp = -1;
