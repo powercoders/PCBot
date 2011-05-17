@@ -3,18 +3,17 @@ package org.rsbot.script.background;
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Web;
-import org.rsbot.script.wrappers.RSGameTile;
+import org.rsbot.script.internal.wrappers.TileData;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 @ScriptManifest(name = "Web Data Collector", authors = {"Timer"})
 public class WebData extends BackgroundScript {
 	private RSTile lb = null;
 	private int lp = -1;
-	public final List<RSGameTile> rs_map = new ArrayList<RSGameTile>();
+	public final HashMap<RSTile, Integer> rs_map = new HashMap<RSTile, Integer>();
 	private static final Object lock = new Object();
 
 	@Override
@@ -50,14 +49,12 @@ public class WebData extends BackgroundScript {
 					final int x = t.x, y = t.y;
 					final int f_x = x - off_x, f_y = y - off_y;
 					final int here = flags[f_x][f_y];
-					RSGameTile gameTile = new RSGameTile(start, here);
 					synchronized (lock) {
-						if (!Web.map.contains(start) && !gameTile.walkable()) {
-							rs_map.add(gameTile);
+						if (!Web.map.containsKey(start) && !TileData.Walkable(here)) {
+							rs_map.put(start, here);
 						} else {
 							try {
-								int indexOf = Web.map.indexOf(start);
-								if (indexOf != -1 && !Web.map.get(indexOf).equals(gameTile)) {
+								if (Web.map.get(start) != null && Web.map.get(start) != here) {
 									WebQueue.Remove(start);
 									lb = null;
 									lp = -1;

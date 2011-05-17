@@ -1,15 +1,11 @@
 package org.rsbot.service;
 
 import org.rsbot.Configuration;
-import org.rsbot.script.wrappers.RSGameTile;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -37,23 +33,25 @@ public class WebQueue {
 	 *
 	 * @param gameTiles The data.
 	 */
-	public static void Add(final List<RSGameTile> gameTiles) {
-		Web.map.addAll(gameTiles);
+	public static void Add(final HashMap<RSTile, Integer> gameTiles) {
+		Web.map.putAll(gameTiles);
 		final int count = gameTiles.size();
 		new Thread() {
 			@Override
 			public void run() {
 				try {
-					final List<RSGameTile> gTList = new ArrayList<RSGameTile>();
-					gTList.addAll(gameTiles);
-					final List<RSGameTile> tl = Collections.unmodifiableList(gTList);
+					final HashMap<RSTile, Integer> gTList = new HashMap<RSTile, Integer>();
+					gTList.putAll(gameTiles);
+					final Map<RSTile, Integer> tl = Collections.unmodifiableMap(gTList);
 					bufferingCount = bufferingCount + count;
-					final Iterator<RSGameTile> tileFlagsIterator = tl.listIterator();
+					final Iterator<Map.Entry<RSTile, Integer>> tileFlagsIterator = tl.entrySet().iterator();
 					while (tileFlagsIterator.hasNext()) {
-						final RSGameTile tileFlags = tileFlagsIterator.next();
+						final Map.Entry<RSTile, Integer> tileFlags = tileFlagsIterator.next();
+						final RSTile tile = tileFlags.getKey();
+						final int key = tileFlags.getValue();
 						if (tileFlags != null) {
 							synchronized (queueLock) {
-								queue.add(tileFlags.toString());
+								queue.add(tile.getX() + "," + tile.getY() + "," + tile.getZ() + "k" + key);
 							}
 							synchronized (bufferLock) {
 								bufferingCount--;
@@ -91,7 +89,7 @@ public class WebQueue {
 	public static void Remove(final RSTile tile) {
 		synchronized (removeLock) {
 			Web.map.remove(tile);
-			Remove(tile.getX() + "," + tile.getY() + tile.getZ());
+			Remove(tile.getX() + "," + tile.getY() + "," + tile.getZ());
 		}
 	}
 

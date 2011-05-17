@@ -3,7 +3,6 @@ package org.rsbot.script.background;
 import org.rsbot.Configuration;
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.wrappers.RSGameTile;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
@@ -11,8 +10,7 @@ import org.rsbot.service.WebQueue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 @ScriptManifest(name = "Web Data Loader", authors = {"Timer"})
 public class WebLoader extends BackgroundScript {
@@ -38,7 +36,7 @@ public class WebLoader extends BackgroundScript {
 					}
 					final BufferedReader br = new BufferedReader(new FileReader(Configuration.Paths.getWebDatabase()));
 					String line;
-					final List<RSGameTile> flagsArray = new ArrayList<RSGameTile>();
+					final HashMap<RSTile, Integer> flagsArray = new HashMap<RSTile, Integer>();
 					while ((line = br.readLine()) != null) {
 						final String[] d = line.split("k");
 						if (d.length == 2) {
@@ -46,11 +44,11 @@ public class WebLoader extends BackgroundScript {
 							if (tD.length == 3) {
 								try {
 									final RSTile tile = new RSTile(Integer.parseInt(tD[0]), Integer.parseInt(tD[1]), Integer.parseInt(tD[2]));
-									final RSGameTile gameTile = new RSGameTile(tile, Integer.parseInt(d[1]));
-									if (flagsArray.contains(tile)) {
-										WebQueue.Remove(line);//Line is double, remove from file--bad collection.
+									final int flag = Integer.parseInt(d[1]);
+									if (flagsArray.containsKey(tile)) {
+										WebQueue.Remove(line);//Line is double, remove from file--bad collection!
 									} else {
-										flagsArray.add(gameTile);
+										flagsArray.put(tile, flag);
 									}
 								} catch (final Exception e) {
 								}
@@ -61,7 +59,7 @@ public class WebLoader extends BackgroundScript {
 							WebQueue.Remove(line);//Line is bad, remove from file.
 						}
 					}
-					Web.map.addAll(flagsArray);
+					Web.map.putAll(flagsArray);
 					Web.loaded = true;
 				} catch (final Exception e) {
 					log("Failed to load the web.. trying again.");
