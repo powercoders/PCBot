@@ -4,7 +4,6 @@ package org.rsbot.script.methods;
  * Provides access to game settings.
  */
 public class Settings extends MethodProvider {
-
 	public static final int SETTING_COMBAT_STYLE = 43;
 	public static final int SETTING_TOGGLE_RUN = 173;
 	public static final int SETTING_BANK_TOGGLE_REARRANGE_MODE = 304;

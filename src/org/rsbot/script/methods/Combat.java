@@ -130,8 +130,7 @@ public class Combat extends MethodProvider {
 	 * @return <tt>true</tt> if poisoned; otherwise <tt>false</tt>.
 	 */
 	public boolean isPoisoned() {
-		return methods.settings.getSetting(102) > 0 || methods.interfaces.getComponent(748,
-				4).getBackgroundColor() == 1801;
+		return methods.settings.getSetting(102) > 0 || methods.interfaces.getComponent(748, 4).getBackgroundColor() == 1801;
 	}
 
 	/**
