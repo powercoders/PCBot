@@ -92,8 +92,7 @@ public class LogTextArea extends JList {
 		public void addAllElements(final List<WrappedLogRecord> obj) {
 			records.addAll(obj);
 			if (getSize() > LogTextArea.MAX_ENTRIES) {
-				records = records.subList(
-						(getSize() - LogTextArea.MAX_ENTRIES), getSize());
+				records.subList(0, (getSize() - LogTextArea.MAX_ENTRIES)).clear();
 
 				fireContentsChanged(this, 0, (getSize() - 1));
 			} else {
