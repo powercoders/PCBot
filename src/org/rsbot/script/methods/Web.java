@@ -273,43 +273,43 @@ public class Web extends MethodProvider {
 		final int x = t.x, y = t.y;
 		final RSTile here = t.toRSTile();
 		if (!Flag(here, RSGameTile.Flags.WALL_SOUTH) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER)) {
+				!Flag(new RSTile(here.getX(), here.getY() - 1), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER)) {
 			tiles.add(new Node(x, y - 1, t.toRSTile().getZ()));
 		}
 		if (!Flag(here, RSGameTile.Flags.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER)) {
+				!Flag(new RSTile(here.getX() - 1, here.getY()), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER)) {
 			tiles.add(new Node(x - 1, y, t.toRSTile().getZ()));
 		}
 		if (!Flag(here, RSGameTile.Flags.WALL_NORTH) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER)) {
+				!Flag(new RSTile(here.getX(), here.getY() + 1), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER)) {
 			tiles.add(new Node(x, y + 1, t.toRSTile().getZ()));
 		}
 		if (!Flag(here, RSGameTile.Flags.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER)) {
+				!Flag(new RSTile(here.getX() + 1, here.getY()), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER)) {
 			tiles.add(new Node(x + 1, y, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, RSGameTile.Flags.WALL_SOUTH_WEST, RSGameTile.Flags.WALL_SOUTH, RSGameTile.Flags.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY() - 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_SOUTH)) {
+		if (!Flag(here, RSGameTile.Flags.WALL_SOUTH_WEST | RSGameTile.Flags.WALL_SOUTH | RSGameTile.Flags.WALL_WEST) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY() - 1), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER | RSGameTile.Flags.WALL_WEST) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER | RSGameTile.Flags.WALL_SOUTH)) {
 			tiles.add(new Node(x - 1, y - 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, RSGameTile.Flags.WALL_NORTH_WEST, RSGameTile.Flags.WALL_NORTH, RSGameTile.Flags.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY() + 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_NORTH)) {
+		if (!Flag(here, RSGameTile.Flags.WALL_NORTH_WEST | RSGameTile.Flags.WALL_NORTH | RSGameTile.Flags.WALL_WEST) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY() + 1), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER | RSGameTile.Flags.WALL_WEST) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER | RSGameTile.Flags.WALL_NORTH)) {
 			tiles.add(new Node(x - 1, y + 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, RSGameTile.Flags.WALL_SOUTH_EAST, RSGameTile.Flags.WALL_SOUTH, RSGameTile.Flags.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY() - 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_SOUTH)) {
+		if (!Flag(here, RSGameTile.Flags.WALL_SOUTH_EAST | RSGameTile.Flags.WALL_SOUTH | RSGameTile.Flags.WALL_EAST) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY() - 1), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER | RSGameTile.Flags.WALL_EAST) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER | RSGameTile.Flags.WALL_SOUTH)) {
 			tiles.add(new Node(x + 1, y - 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, RSGameTile.Flags.WALL_NORTH_EAST, RSGameTile.Flags.WALL_NORTH, RSGameTile.Flags.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY() + 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_NORTH)) {
+		if (!Flag(here, RSGameTile.Flags.WALL_NORTH_EAST | RSGameTile.Flags.WALL_NORTH | RSGameTile.Flags.WALL_EAST) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY() + 1), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER | RSGameTile.Flags.WALL_EAST) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), RSGameTile.Flags.BLOCKED | RSGameTile.Flags.WATER | RSGameTile.Flags.WALL_NORTH)) {
 			tiles.add(new Node(x + 1, y + 1, t.toRSTile().getZ()));
 		}
 		return tiles;
@@ -335,10 +335,10 @@ public class Web extends MethodProvider {
 	 * @param key  Keys to look for.
 	 * @return <tt>true</tt> if the tile contains flags.
 	 */
-	public static boolean Flag(final RSTile tile, final int... key) {
+	public static boolean Flag(final RSTile tile, final int key) {
 		if (Web.map.contains(tile)) {
 			final RSGameTile theTile = Web.map.get(Web.map.indexOf(tile));
-			return theTile.has(key);
+			return (theTile.key() & key) != 0;
 		}
 		return false;
 	}

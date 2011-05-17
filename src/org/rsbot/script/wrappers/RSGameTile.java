@@ -31,25 +31,13 @@ public class RSGameTile extends RSTile {
 	}
 
 	public boolean walkable() {
-		return (key & Flags.WALL_NORTH_WEST) == 0 && (key & Flags.WALL_NORTH) == 0 && (key & Flags.WALL_NORTH_EAST) == 0
-				&& (key & Flags.WALL_EAST) == 0 && (key & Flags.WALL_SOUTH_EAST) == 0 && (key & Flags.WALL_SOUTH) == 0
-				&& (key & Flags.WALL_SOUTH_WEST) == 0 && (key & Flags.WALL_WEST) == 0 && (key & Flags.BLOCKED) == 0
-				&& (key & Flags.WATER) == 0;
+		return (key & Flags.WALL_NORTH_WEST | Flags.WALL_NORTH | Flags.WALL_NORTH_EAST | Flags.WALL_EAST |
+				Flags.WALL_SOUTH_EAST | Flags.WALL_SOUTH | Flags.WALL_SOUTH_WEST | Flags.WALL_WEST | Flags.BLOCKED |
+				Flags.WATER) == 0;
 	}
 
 	public boolean special() {
 		return (key & Flags.BLOCKED) == 0 && (key & Flags.WATER) != 0;
-	}
-
-	public boolean has(final int... keyz) {
-		boolean check = false;
-		for (final int keyy : keyz) {
-			check = check || (key & keyy) != 0;
-			if (check) {
-				break;//Break from unnecessary computations.
-			}
-		}
-		return check;
 	}
 
 	@Override
