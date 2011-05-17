@@ -31,9 +31,9 @@ public class RSGameTile extends RSTile {
 	}
 
 	public boolean walkable() {
-		return (key & Flags.WALL_NORTH_WEST | Flags.WALL_NORTH | Flags.WALL_NORTH_EAST | Flags.WALL_EAST |
+		return (key & (Flags.WALL_NORTH_WEST | Flags.WALL_NORTH | Flags.WALL_NORTH_EAST | Flags.WALL_EAST |
 				Flags.WALL_SOUTH_EAST | Flags.WALL_SOUTH | Flags.WALL_SOUTH_WEST | Flags.WALL_WEST | Flags.BLOCKED |
-				Flags.WATER) == 0;
+				Flags.WATER)) == 0;
 	}
 
 	public boolean special() {
