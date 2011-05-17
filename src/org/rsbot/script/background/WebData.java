@@ -2,8 +2,8 @@ package org.rsbot.script.background;
 
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.wrappers.RSGameTile;
 import org.rsbot.script.methods.Web;
+import org.rsbot.script.wrappers.RSGameTile;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
 
@@ -21,7 +21,7 @@ public class WebData extends BackgroundScript {
 	public boolean activateCondition() {
 		final RSTile curr_base = game.getMapBase();
 		final int curr_plane = game.getPlane();
-		return game.isLoggedIn() && (lb == null || !lb.equals(curr_base)) || (lp == -1 || lp != curr_plane);
+		return game.isLoggedIn() && ((lb == null || !lb.equals(curr_base)) || (lp == -1 || lp != curr_plane));
 	}
 
 	@Override
