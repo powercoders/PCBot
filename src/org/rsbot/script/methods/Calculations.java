@@ -129,20 +129,21 @@ public class Calculations extends MethodProvider {
 	 * @return <code>RSTile</code> that is onScreen.
 	 */
 	public RSTile getTileOnScreen(final RSTile tile) {
-		try {
-			if (tileOnScreen(tile)) {
-				return tile;
-			} else {
-				final RSTile loc = methods.players.getMyPlayer().getLocation();
-				final RSTile halfWayTile = new RSTile((tile.getX() + loc.getX()) / 2, (tile.getY() + loc.getY()) / 2);
-				if (tileOnScreen(halfWayTile)) {
-					return halfWayTile;
+		if (tileOnScreen(tile)) {
+			return tile;
+		} else {
+			RSTile start = methods.players.getMyPlayer().getLocation();
+			RSTile end = tile;
+			while (!start.equals(end)) {
+				RSTile mid = new RSTile((start.getX() + end.getX()) / 2, 
+					(start.getY() + end.getY()) / 2);
+				if(!tileOnScreen(mid)) {
+					start = mid;
 				} else {
-					return getTileOnScreen(halfWayTile);
+					end = mid;
 				}
 			}
-		} catch (final StackOverflowError soe) {
-			return null;
+			return start;
 		}
 	}
 
