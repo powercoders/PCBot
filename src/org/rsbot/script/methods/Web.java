@@ -1,10 +1,10 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.wrappers.RSGameTile;
 import org.rsbot.script.web.Route;
 import org.rsbot.script.web.RouteStep;
 import org.rsbot.script.web.Teleport;
 import org.rsbot.script.web.TransportationHandler;
+import org.rsbot.script.wrappers.RSGameTile;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.script.wrappers.RSWeb;
 
@@ -70,7 +70,6 @@ public class Web extends MethodProvider {
 		}
 		if (start.equals(end)) {
 			return new RSTile[]{};
-			//return new RSWeb(methods, new WebTile[]{});
 		}
 		final HashSet<Node> open = new HashSet<Node>();
 		final HashSet<Node> closed = new HashSet<Node>();

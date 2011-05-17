@@ -45,6 +45,9 @@ public class RSGameTile extends RSTile {
 		boolean check = false;
 		for (final int keyy : keyz) {
 			check = check || (key & keyy) != 0;
+			if (check) {
+				break;//Break from unnecessary computations.
+			}
 		}
 		return check;
 	}
