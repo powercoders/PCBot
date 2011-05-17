@@ -65,12 +65,40 @@ public class RSTilePath extends RSPath {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RSTile getNext() {
+		public RSTile getNext() {
+		/* Failsafed for traverse(). */
+		int closest = -1;
+		int distance = Integer.MAX_VALUE;
+		for(int i = 0; i < tiles.length; i++) {
+			if (methods.calc.distanceTo(tiles[i]) < distance) {
+				distance = methods.calc.distanceTo(tiles[i]);
+				closest = i; //Find the closest tile to you that is on the map.
+			}
+		}
+		if (closest != -1) {
+			RSTile lastOnMap = null;
+			for (int i = closest; i < tiles.length; i++) { //Start finding the tile at the closest one.
+				if (methods.calc.tileOnMap(tiles[i]) && methods.calc.canReach(tiles[i], false)) {
+					lastOnMap = tiles[i]; //If tile is on the map and reachable, then it is lastOnMap
+				} else if (!methods.calc.tileOnMap(tiles[i]) && methods.calc.canReach(tiles[i], false)) {
+					if (lastOnMap != null && methods.calc.pathLengthBetween(tiles[closest], tiles[i], false) > 16) {
+						break; //If the path distance between the closest and current tile is too large, break
+					} else if (lastOnMap == null) {
+						break; //If the current tile isn't on map and lastOnMap was only declared null, break
+					}
+				}
+			}
+			if (lastOnMap != null) {
+				return methods.calc.tileOnMap(lastOnMap) ? lastOnMap : null;
+			}
+		}
+		//If all else fails, use old method.
 		for (int i = tiles.length - 1; i >= 0; --i) {
 			if (methods.calc.tileOnMap(tiles[i]) && methods.calc.canReach(tiles[i], false)) {
 				return tiles[i];
 			}
 		}
+		//If even that fails (no part of the path is on the map), return null.
 		return null;
 	}
 

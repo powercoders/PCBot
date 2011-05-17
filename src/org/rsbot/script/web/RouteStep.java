@@ -15,6 +15,7 @@ public class RouteStep extends MethodProvider {
 	private RSTile[] path = null;
 	private RSPath rspath = null;
 	private Teleport teleport = null;
+	private long updateTime = -1;
 
 	public static enum Type {
 		PATH, TELEPORT
@@ -43,7 +44,6 @@ public class RouteStep extends MethodProvider {
 					return false;
 				}
 				if (checkScript.isPaused()) {
-					sleep(500);
 					return true;
 				}
 			}
@@ -51,6 +51,7 @@ public class RouteStep extends MethodProvider {
 				case PATH:
 					if (rspath == null) {
 						rspath = methods.walking.newTilePath(path);
+						updateTime = System.currentTimeMillis();
 					}
 					if (inSomeRandom()) {
 						return false;
@@ -61,6 +62,12 @@ public class RouteStep extends MethodProvider {
 						return true;
 					}
 					sleep(random(50, 150));
+					if (updateTime == -1 || System.currentTimeMillis() - updateTime > (methods.bot.disableRendering ? 2000 : 1300)) {
+						RSTile[] nodePath = methods.web.generateNodePath(rspath.getStart(), rspath.getEnd());
+						path = nodePath != null ? nodePath : path;
+						rspath = methods.walking.newTilePath(path);
+						updateTime = System.currentTimeMillis();
+					}
 					return !inSomeRandom() && rspath.traverse();
 				case TELEPORT:
 					if (inSomeRandom()) {
@@ -102,4 +109,5 @@ public class RouteStep extends MethodProvider {
 		}
 		return false;
 	}
+
 }
