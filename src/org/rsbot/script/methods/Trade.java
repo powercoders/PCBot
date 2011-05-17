@@ -1,9 +1,9 @@
 package org.rsbot.script.methods;
 
-import java.util.logging.Logger;
-
 import org.rsbot.script.wrappers.RSInterface;
 import org.rsbot.script.wrappers.RSPlayer;
+
+import java.util.logging.Logger;
 
 /**
  * Trade handling.
@@ -132,7 +132,7 @@ public class Trade extends MethodProvider {
 	public boolean acceptTrade() {
 		if (inTradeMain()) {
 			return methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_ACCEPT).doAction(
-			"Accept");
+					"Accept");
 		} else {
 			return inTradeSecond() && methods.interfaces.get(INTERFACE_TRADE_SECOND).getComponent(INTERFACE_TRADE_SECOND_ACCEPT).doAction("Accept");
 		}
@@ -146,7 +146,7 @@ public class Trade extends MethodProvider {
 	public boolean declineTrade() {
 		if (inTradeMain()) {
 			return methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_DECLINE).doAction(
-			"Decline");
+					"Decline");
 		} else {
 			return inTradeSecond() && methods.interfaces.get(INTERFACE_TRADE_SECOND).getComponent(INTERFACE_TRADE_SECOND_DECLINE).doAction("Decline");
 		}
@@ -163,21 +163,21 @@ public class Trade extends MethodProvider {
 		final long timeCounter = System.currentTimeMillis() + timeOut;
 		while (timeCounter - System.currentTimeMillis() > 0) {
 			switch (tradeType) {
-			case TRADE_TYPE_MAIN:
-				if (inTradeMain()) {
-					return true;
-				}
-				break;
-			case TRADE_TYPE_SECONDARY:
-				if (inTradeSecond()) {
-					return true;
-				}
-				break;
-			case TRADE_TYPE_NONE:
-				if (!inTrade()) {
-					return true;
-				}
-				break;
+				case TRADE_TYPE_MAIN:
+					if (inTradeMain()) {
+						return true;
+					}
+					break;
+				case TRADE_TYPE_SECONDARY:
+					if (inTradeSecond()) {
+						return true;
+					}
+					break;
+				case TRADE_TYPE_NONE:
+					if (!inTrade()) {
+						return true;
+					}
+					break;
 			}
 			sleep(5);
 		}

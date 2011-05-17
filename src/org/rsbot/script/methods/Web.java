@@ -1,6 +1,6 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.internal.wrappers.TileFlags;
+import org.rsbot.script.internal.wrappers.TileData;
 import org.rsbot.script.web.Route;
 import org.rsbot.script.web.RouteStep;
 import org.rsbot.script.web.Teleport;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * @author Timer
  */
 public class Web extends MethodProvider {
-	public static final HashMap<RSTile, TileFlags> map = new HashMap<RSTile, TileFlags>();
+	public static final HashMap<RSTile, Integer> rs_map = new HashMap<RSTile, Integer>();
 	public static boolean loaded = false;
 	private final Logger log = Logger.getLogger("Web");
 
@@ -25,8 +25,35 @@ public class Web extends MethodProvider {
 		super(ctx);
 	}
 
+	/**
+	 * Gets the closest supported bank in runescape that is usable.
+	 *
+	 * @param tile The tile to look off of.
+	 * @return The closest bank's tile.
+	 */
 	public RSTile getNearestBank(final RSTile tile) {
-		return null;
+		double dist = -1.0D;
+		RSTile finalTile = null;
+		final RSTile[] BANKS = {new RSTile(3093, 3243, 0), new RSTile(3209, 3219, 2), new RSTile(3270, 3167, 0),
+				new RSTile(3253, 3421, 0), new RSTile(3188, 3437, 0), new RSTile(3094, 3491, 0),
+				new RSTile(3097, 3496, 0), new RSTile(2946, 3369, 0), new RSTile(3012, 3356, 0)};
+		for (RSTile bank : BANKS) {
+			double cdist = methods.calc.distanceBetween(tile, bank);
+			if ((dist > cdist || dist == -1.0D) && (tile.getZ() == bank.getZ())) {
+				dist = cdist;
+				finalTile = bank;
+			}
+		}
+		return finalTile;
+	}
+
+	/**
+	 * Gets the closest supported bank in runescape that is usable.
+	 *
+	 * @return The closest bank's tile.
+	 */
+	public RSTile getNearestBank() {
+		return getNearestBank(methods.players.getMyPlayer().getLocation());
 	}
 
 	/**
@@ -43,7 +70,6 @@ public class Web extends MethodProvider {
 		}
 		if (start.equals(end)) {
 			return new RSTile[]{};
-			//return new RSWeb(methods, new WebTile[]{});
 		}
 		final HashSet<Node> open = new HashSet<Node>();
 		final HashSet<Node> closed = new HashSet<Node>();
@@ -80,6 +106,13 @@ public class Web extends MethodProvider {
 		return null;
 	}
 
+	/**
+	 * Generates a route between two tiles.
+	 *
+	 * @param start The start tile.
+	 * @param end   The ending tile.
+	 * @return The generated route.
+	 */
 	public Route generateRoute(RSTile start, final RSTile end) {
 		TransportationHandler transportationHandler = new TransportationHandler(methods);
 		List<RouteStep> routeSteps = new ArrayList<RouteStep>();
@@ -100,9 +133,26 @@ public class Web extends MethodProvider {
 		return null;
 	}
 
+	/**
+	 * Returns a web instance to traverse.
+	 *
+	 * @param start The starting tile.
+	 * @param end   The end tile.
+	 * @return The web constructed.  <code>null</code> if it cannot be done.
+	 */
 	public RSWeb getWeb(RSTile start, final RSTile end) {
 		Route onlyRoute = generateRoute(start, end);
 		return new RSWeb(new Route[]{onlyRoute});
+	}
+
+	/**
+	 * Returns a web instance to traverse.
+	 *
+	 * @param end The end tile.
+	 * @return The web constructed.  <code>null</code> if it cannot be done.
+	 */
+	public RSWeb getWeb(final RSTile end) {
+		return getWeb(methods.players.getMyPlayer().getLocation(), end);
 	}
 
 	/**
@@ -222,44 +272,44 @@ public class Web extends MethodProvider {
 		final LinkedList<Node> tiles = new LinkedList<Node>();
 		final int x = t.x, y = t.y;
 		final RSTile here = t.toRSTile();
-		if (!Flag(here, TileFlags.Keys.WALL_SOUTH) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER)) {
+		if (!Flag(here, TileData.Flags.W_S) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), TileData.Flags.BLOCKED | TileData.Flags.WATER)) {
 			tiles.add(new Node(x, y - 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileFlags.Keys.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER)) {
+		if (!Flag(here, TileData.Flags.W_W) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), TileData.Flags.BLOCKED | TileData.Flags.WATER)) {
 			tiles.add(new Node(x - 1, y, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileFlags.Keys.WALL_NORTH) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER)) {
+		if (!Flag(here, TileData.Flags.W_N) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), TileData.Flags.BLOCKED | TileData.Flags.WATER)) {
 			tiles.add(new Node(x, y + 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileFlags.Keys.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER)) {
+		if (!Flag(here, TileData.Flags.W_E) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), TileData.Flags.BLOCKED | TileData.Flags.WATER)) {
 			tiles.add(new Node(x + 1, y, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileFlags.Keys.WALL_SOUTH_WEST, TileFlags.Keys.WALL_SOUTH, TileFlags.Keys.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_SOUTH)) {
+		if (!Flag(here, TileData.Flags.W_SW | TileData.Flags.W_S | TileData.Flags.W_W) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY() - 1), TileData.Flags.BLOCKED | TileData.Flags.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_W) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_S)) {
 			tiles.add(new Node(x - 1, y - 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileFlags.Keys.WALL_NORTH_WEST, TileFlags.Keys.WALL_NORTH, TileFlags.Keys.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_NORTH)) {
+		if (!Flag(here, TileData.Flags.W_NW | TileData.Flags.W_N | TileData.Flags.W_W) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY() + 1), TileData.Flags.BLOCKED | TileData.Flags.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_W) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_N)) {
 			tiles.add(new Node(x - 1, y + 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileFlags.Keys.WALL_SOUTH_EAST, TileFlags.Keys.WALL_SOUTH, TileFlags.Keys.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_SOUTH)) {
+		if (!Flag(here, TileData.Flags.W_SE | TileData.Flags.W_S | TileData.Flags.W_E) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY() - 1), TileData.Flags.BLOCKED | TileData.Flags.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_E) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_S)) {
 			tiles.add(new Node(x + 1, y - 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileFlags.Keys.WALL_NORTH_EAST, TileFlags.Keys.WALL_NORTH, TileFlags.Keys.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), TileFlags.Keys.BLOCKED, TileFlags.Keys.TILE_WATER, TileFlags.Keys.WALL_NORTH)) {
+		if (!Flag(here, TileData.Flags.W_NE | TileData.Flags.W_N | TileData.Flags.W_E) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY() + 1), TileData.Flags.BLOCKED | TileData.Flags.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_E) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_N)) {
 			tiles.add(new Node(x + 1, y + 1, t.toRSTile().getZ()));
 		}
 		return tiles;
@@ -271,11 +321,8 @@ public class Web extends MethodProvider {
 	 * @param tile The tile.
 	 * @return The <code>TileFlags</code>.
 	 */
-	public static TileFlags getTileFlags(final RSTile tile) {
-		if (Web.map.containsKey(tile)) {
-			return Web.map.get(tile);
-		}
-		return null;
+	public static int GetTileFlag(final RSTile tile) {
+		return Web.rs_map.get(tile);
 	}
 
 	/**
@@ -285,10 +332,10 @@ public class Web extends MethodProvider {
 	 * @param key  Keys to look for.
 	 * @return <tt>true</tt> if the tile contains flags.
 	 */
-	public static boolean Flag(final RSTile tile, final int... key) {
-		if (Web.map.containsKey(tile)) {
-			final TileFlags theTile = Web.map.get(tile);
-			return theTile.containsKey(key);
+	public static boolean Flag(final RSTile tile, final int key) {
+		if (Web.rs_map.containsKey(tile)) {
+			final int theTile = Web.rs_map.get(tile);
+			return (theTile & key) != 0;
 		}
 		return false;
 	}

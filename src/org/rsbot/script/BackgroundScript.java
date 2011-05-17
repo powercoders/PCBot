@@ -1,9 +1,9 @@
 package org.rsbot.script;
 
-import java.util.EventListener;
-
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Methods;
+
+import java.util.EventListener;
 
 /**
  * A background script.
@@ -45,7 +45,7 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 		running = true;
 		try {
 			while (running) {
-				if (activateCondition() && isLoggedIn()) {
+				if (activateCondition()) {
 					final boolean start = onStart();
 					if (start) {
 						while (running) {

@@ -1,14 +1,14 @@
 package org.rsbot.script.background;
 
+import org.rsbot.Configuration;
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.internal.wrappers.TileFlags;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
-import org.rsbot.util.GlobalConfiguration;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
 
@@ -24,47 +24,42 @@ public class WebLoader extends BackgroundScript {
 	@Override
 	public int loop() {
 		synchronized (lock) {
+			if (Web.loaded) {
+				deactivate(getID());
+			}
 			if (!Web.loaded) {
 				try {
-					final BufferedReader br = new BufferedReader(new FileReader(GlobalConfiguration.Paths.getWebDatabase()));
-					String line;
-					final HashMap<RSTile, TileFlags> theFlagsList = new HashMap<RSTile, TileFlags>();
-					while ((line = br.readLine()) != null) {
-						final String[] data = line.split("tile=data");
-						if (data.length == 2) {
-							final String[] tileData = data[0].split(",");
-							final String[] abbData = data[1].split("=");
+					if (!new File(Configuration.Paths.getWebDatabase()).exists()) {
+						Web.loaded = true;
+						deactivate(getID());
+						return -1;
+					}
+					final BufferedReader bufferedReader = new BufferedReader(new FileReader(Configuration.Paths.getWebDatabase()));
+					String dataLine;
+					final HashMap<RSTile, Integer> mapData = new HashMap<RSTile, Integer>();
+					while ((dataLine = bufferedReader.readLine()) != null) {
+						final String[] storeData = dataLine.split("k");
+						if (storeData.length == 2) {
+							final String[] tileData = storeData[0].split(",");
 							if (tileData.length == 3) {
 								try {
 									final RSTile tile = new RSTile(Integer.parseInt(tileData[0]), Integer.parseInt(tileData[1]), Integer.parseInt(tileData[2]));
-									final TileFlags tileFlags = new TileFlags(tile, null);
-									for (final String abb : abbData) {
-										if (abb.length() > 0) {
-											try {
-												tileFlags.addKey(Integer.parseInt(abb));
-											} catch (final Exception e) {
-											}
-										}
-									}
-									if (tileFlags.containsKey(0)) {
-										WebQueue.Remove(line);//Line is redundant as of Thursday, May 5, 2011.
+									final int tileFlag = Integer.parseInt(storeData[1]);
+									if (mapData.containsKey(tile)) {
+										WebQueue.Remove(dataLine);//Line is double, remove from file--bad collection!
 									} else {
-										if (theFlagsList.containsKey(tile)) {
-											WebQueue.Remove(line);//Line is double, remove from file--bad collection.
-										} else {
-											theFlagsList.put(tile, tileFlags);
-										}
+										mapData.put(tile, tileFlag);
 									}
 								} catch (final Exception e) {
 								}
 							} else {
-								WebQueue.Remove(line);//Line is bad, remove from file.
+								WebQueue.Remove(dataLine);//Line is bad, remove from file.
 							}
 						} else {
-							WebQueue.Remove(line);//Line is bad, remove from file.
+							WebQueue.Remove(dataLine);//Line is bad, remove from file.
 						}
 					}
-					Web.map.putAll(theFlagsList);
+					Web.rs_map.putAll(mapData);
 					Web.loaded = true;
 				} catch (final Exception e) {
 					log("Failed to load the web.. trying again.");

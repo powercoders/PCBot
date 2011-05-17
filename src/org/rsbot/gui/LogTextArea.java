@@ -1,30 +1,19 @@
 package org.rsbot.gui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Rectangle;
+import org.rsbot.Configuration;
+import org.rsbot.log.LogFormatter;
+import org.rsbot.util.StringUtil;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-
-import javax.swing.AbstractListModel;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JTextPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
-import org.rsbot.log.LogFormatter;
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.StringUtil;
 
 /**
  * Non swing methods are thread safe.
@@ -51,7 +40,7 @@ public class LogTextArea extends JList {
 
 	private static final Formatter formatter = new Formatter() {
 		private final SimpleDateFormat dateFormat = new SimpleDateFormat(
-		"hh:mm:ss");
+				"hh:mm:ss");
 
 		@Override
 		public String format(final LogRecord record) {
@@ -66,7 +55,7 @@ public class LogTextArea extends JList {
 					name.length() > maxLen ? name.substring(0,
 							maxLen - append.length())
 							+ append : name, record.getMessage(),
-							StringUtil.throwableToString(record.getThrown()));
+					StringUtil.throwableToString(record.getThrown()));
 		}
 	};
 
@@ -76,7 +65,7 @@ public class LogTextArea extends JList {
 		setModel(model);
 		setCellRenderer(new Renderer());
 		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.MAC) {
+		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.MAC) {
 			setFont(new Font("Monaco", Font.PLAIN, 10));
 		} else {
 			setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -103,8 +92,7 @@ public class LogTextArea extends JList {
 		public void addAllElements(final List<WrappedLogRecord> obj) {
 			records.addAll(obj);
 			if (getSize() > LogTextArea.MAX_ENTRIES) {
-				records = records.subList(
-						(getSize() - LogTextArea.MAX_ENTRIES), getSize());
+				records.subList(0, (getSize() - LogTextArea.MAX_ENTRIES)).clear();
 
 				fireContentsChanged(this, 0, (getSize() - 1));
 			} else {
@@ -172,13 +160,13 @@ public class LogTextArea extends JList {
 
 		private final Border EMPTY_BORDER = new EmptyBorder(1, 1, 1, 1);
 		private final Border SELECTED_BORDER = UIManager
-		.getBorder("List.focusCellHighlightBorder");
+				.getBorder("List.focusCellHighlightBorder");
 		private final Color DARK_GREEN = new Color(0, 90, 0);
 
 		@Override
 		public Component getListCellRendererComponent(final JList list,
-				final Object value, final int index, final boolean isSelected,
-				final boolean cellHasFocus) {
+		                                              final Object value, final int index, final boolean isSelected,
+		                                              final boolean cellHasFocus) {
 			if (!(value instanceof WrappedLogRecord)) {
 				return new JLabel();
 			}

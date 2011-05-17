@@ -428,9 +428,9 @@ public class ClassWriter implements ClassVisitor {
 		int i;
 		final byte[] b = new byte[220];
 		final String s = "AAAAAAAAAAAAAAAABCKLLDDDDDEEEEEEEEEEEEEEEEEEEEAAAAAAAADD"
-			+ "DDDEEEEEEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-			+ "AAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAIIIIIIIIIIIIIIIIDNOAA"
-			+ "AAAAGGGGGGGHHFBFAAFFAAQPIIJJIIIIIIIIIIIIIIIIII";
+				+ "DDDEEEEEEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+				+ "AAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAIIIIIIIIIIIIIIIIDNOAA"
+				+ "AAAAGGGGGGGHHFBFAAFFAAQPIIJJIIIIIIIIIIIIIIIIII";
 		for (i = 0; i < b.length; ++i) {
 			b[i] = (byte) (s.charAt(i) - 'A');
 		}
@@ -496,7 +496,6 @@ public class ClassWriter implements ClassVisitor {
 	// Implementation of the ClassVisitor interface
 	// ------------------------------------------------------------------------
 
-	@Override
 	public void visit(
 			final int version,
 			final int access,
@@ -521,7 +520,6 @@ public class ClassWriter implements ClassVisitor {
 		}
 	}
 
-	@Override
 	public void visitSource(final String file, final String debug) {
 		if (file != null) {
 			sourceFile = newUTF8(file);
@@ -531,7 +529,6 @@ public class ClassWriter implements ClassVisitor {
 		}
 	}
 
-	@Override
 	public void visitOuterClass(
 			final String owner,
 			final String name,
@@ -542,7 +539,6 @@ public class ClassWriter implements ClassVisitor {
 		}
 	}
 
-	@Override
 	public AnnotationVisitor visitAnnotation(
 			final String desc,
 			final boolean visible) {
@@ -563,13 +559,11 @@ public class ClassWriter implements ClassVisitor {
 		return aw;
 	}
 
-	@Override
 	public void visitAttribute(final Attribute attr) {
 		attr.next = attrs;
 		attrs = attr;
 	}
 
-	@Override
 	public void visitInnerClass(
 			final String name,
 			final String outerName,
@@ -585,7 +579,6 @@ public class ClassWriter implements ClassVisitor {
 		innerClasses.putShort(access);
 	}
 
-	@Override
 	public FieldVisitor visitField(
 			final int access,
 			final String name,
@@ -595,7 +588,6 @@ public class ClassWriter implements ClassVisitor {
 		return new FieldWriter(this, access, name, desc, signature, value);
 	}
 
-	@Override
 	public MethodVisitor visitMethod(
 			final int access,
 			final String name,
@@ -612,7 +604,6 @@ public class ClassWriter implements ClassVisitor {
 				computeFrames);
 	}
 
-	@Override
 	public void visitEnd() {
 	}
 
@@ -700,8 +691,8 @@ public class ClassWriter implements ClassVisitor {
 		out.putInt(0xCAFEBABE).putInt(version);
 		out.putShort(index).putByteArray(pool.data, 0, pool.length);
 		final int mask = Opcodes.ACC_DEPRECATED
-		| ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
-		| (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) / (ClassWriter.ACC_SYNTHETIC_ATTRIBUTE / Opcodes.ACC_SYNTHETIC);
+				| ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
+				| (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) / (ClassWriter.ACC_SYNTHETIC_ATTRIBUTE / Opcodes.ACC_SYNTHETIC);
 		out.putShort(access & ~mask).putShort(name).putShort(superName);
 		out.putShort(interfaceCount);
 		for (int i = 0; i < interfaceCount; ++i) {
@@ -811,7 +802,7 @@ public class ClassWriter implements ClassVisitor {
 			final Type t = (Type) cst;
 			return newClassItem(t.getSort() == Type.OBJECT
 					? t.getInternalName()
-							: t.getDescriptor());
+					: t.getDescriptor());
 		} else {
 			throw new IllegalArgumentException("value " + cst);
 		}

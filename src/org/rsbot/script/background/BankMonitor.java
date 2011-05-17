@@ -14,7 +14,7 @@ public class BankMonitor extends BackgroundScript {
 
 	@Override
 	public boolean activateCondition() {
-		return bank.isOpen();
+		return game.isLoggedIn() && bank.isOpen();
 	}
 
 	@Override

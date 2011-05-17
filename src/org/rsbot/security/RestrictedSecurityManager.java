@@ -1,12 +1,12 @@
 package org.rsbot.security;
 
 import org.rsbot.Application;
+import org.rsbot.Configuration;
 import org.rsbot.gui.BotGUI;
-import org.rsbot.service.ScriptDeliveryNetwork;
-import org.rsbot.util.AccountStore;
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.ScriptDownloader;
-import org.rsbot.util.UpdateUtil;
+import org.rsbot.script.AccountStore;
+import org.rsbot.script.provider.ScriptDeliveryNetwork;
+import org.rsbot.script.provider.ScriptDownloader;
+import org.rsbot.util.UpdateChecker;
 import sun.font.FontManager;
 
 import java.io.File;
@@ -66,9 +66,16 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("zaszmedia.com"); // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
 		whitelist.add("pumyscript.orgfree.com"); // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
 		whitelist.add("noneevr2.r00t.la"); // noneevr2 - TakeBury
-		whitelist.add("testscriptsecurity.host22.com");//Marneus901
+		whitelist.add("testscriptsecurity.host22.com");//Marneus901 - Runite miner
 		whitelist.add("massacrescripting.net");//ShizZznit - Aviansie Massacre.
 		whitelist.add(".ownagebots.com"); //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
+		whitelist.add("vassdascripts.comuf.com");//Dandan Boy - ?
+		whitelist.add("doout.net84.net");
+		whitelist.add("doout5.webs.com");
+		whitelist.add("terrabubble.netai.net");
+		whitelist.add("terrabubble.webs.com");
+		whitelist.add("aaimister.webs.com");
+		whitelist.add("xscriptx.atwebpages.com");
 
 		return whitelist;
 	}
@@ -154,7 +161,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	@Override
 	public void checkExec(final String cmd) {
 		final String calling = getCallingClass();
-		for (final Class<?> c : new Class<?>[] {ScriptDeliveryNetwork.class, BotGUI.class, UpdateUtil.class, ScriptDownloader.class} ) {
+		for (final Class<?> c : new Class<?>[]{ScriptDeliveryNetwork.class, BotGUI.class, UpdateChecker.class, ScriptDownloader.class}) {
 			if (calling.equals(c.getName())) {
 				super.checkExec(cmd);
 				return;
@@ -166,7 +173,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	@Override
 	public void checkExit(final int status) {
 		final String calling = getCallingClass();
-		if (calling.equals(BotGUI.class.getName())) {
+		if (calling.equals(BotGUI.class.getName()) || calling.equals(Application.class.getName())) {
 			super.checkExit(status);
 		} else {
 			throw new SecurityException();
@@ -290,23 +297,23 @@ public class RestrictedSecurityManager extends SecurityManager {
 	private void checkFilePath(String path, final boolean readOnly) {
 		path = new File(path).getAbsolutePath();
 		if (isCallerScript()) {
-			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())) {
+			if (!path.startsWith(Configuration.Paths.getScriptCacheDirectory())) {
 				boolean fail = true;
-				if (!GlobalConfiguration.RUNNING_FROM_JAR) {
+				if (!Configuration.RUNNING_FROM_JAR) {
 					// allow project resource directory if not running from JAR (i.e. in eclipse)
-					String check = new File(GlobalConfiguration.Paths.ROOT).getAbsolutePath();
+					String check = new File(Configuration.Paths.ROOT).getAbsolutePath();
 					try {
 						check = new File(check).getCanonicalPath();
 					} catch (final IOException ignored) {
 					}
 					fail = !path.startsWith(check);
 				} else {
-					if (readOnly && path.equals(GlobalConfiguration.Paths.getRunningJarPath())) {
+					if (readOnly && path.equals(Configuration.Paths.getRunningJarPath())) {
 						fail = false;
 					}
 				}
-				for (final String prefix : new String[]{GlobalConfiguration.Paths.getScreenshotsDirectory(),
-						GlobalConfiguration.Paths.getScriptsDirectory(), GlobalConfiguration.Paths.getWebDatabase()}) {
+				for (final String prefix : new String[]{Configuration.Paths.getScreenshotsDirectory(),
+						Configuration.Paths.getScriptsDirectory(), Configuration.Paths.getWebDatabase()}) {
 					if (path.startsWith(prefix)) {
 						fail = false;
 						break;
@@ -329,7 +336,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 				}
 			}
 		}
-		if (path.equalsIgnoreCase(new File(GlobalConfiguration.Paths.getAccountsFile()).getAbsolutePath())) {
+		if (path.equalsIgnoreCase(new File(Configuration.Paths.getAccountsFile()).getAbsolutePath())) {
 			for (final StackTraceElement s : Thread.currentThread().getStackTrace()) {
 				final String name = s.getClassName();
 				if (name.equals(AccountStore.class.getName())) {

@@ -1,18 +1,14 @@
 package org.rsbot.script.methods;
 
-import java.awt.Color;
+import org.rsbot.Configuration;
+import org.rsbot.script.internal.reflection.Reflection;
+import org.rsbot.script.wrappers.*;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
-
-import org.rsbot.script.wrappers.RSGroundItem;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSPlayer;
-import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.util.GlobalConfiguration;
 
 
 /**
@@ -142,22 +138,29 @@ public class Methods {
 	 */
 	protected Prayer prayer;
 	/**
+	 * The singleton of Quests
+	 */
+	protected Quests quests;
+	/**
 	 * The singleton of FriendsChat
 	 */
 	protected FriendChat friendChat;
+	/**
+	 * The singleton of Lobby
+	 */
+	protected Lobby lobby;
 	/**
 	 * The singleton of Trade
 	 */
 	protected Trade trade;
 	/**
-	 * The singleton of Trade
-	 */
-	protected Paint paint;
-
-	/**
 	 * The singleton of Web
 	 */
 	protected Web web;
+	/**
+	 * Reflection providers.
+	 */
+	protected Reflection reflection;
 
 
 	/**
@@ -166,7 +169,7 @@ public class Methods {
 	 * @param ctx The MethodContext.
 	 */
 	public void init(final MethodContext ctx) {
-		final File cache = new File(GlobalConfiguration.Paths.getScriptCacheDirectory());
+		final File cache = new File(Configuration.Paths.getScriptCacheDirectory());
 		if (!cache.exists()) {
 			cache.mkdirs();
 		}
@@ -200,10 +203,12 @@ public class Methods {
 		summoning = ctx.summoning;
 		env = ctx.env;
 		prayer = ctx.prayer;
+		quests = ctx.quests;
 		friendChat = ctx.friendChat;
+		lobby = ctx.lobby;
 		trade = ctx.trade;
-		paint = ctx.paint;
 		web = ctx.web;
+		reflection = ctx.reflection;
 	}
 
 	/**

@@ -1,27 +1,17 @@
 package org.rsbot.client.input;
 
-import java.awt.AWTEvent;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
-import java.awt.Image;
-import java.awt.event.FocusEvent;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.awt.image.DirectColorModel;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
-import java.util.Hashtable;
-
-import javax.swing.SwingUtilities;
-
 import org.rsbot.Application;
 import org.rsbot.bot.Bot;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.image.*;
+import java.util.Hashtable;
 
 public class Canvas extends java.awt.Canvas {
 	public static final int GRAPHICS_DELAY = 6;
 	public static final int SLOW_GRAPHICS_DELAY = 50;
-	public static final int DISABLE_GRAPHICS_DELAY = 150;
 
 	private static final long serialVersionUID = -2276037172265300477L;
 
@@ -51,7 +41,7 @@ public class Canvas extends java.awt.Canvas {
 			}
 		}
 		try {
-			Thread.sleep(bot.disableCanvas ? DISABLE_GRAPHICS_DELAY : bot.disableRendering ? SLOW_GRAPHICS_DELAY : GRAPHICS_DELAY);
+			Thread.sleep(bot.disableRendering ? SLOW_GRAPHICS_DELAY : GRAPHICS_DELAY);
 		} catch (final InterruptedException ignored) {
 		}
 		return bot.getBufferGraphics();

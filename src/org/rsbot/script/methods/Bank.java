@@ -1,14 +1,9 @@
 package org.rsbot.script.methods;
 
-import java.awt.Point;
-
 import org.rsbot.script.util.Filter;
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSInterface;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.*;
+
+import java.awt.*;
 
 /**
  * Bank related operations.
@@ -16,14 +11,14 @@ import org.rsbot.script.wrappers.RSTile;
 public class Bank extends MethodProvider {
 
 	public static final int[] BANKERS = {44, 45, 494, 495, 499, 553, 958, 1036, 2271, 2354, 2355, 2759, 3824, 5488,
-		5901, 5912, 5913, 6362, 6532, 6533, 6534, 6535, 7605, 8948, 9710, 14367};
+			5901, 5912, 5913, 6362, 6532, 6533, 6534, 6535, 7605, 8948, 9710, 14367};
 	public static final int[] BANK_BOOTHS = {782, 2213, 4483, 6084, 11402, 11758, 12759, 14367, 19230, 24914, 25808, 26972,
-		27663, 29085, 34752, 35647, 36786};
+			27663, 29085, 34752, 35647, 36786};
 	public static final int[] BANK_CHESTS = {4483, 12308, 21301, 27663, 42192};
 	public static final int[] BANK_DEPOSIT_BOX = {9398, 20228, 26969, 36788};
 	public static final int[] DO_NOT_DEPOSIT = new int[]{1265, 1267, 1269, 1273, 1271, 1275, 1351, 590, 303};
 	public static final RSTile[] UNREACHABLE_BANKERS = {
-		new RSTile(3191, 3445), new RSTile(3180, 3433) // VARROCK EAST
+			new RSTile(3191, 3445), new RSTile(3180, 3433) // VARROCK EAST
 	};
 
 	public static final int INTERFACE_BANK = 762;
@@ -126,23 +121,23 @@ public class Bank extends MethodProvider {
 				return true;
 			}
 			switch (number) {
-			case 0:
-				item.doAction(itemCount > 1 ? "Deposit-All" : "Deposit");
-				break;
-			case 1:
-				item.doAction("Deposit");
-				break;
-			case 5:
-				item.doAction("Deposit-" + number);
-				break;
-			default:
-				if (!item.doAction("Deposit-" + number)) {
-					if (item.doAction("Deposit-X")) {
-						sleep(random(1000, 1300));
-						methods.inputManager.sendKeys(String.valueOf(number), true);
+				case 0:
+					item.doAction(itemCount > 1 ? "Deposit-All" : "Deposit");
+					break;
+				case 1:
+					item.doAction("Deposit");
+					break;
+				case 5:
+					item.doAction("Deposit-" + number);
+					break;
+				default:
+					if (!item.doAction("Deposit-" + number)) {
+						if (item.doAction("Deposit-X")) {
+							sleep(random(1000, 1300));
+							methods.inputManager.sendKeys(String.valueOf(number), true);
+						}
 					}
-				}
-				break;
+					break;
 			}
 			sleep(300);
 			final int cInvCount = isOpen() ? methods.inventory.getCount(true) : getBoxCount();
@@ -158,11 +153,9 @@ public class Bank extends MethodProvider {
 	 */
 	public boolean depositAll() {
 		if (isOpen()) {
-			return methods.interfaces.getComponent(INTERFACE_BANK,
-					INTERFACE_BANK_BUTTON_DEPOSIT_CARRIED_ITEMS).doClick();
+			return methods.interfaces.getComponent(INTERFACE_BANK, INTERFACE_BANK_BUTTON_DEPOSIT_CARRIED_ITEMS).doClick();
 		}
-		return isDepositOpen() && methods.interfaces.getComponent(INTERFACE_DEPOSIT_BOX,
-				INTERFACE_DEPOSIT_BUTTON_DEPOSIT_CARRIED_ITEMS).doClick();
+		return isDepositOpen() && methods.interfaces.getComponent(INTERFACE_DEPOSIT_BOX, INTERFACE_DEPOSIT_BUTTON_DEPOSIT_CARRIED_ITEMS).doClick();
 	}
 
 	/**
@@ -177,27 +170,26 @@ public class Bank extends MethodProvider {
 			boolean deposit = true;
 			int invCount = isOpen() ? methods.inventory.getCount(true) : getBoxCount();
 			outer:
-				for (int i = 0; i < 28; i++) {
-					final RSComponent item = isOpen() ? methods.inventory.getItemAt(i).getComponent() :
-						methods.interfaces.get(11).getComponent(17).getComponent(i);
-					if (item != null && item.getComponentID() != -1) {
-						for (final int id : items) {
-							if (item.getComponentID() == id) {
-								continue outer;
-							}
+			for (int i = 0; i < 28; i++) {
+				final RSComponent item = isOpen() ? methods.inventory.getItemAt(i).getComponent() : methods.interfaces.get(11).getComponent(17).getComponent(i);
+				if (item != null && item.getComponentID() != -1) {
+					for (final int id : items) {
+						if (item.getComponentID() == id) {
+							continue outer;
 						}
-						for (int tries = 0; tries < 5; tries++) {
-							deposit(item.getComponentID(), 0);
-							sleep(random(600, 900));
-							final int cInvCount = isOpen() ? methods.inventory.getCount(true) : getBoxCount();
-							if (cInvCount < invCount) {
-								invCount = cInvCount;
-								continue outer;
-							}
-						}
-						deposit = false;
 					}
+					for (int tries = 0; tries < 5; tries++) {
+						deposit(item.getComponentID(), 0);
+						sleep(random(600, 900));
+						final int cInvCount = isOpen() ? methods.inventory.getCount(true) : getBoxCount();
+						if (cInvCount < invCount) {
+							invCount = cInvCount;
+							continue outer;
+						}
+					}
+					deposit = false;
 				}
+			}
 			return deposit;
 		}
 		return false;
@@ -213,8 +205,7 @@ public class Bank extends MethodProvider {
 		if (isOpen()) {
 			return methods.interfaces.getComponent(INTERFACE_BANK, INTERFACE_BANK_BUTTON_DEPOSIT_WORN_ITEMS).doClick();
 		}
-		return isDepositOpen() && methods.interfaces.getComponent(INTERFACE_DEPOSIT_BOX,
-				INTERFACE_DEPOSIT_BUTTON_DEPOSIT_WORN_ITEMS).doClick();
+		return isDepositOpen() && methods.interfaces.getComponent(INTERFACE_DEPOSIT_BOX, INTERFACE_DEPOSIT_BUTTON_DEPOSIT_WORN_ITEMS).doClick();
 	}
 
 	/**
@@ -225,11 +216,9 @@ public class Bank extends MethodProvider {
 	 */
 	public boolean depositAllFamiliar() {
 		if (isOpen()) {
-			return methods.interfaces.getComponent(INTERFACE_BANK,
-					INTERFACE_BANK_BUTTON_DEPOSIT_BEAST_INVENTORY).doClick();
+			return methods.interfaces.getComponent(INTERFACE_BANK, INTERFACE_BANK_BUTTON_DEPOSIT_BEAST_INVENTORY).doClick();
 		}
-		return isDepositOpen() && methods.interfaces.getComponent(INTERFACE_DEPOSIT_BOX,
-				INTERFACE_DEPOSIT_BUTTON_DEPOSIT_BEAST_INVENTORY).doClick();
+		return isDepositOpen() && methods.interfaces.getComponent(INTERFACE_DEPOSIT_BOX, INTERFACE_DEPOSIT_BUTTON_DEPOSIT_BEAST_INVENTORY).doClick();
 	}
 
 	/**
@@ -258,8 +247,7 @@ public class Bank extends MethodProvider {
 	 */
 	public int getCurrentTab() {
 		for (int i = 0; i < INTERFACE_BANK_TAB.length; i++) {
-			if (methods.interfaces.get(INTERFACE_BANK).getComponent(
-					INTERFACE_BANK_TAB[i] - 1).getBackgroundColor() == 1419) {
+			if (methods.interfaces.get(INTERFACE_BANK).getComponent(INTERFACE_BANK_TAB[i] - 1).getBackgroundColor() == 1419) {
 				return i;
 			}
 		}
@@ -410,7 +398,7 @@ public class Bank extends MethodProvider {
 			RSObject bankBooth = methods.objects.getNearest(BANK_BOOTHS);
 			RSNPC banker = methods.npcs.getNearest(new ReachableBankerFilter());
 			final RSObject bankChest = methods.objects.getNearest(BANK_CHESTS);
-			/* Find closese one, others are set to null. Remember distance and tile. */
+			/* Find closest one, others are set to null. Remember distance and tile. */
 			int lowestDist = Integer.MAX_VALUE;
 			RSTile tile = null;
 			if (bankBooth != null) {
@@ -473,11 +461,8 @@ public class Bank extends MethodProvider {
 					methods.mouse.moveSlightly();
 					sleep(random(20, 30));
 				}
-				final RSObject depositBox = methods.objects.getNearest(
-						BANK_DEPOSIT_BOX);
-				if (depositBox != null && methods.calc.distanceTo(depositBox) < 8 && methods.calc.tileOnMap(
-						depositBox.getLocation()) && methods.calc.canReach(
-								depositBox.getLocation(), true)) {
+				final RSObject depositBox = methods.objects.getNearest(BANK_DEPOSIT_BOX);
+				if (depositBox != null && methods.calc.distanceTo(depositBox) < 8 && methods.calc.tileOnMap(depositBox.getLocation()) && methods.calc.canReach(depositBox.getLocation(), true)) {
 					if (depositBox.doAction("Deposit")) {
 						int count = 0;
 						while (!isDepositOpen() && ++count < 10) {
@@ -569,13 +554,11 @@ public class Bank extends MethodProvider {
 		if (!isOpen()) {
 			return false;
 		}
-		if (methods.settings.getSetting(
-				Settings.SETTING_BANK_TOGGLE_REARRANGE_MODE) != 0) {
+		if (methods.settings.getSetting(Settings.SETTING_BANK_TOGGLE_REARRANGE_MODE) != 0) {
 			methods.interfaces.getComponent(INTERFACE_BANK, INTERFACE_BANK_BUTTON_SWAP).doClick();
 			sleep(random(500, 700));
 		}
-		return methods.settings.getSetting(
-				Settings.SETTING_BANK_TOGGLE_REARRANGE_MODE) == 0;
+		return methods.settings.getSetting(Settings.SETTING_BANK_TOGGLE_REARRANGE_MODE) == 0;
 	}
 
 	/**
@@ -587,13 +570,11 @@ public class Bank extends MethodProvider {
 		if (!isOpen()) {
 			return false;
 		}
-		if (methods.settings.getSetting(
-				Settings.SETTING_BANK_TOGGLE_WITHDRAW_MODE) != 0) {
+		if (methods.settings.getSetting(Settings.SETTING_BANK_TOGGLE_WITHDRAW_MODE) != 0) {
 			methods.interfaces.getComponent(INTERFACE_BANK, INTERFACE_BANK_BUTTON_ITEM).doClick();
 			sleep(random(500, 700));
 		}
-		return methods.settings.getSetting(
-				Settings.SETTING_BANK_TOGGLE_WITHDRAW_MODE) == 0;
+		return methods.settings.getSetting(Settings.SETTING_BANK_TOGGLE_WITHDRAW_MODE) == 0;
 	}
 
 	/**
@@ -605,13 +586,11 @@ public class Bank extends MethodProvider {
 		if (!isOpen()) {
 			return false;
 		}
-		if (methods.settings.getSetting(
-				Settings.SETTING_BANK_TOGGLE_WITHDRAW_MODE) != 1) {
+		if (methods.settings.getSetting(Settings.SETTING_BANK_TOGGLE_WITHDRAW_MODE) != 1) {
 			methods.interfaces.getComponent(INTERFACE_BANK, INTERFACE_BANK_BUTTON_NOTE).doClick();
 			sleep(random(500, 700));
 		}
-		return methods.settings.getSetting(
-				Settings.SETTING_BANK_TOGGLE_WITHDRAW_MODE) == 1;
+		return methods.settings.getSetting(Settings.SETTING_BANK_TOGGLE_WITHDRAW_MODE) == 1;
 	}
 
 	/**
@@ -630,17 +609,19 @@ public class Bank extends MethodProvider {
 			throw new IllegalArgumentException("count (" + count + ") < 0");
 		}
 		final RSItem rsi = getItem(itemID);
-		if (rsi == null) {
+		if (rsi == null || rsi.getID() == -1) {
 			return false;
 		}
 		final RSComponent item = rsi.getComponent();
 		if (item == null) {
 			return false;
 		}
-		while (item.getRelativeX() == 0 && methods.bank.getCurrentTab() != 0) {
+		int t = 0;
+		while (item.getRelativeX() == 0 && methods.bank.getCurrentTab() != 0 && t < 5) {
 			if (methods.interfaces.getComponent(Bank.INTERFACE_BANK, Bank.INTERFACE_BANK_TAB[0]).doClick()) {
 				sleep(random(800, 1300));
 			}
+			t++;
 		}
 		if (!methods.interfaces.scrollTo(item, (Bank.INTERFACE_BANK << 16) + Bank.INTERFACE_BANK_SCROLLBAR)) {
 			return false;
@@ -650,36 +631,36 @@ public class Bank extends MethodProvider {
 		final String defaultAction = "Withdraw-" + count;
 		String action = null;
 		switch (count) {
-		case 0:
-			action = "Withdraw-All";
-			break;
-		case 1:
-			break;
-		case 5:
-			action = defaultAction;
-			break;
-		case 10:
-			action = defaultAction;
-			break;
-		default:
-			int i = -1;
-			try {
-				i = Integer.parseInt(item.getActions()[3].toLowerCase().trim().replaceAll("\\D", ""));
-			} catch (final Exception e) {
-				e.printStackTrace();
-			}
-			if (i == count) {
+			case 0:
+				action = "Withdraw-All";
+				break;
+			case 1:
+				break;
+			case 5:
 				action = defaultAction;
-			} else if (item.doAction("Withdraw-X")) {
-				sleep(random(1000, 1300));
-				methods.keyboard.sendText(String.valueOf(count), true);
-			}
+				break;
+			case 10:
+				action = defaultAction;
+				break;
+			default:
+				int i = -1;
+				try {
+					i = Integer.parseInt(item.getActions()[3].toLowerCase().trim().replaceAll("\\D", ""));
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
+				if (i == count) {
+					action = defaultAction;
+				} else if (item.doAction("Withdraw-X")) {
+					sleep(random(1000, 1300));
+					methods.keyboard.sendText(String.valueOf(count), true);
+				}
 		}
 		if (action != null && item.doAction(action)) {
 			sleep(random(1000, 1300));
 		}
 		final int newInvCount = methods.inventory.getCount(true);
-		return newInvCount > invCount || newInvCount == 28;
+		return newInvCount > invCount;
 	}
 
 	/**
@@ -696,8 +677,7 @@ public class Bank extends MethodProvider {
 		int count = 0;
 		for (int i = 0; i < 28; ++i) {
 			for (final int id : ids) {
-				if (methods.interfaces.get(11).getComponent(17).isValid() && methods.interfaces.get(11).getComponent(
-						17).getComponent(i).getComponentID() == id) {
+				if (methods.interfaces.get(11).getComponent(17).isValid() && methods.interfaces.get(11).getComponent(17).getComponent(i).getComponentID() == id) {
 					count++;
 				}
 			}
@@ -717,8 +697,7 @@ public class Bank extends MethodProvider {
 		}
 		int count = 0;
 		for (int i = 0; i < 28; i++) {
-			if (methods.interfaces.get(11).getComponent(17).isValid() && methods.interfaces.get(11).getComponent(
-					17).getComponent(i).getComponentID() != -1) {
+			if (methods.interfaces.get(11).getComponent(17).isValid() && methods.interfaces.get(11).getComponent(17).getComponent(i).getComponentID() != -1) {
 				count++;
 			}
 		}
@@ -732,12 +711,10 @@ public class Bank extends MethodProvider {
 	 * @author LastCoder
 	 */
 	public RSItem[] getEquipmentItems() {
-		if (methods.interfaces.get(INTERFACE_EQUIPMENT).getComponent(
-				INTERFACE_EQUIPMENT_COMPONENT).isValid()) {
+		if (methods.interfaces.get(INTERFACE_EQUIPMENT).getComponent(INTERFACE_EQUIPMENT_COMPONENT).isValid()) {
 			return new RSItem[0];
 		}
-		final RSComponent[] components = methods.interfaces.get(INTERFACE_EQUIPMENT).getComponent(
-				INTERFACE_EQUIPMENT_COMPONENT).getComponents();
+		final RSComponent[] components = methods.interfaces.get(INTERFACE_EQUIPMENT).getComponent(INTERFACE_EQUIPMENT_COMPONENT).getComponents();
 		final RSItem[] items = new RSItem[components.length];
 		for (int i = 0; i < items.length; i++) {
 			items[i] = new RSItem(methods, components[i]);
@@ -787,8 +764,7 @@ public class Bank extends MethodProvider {
 	 * @return <tt>true</tt> if opened.
 	 */
 	public boolean openEquipment() {
-		return getInterface().getComponent(INTERFACE_BANK_BUTTON_OPEN_EQUIP).isValid() && getInterface().getComponent(
-				INTERFACE_BANK_BUTTON_OPEN_EQUIP).doClick();
+		return getInterface().getComponent(INTERFACE_BANK_BUTTON_OPEN_EQUIP).isValid() && getInterface().getComponent(INTERFACE_BANK_BUTTON_OPEN_EQUIP).doClick();
 	}
 
 	/**

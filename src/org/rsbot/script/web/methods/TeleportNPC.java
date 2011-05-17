@@ -4,6 +4,7 @@ import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.web.Teleport;
 import org.rsbot.script.wrappers.RSNPC;
 import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.RSWeb;
 
 public class TeleportNPC extends Teleport {
 	public final int npcID;
@@ -23,7 +24,7 @@ public class TeleportNPC extends Teleport {
 		return methods.calc.distanceBetween(base, teleportationLocation()) > 30 && methods.calc.distanceBetween(teleportationLocation(), destination) < methods.calc.distanceTo(destination);
 	}
 
-	public boolean preform() {
+	public boolean perform() {
 		RSNPC npc = methods.npcs.getNearest(npcID);
 		if (npc != null) {
 			if (npc.doAction(action)) {
@@ -41,6 +42,12 @@ public class TeleportNPC extends Teleport {
 	}
 
 	public double getDistance(RSTile destination) {
-		return methods.calc.distanceBetween(teleportationLocation(), destination);// TODO use web distancing.
+		RSWeb tempWeb = methods.web.getWeb(teleportationLocation(), destination);
+		double d = 0.0D;
+		if (tempWeb != null) {
+			d = tempWeb.getDistance();
+			tempWeb = null;
+		}
+		return d;
 	}
 }

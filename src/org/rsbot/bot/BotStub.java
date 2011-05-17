@@ -1,29 +1,21 @@
 package org.rsbot.bot;
 
+import org.rsbot.Configuration;
+
+import javax.swing.*;
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.applet.AudioClip;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
-
-import org.rsbot.util.GlobalConfiguration;
 
 public class BotStub implements AppletStub, AppletContext {
 	private final Map<URL, WeakReference<Image>> IMAGE_CACHE = new HashMap<URL, WeakReference<Image>>();
@@ -133,10 +125,10 @@ public class BotStub implements AppletStub, AppletContext {
 
 	public void showDocument(final URL url, final String target) {
 		if (url.toString().contains("outofdate")) {
-			final String message = GlobalConfiguration.NAME + " is currently outdated, please wait patiently for a new version.";
+			final String message = Configuration.NAME + " is currently outdated, please wait patiently for a new version.";
 			log.severe(message);
 			JOptionPane.showMessageDialog(null, message, "Outdated", JOptionPane.WARNING_MESSAGE);
-			final File versionFile = new File(GlobalConfiguration.Paths.getVersionCache());
+			final File versionFile = new File(Configuration.Paths.getVersionCache());
 			if (versionFile.exists() && !versionFile.delete()) {
 				log.warning("Unable to clear cache.");
 			}

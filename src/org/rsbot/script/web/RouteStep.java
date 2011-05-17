@@ -1,11 +1,14 @@
 package org.rsbot.script.web;
 
 import org.rsbot.script.Random;
+import org.rsbot.script.Script;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
 import org.rsbot.script.randoms.LoginBot;
 import org.rsbot.script.wrappers.RSPath;
 import org.rsbot.script.wrappers.RSTile;
+
+import java.util.Collections;
 
 public class RouteStep extends MethodProvider {
 	private final Type type;
@@ -34,22 +37,51 @@ public class RouteStep extends MethodProvider {
 	}
 
 	public boolean execute() {
-		switch (type) {
-			case PATH:
-				if (rspath == null) {
-					rspath = methods.walking.newTilePath(path);
+		try {
+			for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
+				if (!checkScript.isActive() || !checkScript.isRunning()) {
+					return false;
 				}
-				while (!inSomeRandom()) {
-					if (!rspath.traverse() || methods.calc.distanceTo(rspath.getEnd()) < 5) {
-						break;
+				if (checkScript.isPaused()) {
+					sleep(500);
+					return true;
+				}
+			}
+			switch (type) {
+				case PATH:
+					if (path == null) {//Recalculation says path is a no-go.
+						return false;
+					}
+					if (rspath == null) {
+						rspath = methods.walking.newTilePath(path);
+					}
+					if (inSomeRandom()) {
+						return false;
+					}
+					if (methods.calc.distanceTo(rspath.getEnd()) < 5) {
+						rspath = null;
+						path = null;
+						return true;
 					}
 					sleep(random(50, 150));
-				}
-				return !inSomeRandom() && methods.calc.distanceTo(rspath.getEnd()) < 5;
-			case TELEPORT:
-				return teleport != null && teleport.preform();
+					return !inSomeRandom() && rspath.traverse();
+				case TELEPORT:
+					if (inSomeRandom()) {
+						return false;
+					}
+					if (teleport != null && teleport.perform()) {
+						teleport = null;
+						return true;
+					}
+					return false;
+			}
+		} catch (Exception e) {
 		}
 		return false;
+	}
+
+	public boolean finished() {
+		return path == null && teleport == null;
 	}
 
 	public Teleport getTeleport() {
@@ -72,5 +104,13 @@ public class RouteStep extends MethodProvider {
 			}
 		}
 		return false;
+	}
+
+	void update() {
+		if (path != null && path.length > 1) {
+			RSTile startTile = path[0];
+			RSTile endTile = path[path.length - 1];
+			path = methods.web.generateNodePath(startTile, endTile);
+		}
 	}
 }

@@ -1,11 +1,15 @@
 package org.rsbot.gui;
 
+import org.rsbot.Configuration;
 import org.rsbot.bot.Bot;
 import org.rsbot.script.Script;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
-import org.rsbot.service.*;
-import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.script.provider.FileScriptSource;
+import org.rsbot.script.provider.ScriptDefinition;
+import org.rsbot.script.provider.ScriptDeliveryNetwork;
+import org.rsbot.script.provider.ScriptSource;
+import org.rsbot.service.ServiceException;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -32,7 +36,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	private static final ScriptSource SRC_SOURCES;
 	private static final ScriptSource SRC_PRECOMPILED;
-	private static final ScriptSource SRC_BUNDLED;
 	private static final ScriptSource SRC_DRM;
 	private final Bot bot;
 	private JTable table;
@@ -44,13 +47,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private boolean connected = true;
 
 	static {
-		SRC_SOURCES = new FileScriptSource(new File(GlobalConfiguration.Paths.getScriptsSourcesDirectory()));
-		SRC_PRECOMPILED = new FileScriptSource(new File(GlobalConfiguration.Paths.getScriptsPrecompiledDirectory()));
-		if (GlobalConfiguration.RUNNING_FROM_JAR) {
-			SRC_BUNDLED = new FileScriptSource(new File(GlobalConfiguration.Paths.getScriptsExtractedCache()));
-		} else {
-			SRC_BUNDLED = new FileScriptSource(new File("." + File.separator + GlobalConfiguration.Paths.SCRIPTS_NAME_SRC));
-		}
+		SRC_SOURCES = new FileScriptSource(new File(Configuration.Paths.getScriptsSourcesDirectory()));
+		SRC_PRECOMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
 		SRC_DRM = ScriptDeliveryNetwork.getInstance();
 	}
 
@@ -82,13 +80,13 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		if (connected) {
 			scripts.addAll(SRC_DRM.list());
 		}
-		scripts.addAll(SRC_BUNDLED.list());
 		scripts.addAll(SRC_PRECOMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
 		model.search("");
 	}
 
 	private void init() {
+		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT));
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		bot.getScriptHandler().addScriptListener(ScriptSelector.this);
@@ -99,7 +97,30 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				dispose();
 			}
 		});
-		table = new JTable(model);
+		table = new JTable(model) {
+			private static final long serialVersionUID = 6969410339933692133L;
+
+			@Override
+			public String getToolTipText(MouseEvent e) {
+				int row = rowAtPoint(e.getPoint());
+				ScriptDefinition def = model.getDefinition(row);
+				if (def != null) {
+					StringBuilder b = new StringBuilder();
+					b.append(def.name);
+					b.append(" v");
+					b.append(def.version);
+					b.append(" by ");
+					for (int i = 0; i < def.authors.length; i++) {
+						if (i > 0) {
+							b.append(i == def.authors.length - 1 ? " and " : ", ");
+						}
+						b.append(def.authors[i]);
+					}
+					return b.toString();
+				}
+				return super.getToolTipText(e);
+			}
+		};
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(final MouseEvent e) {
@@ -117,7 +138,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				final JPopupMenu contextMenu = new JPopupMenu();
 				final JMenuItem visit = new JMenuItem();
 				visit.setText("Visit Site");
-				visit.setIcon(new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_WEBLINK)));
+				visit.setIcon(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_WEBLINK)));
 				visit.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(final MouseEvent e) {
@@ -127,8 +148,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 				final JMenuItem start = new JMenuItem();
 				start.setText(submit.getText());
-				start.setIcon(new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PLAY)));
-				start.addActionListener(new ActionListener(){
+				start.setIcon(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
+				start.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						submit.doClick();
 					}
@@ -137,7 +158,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 				final JMenuItem delete = new JMenuItem();
 				delete.setText("Delete");
-				delete.setIcon(new ImageIcon(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CLOSE)));
+				delete.setIcon(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE)));
 				delete.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						final File path = def.path == null || def.path.isEmpty() ? null : new File(def.path);
@@ -164,7 +185,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		table.setShowGrid(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(new TableSelectionListener());
-		setColumnWidths(table, 30, 175, 50, 100);
+		setColumnWidths(table, 30, 175, 55, 95);
 		final JToolBar toolBar = new JToolBar();
 		toolBar.setMargin(new Insets(1, 1, 1, 1));
 		toolBar.setFloatable(false);
@@ -199,9 +220,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			}
 		});
 		submit = new JButton("Start", new ImageIcon(
-				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_PLAY)));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
 		final JButton connect = new JButton(new ImageIcon(
-				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_CONNECT)));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_CONNECT)));
 		submit.setEnabled(false);
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent evt) {
@@ -216,13 +237,13 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				}
 			}
 		});
-		connect.setEnabled(GlobalConfiguration.SCRIPT_DRM ? true : false);
+		connect.setEnabled(Configuration.SCRIPT_DRM ? true : false);
 		if (connect.isEnabled()) {
 			final ActionListener listenConnect = new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
-					final String icon = connected ? GlobalConfiguration.Paths.Resources.ICON_DISCONNECT :
-							GlobalConfiguration.Paths.Resources.ICON_CONNECT;
-					connect.setIcon(new ImageIcon(GlobalConfiguration.getImage(icon)));
+					final String icon = connected ? Configuration.Paths.Resources.ICON_DISCONNECT :
+							Configuration.Paths.Resources.ICON_CONNECT;
+					connect.setIcon(new ImageIcon(Configuration.getImage(icon)));
 					connect.repaint();
 					connected = !connected;
 					load();
@@ -289,13 +310,11 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private static class ScriptTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
 		public static final ImageIcon ICON_SCRIPT_SRC = new ImageIcon(
-				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_SCRIPT_SRC));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_EDIT));
 		public static final ImageIcon ICON_SCRIPT_PRE = new ImageIcon(
-				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_SCRIPT_PRE));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_GEAR));
 		public static final ImageIcon ICON_SCRIPT_DRM = new ImageIcon(
-				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_SCRIPT_DRM));
-		public static final ImageIcon ICON_SCRIPT_BDL = new ImageIcon(
-				GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON_SCRIPT_BDL));
+				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_LIVE));
 		private final List<ScriptDefinition> scripts;
 		private final List<ScriptDefinition> matches;
 
@@ -348,9 +367,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					}
 					if (def.source == SRC_PRECOMPILED) {
 						return ICON_SCRIPT_PRE;
-					}
-					if (def.source == SRC_BUNDLED) {
-						return ICON_SCRIPT_BDL;
 					}
 					return ICON_SCRIPT_DRM;
 				}

@@ -1,8 +1,8 @@
 package org.rsbot.gui;
 
-import org.rsbot.service.ScriptDeliveryNetwork;
-import org.rsbot.util.AccountStore;
-import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.Configuration;
+import org.rsbot.script.AccountStore;
+import org.rsbot.script.provider.ScriptDeliveryNetwork;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -27,10 +27,8 @@ import java.util.logging.Logger;
  * @author Aion
  * @author Timer
  */
-@SuppressWarnings("serial")
 public class AccountManager extends JDialog implements ActionListener {
-
-	private static final String FILE_NAME = GlobalConfiguration.Paths.getAccountsFile();
+	private static final String FILE_ACCOUNT_STORAGE = Configuration.Paths.getAccountsFile();
 
 	private static final String[] RANDOM_REWARDS = {"Cash", "Runes", "Coal", "Essence", "Ore", "Bars", "Gems", "Herbs",
 			"Seeds", "Charms", "Surprise", "Emote", "Costume", "Attack",
@@ -44,7 +42,7 @@ public class AccountManager extends JDialog implements ActionListener {
 
 	private static final Logger log = Logger.getLogger(AccountManager.class.getName());
 
-	private static final AccountStore accountStore = new AccountStore(new File(FILE_NAME));
+	private static final AccountStore accountStore = new AccountStore(new File(FILE_ACCOUNT_STORAGE));
 
 	static {
 		accountStore.setPassword(ScriptDeliveryNetwork.getInstance().getKey());
@@ -70,12 +68,12 @@ public class AccountManager extends JDialog implements ActionListener {
 		@Override
 		protected void setValue(final Object value) {
 			if (value == null) {
-				setText("<none>");
+				setText("");
 			} else {
 				final String str = value.toString();
 				final StringBuilder b = new StringBuilder();
 				for (int i = 0; i < str.length(); ++i) {
-					b.append("*");
+					b.append("\u25CF");
 				}
 				setText(b.toString());
 			}
@@ -191,12 +189,13 @@ public class AccountManager extends JDialog implements ActionListener {
 
 	private AccountManager() {
 		super(Frame.getFrames()[0], "Account Manager", true);
+		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_REPORTKEY));
 	}
 
 	public void actionPerformed(final ActionEvent e) {
 		if (e.getSource() instanceof JButton) {
-			final String label = ((JButton) e.getSource()).getText();
-			if (label.equals("Done")) {
+			final JButton button = (JButton) e.getSource();
+			if (button.getText().equals("Save")) {
 				try {
 					accountStore.save();
 				} catch (final IOException ioe) {
@@ -204,8 +203,8 @@ public class AccountManager extends JDialog implements ActionListener {
 					log.info("Failed to save accounts...  Please report this.");
 				}
 				dispose();
-			} else if (label.equals("Add")) {
-				final String str = JOptionPane.showInputDialog(getParent(), "Enter the account username.", "New Account", JOptionPane.QUESTION_MESSAGE);
+			} else if (button.getToolTipText().equals("Add")) {
+				final String str = JOptionPane.showInputDialog(getParent(), "Enter the account username:", "New Account", JOptionPane.QUESTION_MESSAGE);
 				if (str == null || str.isEmpty()) {
 					return;
 				}
@@ -213,7 +212,7 @@ public class AccountManager extends JDialog implements ActionListener {
 				accountStore.get(str).setAttribute("reward", RANDOM_REWARDS[0]);
 				final int row = table.getRowCount();
 				((AccountTableModel) table.getModel()).fireTableRowsInserted(row, row);
-			} else if (label.equals("Remove")) {
+			} else if (button.getToolTipText().equals("Remove")) {
 				final int row = table.getSelectedRow();
 				final String user = ((AccountTableModel) table.getModel()).userForRow(row);
 				if (user != null) {
@@ -230,15 +229,19 @@ public class AccountManager extends JDialog implements ActionListener {
 	public void showGUI() {
 		final JScrollPane scrollPane = new JScrollPane();
 		table = new JTable(new AccountTableModel());
-		final JPanel bar = new JPanel();
-		removeButton = new JButton();
-		final JButton newButton = new JButton();
-		final JButton doneButton = new JButton();
+		final JToolBar bar = new JToolBar();
+		bar.setMargin(new Insets(1, 1, 1, 1));
+		bar.setFloatable(false);
+		removeButton = new JButton("Remove", new ImageIcon(
+				Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE)));
+		final JButton newButton = new JButton("Add", new ImageIcon(
+				Configuration.getImage(Configuration.Paths.Resources.ICON_ADD)));
+		final JButton doneButton = new JButton("Save", new ImageIcon(
+				Configuration.getImage(Configuration.Paths.Resources.ICON_REPORT_DISK)));
 		setTitle("Account Manager");
-		final Container contentPane = getContentPane();
-		contentPane.setLayout(new BorderLayout(5, 5));
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(new TableSelectionListener());
+		table.setShowGrid(false);
 		final TableColumnModel cm = table.getColumnModel();
 		cm.getColumn(cm.getColumnIndex("Password")).setCellRenderer(new PasswordCellRenderer());
 		cm.getColumn(cm.getColumnIndex("Password")).setCellEditor(new PasswordCellEditor());
@@ -247,21 +250,21 @@ public class AccountManager extends JDialog implements ActionListener {
 		cm.getColumn(cm.getColumnIndex("Reward")).setCellEditor(new RandomRewardEditor());
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setViewportView(table);
-		contentPane.add(scrollPane, BorderLayout.CENTER);
-		final GridBagLayout gbl = new GridBagLayout();
-		bar.setLayout(gbl);
-		gbl.rowHeights = new int[]{0, 0};
-		gbl.rowWeights = new double[]{0.0, 1.0E-4};
-		newButton.setText("Add");
-		bar.add(newButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
-		removeButton.setText("Remove");
-		bar.add(removeButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
-		doneButton.setText("Done");
-		bar.add(doneButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
+		add(scrollPane, BorderLayout.CENTER);
+		newButton.setFocusable(false);
+		newButton.setToolTipText(newButton.getText());
+		newButton.setText("");
+		bar.add(newButton);
+		removeButton.setFocusable(false);
+		removeButton.setToolTipText(removeButton.getText());
+		removeButton.setText("");
+		bar.add(removeButton);
+		bar.add(Box.createHorizontalGlue());
+		bar.add(doneButton);
 		newButton.addActionListener(this);
-		doneButton.addActionListener(this);
 		removeButton.addActionListener(this);
-		contentPane.add(bar, BorderLayout.SOUTH);
+		doneButton.addActionListener(this);
+		add(bar, BorderLayout.SOUTH);
 		final int row = table.getSelectedRow();
 		removeButton.setEnabled(row >= 0 && row < table.getRowCount());
 		table.clearSelection();

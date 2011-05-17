@@ -122,14 +122,14 @@ public class QuizSolver extends Random {
 
 	public boolean atSlot(final int slot) {
 		switch (slot) {
-		case 1:
-			return interfaces.getComponent(quizInterface, 3).doClick();
-		case 2:
-			return interfaces.getComponent(quizInterface, 4).doClick();
-		case 3:
-			return interfaces.getComponent(quizInterface, 5).doClick();
-		default:
-			return false;
+			case 1:
+				return interfaces.getComponent(quizInterface, 3).doClick();
+			case 2:
+				return interfaces.getComponent(quizInterface, 4).doClick();
+			case 3:
+				return interfaces.getComponent(quizInterface, 5).doClick();
+			default:
+				return false;
 		}
 	}
 
@@ -172,17 +172,17 @@ public class QuizSolver extends Random {
 
 	public int Slot_to_ID(final int slot) {
 		switch (slot) {
-		case 1:
-			//System.out.println(interfaces.get(quizInterface).getComponent(6).getComponentID());
-			return interfaces.get(quizInterface).getComponent(6).getComponentID();
-		case 2:
-			//System.out.println(interfaces.get(quizInterface).getComponent(7).getComponentID());
-			return interfaces.get(quizInterface).getComponent(7).getComponentID();
-		case 3:
-			//System.out.println(interfaces.get(quizInterface).getComponent(8).getComponentID());
-			return interfaces.get(quizInterface).getComponent(8).getComponentID();
-		default:
-			return -1;
+			case 1:
+				//System.out.println(interfaces.get(quizInterface).getComponent(6).getComponentID());
+				return interfaces.get(quizInterface).getComponent(6).getComponentID();
+			case 2:
+				//System.out.println(interfaces.get(quizInterface).getComponent(7).getComponentID());
+				return interfaces.get(quizInterface).getComponent(7).getComponentID();
+			case 3:
+				//System.out.println(interfaces.get(quizInterface).getComponent(8).getComponentID());
+				return interfaces.get(quizInterface).getComponent(8).getComponentID();
+			default:
+				return -1;
 		}
 	}
 }

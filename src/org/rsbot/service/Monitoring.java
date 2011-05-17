@@ -1,25 +1,13 @@
 package org.rsbot.service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import org.rsbot.Configuration;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IniParser;
+
+import java.io.*;
+import java.net.*;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpClient;
-import org.rsbot.util.IniParser;
 
 
 /**
@@ -45,11 +33,11 @@ public class Monitoring {
 		}
 
 		events = new ConcurrentLinkedQueue<Event>();
-		HashMap<String, String> keys = null;
+		HashMap<String, String> keys;
 
 		try {
-			final URL source = new URL(GlobalConfiguration.Paths.URLs.MONITORING_CONTROL);
-			final File cache = new File(GlobalConfiguration.Paths.getCacheDirectory(), "monitoring-control.txt");
+			final URL source = new URL(Configuration.Paths.URLs.MONITORING_CONTROL);
+			final File cache = new File(Configuration.Paths.getCacheDirectory(), "monitoring-control.txt");
 			HttpClient.download(source, cache);
 			final BufferedReader reader = new BufferedReader(new FileReader(cache));
 			keys = IniParser.deserialise(reader).get(IniParser.emptySection);
@@ -104,11 +92,11 @@ public class Monitoring {
 		pushState(Type.SYSTEM, "DISK", "FREE", Long.toString(diskFree));
 		pushState(Type.SYSTEM, "DISK", "USABLE", Long.toString(diskUsable));
 
-		pushState(Type.ENVIRONMENT, "VERSION", Integer.toString(GlobalConfiguration.getVersion()));
-		pushState(Type.ENVIRONMENT, "OS", GlobalConfiguration.getCurrentOperatingSystem().toString());
-		pushState(Type.ENVIRONMENT, "JAR", Boolean.toString(GlobalConfiguration.RUNNING_FROM_JAR));
-		pushState(Type.ENVIRONMENT, "GIT", Boolean.toString(new File(GlobalConfiguration.Paths.ROOT, ".git").exists()));
-		pushState(Type.ENVIRONMENT, "SVN", Boolean.toString(new File(GlobalConfiguration.Paths.ROOT, ".svn").exists()));
+		pushState(Type.ENVIRONMENT, "VERSION", Integer.toString(Configuration.getVersion()));
+		pushState(Type.ENVIRONMENT, "OS", Configuration.getCurrentOperatingSystem().toString());
+		pushState(Type.ENVIRONMENT, "JAR", Boolean.toString(Configuration.RUNNING_FROM_JAR));
+		pushState(Type.ENVIRONMENT, "GIT", Boolean.toString(new File(Configuration.Paths.ROOT, ".git").exists()));
+		pushState(Type.ENVIRONMENT, "SVN", Boolean.toString(new File(Configuration.Paths.ROOT, ".svn").exists()));
 	}
 
 	public static void stop() {
@@ -133,7 +121,7 @@ public class Monitoring {
 		}
 		final String log = s.toString();
 
-		final FileWriter out = new FileWriter(GlobalConfiguration.Paths.getEventsLog());
+		final FileWriter out = new FileWriter(Configuration.Paths.getEventsLog());
 		out.write(log);
 		out.close();
 
@@ -157,7 +145,7 @@ public class Monitoring {
 	}
 
 	private static void uploadHttp(final URL url, final String data) throws IOException {
-		final HttpURLConnection con = GlobalConfiguration.getHttpConnection(url);
+		final HttpURLConnection con = Configuration.getHttpConnection(url);
 		con.setDoOutput(true);
 		OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
 		out.write(data);
@@ -194,7 +182,7 @@ public class Monitoring {
 		events.add(e);
 	}
 
-	public static enum Type { START, STOP, SYSTEM, ENVIRONMENT, SCRIPT, RANDOM }
+	public static enum Type {START, STOP, SYSTEM, ENVIRONMENT, SCRIPT, RANDOM}
 
 	private static class Event {
 		private final int time;

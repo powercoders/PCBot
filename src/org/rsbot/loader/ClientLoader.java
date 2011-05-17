@@ -1,35 +1,20 @@
 package org.rsbot.loader;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import org.rsbot.Configuration;
+import org.rsbot.loader.asm.ClassReader;
+import org.rsbot.loader.script.ModScript;
+import org.rsbot.loader.script.ParseException;
+import org.rsbot.util.io.HttpClient;
+
+import javax.swing.*;
+import java.io.*;
 import java.net.JarURLConnection;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
-
-import org.rsbot.loader.asm.ClassReader;
-import org.rsbot.loader.script.ModScript;
-import org.rsbot.loader.script.ParseException;
-import org.rsbot.util.GlobalConfiguration;
-import org.rsbot.util.HttpClient;
 
 /**
  * @author Jacmob
@@ -137,7 +122,7 @@ public class ClientLoader {
 				client_version = checkVersion(new ByteArrayInputStream(classes.get("client")));
 			} finally {
 				if (client_version != 0) {
-					final FileWriter writer = new FileWriter(GlobalConfiguration.Paths.getVersionCache());
+					final FileWriter writer = new FileWriter(Configuration.Paths.getVersionCache());
 					writer.write(Integer.toString(client_version));
 					writer.close();
 				}

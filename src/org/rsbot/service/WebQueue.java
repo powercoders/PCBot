@@ -1,9 +1,8 @@
 package org.rsbot.service;
 
-import org.rsbot.script.internal.wrappers.TileFlags;
+import org.rsbot.Configuration;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.util.GlobalConfiguration;
 
 import java.io.*;
 import java.util.*;
@@ -25,32 +24,34 @@ public class WebQueue {
 	private static final Object removeLock = new Object();
 
 	static {
-		writer = new QueueWriter(GlobalConfiguration.Paths.getWebDatabase());
+		writer = new QueueWriter(Configuration.Paths.getWebDatabase());
 		writer.start();
 	}
 
 	/**
 	 * Adds collected data to the queue.
 	 *
-	 * @param theFlagsList The data.
+	 * @param gameTiles The data.
 	 */
-	public static void Add(final HashMap<RSTile, TileFlags> theFlagsList) {
-		Web.map.putAll(theFlagsList);
-		final int count = theFlagsList.size();
+	public static void Add(final HashMap<RSTile, Integer> gameTiles) {
+		Web.rs_map.putAll(gameTiles);
+		final int count = gameTiles.size();
 		new Thread() {
 			@Override
 			public void run() {
 				try {
-					final HashMap<RSTile, TileFlags> theFlagsList2 = new HashMap<RSTile, TileFlags>();
-					theFlagsList2.putAll(theFlagsList);
-					final Map<RSTile, TileFlags> tl = Collections.unmodifiableMap(theFlagsList2);
+					final HashMap<RSTile, Integer> mapData = new HashMap<RSTile, Integer>();
+					mapData.putAll(gameTiles);
+					final Map<RSTile, Integer> safeMapData = Collections.unmodifiableMap(mapData);
 					bufferingCount = bufferingCount + count;
-					final Iterator<Map.Entry<RSTile, TileFlags>> tileFlagsIterator = tl.entrySet().iterator();
-					while (tileFlagsIterator.hasNext()) {
-						final TileFlags tileFlags = tileFlagsIterator.next().getValue();
-						if (tileFlags != null) {
+					final Iterator<Map.Entry<RSTile, Integer>> safeIterator = safeMapData.entrySet().iterator();
+					while (safeIterator.hasNext()) {
+						final Map.Entry<RSTile, Integer> tileData = safeIterator.next();
+						final RSTile tile = tileData.getKey();
+						final int key = tileData.getValue();
+						if (tileData != null) {
 							synchronized (queueLock) {
-								queue.add(tileFlags.toString() + "\n");
+								queue.add(tile.getX() + "," + tile.getY() + "," + tile.getZ() + "k" + key);
 							}
 							synchronized (bufferLock) {
 								bufferingCount--;
@@ -67,7 +68,7 @@ public class WebQueue {
 					if (bufferingCount < 0) {
 						bufferingCount = 0;
 					}
-					theFlagsList2.clear();
+					mapData.clear();
 					weAreBuffering = false;
 				} catch (final Exception e) {
 					bufferingCount = count;
@@ -87,8 +88,8 @@ public class WebQueue {
 	 */
 	public static void Remove(final RSTile tile) {
 		synchronized (removeLock) {
-			Web.map.remove(tile);
-			Remove(tile.getX() + "," + tile.getY() + tile.getZ());
+			Web.rs_map.remove(tile);
+			Remove(tile.getX() + "," + tile.getY() + "," + tile.getZ());
 		}
 	}
 

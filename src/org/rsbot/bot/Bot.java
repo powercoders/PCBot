@@ -64,11 +64,6 @@ public class Bot {
 	public volatile boolean disableRendering = false;
 
 	/**
-	 * Whether or not the canvas is enabled.
-	 */
-	public volatile boolean disableCanvas = false;
-
-	/**
 	 * Defines what types of input are enabled when overrideInput is false.
 	 * Defaults to 'keyboard only' whenever a script is started.
 	 */
@@ -151,9 +146,7 @@ public class Bot {
 		// simulate loader repaint awt event dispatch
 		final Graphics g = backBuffer.getGraphics();
 		loader.update(g);
-		if (!disableCanvas) {
-			loader.paint(g);
-		}
+		loader.paint(g);
 	}
 
 	public boolean setAccount(final String name) {

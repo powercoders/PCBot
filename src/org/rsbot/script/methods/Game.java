@@ -1,18 +1,14 @@
 package org.rsbot.script.methods;
 
-import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-
 import org.rsbot.script.Random;
-import org.rsbot.script.randoms.BankPins;
-import org.rsbot.script.randoms.CloseAllInterface;
-import org.rsbot.script.randoms.ImprovedRewardsBox;
-import org.rsbot.script.randoms.LoginBot;
-import org.rsbot.script.randoms.TeleotherCloser;
+import org.rsbot.script.randoms.*;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
 import org.rsbot.script.wrappers.RSTile;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * Game state and GUI operations.
@@ -34,22 +30,22 @@ public class Game extends MethodProvider {
 	public static final int INDEX_FIXED = 746;
 
 	public static final int[] TAB_FUNCTION_KEYS = {KeyEvent.VK_F5, // Attack
-		0, // Achievements
-		0, // Stats
-		0, // Quests
-		KeyEvent.VK_F1, // Inventory
-		KeyEvent.VK_F2, // Equipment
-		KeyEvent.VK_F3, // Prayer
-		KeyEvent.VK_F4, // Magic
-		0, // Summoning
-		0, // Friends
-		0, // Ignore
-		0, // Clan
-		0, // Options
-		0, // Controls
-		0, // Music
-		0, // Notes
-		0, // Logout
+			0, // Achievements
+			0, // Stats
+			0, // Quests
+			KeyEvent.VK_F1, // Inventory
+			KeyEvent.VK_F2, // Equipment
+			KeyEvent.VK_F3, // Prayer
+			KeyEvent.VK_F4, // Magic
+			0, // Summoning
+			0, // Friends
+			0, // Ignore
+			0, // Clan
+			0, // Options
+			0, // Controls
+			0, // Music
+			0, // Notes
+			0, // Logout
 	};
 	public static final int TAB_ATTACK = 0;
 	public static final int TAB_TASK = 1;
@@ -95,123 +91,19 @@ public class Game extends MethodProvider {
 	public static final int INTERFACE_PRAYER_ORB = 749;
 
 	public static final int[] INTERFACE_TALKS = new int[]{211, 241, 251, 101,
-		242, 102, 161, 249, 243, 64, 65, 244, 255, 249, 230, 372,
-		421};
+			242, 102, 161, 249, 243, 64, 65, 244, 255, 249, 230, 372,
+			421};
 	public static final int[] INTERFACE_OPTIONS = new int[]{230, 228};
 
 	public static final String[] TAB_NAMES = new String[]{"Combat Styles",
-		"Task System", "Stats", "Quest Journals", "Inventory",
-		"Worn Equipment", "Prayer List", "Magic Spellbook", "",
-		"Friends List", "Friends Chat", "Clan Chat", "Options",
-		"Emotes",
-		"Music Player", "Notes", "Exit"};
+			"Task System", "Stats", "Quest Journals", "Inventory",
+			"Worn Equipment", "Prayer List", "Magic Spellbook", "",
+			"Friends List", "Friends Chat", "Clan Chat", "Options",
+			"Emotes",
+			"Music Player", "Notes", "Exit"};
 
 	Game(final MethodContext ctx) {
 		super(ctx);
-	}
-
-	/**
-	 * Sets the trade accept mode
-	 *
-	 * @param mode The <tt>ChatMode</tt> to set the trade button to.
-	 * @return <tt>true</tt> if item in menu was clicked; otherwise
-	 *         <tt>false</tt>.
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public boolean setTradeMode(final Game.ChatMode mode) {
-		if (mode.equals(Game.ChatMode.HIDE)) {
-			throw new IllegalArgumentException("Bad mode: HIDE");
-		}
-		mouseChatButton(CHAT_OPTION_TRADE, false);
-		return methods.menu.doAction(mode.toString());
-	}
-
-	/**
-	 * Left clicks the first chat button at the bottom of the screen to turn on
-	 * the showing of all chat messages.
-	 *
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public void showAllChatMessages() {
-		mouseChatButton(CHAT_OPTION_ALL, true);
-	}
-
-	/**
-	 * Left clicks the game chat messages button at the bottom of the screen to
-	 * enable the showing of all game messages.
-	 *
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public void showGameChatMessages() {
-		mouseChatButton(CHAT_OPTION_GAME, true);
-	}
-
-	/**
-	 * Set private chat mode.
-	 *
-	 * @param mode The <tt>ChatMode</tt> to set the private chat button to.
-	 * @return <tt>true</tt> if item in menu was clicked; otherwise
-	 *         <tt>false</tt>.
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public boolean setPrivateChat(final Game.ChatMode mode) {
-		if (mode.equals(Game.ChatMode.HIDE)) {
-			throw new IllegalArgumentException("Bad mode: HIDE");
-		}
-		mouseChatButton(CHAT_OPTION_PRIVATE, false);
-		return methods.menu.doAction(mode.toString());
-	}
-
-	/**
-	 * Sets the public chat mode.
-	 *
-	 * @param mode The <tt>ChatMode</tt> to set the public chat button to.
-	 * @return <tt>true</tt> if item in menu was clicked; otherwise
-	 *         <tt>false</tt>.
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public boolean setPublicChat(final Game.ChatMode mode) {
-		mouseChatButton(CHAT_OPTION_PUBLIC, false);
-		return methods.menu.doAction(mode.toString());
-	}
-
-	/**
-	 * Sets the request assistance mode.
-	 *
-	 * @param mode The <tt>ChatMode</tt> to set the assist button to.
-	 * @return <tt>true</tt> if item in menu was clicked; otherwise
-	 *         <tt>false</tt>.
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public boolean setAssistMode(final Game.ChatMode mode) {
-		if (mode.equals(Game.ChatMode.HIDE)) {
-			throw new IllegalArgumentException("Bad mode: HIDE");
-		}
-		mouseChatButton(CHAT_OPTION_ASSIST, false);
-		return methods.menu.doAction(mode.toString());
-	}
-
-	/**
-	 * Sets the clan chat mode
-	 *
-	 * @param mode The <tt>ChatMode</tt> to set the clan button to.
-	 * @return <tt>true</tt> if item in menu was clicked; otherwise
-	 *         <tt>false</tt>.
-	 * @see #setChatOption(int, ChatMode)
-	 */
-	@Deprecated
-	public boolean setClanMode(final Game.ChatMode mode) {
-		if (mode.equals(Game.ChatMode.HIDE)) {
-			throw new IllegalArgumentException("Bad mode: HIDE");
-		}
-		mouseChatButton(CHAT_OPTION_CLAN, false);
-		return methods.menu.doAction(mode.toString());
 	}
 
 	/**
@@ -378,18 +270,6 @@ public class Game extends MethodProvider {
 	}
 
 	/**
-	 * Gets the current run energy.
-	 * <p/>
-	 * Deprecated : use walking.getEnergy()
-	 *
-	 * @return An <tt>int</tt> representation of the players current energy.
-	 */
-	@Deprecated
-	public int getEnergy() {
-		return methods.walking.getEnergy();
-	}
-
-	/**
 	 * Excludes Loginbot, BankPin, TeleotherCloser, CloseAllInterface,
 	 * ImprovedRewardsBox
 	 *
@@ -516,7 +396,7 @@ public class Game extends MethodProvider {
 			final int idx = methods.client.getGUIRSInterfaceIndex();
 			// Logout button in the top right hand corner
 			methods.interfaces.getComponent(idx, isFixed() ? 181 : 172)
-			.doClick();
+					.doClick();
 			int timesToWait = 0;
 			while (!isOnLogoutTab() && timesToWait < 5) {
 				sleep(random(200, 400));
@@ -583,7 +463,7 @@ public class Game extends MethodProvider {
 	 */
 	public boolean isWelcomeScreen() {
 		return methods.interfaces.get(INTERFACE_WELCOME_SCREEN)
-		.getComponent(INTERFACE_WELCOME_SCREEN_CHILD).getAbsoluteY() > 2;
+				.getComponent(INTERFACE_WELCOME_SCREEN_CHILD).getAbsoluteY() > 2;
 	}
 
 	/**

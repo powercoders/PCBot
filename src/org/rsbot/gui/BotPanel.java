@@ -1,29 +1,15 @@
 package org.rsbot.gui;
 
-import static org.rsbot.script.methods.Environment.INPUT_KEYBOARD;
-import static org.rsbot.script.methods.Environment.INPUT_MOUSE;
-
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-
-import javax.swing.JPanel;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.event.EventManager;
 import org.rsbot.script.methods.Mouse;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+import static org.rsbot.script.methods.Environment.INPUT_KEYBOARD;
+import static org.rsbot.script.methods.Environment.INPUT_MOUSE;
 
 /**
  * @author Jacmob
@@ -172,19 +158,8 @@ public class BotPanel extends JPanel {
 		super.paintComponent(g);
 		if (bot == null) {
 			home.paint(g);
-		} else if (!bot.disableCanvas) {
-			g.drawImage(bot.getImage(), offX, 0, null);
 		} else {
-			final Font font = new Font("Helvetica", 1, 13);
-			final FontMetrics fontMetrics = getFontMetrics(font);
-			g.setColor(Color.black);
-			g.fillRect(0, 0, 768, 503);
-			g.setColor(new Color(150, 0, 0));
-			g.drawRect(230, 233, 303, 33);
-			final String s = "Graphics disabled...";
-			g.setFont(font);
-			g.setColor(Color.WHITE);
-			g.drawString(s, (768 - fontMetrics.stringWidth(s)) / 2, 255);
+			g.drawImage(bot.getImage(), offX, 0, null);
 		}
 	}
 

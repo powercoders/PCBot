@@ -1,11 +1,11 @@
 package org.rsbot.script.methods;
 
-import java.awt.event.KeyEvent;
-
 import org.rsbot.script.util.Timer;
 import org.rsbot.script.wrappers.RSCharacter;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSTile;
+
+import java.awt.event.KeyEvent;
 
 /**
  * Camera related operations.
@@ -14,18 +14,6 @@ public class Camera extends MethodProvider {
 
 	Camera(final MethodContext ctx) {
 		super(ctx);
-	}
-
-	/**
-	 * Turns to an RSCharacter (RSNPC or RSPlayer).
-	 *
-	 * @param c The RSCharacter to turn to.
-	 * @deprecated
-	 */
-	@Deprecated
-	public void turnToCharacter(final RSCharacter c) {
-		final int angle = getCharacterAngle(c);
-		setAngle(angle);
 	}
 
 	/**
@@ -43,36 +31,10 @@ public class Camera extends MethodProvider {
 	 *
 	 * @param c   The RSCharacter to turn to.
 	 * @param dev The maximum difference in the angle.
-	 * @deprecated
-	 */
-	@Deprecated
-	public void turnToCharacter(final RSCharacter c, final int dev) {
-		int angle = getCharacterAngle(c);
-		angle = random(angle - dev, angle + dev + 1);
-		setAngle(angle);
-	}
-
-	/**
-	 * Turns to within a few degrees of an RSCharacter (RSNPC or RSPlayer).
-	 *
-	 * @param c   The RSCharacter to turn to.
-	 * @param dev The maximum difference in the angle.
 	 */
 	public void turnTo(final RSCharacter c, final int dev) {
 		int angle = getCharacterAngle(c);
 		angle = random(angle - dev, angle + dev + 1);
-		setAngle(angle);
-	}
-
-	/**
-	 * Turns to an RSObject
-	 *
-	 * @param o The RSObject to turn to.
-	 * @deprecated
-	 */
-	@Deprecated
-	public void turnToObject(final RSObject o) {
-		final int angle = getObjectAngle(o);
 		setAngle(angle);
 	}
 
@@ -83,20 +45,6 @@ public class Camera extends MethodProvider {
 	 */
 	public void turnTo(final RSObject o) {
 		final int angle = getObjectAngle(o);
-		setAngle(angle);
-	}
-
-	/**
-	 * Turns to within a few degrees of an RSObject.
-	 *
-	 * @param o   The RSObject to turn to.
-	 * @param dev The maximum difference in the turn angle.
-	 * @deprecated
-	 */
-	@Deprecated
-	public void turnToObject(final RSObject o, final int dev) {
-		int angle = getObjectAngle(o);
-		angle = random(angle - dev, angle + dev + 1);
 		setAngle(angle);
 	}
 
@@ -116,35 +64,9 @@ public class Camera extends MethodProvider {
 	 * Turns to a specific RSTile.
 	 *
 	 * @param tile Tile to turn to.
-	 * @deprecated
-	 */
-	@Deprecated
-	public void turnToTile(final RSTile tile) {
-		final int angle = getTileAngle(tile);
-		setAngle(angle);
-	}
-
-	/**
-	 * Turns to a specific RSTile.
-	 *
-	 * @param tile Tile to turn to.
 	 */
 	public void turnTo(final RSTile tile) {
 		final int angle = getTileAngle(tile);
-		setAngle(angle);
-	}
-
-	/**
-	 * Turns within a few degrees to a specific RSTile.
-	 *
-	 * @param tile Tile to turn to.
-	 * @param dev  Maximum deviation from the angle to the tile.
-	 * @deprecated
-	 */
-	@Deprecated
-	public void turnToTile(final RSTile tile, final int dev) {
-		int angle = getTileAngle(tile);
-		angle = random(angle - dev, angle + dev + 1);
 		setAngle(angle);
 	}
 
@@ -281,21 +203,21 @@ public class Camera extends MethodProvider {
 	 */
 	public void setCompass(final char direction) {
 		switch (direction) {
-		case 'n':
-			setAngle(359);
-			break;
-		case 'w':
-			setAngle(89);
-			break;
-		case 's':
-			setAngle(179);
-			break;
-		case 'e':
-			setAngle(269);
-			break;
-		default:
-			setAngle(359);
-			break;
+			case 'n':
+				setAngle(359);
+				break;
+			case 'w':
+				setAngle(89);
+				break;
+			case 's':
+				setAngle(179);
+				break;
+			case 'e':
+				setAngle(269);
+				break;
+			default:
+				setAngle(359);
+				break;
 		}
 	}
 

@@ -1,8 +1,8 @@
 package org.rsbot.script.methods;
 
-import java.util.logging.Logger;
-
 import org.rsbot.gui.AccountManager;
+
+import java.util.logging.Logger;
 
 /**
  * Selected account information.

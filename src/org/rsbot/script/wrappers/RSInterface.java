@@ -1,12 +1,12 @@
 package org.rsbot.script.wrappers;
 
-import java.awt.Point;
-import java.util.Arrays;
-import java.util.Iterator;
-
 import org.rsbot.client.Client;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
+
+import java.awt.*;
+import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Represents an interface. Each interface consists
@@ -209,24 +209,20 @@ public class RSInterface extends MethodProvider implements Iterable<RSComponent>
 	 * Iterates over the children of the interface. Will never return null even
 	 * if the underlying interface is null.
 	 */
-	@Override
 	public Iterator<RSComponent> iterator() {
 		return new Iterator<RSComponent>() {
 			private int nextIdx = 0;
 
-			@Override
 			public boolean hasNext() {
 				return !isValid() && getChildCount() >= nextIdx;
 			}
 
-			@Override
 			public RSComponent next() {
 				final RSComponent child = getComponent(nextIdx);
 				nextIdx++;
 				return child;
 			}
 
-			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
