@@ -50,11 +50,11 @@ public class WebData extends BackgroundScript {
 					final int f_x = x - off_x, f_y = y - off_y;
 					final int here = flags[f_x][f_y];
 					synchronized (lock) {
-						if (!Web.map.containsKey(start) && !TileData.Walkable(here)) {
+						if (!Web.rs_map.containsKey(start) && !TileData.Walkable(here)) {
 							rs_map.put(start, here);
 						} else {
 							try {
-								if (Web.map.get(start) != null && Web.map.get(start) != here) {
+								if (Web.rs_map.get(start) != null && Web.rs_map.get(start) != here) {
 									WebQueue.Remove(start);
 									lb = null;
 									lp = -1;

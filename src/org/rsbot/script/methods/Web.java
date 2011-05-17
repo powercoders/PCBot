@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * @author Timer
  */
 public class Web extends MethodProvider {
-	public static final HashMap<RSTile, Integer> map = new HashMap<RSTile, Integer>();
+	public static final HashMap<RSTile, Integer> rs_map = new HashMap<RSTile, Integer>();
 	public static boolean loaded = false;
 	private final Logger log = Logger.getLogger("Web");
 
@@ -322,7 +322,7 @@ public class Web extends MethodProvider {
 	 * @return The <code>TileFlags</code>.
 	 */
 	public static int GetTileFlag(final RSTile tile) {
-		return Web.map.get(tile);
+		return Web.rs_map.get(tile);
 	}
 
 	/**
@@ -333,8 +333,8 @@ public class Web extends MethodProvider {
 	 * @return <tt>true</tt> if the tile contains flags.
 	 */
 	public static boolean Flag(final RSTile tile, final int key) {
-		if (Web.map.containsKey(tile)) {
-			final int theTile = Web.map.get(tile);
+		if (Web.rs_map.containsKey(tile)) {
+			final int theTile = Web.rs_map.get(tile);
 			return (theTile & key) != 0;
 		}
 		return false;

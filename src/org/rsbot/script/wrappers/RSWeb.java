@@ -20,7 +20,7 @@ public class RSWeb {
 		for (Route route : routes) {
 			this.routes.addLast(route);
 		}
-		oldCount = Web.map.size();
+		oldCount = Web.rs_map.size();
 	}
 
 	public Route[] getRoutes() {
@@ -29,8 +29,8 @@ public class RSWeb {
 
 	public boolean step() {
 		if (routes.size() > 0) {
-			if (Web.map.size() != oldCount) {
-				oldCount = Web.map.size();
+			if (Web.rs_map.size() != oldCount) {
+				oldCount = Web.rs_map.size();
 				update();
 			}
 			Route route = routes.poll();

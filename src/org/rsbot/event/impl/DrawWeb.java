@@ -49,7 +49,7 @@ public class DrawWeb implements PaintListener {
 		}
 		final RSTile oT = player.getLocation();
 		final int plane = ctx.game.getPlane();
-		final Iterator<Map.Entry<RSTile, Integer>> rs = Web.map.entrySet().iterator();
+		final Iterator<Map.Entry<RSTile, Integer>> rs = Web.rs_map.entrySet().iterator();
 		while (rs.hasNext()) {
 			Map.Entry<RSTile, Integer> e = rs.next();
 			final RSTile t = e.getKey();

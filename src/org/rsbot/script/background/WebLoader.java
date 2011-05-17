@@ -34,32 +34,32 @@ public class WebLoader extends BackgroundScript {
 						deactivate(getID());
 						return -1;
 					}
-					final BufferedReader br = new BufferedReader(new FileReader(Configuration.Paths.getWebDatabase()));
-					String line;
-					final HashMap<RSTile, Integer> flagsArray = new HashMap<RSTile, Integer>();
-					while ((line = br.readLine()) != null) {
-						final String[] d = line.split("k");
-						if (d.length == 2) {
-							final String[] tD = d[0].split(",");
-							if (tD.length == 3) {
+					final BufferedReader bufferedReader = new BufferedReader(new FileReader(Configuration.Paths.getWebDatabase()));
+					String dataLine;
+					final HashMap<RSTile, Integer> mapData = new HashMap<RSTile, Integer>();
+					while ((dataLine = bufferedReader.readLine()) != null) {
+						final String[] storeData = dataLine.split("k");
+						if (storeData.length == 2) {
+							final String[] tileData = storeData[0].split(",");
+							if (tileData.length == 3) {
 								try {
-									final RSTile tile = new RSTile(Integer.parseInt(tD[0]), Integer.parseInt(tD[1]), Integer.parseInt(tD[2]));
-									final int flag = Integer.parseInt(d[1]);
-									if (flagsArray.containsKey(tile)) {
-										WebQueue.Remove(line);//Line is double, remove from file--bad collection!
+									final RSTile tile = new RSTile(Integer.parseInt(tileData[0]), Integer.parseInt(tileData[1]), Integer.parseInt(tileData[2]));
+									final int tileFlag = Integer.parseInt(storeData[1]);
+									if (mapData.containsKey(tile)) {
+										WebQueue.Remove(dataLine);//Line is double, remove from file--bad collection!
 									} else {
-										flagsArray.put(tile, flag);
+										mapData.put(tile, tileFlag);
 									}
 								} catch (final Exception e) {
 								}
 							} else {
-								WebQueue.Remove(line);//Line is bad, remove from file.
+								WebQueue.Remove(dataLine);//Line is bad, remove from file.
 							}
 						} else {
-							WebQueue.Remove(line);//Line is bad, remove from file.
+							WebQueue.Remove(dataLine);//Line is bad, remove from file.
 						}
 					}
-					Web.map.putAll(flagsArray);
+					Web.rs_map.putAll(mapData);
 					Web.loaded = true;
 				} catch (final Exception e) {
 					log("Failed to load the web.. trying again.");

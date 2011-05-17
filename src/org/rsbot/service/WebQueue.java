@@ -34,22 +34,22 @@ public class WebQueue {
 	 * @param gameTiles The data.
 	 */
 	public static void Add(final HashMap<RSTile, Integer> gameTiles) {
-		Web.map.putAll(gameTiles);
+		Web.rs_map.putAll(gameTiles);
 		final int count = gameTiles.size();
 		new Thread() {
 			@Override
 			public void run() {
 				try {
-					final HashMap<RSTile, Integer> gTList = new HashMap<RSTile, Integer>();
-					gTList.putAll(gameTiles);
-					final Map<RSTile, Integer> tl = Collections.unmodifiableMap(gTList);
+					final HashMap<RSTile, Integer> mapData = new HashMap<RSTile, Integer>();
+					mapData.putAll(gameTiles);
+					final Map<RSTile, Integer> safeMapData = Collections.unmodifiableMap(mapData);
 					bufferingCount = bufferingCount + count;
-					final Iterator<Map.Entry<RSTile, Integer>> tileFlagsIterator = tl.entrySet().iterator();
-					while (tileFlagsIterator.hasNext()) {
-						final Map.Entry<RSTile, Integer> tileFlags = tileFlagsIterator.next();
-						final RSTile tile = tileFlags.getKey();
-						final int key = tileFlags.getValue();
-						if (tileFlags != null) {
+					final Iterator<Map.Entry<RSTile, Integer>> safeIterator = safeMapData.entrySet().iterator();
+					while (safeIterator.hasNext()) {
+						final Map.Entry<RSTile, Integer> tileData = safeIterator.next();
+						final RSTile tile = tileData.getKey();
+						final int key = tileData.getValue();
+						if (tileData != null) {
 							synchronized (queueLock) {
 								queue.add(tile.getX() + "," + tile.getY() + "," + tile.getZ() + "k" + key);
 							}
@@ -68,7 +68,7 @@ public class WebQueue {
 					if (bufferingCount < 0) {
 						bufferingCount = 0;
 					}
-					gTList.clear();
+					mapData.clear();
 					weAreBuffering = false;
 				} catch (final Exception e) {
 					bufferingCount = count;
@@ -88,7 +88,7 @@ public class WebQueue {
 	 */
 	public static void Remove(final RSTile tile) {
 		synchronized (removeLock) {
-			Web.map.remove(tile);
+			Web.rs_map.remove(tile);
 			Remove(tile.getX() + "," + tile.getY() + "," + tile.getZ());
 		}
 	}
