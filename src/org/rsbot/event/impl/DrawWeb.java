@@ -52,7 +52,7 @@ public class DrawWeb implements PaintListener {
 		while (rs.hasNext()) {
 			final RSGameTile t = rs.next();
 			if (t.getZ() == plane && ctx.calc.distanceBetween(t, oT) < 105) {
-				render.setColor(t.questionable() ? Color.yellow : t.isSpecial() ? Color.cyan : Color.red);
+				render.setColor(t.questionable() ? Color.yellow : t.special() ? Color.cyan : Color.red);
 				final Point p = tileToMap(t, oT);
 				render.drawLine(p.x, p.y, p.x, p.y);
 			}

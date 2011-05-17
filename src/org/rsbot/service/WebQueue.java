@@ -53,7 +53,7 @@ public class WebQueue {
 						final RSGameTile tileFlags = tileFlagsIterator.next();
 						if (tileFlags != null) {
 							synchronized (queueLock) {
-								queue.add(tileFlags.toString() + "\n");
+								queue.add(tileFlags.toString());
 							}
 							synchronized (bufferLock) {
 								bufferingCount--;

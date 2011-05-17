@@ -37,7 +37,7 @@ public class RSGameTile extends RSTile {
 				&& (key & Flags.WATER) == 0;
 	}
 
-	public boolean isSpecial() {
+	public boolean special() {
 		return (key & Flags.BLOCKED) == 0 && (key & Flags.WATER) != 0;
 	}
 
@@ -54,7 +54,7 @@ public class RSGameTile extends RSTile {
 		return getX() + "," + getY() + "," + getZ() + "k" + key;
 	}
 
-	public int getKey() {
+	public int key() {
 		return key;
 	}
 
@@ -62,7 +62,7 @@ public class RSGameTile extends RSTile {
 	public boolean equals(final Object o) {
 		if (o instanceof RSGameTile) {
 			RSGameTile gameTile = (RSGameTile) o;
-			return gameTile.getX() == getX() && gameTile.getY() == getY() && gameTile.getZ() == getZ() && gameTile.getKey() == key;
+			return gameTile.getX() == getX() && gameTile.getY() == getY() && gameTile.getZ() == getZ() && gameTile.key() == key;
 		} else if (o instanceof RSTile) {
 			RSTile rsTile = (RSTile) o;
 			return rsTile.getX() == getX() && rsTile.getY() == getY() && rsTile.getZ() == getZ();
