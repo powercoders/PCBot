@@ -5,15 +5,10 @@ package org.rsbot.script.wrappers;
  *
  * @author Timer
  */
-public class GameTile extends RSTile {
+public class RSGameTile extends RSTile {
 	private int key;
 
-	public GameTile(final int x, final int y, final int z, final int key) {
-		super(x, y, z);
-		this.key = key;
-	}
-
-	public GameTile(final RSTile tile, final int key) {
+	public RSGameTile(final RSTile tile, final int key) {
 		super(tile.getX(), tile.getY(), tile.getZ());
 		this.key = key;
 	}
@@ -31,22 +26,22 @@ public class GameTile extends RSTile {
 		public static final int WATER = 0x1280100;
 	}
 
-	public boolean isQuestionable() {
+	public boolean questionable() {
 		return (key & Flags.WATER) == 0 && (key & Flags.BLOCKED) == 0;
 	}
 
-	public boolean isWalkable() {
+	public boolean walkable() {
 		return (key & Flags.WALL_NORTH_WEST) == 0 && (key & Flags.WALL_NORTH) == 0 && (key & Flags.WALL_NORTH_EAST) == 0
 				&& (key & Flags.WALL_EAST) == 0 && (key & Flags.WALL_SOUTH_EAST) == 0 && (key & Flags.WALL_SOUTH) == 0
 				&& (key & Flags.WALL_SOUTH_WEST) == 0 && (key & Flags.WALL_WEST) == 0 && (key & Flags.BLOCKED) == 0
 				&& (key & Flags.WATER) == 0;
 	}
 
-	public boolean isWater() {
-		return (key & Flags.WATER) != 0;
+	public boolean isSpecial() {
+		return (key & Flags.BLOCKED) == 0 && (key & Flags.WATER) != 0;
 	}
 
-	public boolean containsKey(final int... keyz) {
+	public boolean has(final int... keyz) {
 		boolean check = false;
 		for (final int keyy : keyz) {
 			check = check || (key & keyy) != 0;
@@ -65,8 +60,8 @@ public class GameTile extends RSTile {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (o instanceof GameTile) {
-			GameTile gameTile = (GameTile) o;
+		if (o instanceof RSGameTile) {
+			RSGameTile gameTile = (RSGameTile) o;
 			return gameTile.getX() == getX() && gameTile.getY() == getY() && gameTile.getZ() == getZ() && gameTile.getKey() == key;
 		} else if (o instanceof RSTile) {
 			RSTile rsTile = (RSTile) o;

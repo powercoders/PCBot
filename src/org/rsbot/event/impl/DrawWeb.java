@@ -2,7 +2,7 @@ package org.rsbot.event.impl;
 
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
-import org.rsbot.script.wrappers.GameTile;
+import org.rsbot.script.wrappers.RSGameTile;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSPlayer;
@@ -48,11 +48,11 @@ public class DrawWeb implements PaintListener {
 		}
 		final RSTile oT = player.getLocation();
 		final int plane = ctx.game.getPlane();
-		final Iterator<GameTile> rs = Web.map.listIterator();
+		final Iterator<RSGameTile> rs = Web.map.listIterator();
 		while (rs.hasNext()) {
-			final GameTile t = rs.next();
+			final RSGameTile t = rs.next();
 			if (t.getZ() == plane && ctx.calc.distanceBetween(t, oT) < 105) {
-				render.setColor(t.isQuestionable() ? Color.yellow : t.isWater() ? Color.cyan : Color.red);
+				render.setColor(t.questionable() ? Color.yellow : t.isSpecial() ? Color.cyan : Color.red);
 				final Point p = tileToMap(t, oT);
 				render.drawLine(p.x, p.y, p.x, p.y);
 			}

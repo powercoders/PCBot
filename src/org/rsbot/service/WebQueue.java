@@ -1,7 +1,7 @@
 package org.rsbot.service;
 
 import org.rsbot.Configuration;
-import org.rsbot.script.wrappers.GameTile;
+import org.rsbot.script.wrappers.RSGameTile;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 
@@ -37,20 +37,20 @@ public class WebQueue {
 	 *
 	 * @param gameTiles The data.
 	 */
-	public static void Add(final List<GameTile> gameTiles) {
+	public static void Add(final List<RSGameTile> gameTiles) {
 		Web.map.addAll(gameTiles);
 		final int count = gameTiles.size();
 		new Thread() {
 			@Override
 			public void run() {
 				try {
-					final List<GameTile> gTList = new ArrayList<GameTile>();
+					final List<RSGameTile> gTList = new ArrayList<RSGameTile>();
 					gTList.addAll(gameTiles);
-					final List<GameTile> tl = Collections.unmodifiableList(gTList);
+					final List<RSGameTile> tl = Collections.unmodifiableList(gTList);
 					bufferingCount = bufferingCount + count;
-					final Iterator<GameTile> tileFlagsIterator = tl.listIterator();
+					final Iterator<RSGameTile> tileFlagsIterator = tl.listIterator();
 					while (tileFlagsIterator.hasNext()) {
-						final GameTile tileFlags = tileFlagsIterator.next();
+						final RSGameTile tileFlags = tileFlagsIterator.next();
 						if (tileFlags != null) {
 							synchronized (queueLock) {
 								queue.add(tileFlags.toString() + "\n");

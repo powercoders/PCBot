@@ -1,6 +1,6 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.wrappers.GameTile;
+import org.rsbot.script.wrappers.RSGameTile;
 import org.rsbot.script.web.Route;
 import org.rsbot.script.web.RouteStep;
 import org.rsbot.script.web.Teleport;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * @author Timer
  */
 public class Web extends MethodProvider {
-	public static final List<GameTile> map = new ArrayList<GameTile>();
+	public static final List<RSGameTile> map = new ArrayList<RSGameTile>();
 	public static boolean loaded = false;
 	private final Logger log = Logger.getLogger("Web");
 
@@ -273,44 +273,44 @@ public class Web extends MethodProvider {
 		final LinkedList<Node> tiles = new LinkedList<Node>();
 		final int x = t.x, y = t.y;
 		final RSTile here = t.toRSTile();
-		if (!Flag(here, GameTile.Flags.WALL_SOUTH) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), GameTile.Flags.BLOCKED, GameTile.Flags.WATER)) {
+		if (!Flag(here, RSGameTile.Flags.WALL_SOUTH) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER)) {
 			tiles.add(new Node(x, y - 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, GameTile.Flags.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), GameTile.Flags.BLOCKED, GameTile.Flags.WATER)) {
+		if (!Flag(here, RSGameTile.Flags.WALL_WEST) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER)) {
 			tiles.add(new Node(x - 1, y, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, GameTile.Flags.WALL_NORTH) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), GameTile.Flags.BLOCKED, GameTile.Flags.WATER)) {
+		if (!Flag(here, RSGameTile.Flags.WALL_NORTH) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER)) {
 			tiles.add(new Node(x, y + 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, GameTile.Flags.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), GameTile.Flags.BLOCKED, GameTile.Flags.WATER)) {
+		if (!Flag(here, RSGameTile.Flags.WALL_EAST) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER)) {
 			tiles.add(new Node(x + 1, y, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, GameTile.Flags.WALL_SOUTH_WEST, GameTile.Flags.WALL_SOUTH, GameTile.Flags.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY() - 1), GameTile.Flags.BLOCKED, GameTile.Flags.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), GameTile.Flags.BLOCKED, GameTile.Flags.WATER, GameTile.Flags.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), GameTile.Flags.BLOCKED, GameTile.Flags.WATER, GameTile.Flags.WALL_SOUTH)) {
+		if (!Flag(here, RSGameTile.Flags.WALL_SOUTH_WEST, RSGameTile.Flags.WALL_SOUTH, RSGameTile.Flags.WALL_WEST) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY() - 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_WEST) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_SOUTH)) {
 			tiles.add(new Node(x - 1, y - 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, GameTile.Flags.WALL_NORTH_WEST, GameTile.Flags.WALL_NORTH, GameTile.Flags.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY() + 1), GameTile.Flags.BLOCKED, GameTile.Flags.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), GameTile.Flags.BLOCKED, GameTile.Flags.WATER, GameTile.Flags.WALL_WEST) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), GameTile.Flags.BLOCKED, GameTile.Flags.WATER, GameTile.Flags.WALL_NORTH)) {
+		if (!Flag(here, RSGameTile.Flags.WALL_NORTH_WEST, RSGameTile.Flags.WALL_NORTH, RSGameTile.Flags.WALL_WEST) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY() + 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_WEST) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_NORTH)) {
 			tiles.add(new Node(x - 1, y + 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, GameTile.Flags.WALL_SOUTH_EAST, GameTile.Flags.WALL_SOUTH, GameTile.Flags.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY() - 1), GameTile.Flags.BLOCKED, GameTile.Flags.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), GameTile.Flags.BLOCKED, GameTile.Flags.WATER, GameTile.Flags.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), GameTile.Flags.BLOCKED, GameTile.Flags.WATER, GameTile.Flags.WALL_SOUTH)) {
+		if (!Flag(here, RSGameTile.Flags.WALL_SOUTH_EAST, RSGameTile.Flags.WALL_SOUTH, RSGameTile.Flags.WALL_EAST) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY() - 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_EAST) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_SOUTH)) {
 			tiles.add(new Node(x + 1, y - 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, GameTile.Flags.WALL_NORTH_EAST, GameTile.Flags.WALL_NORTH, GameTile.Flags.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY() + 1), GameTile.Flags.BLOCKED, GameTile.Flags.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), GameTile.Flags.BLOCKED, GameTile.Flags.WATER, GameTile.Flags.WALL_EAST) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), GameTile.Flags.BLOCKED, GameTile.Flags.WATER, GameTile.Flags.WALL_NORTH)) {
+		if (!Flag(here, RSGameTile.Flags.WALL_NORTH_EAST, RSGameTile.Flags.WALL_NORTH, RSGameTile.Flags.WALL_EAST) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY() + 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_EAST) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), RSGameTile.Flags.BLOCKED, RSGameTile.Flags.WATER, RSGameTile.Flags.WALL_NORTH)) {
 			tiles.add(new Node(x + 1, y + 1, t.toRSTile().getZ()));
 		}
 		return tiles;
@@ -322,7 +322,7 @@ public class Web extends MethodProvider {
 	 * @param tile The tile.
 	 * @return The <code>TileFlags</code>.
 	 */
-	public static GameTile getGameTile(final RSTile tile) {
+	public static RSGameTile getGameTile(final RSTile tile) {
 		if (Web.map.contains(tile)) {
 			return Web.map.get(Web.map.indexOf(tile));
 		}
@@ -338,8 +338,8 @@ public class Web extends MethodProvider {
 	 */
 	public static boolean Flag(final RSTile tile, final int... key) {
 		if (Web.map.contains(tile)) {
-			final GameTile theTile = Web.map.get(Web.map.indexOf(tile));
-			return theTile.containsKey(key);
+			final RSGameTile theTile = Web.map.get(Web.map.indexOf(tile));
+			return theTile.has(key);
 		}
 		return false;
 	}

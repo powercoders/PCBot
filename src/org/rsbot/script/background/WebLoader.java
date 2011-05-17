@@ -3,7 +3,7 @@ package org.rsbot.script.background;
 import org.rsbot.Configuration;
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.wrappers.GameTile;
+import org.rsbot.script.wrappers.RSGameTile;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
@@ -38,7 +38,7 @@ public class WebLoader extends BackgroundScript {
 					}
 					final BufferedReader br = new BufferedReader(new FileReader(Configuration.Paths.getWebDatabase()));
 					String line;
-					final List<GameTile> flagsArray = new ArrayList<GameTile>();
+					final List<RSGameTile> flagsArray = new ArrayList<RSGameTile>();
 					while ((line = br.readLine()) != null) {
 						final String[] d = line.split("k");
 						if (d.length == 2) {
@@ -46,7 +46,7 @@ public class WebLoader extends BackgroundScript {
 							if (tD.length == 3) {
 								try {
 									final RSTile tile = new RSTile(Integer.parseInt(tD[0]), Integer.parseInt(tD[1]), Integer.parseInt(tD[2]));
-									final GameTile gameTile = new GameTile(tile, Integer.parseInt(d[1]));
+									final RSGameTile gameTile = new RSGameTile(tile, Integer.parseInt(d[1]));
 									if (flagsArray.contains(tile)) {
 										WebQueue.Remove(line);//Line is double, remove from file--bad collection.
 									} else {
