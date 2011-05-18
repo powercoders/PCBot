@@ -4,6 +4,7 @@ import org.rsbot.script.methods.Web;
 import org.rsbot.script.web.Route;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -60,6 +61,16 @@ public class RSWeb {
 			}
 		}
 		return l;
+	}
+
+	public RSTile[] getPath() { //For scripters that wish to draw paths.
+		List<RSTile> l = new ArrayList<RSTile>();
+		for (Route route : getRoutes()) {
+			if (route != null) {
+				l.addAll(Arrays.asList(route.getPath()));
+			}
+		}
+		return l.toArray(new RSTile[l.size()]);
 	}
 
 	public double getDistance() {
