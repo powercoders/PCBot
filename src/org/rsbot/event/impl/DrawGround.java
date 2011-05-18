@@ -17,7 +17,6 @@ public class DrawGround implements PaintListener {
 		ctx = bot.getMethodContext();
 	}
 
-	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;
