@@ -47,16 +47,16 @@ public class RouteStep extends MethodProvider {
 					return true;
 				}
 			}
+			if (methods.bot.getScriptHandler().getRunningScripts().size() == 0) {
+				return false;
+			}
 			switch (type) {
 				case PATH:
-					if (path == null) {//Recalculation says path is a no-go.
+					if (path == null || inSomeRandom()) {//Recalculation says path is a no-go (or in a random).
 						return false;
 					}
 					if (rspath == null) {
 						rspath = methods.walking.newTilePath(path);
-					}
-					if (inSomeRandom()) {
-						return false;
 					}
 					if (methods.calc.distanceTo(rspath.getEnd()) < 5) {
 						rspath = null;
@@ -111,6 +111,7 @@ public class RouteStep extends MethodProvider {
 			RSTile startTile = path[0];
 			RSTile endTile = path[path.length - 1];
 			path = methods.web.generateNodePath(startTile, endTile);
+			rspath = null;
 		}
 	}
 }
