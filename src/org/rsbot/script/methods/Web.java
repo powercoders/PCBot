@@ -272,44 +272,44 @@ public class Web extends MethodProvider {
 		final LinkedList<Node> tiles = new LinkedList<Node>();
 		final int x = t.x, y = t.y;
 		final RSTile here = t.toRSTile();
-		if (!Flag(here, TileData.Flags.W_S) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), TileData.Flags.BLOCKED | TileData.Flags.WATER)) {
+		if (!Flag(here, TileData.Key.W_S) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), TileData.Key.BLOCKED | TileData.Key.WATER)) {
 			tiles.add(new Node(x, y - 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileData.Flags.W_W) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), TileData.Flags.BLOCKED | TileData.Flags.WATER)) {
+		if (!Flag(here, TileData.Key.W_W) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), TileData.Key.BLOCKED | TileData.Key.WATER)) {
 			tiles.add(new Node(x - 1, y, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileData.Flags.W_N) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), TileData.Flags.BLOCKED | TileData.Flags.WATER)) {
+		if (!Flag(here, TileData.Key.W_N) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), TileData.Key.BLOCKED | TileData.Key.WATER)) {
 			tiles.add(new Node(x, y + 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileData.Flags.W_E) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), TileData.Flags.BLOCKED | TileData.Flags.WATER)) {
+		if (!Flag(here, TileData.Key.W_E) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), TileData.Key.BLOCKED | TileData.Key.WATER)) {
 			tiles.add(new Node(x + 1, y, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileData.Flags.W_SW | TileData.Flags.W_S | TileData.Flags.W_W) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY() - 1), TileData.Flags.BLOCKED | TileData.Flags.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_W) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_S)) {
+		if (!Flag(here, TileData.Key.W_SW | TileData.Key.W_S | TileData.Key.W_W) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY() - 1), TileData.Key.BLOCKED | TileData.Key.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_W) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_S)) {
 			tiles.add(new Node(x - 1, y - 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileData.Flags.W_NW | TileData.Flags.W_N | TileData.Flags.W_W) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY() + 1), TileData.Flags.BLOCKED | TileData.Flags.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_W) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_N)) {
+		if (!Flag(here, TileData.Key.W_NW | TileData.Key.W_N | TileData.Key.W_W) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY() + 1), TileData.Key.BLOCKED | TileData.Key.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_W) &&
+				!Flag(new RSTile(here.getX() - 1, here.getY()), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_N)) {
 			tiles.add(new Node(x - 1, y + 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileData.Flags.W_SE | TileData.Flags.W_S | TileData.Flags.W_E) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY() - 1), TileData.Flags.BLOCKED | TileData.Flags.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_E) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_S)) {
+		if (!Flag(here, TileData.Key.W_SE | TileData.Key.W_S | TileData.Key.W_E) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY() - 1), TileData.Key.BLOCKED | TileData.Key.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() - 1), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_E) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_S)) {
 			tiles.add(new Node(x + 1, y - 1, t.toRSTile().getZ()));
 		}
-		if (!Flag(here, TileData.Flags.W_NE | TileData.Flags.W_N | TileData.Flags.W_E) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY() + 1), TileData.Flags.BLOCKED | TileData.Flags.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_E) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), TileData.Flags.BLOCKED | TileData.Flags.WATER | TileData.Flags.W_N)) {
+		if (!Flag(here, TileData.Key.W_NE | TileData.Key.W_N | TileData.Key.W_E) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY() + 1), TileData.Key.BLOCKED | TileData.Key.WATER) &&
+				!Flag(new RSTile(here.getX(), here.getY() + 1), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_E) &&
+				!Flag(new RSTile(here.getX() + 1, here.getY()), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_N)) {
 			tiles.add(new Node(x + 1, y + 1, t.toRSTile().getZ()));
 		}
 		return tiles;
