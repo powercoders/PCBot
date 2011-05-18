@@ -27,6 +27,8 @@ public class BotToolBar extends JToolBar {
 	public static Image IMAGE_CLOSE;
 	public static final Image IMAGE_CLOSE_OVER;
 
+	private static final int TABINDEX = 1;
+
 	static {
 		ICON_HOME = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_HOME));
 		ICON_BOT = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_BOT));
@@ -117,7 +119,7 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void addTab() {
-		final int idx = getComponentCount() - 5;
+		final int idx = getComponentCount() - 5 - TABINDEX;
 		add(new BotButton(Messages.TABDEFAULTTEXT, ICON_BOT), idx);
 		validate();
 		setSelection(idx);
@@ -135,7 +137,7 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void setTabLabel(final int idx, final String label) {
-		((BotButton) getComponentAtIndex(idx)).setText(label);
+		((BotButton) getComponentAtIndex(idx + TABINDEX)).setText(label);
 	}
 
 	public int getCurrentTab() {
