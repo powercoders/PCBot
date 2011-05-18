@@ -27,12 +27,17 @@ public class BotToolBar extends JToolBar {
 	public static Image IMAGE_CLOSE;
 	public static final Image IMAGE_CLOSE_OVER;
 
+	private static final int TABINDEX = 1;
+	private static final int BUTTONCOUNT = 6;
+	private static final int OPTIONBUTTONS = 4;
+
 	static {
 		ICON_HOME = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_HOME));
 		ICON_BOT = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_BOT));
 		IMAGE_CLOSE_OVER = Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE);
 	}
 
+	private final AddButton addTabButton;
 	private final JButton screenshotButton;
 	private final JButton userInputButton;
 	private final JButton runScriptButton;
@@ -76,7 +81,7 @@ public class BotToolBar extends JToolBar {
 		userInputButton = new JButton("Input", new ImageIcon(getInputImage(inputOverride, inputState)));
 		userInputButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				menu.doTick("Force Input");
+				menu.doTick(Messages.FORCEINPUT);
 			}
 		});
 		userInputButton.setFocusable(false);
@@ -107,7 +112,7 @@ public class BotToolBar extends JToolBar {
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		setFloatable(false);
 		add(home);
-		add(new AddButton(listener));
+		add(addTabButton = new AddButton(listener));
 		add(Box.createHorizontalGlue());
 		add(screenshotButton);
 		add(runScriptButton);
@@ -116,31 +121,38 @@ public class BotToolBar extends JToolBar {
 		updateSelection(false);
 	}
 
+	public void setAddTabVisible(final boolean visible) {
+		addTabButton.setVisible(visible);
+	}
+
 	public void addTab() {
-		final int idx = getComponentCount() - 5;
+		final int idx = getComponentCount() - BUTTONCOUNT - TABINDEX + 1;
 		add(new BotButton(Messages.TABDEFAULTTEXT, ICON_BOT), idx);
 		validate();
 		setSelection(idx);
 	}
 
-	public void removeTab(final int idx) {
+	public void removeTab(int idx) {
+		final int current = getCurrentTab() + TABINDEX;
+		final int select = idx == current ? idx - TABINDEX : current;
+		idx += TABINDEX;
 		remove(idx);
 		revalidate();
 		repaint();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				setSelection(0);
+				setSelection(Math.max(0, select - 1));
 			}
 		});
 	}
 
 	public void setTabLabel(final int idx, final String label) {
-		((BotButton) getComponentAtIndex(idx)).setText(label);
+		((BotButton) getComponentAtIndex(idx + TABINDEX)).setText(label);
 	}
 
 	public int getCurrentTab() {
-		if (idx > -1 && idx < getComponentCount() - 4) {
-			return idx;
+		if (idx > -1 && idx < getComponentCount() - OPTIONBUTTONS) {
+			return idx - TABINDEX;
 		} else {
 			return -1;
 		}
@@ -213,7 +225,7 @@ public class BotToolBar extends JToolBar {
 	}
 
 	private void updateSelection(final boolean enabled) {
-		final int idx = getCurrentTab();
+		final int idx = getCurrentTab() + TABINDEX;
 		if (idx >= 0) {
 			getComponent(idx).setEnabled(enabled);
 			getComponent(idx).repaint();
@@ -331,9 +343,9 @@ public class BotToolBar extends JToolBar {
 				@Override
 				public void mouseReleased(final MouseEvent e) {
 					if (hovered && close) {
-						final int idx = getComponentIndex(BotButton.this);
+						final int idx = getComponentIndex(BotButton.this) - TABINDEX;
 						listener.actionPerformed(new ActionEvent(this,
-								ActionEvent.ACTION_PERFORMED, "Close." + idx));
+								ActionEvent.ACTION_PERFORMED, Messages.CLOSEBOT + "." + idx));
 					} else {
 						setSelection(getComponentIndex(BotButton.this));
 					}

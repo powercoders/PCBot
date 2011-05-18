@@ -34,6 +34,7 @@ import java.util.logging.Logger;
  */
 public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public static final int PANEL_WIDTH = 765, PANEL_HEIGHT = 503, LOG_HEIGHT = 120;
+	public static final int MAX_BOTS = 6;
 	private static final long serialVersionUID = -5411033752001988794L;
 	private static final Logger log = Logger.getLogger(BotGUI.class.getName());
 	private BotPanel panel;
@@ -45,7 +46,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private final List<Bot> bots = new ArrayList<Bot>();
 	private boolean showAds = true;
 	private boolean disableConfirmations = false;
-	private final int botsIndex = 2;
 	private TrayIcon tray = null;
 	private java.util.Timer shutdown = null;
 
@@ -54,7 +54,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		pack();
 		setTitle(null);
 		setLocationRelativeTo(getOwner());
-		setPreferredSize(getSize());
+		setMinimumSize(getSize());
 		setResizable(true);
 		menuBar.loadPrefs();
 		SwingUtilities.invokeLater(new Runnable() {
@@ -106,10 +106,10 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			menu = action.substring(0, z);
 			option = action.substring(z + 1);
 		}
-		if (menu.equals("Close")) {
+		if (menu.equals(Messages.CLOSEBOT)) {
 			if (confirmRemoveBot()) {
 				final int idx = Integer.parseInt(option);
-				removeBot(bots.get(idx - botsIndex));
+				removeBot(bots.get(idx));
 			}
 		} else if (menu.equals(Messages.FILE)) {
 			if (option.equals(Messages.NEWBOT)) {
@@ -351,14 +351,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	public void addBot() {
-		final int max = 6;
-		if (bots.size() >= max && Configuration.RUNNING_FROM_JAR) {
-			log.warning("Cannot run more than " + Integer.toString(max) + " bots!");
+		if (bots.size() > MAX_BOTS) {
 			return;
 		}
 		final Bot bot = new Bot();
 		bots.add(bot);
 		toolBar.addTab();
+		toolBar.setAddTabVisible(bots.size() < MAX_BOTS);
 		bot.getScriptHandler().addScriptListener(this);
 		new Thread(new Runnable() {
 			public void run() {
@@ -374,10 +373,11 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		bot.getScriptHandler().removeScriptListener(this);
 		bot.getBackgroundScriptHandler().stopAllScripts();
 		if (idx >= 0) {
-			toolBar.removeTab(idx + botsIndex);
+			toolBar.removeTab(idx);
 		}
 		bots.remove(idx);
 		home.setBots(bots);
+		toolBar.setAddTabVisible(bots.size() < MAX_BOTS);
 		new Thread(new Runnable() {
 			public void run() {
 				bot.stop();
@@ -396,7 +396,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	private Bot getCurrentBot() {
-		final int idx = toolBar.getCurrentTab() - botsIndex;
+		final int idx = toolBar.getCurrentTab();
 		if (idx >= 0) {
 			return bots.get(idx);
 		}
@@ -494,7 +494,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					bot.overrideInput = false;
 					updateScriptControls();
 					final String acct = bot.getAccountName();
-					toolBar.setTabLabel(bots.indexOf(bot) + botsIndex, acct == null ? Messages.TABDEFAULTTEXT : acct);
+					toolBar.setTabLabel(bots.indexOf(bot), acct == null ? Messages.TABDEFAULTTEXT : acct);
 					setTitle(acct);
 				}
 			}
@@ -507,7 +507,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			bot.inputFlags = Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE;
 			bot.overrideInput = false;
 			updateScriptControls();
-			toolBar.setTabLabel(bots.indexOf(bot) + botsIndex, Messages.TABDEFAULTTEXT);
+			toolBar.setTabLabel(bots.indexOf(bot), Messages.TABDEFAULTTEXT);
 			setTitle(null);
 		}
 	}

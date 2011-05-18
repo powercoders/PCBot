@@ -38,16 +38,25 @@ public class RouteStep extends MethodProvider {
 
 	public boolean execute() {
 		try {
-			if (aScriptInactive()) {
+			for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
+				if (!checkScript.isActive() || !checkScript.isRunning()) {
+					return false;
+				}
+				if (checkScript.isPaused()) {
+					sleep(500);
+					return true;
+				}
+			}
+			if (methods.bot.getScriptHandler().getRunningScripts().size() == 0) {
 				return false;
 			}
 			switch (type) {
 				case PATH:
-					if (path == null || inSomeRandom()) {
+					if (path == null || inSomeRandom()) {//Recalculation says path is a no-go (or in a random).
 						return false;
 					}
-					if (rspath == null || (rspath.getNext() == null && !destOffScreen())) {
-						update();
+					if (rspath == null) {
+						rspath = methods.walking.newTilePath(path);
 					}
 					if (methods.calc.distanceTo(rspath.getEnd()) < 5) {
 						rspath = null;
@@ -80,26 +89,7 @@ public class RouteStep extends MethodProvider {
 	}
 
 	public RSTile[] getPath() {
-		switch (type) {
-			case PATH:
-				return path;
-			case TELEPORT:
-				return new RSTile[]{methods.players.getMyPlayer().getLocation(), teleport.teleportationLocation()};
-		}
-		return null;
-	}
-
-	private boolean aScriptInactive() {
-		for (final Script checkScript : Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values())) {
-				if (!checkScript.isActive() || !checkScript.isRunning()) {
-					return true;
-				}
-				if (checkScript.isPaused()) {
-					sleep(500);
-					return true;
-				}
-		}
-		return Collections.unmodifiableCollection(methods.bot.getScriptHandler().getRunningScripts().values()).size() == 0;
+		return path;
 	}
 
 	private boolean inSomeRandom() {
@@ -116,25 +106,12 @@ public class RouteStep extends MethodProvider {
 		return false;
 	}
 
-	private boolean destOffScreen() {
-		if (rspath.getNext() == null && methods.players.getMyPlayer().isMoving() && methods.walking.getDestination() == null) {
-			sleep(random(200, 250));
-			if (methods.players.getMyPlayer().isMoving()) {
-				sleep(random(100, 150));
-				if (methods.players.getMyPlayer().isMoving()) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	public void update() {
+	void update() {
 		if (path != null && path.length > 1) {
 			RSTile startTile = path[0];
 			RSTile endTile = path[path.length - 1];
 			path = methods.web.generateNodePath(startTile, endTile);
-			rspath = path != null ? methods.walking.newTilePath(path) : rspath;
+			rspath = null;
 		}
 	}
 }

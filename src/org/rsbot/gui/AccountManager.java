@@ -28,6 +28,8 @@ import java.util.logging.Logger;
  * @author Timer
  */
 public class AccountManager extends JDialog implements ActionListener {
+	private static final long serialVersionUID = 2834954922670757338L;
+
 	private static final String FILE_ACCOUNT_STORAGE = Configuration.Paths.getAccountsFile();
 
 	private static final String[] RANDOM_REWARDS = {"Cash", "Runes", "Coal", "Essence", "Ore", "Bars", "Gems", "Herbs",
@@ -53,18 +55,24 @@ public class AccountManager extends JDialog implements ActionListener {
 	}
 
 	private static class RandomRewardEditor extends DefaultCellEditor {
+		private static final long serialVersionUID = 6519185448833736787L;
+
 		public RandomRewardEditor() {
 			super(new JComboBox(RANDOM_REWARDS));
 		}
 	}
 
 	private static class PasswordCellEditor extends DefaultCellEditor {
+		private static final long serialVersionUID = -8042183192369284908L;
+
 		public PasswordCellEditor() {
 			super(new JPasswordField());
 		}
 	}
 
 	private static class PasswordCellRenderer extends DefaultTableCellRenderer {
+		private static final long serialVersionUID = -8149913137634230574L;
+
 		@Override
 		protected void setValue(final Object value) {
 			if (value == null) {
@@ -90,6 +98,8 @@ public class AccountManager extends JDialog implements ActionListener {
 	}
 
 	private class AccountTableModel extends AbstractTableModel {
+		private static final long serialVersionUID = 3233063410900758383L;
+
 		public int getRowCount() {
 			return accountStore.list().size();
 		}

@@ -79,6 +79,25 @@ public class RSItem extends MethodProvider {
 	}
 
 	/**
+	 * Determines if this item contains the desired action
+	 *
+	 * @param action The item menu action to check.
+	 * @return <tt>true</tt> if the item has the action; otherwise
+	 *         <tt>false</tt>.
+	 */
+	public boolean hasAction(final String action) {
+		final RSItemDef itemDef = getDefinition();
+		if (itemDef != null) {
+			for (final String a : itemDef.getActions()) {
+				if (a != null && a.equalsIgnoreCase(action)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Returns whether or not this item has an available definition.
 	 *
 	 * @return <tt>true</tt> if an item definition is available;

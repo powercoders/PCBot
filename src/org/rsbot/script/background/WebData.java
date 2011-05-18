@@ -2,8 +2,8 @@ package org.rsbot.script.background;
 
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.methods.Web;
 import org.rsbot.script.internal.wrappers.TileData;
+import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
 
@@ -50,16 +50,13 @@ public class WebData extends BackgroundScript {
 					final int f_x = x - off_x, f_y = y - off_y;
 					final int here = flags[f_x][f_y];
 					synchronized (lock) {
-						if (!Web.rs_map.containsKey(start) && !TileData.Walkable(here)) {
+						if (!Web.rs_map.containsKey(start) && (!TileData.Walkable(here) || TileData.Questionable(here))) {
 							rs_map.put(start, here);
 						} else {
-							try {
-								if (Web.rs_map.get(start) != null && Web.rs_map.get(start) != here) {
-									WebQueue.Remove(start);
-									lb = null;
-									lp = -1;
-								}
-							} catch (final NullPointerException ignored) {
+							if (Web.rs_map.containsKey(start) && (Web.rs_map.get(start) != here || here == 0)) {
+								WebQueue.Remove(start);
+								lb = null;
+								lp = -1;
 							}
 						}
 					}
