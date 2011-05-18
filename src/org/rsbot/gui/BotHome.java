@@ -33,35 +33,43 @@ public class BotHome {
 	public void paint(final Graphics g) {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, width, height);
-		final int len = Math.min(bots.length, 6);
-		if (len == 1) {
+		final int len = Math.min(bots.length, BotGUI.MAX_BOTS);
+		switch (len)
+		{
+		case 1:
 			draw(g, 0, 0, 0, width, height);
-		} else if (len == 2) {
+			break;
+		case 2:
 			draw(g, 0, 0, 0, width, height / 2);
 			draw(g, 1, 0, height / 2, width, height / 2);
-		} else if (len == 3) {
+			break;
+		case 3:
 			draw(g, 0, 0, 0, width / 2, height / 2);
 			draw(g, 1, width / 2, 0, width / 2, height / 2);
 			draw(g, 2, 0, height / 2, width, height / 2);
-		} else if (len == 4) {
+			break;
+		case 4:
 			draw(g, 0, 0, 0, width / 2, height / 2);
 			draw(g, 1, width / 2, 0, width / 2, height / 2);
 			draw(g, 2, 0, height / 2, width / 2, height / 2);
 			draw(g, 3, width / 2, height / 2, width / 2, height / 2);
-		} else if (len == 5) {
+			break;
+		case 5:
 			draw(g, 0, 0, 0, width / 3, height / 2);
 			draw(g, 1, width / 3, 0, width / 3, height / 2);
 			draw(g, 2, width * 2 / 3, 0, width / 3, height / 2);
 			draw(g, 3, 0, height / 2, width / 2, height / 2);
 			draw(g, 4, width / 2, height / 2, width / 2, height / 2);
-		} else if (len == 6) {
+			break;
+		case 6:
 			draw(g, 0, 0, 0, width / 3, height / 2);
 			draw(g, 1, width / 3, 0, width / 3, height / 2);
 			draw(g, 2, width * 2 / 3, 0, width / 3, height / 2);
 			draw(g, 3, 0, height / 2, width / 3, height / 2);
 			draw(g, 4, width / 3, height / 2, width / 3, height / 2);
 			draw(g, 5, width * 2 / 3, height / 2, width / 3, height / 2);
-		} else {
+			break;
+		default:
 			return;
 		}
 		final FontMetrics metrics = g.getFontMetrics(FONT);

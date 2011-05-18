@@ -49,7 +49,7 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 					final boolean start = onStart();
 					if (start) {
 						while (running) {
-							final int timeOut = loop();
+							final int timeOut = isLoggedIn() ? loop() : iterationSleep();
 							if (timeOut == -1) {
 								break;
 							}
