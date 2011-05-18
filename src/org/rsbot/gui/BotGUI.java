@@ -34,6 +34,7 @@ import java.util.logging.Logger;
  */
 public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public static final int PANEL_WIDTH = 765, PANEL_HEIGHT = 503, LOG_HEIGHT = 120;
+	public static final int MAX_BOTS = 6;
 	private static final long serialVersionUID = -5411033752001988794L;
 	private static final Logger log = Logger.getLogger(BotGUI.class.getName());
 	private BotPanel panel;
@@ -345,14 +346,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	public void addBot() {
-		final int max = 6;
-		if (bots.size() >= max && Configuration.RUNNING_FROM_JAR) {
-			log.warning("Cannot run more than " + Integer.toString(max) + " bots!");
+		if (bots.size() > MAX_BOTS) {
 			return;
 		}
 		final Bot bot = new Bot();
 		bots.add(bot);
 		toolBar.addTab();
+		toolBar.setAddTabVisible(bots.size() < MAX_BOTS);
 		bot.getScriptHandler().addScriptListener(this);
 		new Thread(new Runnable() {
 			public void run() {
@@ -372,6 +372,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 		bots.remove(idx);
 		home.setBots(bots);
+		toolBar.setAddTabVisible(bots.size() < MAX_BOTS);
 		new Thread(new Runnable() {
 			public void run() {
 				bot.stop();

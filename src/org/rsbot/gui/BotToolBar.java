@@ -37,6 +37,7 @@ public class BotToolBar extends JToolBar {
 		IMAGE_CLOSE_OVER = Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE);
 	}
 
+	private final AddButton addTabButton;
 	private final JButton screenshotButton;
 	private final JButton userInputButton;
 	private final JButton runScriptButton;
@@ -111,13 +112,17 @@ public class BotToolBar extends JToolBar {
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		setFloatable(false);
 		add(home);
-		add(new AddButton(listener));
+		add(addTabButton = new AddButton(listener));
 		add(Box.createHorizontalGlue());
 		add(screenshotButton);
 		add(runScriptButton);
 		add(stopScriptButton);
 		add(userInputButton);
 		updateSelection(false);
+	}
+
+	public void setAddTabVisible(final boolean visible) {
+		addTabButton.setVisible(visible);
 	}
 
 	public void addTab() {
