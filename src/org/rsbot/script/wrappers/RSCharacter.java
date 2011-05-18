@@ -161,8 +161,7 @@ public abstract class RSCharacter extends MethodProvider {
 	 *         <tt>false</tt>.
 	 */
 	public boolean isDead() {
-		return !isValid() || (getHPPercent() == 0 && getAnimation() != -1
-				&& getInteracting() == null);
+		return !isValid() || getAnimation() == 836;
 	}
 
 	public boolean isInCombat() {
