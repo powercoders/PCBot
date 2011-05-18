@@ -127,13 +127,16 @@ public class BotToolBar extends JToolBar {
 		setSelection(idx);
 	}
 
-	public void removeTab(final int idx) {
-		remove(idx + TABINDEX);
+	public void removeTab(int idx) {
+		final int current = getCurrentTab() + TABINDEX;
+		final int select = idx == current ? idx - TABINDEX : current;
+		idx += TABINDEX;
+		remove(idx);
 		revalidate();
 		repaint();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				setSelection(0);
+				setSelection(Math.max(0, select - 1));
 			}
 		});
 	}
