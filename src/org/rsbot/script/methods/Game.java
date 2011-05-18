@@ -25,7 +25,7 @@ public class Game extends MethodProvider {
 	 * @author Aut0r
 	 */
 	public enum ChatMode {
-		VIEW, ON, FRIENDS, OFF, HIDE
+		VIEW, ON, FRIENDS, OFF, HIDE, ALL, FILTER
 	}
 
 	public static final int INDEX_LOGIN_SCREEN = 3;
@@ -75,9 +75,10 @@ public class Game extends MethodProvider {
 	public static final int CHAT_OPTION_GAME = 3;
 	public static final int CHAT_OPTION_PUBLIC = 4;
 	public static final int CHAT_OPTION_PRIVATE = 5;
+	public static final int CHAT_OPTION_FRIENDS = 7;
 	public static final int CHAT_OPTION_CLAN = 6;
-	public static final int CHAT_OPTION_TRADE = 7;
-	public static final int CHAT_OPTION_ASSIST = 8;
+	public static final int CHAT_OPTION_TRADE = 8;
+	public static final int CHAT_OPTION_ASSIST = 9;
 
 	public static final int INTERFACE_CHAT_BOX = 137;
 	public static final int INTERFACE_GAME_SCREEN = 548;
