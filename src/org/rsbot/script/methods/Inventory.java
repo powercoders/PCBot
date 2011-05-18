@@ -63,17 +63,16 @@ public class Inventory extends MethodProvider {
 	 */
 	public boolean destroyItem(final int itemID) {
 		RSItem item = getItem(itemID);
-		if (!itemHasAction(item, "Destroy")) {
+		if (item == null || !item.hasAction("Destroy")) {
 			return false;
 		}
-		while (item != null) {
+		while ((item = getItem(itemID)) != null) {
 			if (methods.interfaces.get(94).isValid()) {
 				methods.interfaces.getComponent(94, 3).doClick();
 			} else {
 				item.doAction("Destroy");
 			}
 			sleep(random(700, 1100));
-			item = getItem(itemID);
 		}
 		return true;
 	}
@@ -120,8 +119,8 @@ public class Inventory extends MethodProvider {
 	 * @param action The item menu action to check.
 	 * @return <tt>true</tt> if the item has the action; otherwise
 	 *         <tt>false</tt>.
-	 * @author Aut0r
 	 */
+	@Deprecated
 	public boolean itemHasAction(final RSItem item, final String action) {
 		// Used to determine if an item is droppable/destroyable
 		if (item == null) {

@@ -315,6 +315,7 @@ public class Combat extends MethodProvider {
 	 * @return <tt>true</tt> if the Npc is dead or dying; otherwise
 	 *         <tt>false</tt>.
 	 */
+	@Deprecated
 	public boolean isDead(final RSNPC npc) {
 		// getHPPercent() can return 0 when the Npc has a sliver of health left
 		// getAnimation() confirms a death animation is playing (to prevent

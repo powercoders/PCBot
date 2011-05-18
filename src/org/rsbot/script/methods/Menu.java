@@ -109,6 +109,7 @@ public class Menu extends MethodProvider {
 	 * @return <tt>true</tt> if the item has the action; otherwise
 	 *         <tt>false</tt>.
 	 */
+	@Deprecated
 	public boolean itemHasAction(final RSItem item, final String action) {
 		// Used to determine if an item is droppable/destroyable
 		if (item == null) {
