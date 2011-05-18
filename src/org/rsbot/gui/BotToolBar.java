@@ -76,7 +76,7 @@ public class BotToolBar extends JToolBar {
 		userInputButton = new JButton("Input", new ImageIcon(getInputImage(inputOverride, inputState)));
 		userInputButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				menu.doTick("Force Input");
+				menu.doTick(Messages.FORCEINPUT);
 			}
 		});
 		userInputButton.setFocusable(false);
