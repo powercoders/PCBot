@@ -28,6 +28,8 @@ public class BotToolBar extends JToolBar {
 	public static final Image IMAGE_CLOSE_OVER;
 
 	private static final int TABINDEX = 1;
+	private static final int BUTTONCOUNT = 6;
+	private static final int OPTIONBUTTONS = 4;
 
 	static {
 		ICON_HOME = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_HOME));
@@ -119,14 +121,14 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void addTab() {
-		final int idx = getComponentCount() - 5 - TABINDEX;
+		final int idx = getComponentCount() - BUTTONCOUNT - TABINDEX + 1;
 		add(new BotButton(Messages.TABDEFAULTTEXT, ICON_BOT), idx);
 		validate();
 		setSelection(idx);
 	}
 
 	public void removeTab(final int idx) {
-		remove(idx);
+		remove(idx + TABINDEX);
 		revalidate();
 		repaint();
 		SwingUtilities.invokeLater(new Runnable() {
@@ -141,8 +143,8 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public int getCurrentTab() {
-		if (idx > -1 && idx < getComponentCount() - 4) {
-			return idx;
+		if (idx > -1 && idx < getComponentCount() - OPTIONBUTTONS) {
+			return idx - TABINDEX;
 		} else {
 			return -1;
 		}
@@ -215,7 +217,7 @@ public class BotToolBar extends JToolBar {
 	}
 
 	private void updateSelection(final boolean enabled) {
-		final int idx = getCurrentTab();
+		final int idx = getCurrentTab() + TABINDEX;
 		if (idx >= 0) {
 			getComponent(idx).setEnabled(enabled);
 			getComponent(idx).repaint();
@@ -333,7 +335,7 @@ public class BotToolBar extends JToolBar {
 				@Override
 				public void mouseReleased(final MouseEvent e) {
 					if (hovered && close) {
-						final int idx = getComponentIndex(BotButton.this);
+						final int idx = getComponentIndex(BotButton.this) - TABINDEX;
 						listener.actionPerformed(new ActionEvent(this,
 								ActionEvent.ACTION_PERFORMED, Messages.CLOSEBOT + "." + idx));
 					} else {

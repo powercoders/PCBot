@@ -45,7 +45,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private final List<Bot> bots = new ArrayList<Bot>();
 	private boolean showAds = true;
 	private boolean disableConfirmations = false;
-	private final int botsIndex = 1;
 	private TrayIcon tray = null;
 	private java.util.Timer shutdown = null;
 
@@ -109,7 +108,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		if (menu.equals(Messages.CLOSEBOT)) {
 			if (confirmRemoveBot()) {
 				final int idx = Integer.parseInt(option);
-				removeBot(bots.get(idx - botsIndex));
+				removeBot(bots.get(idx));
 			}
 		} else if (menu.equals(Messages.FILE)) {
 			if (option.equals(Messages.NEWBOT)) {
@@ -374,7 +373,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		bot.getScriptHandler().removeScriptListener(this);
 		bot.getBackgroundScriptHandler().stopAllScripts();
 		if (idx >= 0) {
-			toolBar.removeTab(idx + botsIndex);
+			toolBar.removeTab(idx);
 		}
 		bots.remove(idx);
 		home.setBots(bots);
@@ -396,7 +395,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	private Bot getCurrentBot() {
-		final int idx = toolBar.getCurrentTab() - botsIndex;
+		final int idx = toolBar.getCurrentTab();
 		if (idx >= 0) {
 			return bots.get(idx);
 		}
