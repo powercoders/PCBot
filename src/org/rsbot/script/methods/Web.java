@@ -47,26 +47,6 @@ public class Web extends MethodProvider {
 				finalTile = bank;
 			}
 		}
-		RSObject nearestChest = methods.objects.getNearest(Bank.BANK_CHESTS);
-		if (nearestChest != null && methods.calc.distanceBetween(tile, nearestChest.getLocation()) < dist) {
-			dist = methods.calc.distanceBetween(tile, nearestChest.getLocation());
-			finalTile = nearestChest.getLocation();
-		}
-		RSObject nearestDeposit = methods.objects.getNearest(Bank.BANK_DEPOSIT_BOX);
-		if (nearestDeposit != null && methods.calc.distanceBetween(tile, nearestDeposit.getLocation()) < dist) {
-			dist = methods.calc.distanceBetween(tile, nearestDeposit.getLocation());
-			finalTile = nearestDeposit.getLocation();
-		}
-		RSNPC nearestBanker = methods.npcs.getNearest(Bank.BANKERS);
-		if (nearestBanker != null && methods.calc.distanceBetween(tile, nearestBanker.getLocation()) < dist) {
-			dist = methods.calc.distanceBetween(tile, nearestBanker.getLocation());
-			finalTile = nearestBanker.getLocation();
-		}
-		RSObject nearestBooth = methods.objects.getNearest(Bank.BANK_BOOTHS);
-		if (nearestBooth != null && methods.calc.distanceBetween(tile, nearestBooth.getLocation()) < dist) {
-			dist = methods.calc.distanceBetween(tile, nearestBooth.getLocation());
-			finalTile = nearestBooth.getLocation();
-		}
 		return finalTile;
 	}
 
