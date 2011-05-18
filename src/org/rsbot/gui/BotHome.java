@@ -33,7 +33,7 @@ public class BotHome {
 	public void paint(final Graphics g) {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, width, height);
-		final int len = Math.min(bots.length, 6);
+		final int len = Math.min(bots.length, BotGUI.MAX_BOTS);
 		switch (len)
 		{
 		case 1:
