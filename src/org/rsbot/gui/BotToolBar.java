@@ -335,7 +335,7 @@ public class BotToolBar extends JToolBar {
 					if (hovered && close) {
 						final int idx = getComponentIndex(BotButton.this);
 						listener.actionPerformed(new ActionEvent(this,
-								ActionEvent.ACTION_PERFORMED, "Close." + idx));
+								ActionEvent.ACTION_PERFORMED, Messages.CLOSEBOT + "." + idx));
 					} else {
 						setSelection(getComponentIndex(BotButton.this));
 					}
