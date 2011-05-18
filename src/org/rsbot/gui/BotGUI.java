@@ -106,7 +106,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			menu = action.substring(0, z);
 			option = action.substring(z + 1);
 		}
-		if (menu.equals("Close")) {
+		if (menu.equals(Messages.CLOSEBOT)) {
 			if (confirmRemoveBot()) {
 				final int idx = Integer.parseInt(option);
 				removeBot(bots.get(idx - botsIndex));
