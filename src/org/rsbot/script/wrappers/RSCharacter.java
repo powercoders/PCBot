@@ -154,6 +154,16 @@ public abstract class RSCharacter extends MethodProvider {
 		getModel().hover();
 	}
 
+	/**
+	 * Determines whether the character is dead or dying
+	 *
+	 * @return <tt>true</tt> if the character is dead/dying; otherwise
+	 *         <tt>false</tt>.
+	 */
+	public boolean isDead() {
+		return !isValid() || getAnimation() == 836;
+	}
+
 	public boolean isInCombat() {
 		return methods.game.isLoggedIn()
 				&& methods.client.getLoopCycle() < getAccessor()
