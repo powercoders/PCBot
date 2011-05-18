@@ -46,7 +46,7 @@ public class RouteStep extends MethodProvider {
 					if (path == null || inSomeRandom()) {
 						return false;
 					}
-					if (rspath == null || (rspath.getNext() == null && destOffScreen())) {
+					if (rspath == null || (rspath.getNext() == null && !destOffScreen())) {
 						update();
 					}
 					if (methods.calc.distanceTo(rspath.getEnd()) < 5) {
