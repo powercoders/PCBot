@@ -45,7 +45,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private final List<Bot> bots = new ArrayList<Bot>();
 	private boolean showAds = true;
 	private boolean disableConfirmations = false;
-	private final int botsIndex = 2;
+	private final int botsIndex = 1;
 	private TrayIcon tray = null;
 	private java.util.Timer shutdown = null;
 
@@ -494,7 +494,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					bot.overrideInput = false;
 					updateScriptControls();
 					final String acct = bot.getAccountName();
-					toolBar.setTabLabel(bots.indexOf(bot) + botsIndex, acct == null ? Messages.TABDEFAULTTEXT : acct);
+					toolBar.setTabLabel(bots.indexOf(bot), acct == null ? Messages.TABDEFAULTTEXT : acct);
 					setTitle(acct);
 				}
 			}
@@ -507,7 +507,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			bot.inputFlags = Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE;
 			bot.overrideInput = false;
 			updateScriptControls();
-			toolBar.setTabLabel(bots.indexOf(bot) + botsIndex, Messages.TABDEFAULTTEXT);
+			toolBar.setTabLabel(bots.indexOf(bot), Messages.TABDEFAULTTEXT);
 			setTitle(null);
 		}
 	}
