@@ -54,7 +54,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		pack();
 		setTitle(null);
 		setLocationRelativeTo(getOwner());
-		setPreferredSize(getSize());
+		setMinimumSize(getSize());
 		setResizable(true);
 		menuBar.loadPrefs();
 		SwingUtilities.invokeLater(new Runnable() {
