@@ -139,6 +139,9 @@ public class Walking extends MethodProvider {
 			methods.mouse.move(p, rx, ry, rm);
 			final Point p2 = methods.calc.tileToMinimap(dest);
 			if (p2.x != -1 && p2.y != -1) {
+				if (!methods.mouse.getLocation().equals(p2)) {//Perfect alignment.
+					methods.mouse.move(p2);
+				}
 				if (!methods.mouse.getLocation().equals(p2)) {//We must've moved while walking, move again!
 					methods.mouse.move(p2);
 				}

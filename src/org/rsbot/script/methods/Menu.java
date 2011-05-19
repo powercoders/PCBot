@@ -151,16 +151,25 @@ public class Menu extends MethodProvider {
 		int y = 21 + 16 * mIdx + random(3, 12);
 		methods.mouse.move(menuLoc.x + x, menuLoc.y + y, 2, 2);
 		sleep(random(125, 150));
-
 		if (isOpen()) {
 			final Point subLoc = getSubMenuLocation();
+			final Point start = methods.mouse.getLocation();
+			int subOff = subLoc.x - start.x;
+			int moves = random(subOff, subOff + random(0, items[sIdx].length() * 2));
 			x = random(4, items[sIdx].length() * 4);
-			methods.mouse.move(subLoc.x + x, methods.mouse.getLocation().y, 2, 0);
+			if (subOff > 0) {
+				final int speed = methods.mouse.getSpeed() / 3;
+				for (int c = 0; c < moves; c++) {
+					methods.mouse.hop(start.x + c, start.y);
+					sleep(random(speed / 2, speed));
+				}
+			} else {
+				methods.mouse.move(subLoc.x + x, methods.mouse.getLocation().y, 2, 0);
+			}
 			sleep(random(125, 150));
-
 			if (isOpen()) {
 				y = 16 * sIdx + random(3, 12) + 21;
-				methods.mouse.move(methods.mouse.getLocation().x, subLoc.y + y, 0, 2);
+				methods.mouse.move(subLoc.x + x, subLoc.y + y, 0, 2);
 				sleep(random(125, 150));
 				if (isOpen()) {
 					methods.mouse.click(true);
