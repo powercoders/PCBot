@@ -346,10 +346,6 @@ public class Magic extends MethodProvider {
      * @return The Book enum of your current spell book.
      */
     public Book getCurrentSpellBook() {
-        if (methods.game.getCurrentTab() != Game.TAB_MAGIC) {
-            methods.game.openTab(Game.TAB_MAGIC);
-            sleep(random(150, 250));
-        }
         for (Book book : Book.values()) {
             if (methods.interfaces.get(book.getInterfaceID()).isValid()) {
                 return book;
