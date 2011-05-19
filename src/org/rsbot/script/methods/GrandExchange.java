@@ -184,7 +184,7 @@ public class GrandExchange extends MethodProvider {
 		if (isOpen()) {
 			final int slotComponent = GRAND_EXCHANGE_OFFER_BOXES[slot];
 			methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW, slotComponent).containsAction(
-					"View Offer");
+					"Veiw Offer");
 			sleep(random(700, 1200));
 			if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW,
 					GRAND_EXCHANGE_COLLECT_BOX_TWO).containsAction("Collect")) {
