@@ -222,7 +222,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 				throw new SecurityException();
 			}
 		}
-		// super.checkPermission(perm);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package org.rsbot.script.web;
 import org.rsbot.script.wrappers.RSTile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,6 +42,16 @@ public class Route {
 			}
 		}
 		return l;
+	}
+
+	public RSTile[] getPath() {
+		List<RSTile> l = new ArrayList<RSTile>();
+		for (RSTile[] tiles : getPaths()) {
+			if (tiles != null) {
+				l.addAll(Arrays.asList(tiles));
+			}
+		}
+		return l.toArray(new RSTile[l.size()]);
 	}
 
 	public void updateRoute() {
