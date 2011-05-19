@@ -9,6 +9,7 @@ import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.script.wrappers.RSWeb;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * The web class.
@@ -72,7 +73,7 @@ public class Web extends MethodProvider {
 		final HashSet<Node> closed = new HashSet<Node>();
 		Node curr = new Node(start.getX(), start.getY(), start.getZ());
 		final Node dest = new Node(end.getX(), end.getY(), end.getZ());
-		curr.f = hCost(curr, dest);
+		curr.f = Heuristic(curr, dest);
 		open.add(curr);
 		while (!open.isEmpty()) {
 			curr = Lowest_f(open);
@@ -83,7 +84,7 @@ public class Web extends MethodProvider {
 			closed.add(curr);
 			for (final Node next : Web.Successors(curr)) {
 				if (!closed.contains(next)) {
-					final double t = curr.g + gCost(curr, next);
+					final double t = curr.g + Dist(curr, next);
 					boolean use_t = false;
 					if (!open.contains(next)) {
 						open.add(next);
@@ -94,7 +95,7 @@ public class Web extends MethodProvider {
 					if (use_t) {
 						next.prev = curr;
 						next.g = t;
-						next.f = t + hCost(next, dest);
+						next.f = t + Heuristic(next, dest);
 					}
 				}
 			}
@@ -199,8 +200,8 @@ public class Web extends MethodProvider {
 	 * @param end   End node.
 	 * @return The distance.
 	 */
-	private static double hCost(final Node start, final Node end) {
-		/*double dx = start.x - end.x;
+	private static double Heuristic(final Node start, final Node end) {
+		double dx = start.x - end.x;
 		double dy = start.y - end.y;
 		if (dx < 0) {
 			dx = -dx;
@@ -208,8 +209,7 @@ public class Web extends MethodProvider {
 		if (dy < 0) {
 			dy = -dy;
 		}
-		return dx < dy ? dy : dx;*/
-		return (Math.abs(end.x - start.x) + Math.abs(end.y - start.x)) * 10;
+		return dx < dy ? dy : dx;
 	}
 
 	/**
@@ -219,13 +219,12 @@ public class Web extends MethodProvider {
 	 * @param end   The end tile.
 	 * @return The distance.
 	 */
-	private static double gCost(final Node start, final Node end) {
-		/*if (start.x != end.x && start.y != end.y) {
+	private static double Dist(final Node start, final Node end) {
+		if (start.x != end.x && start.y != end.y) {
 			return 1.41421356;
 		} else {
 			return 1.0;
-		}*/
-		return (int) (Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2)) * 10);
+		}
 	}
 
 	/**
