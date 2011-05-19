@@ -168,7 +168,7 @@ public class Skills extends MethodProvider {
 	 * @return -1 if the skill is unavailable
 	 */
 	public int getCurrentExp(final int index) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		final int[] skills = methods.client.getSkillExperiences();
@@ -188,7 +188,7 @@ public class Skills extends MethodProvider {
 	 * @return The current level of the given Skill.
 	 */
 	public int getCurrentLevel(final int index) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		return methods.client.getSkillLevels()[index];
@@ -203,7 +203,7 @@ public class Skills extends MethodProvider {
 	 * @see #getRealLevel(int)
 	 */
 	public int getRealLevel(final int index) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		return Skills.getLevelAt(getCurrentExp(index));
@@ -217,7 +217,7 @@ public class Skills extends MethodProvider {
 	 *         of skill is 99.
 	 */
 	public int getPercentToNextLevel(final int index) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		final int lvl = getRealLevel(index);
@@ -233,7 +233,7 @@ public class Skills extends MethodProvider {
 	 *         of skill is 99.
 	 */
 	public int getPercentToLevel(final int index, final int endLvl) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		final int lvl = getRealLevel(index);
@@ -257,7 +257,7 @@ public class Skills extends MethodProvider {
 	 * @return The max level of the skill.
 	 */
 	public int getMaxLevel(final int index) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		return methods.client.getSkillLevelMaxes()[index];
@@ -270,7 +270,7 @@ public class Skills extends MethodProvider {
 	 * @return The max experience of the skill.
 	 */
 	public int getMaxExp(final int index) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		return methods.client.getSkillExperiencesMax()[index];
@@ -284,7 +284,7 @@ public class Skills extends MethodProvider {
 	 * @return The experience to the next level of the skill.
 	 */
 	public int getExpToNextLevel(final int index) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		final int lvl = getRealLevel(index);
@@ -300,7 +300,7 @@ public class Skills extends MethodProvider {
 	 * @return The experience to the level provided of the skill.
 	 */
 	public int getExpToLevel(final int index, final int endLvl) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		final int lvl = getRealLevel(index);
@@ -321,7 +321,7 @@ public class Skills extends MethodProvider {
 	 * @return The time till the next level of the skill.
 	 */
 	public long getTimeTillNextLevel(final int index, final int exp, final long time) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		final int level = getRealLevel(index);
@@ -338,7 +338,7 @@ public class Skills extends MethodProvider {
 	 * @return The time till the level provided of the skill.
 	 */
 	public long getTimeTillLevel(final int index, final int exp, final int endLvl, final long time) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		final int level = getRealLevel(index);
@@ -363,7 +363,7 @@ public class Skills extends MethodProvider {
 	 * @return How many you need to do until the next level.
 	 */
 	public int ammountTillNextLevel(final int index, final double exp) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		final int level = getRealLevel(index);
@@ -379,7 +379,7 @@ public class Skills extends MethodProvider {
 	 * @return How many you need to do until leveling to the level provided.
 	 */
 	public int ammountTillLevel(final int index, final double exp, final int lvl) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		return getExpToLevel(index, lvl) != -1 ? (int) (getExpToLevel(index, lvl) / exp) : 0;
@@ -405,7 +405,7 @@ public class Skills extends MethodProvider {
 	 * @return Percent to level max level.
 	 */
 	public int getPercentToMaxLevel(final int index) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		int lvl = 99;
@@ -422,7 +422,7 @@ public class Skills extends MethodProvider {
 	 * @return Experience to level max level.
 	 */
 	public int getExpToMaxLevel(final int index) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		int lvl = 99;
@@ -441,7 +441,7 @@ public class Skills extends MethodProvider {
 	 * @return The time till the max level of the skill.
 	 */
 	public long getTimeTillMaxLevel(final int index, final int exp, final long time) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		int lvl = 99;
@@ -459,7 +459,7 @@ public class Skills extends MethodProvider {
 	 * @return How many you need to do until the max level.
 	 */
 	public int ammountTillMaxLevel(final int index, final double exp) {
-		if (!isSkill(index)) {
+		if (index > Skills.SKILL_NAMES.length - 1) {
 			return -1;
 		}
 		int lvl = 99;
@@ -481,50 +481,5 @@ public class Skills extends MethodProvider {
 		sleep(random(10, 100));
 		return methods.interfaces.getComponent(INTERFACE_TAB_STATS, component)
 				.doHover();
-	}
-	
-	/**
-	 * Checks if one of the given skills is boosted.
-	 * 
-	 * @author Dunnkers
-	 * @param index The index of the skill.
-	 * @return <tt>true</tt> if one the given skills is boosted.
-	 */
-	public boolean isSkillBoosted(final int... index) {
-		if (!isSkill(index)) {
-			return false;
-		}
-		for (int i : index) {
-			int realLevel = getRealLevel(i);
-			if (realLevel > getMaxLevel(i)) {
-				switch(i) {
-				case Skills.DUNGEONEERING:
-					realLevel = 120;
-					break;
-				default:
-					realLevel = 99;
-					break;
-				}
-			}
-			if (realLevel == getCurrentLevel(i)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	/**
-	 * Checks if this index is not out of range.
-	 * 
-	 * @param index The index of the skill.
-	 * @return <tt>true</tt> if this index is not out of range.
-	 */
-	private boolean isSkill(final int... index) {
-		for (int i : index) {
-			if (i > Skills.SKILL_NAMES.length - 1) {
-				return false;
-			}
-		}
-		return true;
 	}
 }

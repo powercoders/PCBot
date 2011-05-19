@@ -19,9 +19,7 @@ Subversion is also supported:
 ### Dependencies
 
  * [Java Development Kit](http://www.oracle.com/technetwork/java/javase/downloads/)
- * [Apache Commons - Collections] (http://commons.apache.org/downloads/download_collections.cgi)
- * [Apache Commons - Lang] (http://commons.apache.org/lang/download_lang.cgi)
- * [Guava release 09] (http://guava-libraries.googlecode.com/files/guava-r09.zip)
+
 
 ##Microsoft Windows
 
