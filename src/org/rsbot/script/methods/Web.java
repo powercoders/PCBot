@@ -18,7 +18,6 @@ import java.util.*;
 public class Web extends MethodProvider {
 	public static final HashMap<RSTile, Integer> rs_map = new HashMap<RSTile, Integer>();
 	public static boolean loaded = false;
-	private final Logger log = Logger.getLogger("Web");
 
 	Web(final MethodContext ctx) {
 		super(ctx);
@@ -64,7 +63,6 @@ public class Web extends MethodProvider {
 	 */
 	public RSTile[] generateNodePath(final RSTile start, final RSTile end) {
 		if (start.getZ() != end.getZ()) {
-			log.info("Different planes.");
 			return null;
 		}
 		if (start.equals(end)) {
@@ -101,7 +99,6 @@ public class Web extends MethodProvider {
 				}
 			}
 		}
-		log.info("We did not find a path, how is that possible?");
 		return null;
 	}
 
