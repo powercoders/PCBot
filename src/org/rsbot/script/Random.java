@@ -23,11 +23,6 @@ public abstract class Random extends Methods implements PaintListener {
 
 	private final long timeout = random(240, 300);
 
-	//	private Color[] fadeArray = {Color.red, Color.white, Color.green, new Color(128, 0, 128), Color.yellow,
-	//	                             Color.black, Color.orange, Color.pink};
-	//
-	//	private int currentIndex = 0;
-
 	/**
 	 * Detects whether or not this anti-random should
 	 * activate.

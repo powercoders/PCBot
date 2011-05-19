@@ -6,8 +6,6 @@ import org.rsbot.event.EventMulticaster;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.internal.wrappers.Deque;
 import org.rsbot.script.internal.wrappers.Queue;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSItemDef;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -100,30 +98,6 @@ public class Menu extends MethodProvider {
 	}
 
 	/**
-	 * Determines if the item contains the desired action.
-	 *
-	 * @param item   The item to check.
-	 * @param action The item menu action to check.
-	 * @return <tt>true</tt> if the item has the action; otherwise
-	 *         <tt>false</tt>.
-	 */
-	public boolean itemHasAction(final RSItem item, final String action) {
-		// Used to determine if an item is droppable/destroyable
-		if (item == null) {
-			return false;
-		}
-		final RSItemDef itemDef = item.getDefinition();
-		if (itemDef != null) {
-			for (final String a : itemDef.getActions()) {
-				if (a.equalsIgnoreCase(action)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Left clicks at the given index.
 	 *
 	 * @param i The index of the item.
@@ -145,7 +119,7 @@ public class Menu extends MethodProvider {
 				int subIdx = 0;
 				for (MenuItemNode item = subItems.getHead(); item != null; item = subItems.getNext(), ++subIdx) {
 					if (idx++ == i) {
-						if (subIdx == 0 || subItems.size() == 1) {
+						if (subItems.size() == 1) {
 							return clickMain(items, mainIdx);
 						} else {
 							return clickSub(items, mainIdx, subIdx);
@@ -179,12 +153,23 @@ public class Menu extends MethodProvider {
 		sleep(random(125, 150));
 		if (isOpen()) {
 			final Point subLoc = getSubMenuLocation();
+			final Point start = methods.mouse.getLocation();
+			int subOff = subLoc.x - start.x;
+			int moves = random(subOff, subOff + random(0, items[sIdx].length() * 2));
 			x = random(4, items[sIdx].length() * 4);
-			methods.mouse.move(subLoc.x + x, methods.mouse.getLocation().y, 2, 0);
+			if (subOff > 0) {
+				final int speed = methods.mouse.getSpeed() / 3;
+				for (int c = 0; c < moves; c++) {
+					methods.mouse.hop(start.x + c, start.y);
+					sleep(random(speed / 2, speed));
+				}
+			} else {
+				methods.mouse.move(subLoc.x + x, methods.mouse.getLocation().y, 2, 0);
+			}
 			sleep(random(125, 150));
 			if (isOpen()) {
 				y = 16 * sIdx + random(3, 12) + 21;
-				methods.mouse.move(methods.mouse.getLocation().x, subLoc.y + y, 0, 2);
+				methods.mouse.move(subLoc.x + x, subLoc.y + y, 0, 2);
 				sleep(random(125, 150));
 				if (isOpen()) {
 					methods.mouse.click(true);
@@ -239,6 +224,7 @@ public class Menu extends MethodProvider {
 		option = option.toLowerCase();
 		final String[] actions = getActions();
 		final String[] options = getOptions();
+		/* Throw exception if lenghts unequal? */
 		for (int i = 0; i < Math.min(actions.length, options.length); i++) {
 			if (actions[i].toLowerCase().contains(action) && options[i].toLowerCase().contains(option)) {
 				return i;
@@ -255,11 +241,14 @@ public class Menu extends MethodProvider {
 	public String[] getItems() {
 		String[] options;
 		String[] actions;
+
 		synchronized (menuCacheLock) {
 			options = menuOptionsCache;
 			actions = menuActionsCache;
 		}
+
 		final ArrayList<String> output = new ArrayList<String>();
+
 		final int len = Math.min(options.length, actions.length);
 		for (int i = 0; i < len; i++) {
 			final String option = options[i];
@@ -269,9 +258,11 @@ public class Menu extends MethodProvider {
 				output.add(text.trim());
 			}
 		}
+
 		if (output.size() > 1 && output.get(0).equals("Cancel")) {
 			Collections.reverse(output);
 		}
+
 		return output.toArray(new String[output.size()]);
 	}
 

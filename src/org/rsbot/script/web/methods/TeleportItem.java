@@ -5,7 +5,6 @@ import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.web.Teleport;
 import org.rsbot.script.wrappers.RSItem;
 import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.script.wrappers.RSWeb;
 
 public class TeleportItem extends Teleport {
 	public final int[] itemIDs;
@@ -91,13 +90,7 @@ public class TeleportItem extends Teleport {
 	 * @return The distance.
 	 */
 	public double getDistance(RSTile destination) {
-		RSWeb tempWeb = methods.web.getWeb(teleportationLocation(), destination);
-		double d = 0.0D;
-		if (tempWeb != null) {
-			d = tempWeb.getDistance();
-			tempWeb = null;
-		}
-		return d;
+		return methods.calc.distanceBetween(teleportationLocation(), destination);// TODO use web distancing.
 	}
 
 	/**

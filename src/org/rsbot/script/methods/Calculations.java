@@ -47,8 +47,7 @@ public class Calculations extends MethodProvider {
 	 * Checks whether or not a given tile is on the minimap.
 	 *
 	 * @param t The RSTile to check.
-	 * @return <tt>true</tt> if the RSTile is on the minimap; otherwise
-	 *         <tt>false</tt>.
+	 * @return <tt>true</tt> if the RSTile is on the minimap; otherwise <tt>false</tt>.
 	 * @see #tileToMinimap(RSTile)
 	 */
 	public boolean tileOnMap(final RSTile t) {
@@ -59,8 +58,7 @@ public class Calculations extends MethodProvider {
 	 * Checks whether or not the centroid of a given tile is on the screen.
 	 *
 	 * @param t The RSTile to check.
-	 * @return <tt>true</tt> if the RSTile is on the screen; otherwise
-	 *         <tt>false</tt>.
+	 * @return <tt>true</tt> if the RSTile is on the screen; otherwise <tt>false</tt>.
 	 */
 	public boolean tileOnScreen(final RSTile t) {
 		return pointOnScreen(tileToScreen(t, 0.5, 0.5, 0));
@@ -70,8 +68,7 @@ public class Calculations extends MethodProvider {
 	 * Returns the Point on screen where a given tile is shown on the minimap.
 	 *
 	 * @param t The RSTile to check.
-	 * @return <tt>Point</tt> within minimap; otherwise
-	 *         <tt>new Point(-1, -1)</tt>.
+	 * @return <tt>Point</tt> within minimap; otherwise <tt>new Point(-1, -1)</tt>.
 	 */
 	public Point tileToMinimap(final RSTile t) {
 		return worldToMinimap(t.getX(), t.getY());
@@ -164,14 +161,10 @@ public class Calculations extends MethodProvider {
 	 * offset values.
 	 *
 	 * @param tile   RSTile for which the screen location should be calculated.
-	 * @param dX     Distance from bottom left of the tile to bottom right. Ranges
-	 *               from 0-1;
-	 * @param dY     Distance from bottom left of the tile to top left. Ranges from
-	 *               0-1;
-	 * @param height Height offset (normal to the ground) to return the
-	 *               <code>Point</code> at.
-	 * @return <code>Point</code> based on position on the game plane; otherwise
-	 *         <code>new Point(-1, -1)</code>.
+	 * @param dX     Distance from bottom left of the tile to bottom right. Ranges from 0-1;
+	 * @param dY     Distance from bottom left of the tile to top left. Ranges from 0-1;
+	 * @param height Height offset (normal to the ground) to return the <code>Point</code> at.
+	 * @return <code>Point</code> based on position on the game plane; otherwise <code>new Point(-1, -1)</code>.
 	 */
 	public Point tileToScreen(final RSTile tile, final double dX, final double dY, final int height) {
 		return groundToScreen((int) ((tile.getX() - methods.client.getBaseX() + dX) * 512),
@@ -182,10 +175,8 @@ public class Calculations extends MethodProvider {
 	 * Returns the screen location of a Tile with a given 3D height offset.
 	 *
 	 * @param tile   RSTile for which the screen location should be calculated.
-	 * @param height Height offset (normal to the ground) to return the
-	 *               <code>Point</code> at.
-	 * @return <code>Point</code> based on position on the game plane; if null
-	 *         <code>new Point(-1, -1)</code>.
+	 * @param height Height offset (normal to the ground) to return the <code>Point</code> at.
+	 * @return <code>Point</code> based on position on the game plane; if null <code>new Point(-1, -1)</code>.
 	 * @see #tileToScreen(RSTile, double, double, int)
 	 */
 	public Point tileToScreen(final RSTile tile, final int height) {
@@ -196,8 +187,7 @@ public class Calculations extends MethodProvider {
 	 * Returns the screen location of the south-west corner of the given tile.
 	 *
 	 * @param tile RSTile for which the screen location should be calculated.
-	 * @return Center <code>Point</code> of the RSTile at a height of 0; if null
-	 *         <code>new Point(-1, -1)</code>.
+	 * @return Center <code>Point</code> of the RSTile at a height of 0; if null <code>new Point(-1, -1)</code>.
 	 * @see #tileToScreen(RSTile, int)
 	 */
 	public Point tileToScreen(final RSTile tile) {
@@ -253,10 +243,8 @@ public class Calculations extends MethodProvider {
 	 * Returns the length of the path generated to a given RSTile.
 	 *
 	 * @param dest     The destination tile.
-	 * @param isObject <tt>true</tt> if reaching any tile adjacent to the destination
-	 *                 should be accepted.
-	 * @return <tt>true</tt> if reaching any tile adjacent to the destination
-	 *         should be accepted.
+	 * @param isObject <tt>true</tt> if reaching any tile adjacent to the destination should be accepted.
+	 * @return <tt>true</tt> if reaching any tile adjacent to the destination should be accepted.
 	 */
 	public int pathLengthTo(final RSTile dest, final boolean isObject) {
 		final RSTile curPos = methods.players.getMyPlayer().getLocation();
@@ -268,10 +256,8 @@ public class Calculations extends MethodProvider {
 	 *
 	 * @param start    The starting tile.
 	 * @param dest     The destination tile.
-	 * @param isObject <tt>true</tt> if reaching any tile adjacent to the destination
-	 *                 should be accepted.
-	 * @return <tt>true</tt> if reaching any tile adjacent to the destination
-	 *         should be accepted.
+	 * @param isObject <tt>true</tt> if reaching any tile adjacent to the destination should be accepted.
+	 * @return <tt>true</tt> if reaching any tile adjacent to the destination should be accepted.
 	 */
 	public int pathLengthBetween(final RSTile start, final RSTile dest, final boolean isObject) {
 		return dijkstraDist(start.getX() - methods.client.getBaseX(), // startX
@@ -286,8 +272,7 @@ public class Calculations extends MethodProvider {
 	 *
 	 * @param dest     The <code>RSTile</code> to check.
 	 * @param isObject True if an instance of <code>RSObject</code>.
-	 * @return <tt>true</tt> if player can reach specified Object; otherwise
-	 *         <tt>false</tt>.
+	 * @return <tt>true</tt> if player can reach specified Object; otherwise <tt>false</tt>.
 	 */
 	public boolean canReach(final RSTile dest, final boolean isObject) {
 		return pathLengthTo(dest, isObject) != -1;
@@ -299,8 +284,7 @@ public class Calculations extends MethodProvider {
 	 *
 	 * @param x x value based on the game plane.
 	 * @param y y value based on the game plane.
-	 * @return <code>Point</code> within minimap; otherwise
-	 *         <tt>new Point(-1, -1)</tt>.
+	 * @return <code>Point</code> within minimap; otherwise <tt>new Point(-1, -1)</tt>.
 	 */
 	public Point worldToMinimap(double x, double y) {
 		if (distanceBetween(methods.players.getMyPlayer().getLocation(), new RSTile((int) x, (int) y)) > 17) {
@@ -357,8 +341,7 @@ public class Calculations extends MethodProvider {
 	 * @param x      x value based on the game plane.
 	 * @param y      y value based on the game plane.
 	 * @param height height offset (normal to the ground).
-	 * @return <code>Point</code> based on screen; otherwise
-	 *         <code>new Point(-1, -1)</code>.
+	 * @return <code>Point</code> based on screen; otherwise <code>new Point(-1, -1)</code>.
 	 */
 	public Point groundToScreen(final int x, final int y, final int height) {
 		if (methods.client.getGroundByteArray() == null || methods.client.getTileData() == null || x < 512 ||
@@ -374,8 +357,7 @@ public class Calculations extends MethodProvider {
 	 *
 	 * @param x x value based on the game plane.
 	 * @param y y value based on the game plane.
-	 * @return The ground height at the given location; otherwise <code>0</code>
-	 *         .
+	 * @return The ground height at the given location; otherwise <code>0</code>.
 	 */
 	public int tileHeight(final int x, final int y) {
 		int p = methods.client.getPlane();
@@ -407,8 +389,7 @@ public class Calculations extends MethodProvider {
 	 * @param x x value on the game plane.
 	 * @param y y value on the game plane.
 	 * @param z z value on the game plane.
-	 * @return <code>Point</code> based on screen; otherwise
-	 *         <code>new Point(-1, -1)</code>.
+	 * @return <code>Point</code> based on screen; otherwise <code>new Point(-1, -1)</code>.
 	 */
 	public Point worldToScreen(final int x, final int y, final int z) {
 		// perspective projection: hooked viewport values are calculated in
@@ -474,8 +455,7 @@ public class Calculations extends MethodProvider {
 	 * @param destX    the destX (0 < destX < 104)
 	 * @param destY    the destY (0 < destY < 104)
 	 * @param isObject if it's an object, it will find path which touches it.
-	 * @return The distance of the shortest path to the destination; or -1 if no
-	 *         valid path to the destination was found.
+	 * @return The distance of the shortest path to the destination; or -1 if no valid path to the destination was found.
 	 */
 	private int dijkstraDist(final int startX, final int startY, final int destX, final int destY, final boolean isObject) {
 		try {

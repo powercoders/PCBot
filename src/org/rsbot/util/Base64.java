@@ -364,6 +364,7 @@ public class Base64 {
 		encodedBlockSize = BYTES_PER_ENCODED_BLOCK;
 		this.lineLength = lineLength;
 		chunkSeparatorLength = lineSeparator == null ? 0 : lineSeparator.length;
+		// TODO could be simplified if there is no requirement to reject invalid line sep when length <=0
 		// @see test case Base64Test.testConstructors()
 		if (lineSeparator != null) {
 			if (containsAlphabetOrPad(lineSeparator)) {

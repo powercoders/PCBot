@@ -56,6 +56,19 @@ public class RSNPC extends RSCharacter {
 		}
 	}
 
+
+	/**
+	 * Determines whether the RSNPC is dead or dying
+	 *
+	 * @return <tt>true</tt> if the npc is dead/dying; otherwise
+	 *         <tt>false</tt>.
+	 */
+	@Override
+	public boolean isDead() {
+		return !isValid() || (getHPPercent() == 0 && getAnimation() != -1
+				&& getInteracting() == null);
+	}
+
 	/**
 	 * @return <tt>true</tt> if RSNPC is interacting with RSPlayer; otherwise
 	 *         <tt>false</tt>.

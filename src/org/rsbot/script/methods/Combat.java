@@ -183,15 +183,4 @@ public class Combat extends MethodProvider {
 		final RSCharacter interact = methods.players.getMyPlayer().getInteracting();
 		return interact != null && interact.equals(npc);
 	}
-
-	/**
-	 * Checks whether the desired Npc is dead.
-	 *
-	 * @param npc The RSNPC to check.
-	 * @return <tt>true</tt> if the Npc is dead or dying; otherwise
-	 *         <tt>false</tt>.
-	 */
-	public boolean isDead(final RSNPC npc) {
-		return npc == null || !npc.isValid() || npc.getHPPercent() == 0 && npc.getAnimation() != -1 && npc.getInteracting() == null;
-	}
 }
