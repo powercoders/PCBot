@@ -72,24 +72,22 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 
 		if (keys == null || keys.isEmpty() || keys.containsKey("enabled") && !parseBool(keys.get("enabled"))) {
 			enabled = false;
-		}
-
-		if (keys.containsKey("error")) {
-			error = keys.get("error");
-		}
-
-		if (keys.containsKey("version")) {
-			final int remoteVersion = Integer.parseInt(keys.get("version"));
-			if (version != remoteVersion) {
-				enabled = false;
-				error = "please update your version of the bot";
+		} else {
+			if (keys.containsKey("error")) {
+				error = keys.get("error");
 			}
-		}
-
-		if (keys.containsKey("url")) {
-			try {
-				base = new URL(keys.get("url").replace("%key", getKey()));
-			} catch (final MalformedURLException e) {
+			if (keys.containsKey("version")) {
+				final int remoteVersion = Integer.parseInt(keys.get("version"));
+				if (version != remoteVersion) {
+					enabled = false;
+					error = "please update your version of the bot";
+				}
+			}
+			if (keys.containsKey("url")) {
+				try {
+					base = new URL(keys.get("url").replace("%key", getKey()));
+				} catch (final MalformedURLException e) {
+				}
 			}
 		}
 

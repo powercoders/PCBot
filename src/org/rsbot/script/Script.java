@@ -348,6 +348,11 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 		return ctx.bot;
 	}
 
+	/**
+	 * Get an accessible and isolated directory for reading and writing files.
+	 *
+	 * @return A unique per-script directory path with file IO permissions.
+	 */
 	public File getCacheDirectory() {
 		final File dir = new File(Configuration.Paths.getScriptCacheDirectory(), getClass().getName());
 		if (!dir.exists()) {
