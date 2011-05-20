@@ -48,6 +48,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private boolean disableConfirmations = false;
 	private TrayIcon tray = null;
 	private java.util.Timer shutdown = null;
+	private java.util.Timer clean = null;
 
 	public BotGUI() {
 		init();
@@ -80,6 +81,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				System.gc();
 			}
 		});
+		clean = new java.util.Timer(true);
+		clean.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				System.gc();
+			}
+		}, 1000 * 60 * 10, 1000 * 60 * 10);
 	}
 
 	@Override
