@@ -3,501 +3,350 @@ package org.rsbot.script.randoms;
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Bank;
-import org.rsbot.script.util.Filter;
 import org.rsbot.script.wrappers.*;
 
-/*
- * Written by Iscream(Feb 4, 2010)
- * Updated by Iscream(Feb 17, 2010)
- * Updated by zzSleepzz(Mar 1, 2010 to remove false positives)
- * Updated by Iscream(Apr 15, 2010)
- * Updated by Iscream(Apr 23, 2010)
- * Updated by NoEffex(Nov 25, 2010 to convert to model checking)
- * Updated by konzy(May 19, 2011 deposits stacks)
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+/**
+ * <p>
+ * This short-sighted gravedigger has managed to put five coffins in the wrong
+ * graves. <br />
+ * If he'd looked more closely at the headstones, he might have known where each
+ * one was supposed to go! <br />
+ * Help him by matching the contents of each coffin with the headstones in the
+ * graveyard. Easy, huh?
+ * </p>
+ * <p/>
+ * Last Update: 1.7 05/19/11 konzy.
+ *
+ * @author Qauters
+ * 
  */
-@ScriptManifest(authors = {"Iscream"}, name = "PrisonPete", version = 1.5)
-public class Prison extends Random {
+@ScriptManifest(authors = {"Qauters"}, name = "GraveDigger", version = 1.7)
+public class GraveDigger extends Random {
 
-	private static final int PRISON_MATE = 3118, LEVER_ID = 10817,
-			DOOR_KEY = 6966;
+	class Group {
+		// IDs used later
+		int coffinID = -1;
+		int graveID = -1;
 
-	private int unlocked, state = 0;
-	private RSNPC balloonToPop;
-	private RSNPC pete;
-	private boolean talkedtopete = false;
-	private boolean key = false;
-	private boolean lucky = false;
+		// General group data
+		final int graveStoneModelID;
+		final int[] coffinModelIDs;
 
-	private static class Balloons {
-		static final short[] FATTY = {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
-				2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 7, 2, 2, 8, 8, 5, 5, 9, 9, 10,
-				11, 11, 15, 16, 17, 13, 14, 20, 20, 20, 20, 20, 21, 21, 21, 22,
-				22, 23, 23, 24, 24, 24, 25, 25, 26, 26, 26, 27, 28, 29, 29, 30,
-				30, 31, 32, 33, 33, 36, 36, 36, 36, 36, 37, 37, 37, 38, 38, 39,
-				39, 40, 40, 41, 42, 45, 45, 45, 45, 45, 46, 46, 46, 46, 46, 46,
-				46, 46, 47, 47, 48, 48, 49, 49, 50, 51, 51, 52, 52, 47, 47, 53,
-				53, 50, 50, 54, 54, 55, 22, 22, 59, 60, 61, 57, 58, 64, 64, 64,
-				64, 64, 65, 65, 65, 65, 65, 65, 65, 65, 66, 66, 67, 67, 68, 68,
-				43, 69, 69, 70, 70, 66, 66, 71, 71, 43, 43, 72, 72, 73, 74, 74,
-				78, 79, 80, 76, 77, 83, 83, 83, 83, 83, 84, 84, 84, 85, 85, 86,
-				86, 87, 87, 89, 90, 92, 92, 92, 92, 93, 93, 94, 94, 95, 5, 98,
-				98, 98, 98, 98, 99, 99, 99, 22, 22, 100, 100, 101, 101, 101,
-				102, 102, 103, 103, 103, 104, 105, 106, 106, 107, 107, 108,
-				109, 110, 110, 113, 113, 113, 113, 113, 114, 114, 114, 22, 22,
-				115, 115, 116, 116, 116, 117, 117, 118, 118, 118, 119, 120,
-				121, 121, 122, 122, 123, 124, 125, 125, 128, 128, 128, 128,
-				128, 129, 129, 129, 22, 22, 130, 130, 131, 131, 131, 132, 132,
-				133, 133, 133, 134, 135, 136, 136, 137, 137, 138, 32, 139, 139};
-		static final short[] HORNY = {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
-				2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 7, 2, 2, 8, 8, 5, 5, 9, 9, 10,
-				11, 11, 15, 16, 17, 13, 14, 20, 20, 20, 20, 20, 21, 21, 21, 22,
-				22, 23, 23, 24, 24, 24, 25, 25, 26, 26, 26, 27, 28, 29, 29, 30,
-				30, 31, 32, 33, 33, 36, 36, 36, 36, 36, 37, 37, 37, 38, 38, 39,
-				39, 40, 40, 22, 41, 41, 42, 43, 44, 47, 47, 47, 47, 47, 48, 48,
-				48, 48, 48, 48, 48, 48, 49, 49, 50, 50, 51, 51, 52, 53, 53, 54,
-				54, 49, 49, 55, 55, 52, 52, 56, 56, 57, 22, 22, 61, 62, 63, 59,
-				60, 66, 66, 66, 66, 66, 67, 67, 67, 67, 67, 67, 67, 67, 68, 68,
-				69, 69, 70, 70, 43, 71, 71, 72, 72, 68, 68, 73, 73, 43, 43, 74,
-				74, 75, 76, 76, 80, 81, 82, 78, 79, 85, 85, 85, 85, 85, 86, 86,
-				86, 87, 87, 88, 88, 89, 89, 90, 91, 91, 92, 43, 93, 96, 96, 96,
-				96, 97, 97, 98, 98, 99, 5, 102, 102, 102, 102, 102, 102, 103,
-				103, 103, 103, 104, 104, 105, 105, 106, 106, 106, 107, 107,
-				108, 109, 109, 110, 110, 110, 111, 112, 113, 117, 115, 119,
-				119, 119, 119, 119, 119, 120, 120, 120, 120, 121, 121, 122,
-				122, 123, 123, 123, 124, 124, 125, 126, 126, 127, 127, 127,
-				128, 129, 130, 134, 132, 136, 136, 136, 136, 136, 137, 137,
-				137, 22, 22, 138, 138, 139, 139, 139, 140, 140, 141, 141, 141,
-				142, 143, 144, 144, 145, 145, 146, 147, 148, 148, 151, 151,
-				151, 151, 151, 152, 152, 152, 22, 22, 153, 153, 154, 154, 154,
-				155, 155, 156, 156, 156, 157, 158, 159, 159, 160, 160, 161,
-				162, 163, 163};
-		static final short[] SKINNY_BENT_TAIL = {0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
-				1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 7, 2, 2, 8, 8, 5, 5, 9,
-				9, 10, 11, 11, 15, 16, 17, 13, 14, 20, 20, 20, 20, 20, 21, 21,
-				21, 22, 22, 23, 23, 24, 24, 24, 25, 25, 26, 26, 26, 27, 28, 29,
-				29, 30, 30, 31, 32, 33, 33, 36, 36, 36, 36, 36, 37, 37, 37, 38,
-				38, 39, 39, 40, 40, 22, 41, 41, 42, 43, 44, 47, 47, 47, 47, 47,
-				48, 48, 48, 48, 48, 48, 48, 48, 49, 49, 50, 50, 51, 51, 52, 53,
-				53, 54, 54, 49, 49, 55, 55, 52, 52, 56, 56, 57, 22, 22, 61, 62,
-				63, 59, 60, 66, 66, 66, 66, 66, 67, 67, 67, 67, 67, 67, 67, 67,
-				68, 68, 69, 69, 70, 70, 43, 71, 71, 72, 72, 68, 68, 73, 73, 43,
-				43, 74, 74, 75, 76, 76, 80, 81, 82, 78, 79, 85, 85, 85, 85, 85,
-				86, 86, 86, 87, 87, 88, 88, 89, 89, 90, 91, 91, 92, 43, 93, 96,
-				96, 96, 96, 96, 97, 97, 97, 98, 98, 99, 99, 100, 100, 5, 101,
-				101, 102, 103, 104, 107, 107, 107, 107, 107, 108, 108, 108,
-				109, 109, 110, 110, 111, 111, 103, 112, 112, 113, 114, 115};
-		static final short[] SKINNY_NORMAL_TAIL = {0, 0, 0, 0, 0, 1, 1, 1, 1,
-				1, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 7, 2, 2, 8, 8, 5, 5,
-				9, 9, 10, 11, 11, 15, 16, 17, 13, 14, 20, 20, 20, 20, 20, 21,
-				21, 21, 22, 22, 23, 23, 24, 24, 24, 25, 25, 26, 26, 26, 27, 28,
-				29, 29, 30, 30, 31, 32, 33, 33, 36, 36, 36, 36, 37, 37, 38, 38,
-				39, 22, 42, 42, 42, 42, 42, 43, 43, 43, 43, 43, 43, 43, 43, 44,
-				44, 45, 45, 46, 46, 47, 48, 48, 49, 49, 44, 44, 50, 50, 47, 47,
-				51, 51, 52, 22, 22, 56, 57, 58, 54, 55, 61, 61, 61, 61, 61, 62,
-				62, 62, 62, 62, 62, 62, 62, 63, 63, 64, 64, 65, 65, 38, 66, 66,
-				67, 67, 63, 63, 68, 68, 38, 38, 69, 69, 70, 71, 71, 75, 76, 77,
-				73, 74, 80, 80, 80, 80, 80, 81, 81, 81, 82, 82, 82, 83, 83, 83,
-				84, 84, 5, 85, 85, 86, 86, 87, 87, 88, 89, 89, 90, 90, 92, 93,
-				96, 96, 96, 96, 97, 97, 98, 98, 99, 100, 103, 103, 103, 103,
-				104, 104, 105, 105, 106, 107};
+		public Group(final int graveStoneModelID, final int[] coffinModelIDs) {
+			this.graveStoneModelID = graveStoneModelID;
+			this.coffinModelIDs = coffinModelIDs;
+		}
+
+		public boolean isGroup(final int graveStoneModelID) {
+			return this.graveStoneModelID == graveStoneModelID;
+		}
+
+		public boolean isGroup(final int[] coffinModelIDs) {
+			for (final int modelID : this.coffinModelIDs) {
+				boolean found = false;
+				for (final int coffinModelID : coffinModelIDs) {
+					if (modelID == coffinModelID) {
+						found = true;
+					}
+				}
+				if (!found) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
+	private static final int[] coffinIDs = {7587, 7588, 7589, 7590, 7591};
+	private static final int[] graveStoneIDs = {12716, 12717, 12718, 12719,
+			12720};
+	private static final int[] filledGraveIDs = {12721, 12722, 12723, 12724,
+			12725};
+	private static final int[] emptyGraveIDs = {12726, 12727, 12728, 12729,
+			12730};
+
+	private static final int INTERFACE_READ_GRAVESTONE = 143;
+	private static final int INTERFACE_READ_GRAVESTONE_MODEL = 2;
+	private static final int INTERFACE_READ_GRAVESTONE_CLOSE = 3;
+	private static final int INTERFACE_CHECK_COFFIN = 141;
+	private static final int INTERFACE_CHECK_COFFIN_CLOSE = 12;
+	private static final int[] INTERFACE_CHECK_COFFIN_ITEMS = {3, 4, 5, 6, 7,
+			8, 9, 10, 11};
+
+	@SuppressWarnings("unused")
+	private static final int[] NOT_TO_DEPOSIT = {1351, 1349, 1353, 1361, 1355,
+			1357, 1359, 4031, 6739, 13470, 14108, 1265, 1267, 1269, 1296, 1273,
+			1271, 1275, 15259, 303, 305, 307, 309, 311, 10129, 301, 13431, 313,
+			314, 2347, 995, 10006, 10031, 10008, 10012, 11260, 10150, 10010,
+			556, 558, 555, 557, 554, 559, 562, 560, 565, 8013, 4251, 8011,
+			8010, 8009, 8008, 8007};
+
+	private final ArrayList<Group> groups = new ArrayList<Group>();
+
+	private int tmpID = -1, tmpStatus = -1; // used to store some data across
+	// loops
+
+	@Override
+	public void onFinish() {
+		tmpID = -1;
+		tmpStatus = -1;
+	}
+
+	public GraveDigger() {
+		groups.add(new Group(7614, new int[]{7603, 7605, 7612}));
+		groups.add(new Group(7615, new int[]{7600, 7601, 7604}));
+		groups.add(new Group(7616, new int[]{7597, 7606, 7607}));
+		groups.add(new Group(7617, new int[]{7602, 7609, 7610}));
+		groups.add(new Group(7618, new int[]{7599, 7608, 7613}));
 	}
 
 	@Override
 	public boolean activateCondition() {
-		if (game.isLoggedIn()) {
-			pete = npcs.getNearest("Prison Pete");
-			if (pete != null) {
-				return objects.getNearest(LEVER_ID) != null;
-			}
+		if (settings.getSetting(696) != 0 && objects.getNearest(12731) != null) {
+			return true;
 		}
 		return false;
 	}
 
 	@Override
 	public int loop() {
-		if (npcs.getNearest("Prison Pete") == null) {
+		if (npcs.getNearest("Leo") == null) {
 			return -1;
 		}
-		if (!talkedtopete) {
-			camera.setPitch(true);
-			if (camera.getAngle() < 175 || camera.getAngle() > 185) {
-				camera.setAngle(random(175, 185));
-				return random(500, 750);
+		if (inventory.getCountExcept(GraveDigger.coffinIDs) > 23) {
+			if (interfaces.canContinue()) {
+				interfaces.clickContinue();
+				sleep(random(1500, 2000));
 			}
+			final RSObject depo = objects.getNearest(12731);
+			if (depo != null) {
+				if (!calc.tileOnScreen(depo.getLocation())) {
+					walking.getPath(depo.getLocation()).traverse();
+					camera.turnTo(depo);
+				} else {
+					depo.doAction("Deposit");
+				}
+			}
+			if (interfaces.get(Bank.INTERFACE_DEPOSIT_BOX).isValid()) {
+				while(bank.getBoxCount() > 23){
+				final int r = random(11, 27);
+					if (interfaces.get(11).getComponent(17).getComponent(r).getComponentStackSize() > 1) {
+						interfaces.get(11).getComponent(17).getComponent(r).doAction("Deposit-All");
+					} else
+						interfaces.get(11).getComponent(17).getComponent(r).doAction("Deposit");
+				}
+				sleep(random(700, 1200));
+				interfaces.getComponent(11, 15).doClick();
+				return random(500, 700);
+			}
+			return random(2000, 3000);
 		}
-		switch (state) {
-			case 0:
-				pete = npcs.getNearest("Prison Pete");
-				if (interfaceContains("Lucky you!")) {
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
-					}
-					state = 4;
-					lucky = true;
-					return random(500, 600);
+		if (getMyPlayer().isMoving()) {
+		} else if (getMyPlayer().getAnimation() == 827) {
+		} else if (interfaces.get(242).isValid()) {
+			// Check if we finished before
+			if (interfaces.get(242).containsText("ready to leave")) {
+				tmpStatus++;
+			}
+			interfaces.getComponent(242, 6).doClick();
+		} else if (interfaces.get(64).isValid()) {
+			interfaces.getComponent(64, 5).doClick();
+		} else if (interfaces.get(241).isValid()) {
+			interfaces.getComponent(241, 5).doClick();
+		} else if (interfaces.get(243).isValid()) {
+			interfaces.getComponent(243, 7).doClick();
+		} else if (interfaces.get(220).isValid()) {
+			interfaces.getComponent(220, 16).doClick();
+		} else if (interfaces.get(236).isValid()) {
+			if (interfaces.get(236).containsText("ready to leave")) {
+				interfaces.getComponent(236, 1).doClick();
+			} else {
+				interfaces.getComponent(236, 2).doClick();
+			}
+		} else if (interfaces.get(GraveDigger.INTERFACE_CHECK_COFFIN).isValid()) {
+			if (tmpID >= 0) {
+				final int[] items = new int[GraveDigger.INTERFACE_CHECK_COFFIN_ITEMS.length];
+				final RSInterface inters = interfaces.get(GraveDigger.INTERFACE_CHECK_COFFIN);
+				for (int i = 0; i < GraveDigger.INTERFACE_CHECK_COFFIN_ITEMS.length; i++) {
+					items[i] = inters.getComponent(GraveDigger.INTERFACE_CHECK_COFFIN_ITEMS[i]).getComponentID();
 				}
-				if (interfaceContains("should leave")) {
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
-					}
-					state = 4;
-					unlocked = 10;
-					return random(500, 600);
-				}
-				if (inventory.getCount(false) == 28
-						&& !inventory.containsAll(DOOR_KEY)) {
-					log("Not enough space for this random. Depositing an Item");
-					final RSObject depo = objects.getNearest(32924);
-					if (depo != null) {
-						if (!calc.tileOnScreen(depo.getLocation())) {
-							if (!walking.walkTileMM(depo.getLocation().randomize(3,
-									3))) {
-								walking.getPath(depo.getLocation().randomize(3, 3))
-										.traverse();
-								return random(500, 700);
-							}
-							return random(1000, 1500);
-						}
-						camera.turnTo(depo, 20);
-						if (depo.doAction("Deposit")) {
-							sleep(random(1800, 2000));
-							if (getMyPlayer().isMoving()) {
-								sleep(random(200, 500));
-							}
-							if (interfaces.get(Bank.INTERFACE_DEPOSIT_BOX)
-									.isValid()) {
-								sleep(random(700, 1200));
-								final int r = random(21, 27);
-									if (bank.isDepositOpen() && bank.getBoxCount() == 28) {
-										if (interfaces.get(11).getComponent(17).getComponent(r).getComponentStackSize() > 1) {
-											interfaces.get(11).getComponent(17).getComponent(r).doAction("Deposit-All");
-										} else
-											interfaces.get(11).getComponent(17).getComponent(r).doAction("Deposit");
-										return random(500, 750);
-										}
-								sleep(random(700, 1200));
-								interfaces.getComponent(11, 15).doClick();
-							}
-							return random(400, 500);
-						}
-						return random(500, 800);
-					}
-					return random(500, 600);
-				}
-
-				if (getMyPlayer().isMoving()) {
-					return random(250, 500);
-				}
-				if (interfaceContains("minute")) {
-					talkedtopete = true;
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
-						return random(500, 600);
-					}
-					return random(500, 600);
-				}
-
-				if (interfaces.get(228).isValid()
-						&& interfaces.get(228).containsText("How do")) {
-					interfaces.get(228).getComponent(3).doClick();
-					return random(500, 600);
-				}
-				if (interfaces.canContinue()) {
-					interfaces.clickContinue();
-					return random(1000, 1200);
-				}
-				if (!talkedtopete && pete != null
-						&& !interfaces.get(228).isValid()
-						&& !interfaces.canContinue()) {
-					if (!calc.tileOnScreen(pete.getLocation())) {
-						walking.walkTileMM(pete.getLocation());
-						return random(1000, 1400);
-					}
-					if (pete.doAction("talk")) {
-						return random(1500, 1600);
-					} else {
-						camera.turnTo(pete.getLocation());
-						return random(500, 600);
-					}
-				}
-				if (unlocked == 3) {
-					state = 4;
-					return random(250, 500);
-				}
-				if (unlocked <= 2 && talkedtopete) {
-					state = 1;
-					return random(500, 600);
-				}
-				return random(350, 400);
-
-			case 1:
-				// Figures out the balloon
-				if (interfaceContains("Lucky you!")) {
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
-					}
-					state = 4;
-					lucky = true;
-					return random(500, 600);
-				}
-				if (interfaceContains("should leave")) {
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
-					}
-					state = 4;
-					unlocked = 10;
-					return random(500, 600);
-				}
-				if (interfaces.get(273).getComponent(3).isValid()) {
-					if (atLever()) {
-						if (balloonToPop != null
-								&& interfaces.get(273).getComponent(4)
-								.doAction("Close")) {
-							state = 2;
-							return random(800, 900);
-						}
-						return random(500, 700);
-					}
-				}
-				final RSObject lever = objects.getNearest(LEVER_ID);
-				if (lever != null && talkedtopete) {
-					if (!calc.tileOnScreen(lever.getLocation())) {
-						walking.walkTileMM(lever.getLocation());
-						return random(1000, 1200);
-					}
-					if (!getMyPlayer().isMoving()
-							&& calc.tileOnScreen(lever.getLocation())) {
-						// if (tiles.doAction(lever.getLocation(), 0.5, 0.5, 170,
-						// "Pull")) {
-						if (lever.doAction("Pull")) {
-							sleep(random(1400, 1600));
-							if (atLever()) {
-								if (balloonToPop != null
-										&& interfaces.get(273).getComponent(4)
-										.doAction("Close")) {
-									state = 2;
-									return random(800, 900);
-								}
-								return random(500, 700);
-							}
-							return random(500, 600);
-						} else {
-							camera.turnTo(lever.getLocation());
-							return random(500, 600);
-						}
-					}
-				}
-				if (!talkedtopete) {
-					state = 0;
-					return random(500, 600);
-				}
-				return random(500, 600);
-			case 2:
-				// Finds animal and pops it
-				if (interfaceContains("Lucky you!")) {
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
-					}
-					state = 4;
-					lucky = true;
-					return random(500, 600);
-				}
-				if (interfaceContains("should leave")) {
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
-					}
-					state = 4;
-					unlocked = 10;
-					return random(500, 600);
-				}
-				if (getMyPlayer().isMoving()) {
-					return random(250, 500);
-				}
-				if (balloonToPop == null && unlocked <= 2) {
-					state = 1;
-					return random(500, 700);
-				}
-				if (unlocked == 3) {
-					state = 4;
-				}
-
-				if (!inventory.containsAll(DOOR_KEY)) {
-					if (calc.tileOnScreen(balloonToPop.getLocation())) {
-						balloonToPop.doAction("Pop");
-						return random(1200, 1400);
-					} else {
-						if (!getMyPlayer().isMoving()) {
-							walking.walkTileMM(balloonToPop.getLocation()
-									.randomize(2, 2));
-							return random(500, 750);
-						}
-						return random(500, 750);
-					}
-				}
-				if (inventory.containsAll(DOOR_KEY)) {
-					key = false;
-					state = 3;
-					return random(500, 700);
-				}
-				return random(350, 400);
-
-			case 3:
-				// Goes to pete
-				pete = npcs.getNearest("Prison Pete");
-				if (getMyPlayer().isMoving()) {
-					return random(250, 500);
-				}
-				if (interfaceContains("Lucky you!")) {
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
-					}
-					state = 4;
-					lucky = true;
-					return random(500, 600);
-				}
-				if (interfaceContains("should leave")) {
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
-					}
-					state = 4;
-					unlocked = 10;
-					return random(500, 600);
-				}
-				if (interfaceContains("you got all the keys")) {
-					key = true;
-					unlocked = 5;
-					state = 4;
-					balloonToPop = null;
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
-						return random(500, 600);
-					}
-					return random(250, 500);
-				}
-				if (interfaceContains("Hooray")) {
-					key = true;
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
-						return random(500, 600);
-					}
-				}
-				if (interfaces.canContinue()) {
-					interfaces.clickContinue();
-					return random(500, 600);
-				}
-				if (pete != null && !calc.tileOnScreen(pete.getLocation())
-						&& !interfaces.get(243).isValid()) {
-					walking.walkTileMM(pete.getLocation());
-					return random(400, 600);
-				}
-				if (!inventory.containsAll(DOOR_KEY)
-						&& npcs.getNearest(PRISON_MATE) != null
-						&& unlocked <= 2 && key) {
-					unlocked++;
-					state = 0;
-					balloonToPop = null;
-					return random(350, 400);
-				}
-
-				if (inventory.containsAll(DOOR_KEY) && !getMyPlayer().isMoving()) {
-					inventory.getItem(DOOR_KEY).doAction("Return");
-					return random(1000, 2000);
-				}
-				if (!inventory.containsAll(DOOR_KEY)
-						&& npcs.getNearest(PRISON_MATE) != null
-						&& unlocked <= 2 && !key) {
-					state = 0;
-					balloonToPop = null;
-					return random(350, 400);
-				}
-
-				return random(350, 400);
-			case 4:
-				// exits
-				final RSTile doorTile = new RSTile(2086, 4459);
-				if (unlocked <= 2 && !lucky) {
-					state = 0;
-					return random(500, 600);
-				}
-				if (!calc.tileOnScreen(doorTile)) {
-					walking.walkTileMM(doorTile);
-					return random(400, 500);
-				}
-				if (calc.tileOnScreen(doorTile)) {
-					final RSObject gate = objects.getNearest(11177, 11178);
-					if (gate != null) {
-						gate.doAction("Open");
-					}
-					// tiles.doAction(new RSTile(2085, 4459), 1, 0, 30, "Open");
-					return random(500, 600);
-				}
-				return random(200, 400);
-		}
-		return random(200, 400);
-	}
-
-	@Override
-	public void onFinish() {
-		if (lucky) {
-			log.info("Failed to complete Prison Pete. Stopping now.");
-			sleep(5000, 10000);
-			stopScript(false);
-		}
-		unlocked = state = 0;
-		balloonToPop = null;
-		pete = null;
-		talkedtopete = false;
-		key = false;
-		lucky = false;
-	}
-
-	public short[] setItemIDs(final int b2p) {
-		// sets the proper balloon id
-		switch (b2p) {
-			case 10749: // skinny bend at end of tail
-				return Balloons.SKINNY_BENT_TAIL;
-			case 10750: // long tail, no bend at end of tail
-				return Balloons.SKINNY_NORMAL_TAIL;
-			case 10751: // fatty
-				return Balloons.FATTY;
-			case 10752: // horny
-				return Balloons.HORNY;
-		}
-		return new short[]{};
-	}
-
-	public boolean interfaceContains(final String s) {
-		final RSInterface[] all = interfaces.getAll();
-		for (final RSInterface iface : all) {
-			if (iface != null) {
-				final int count = iface.getComponents().length;
-				for (int i = 0; i < count; i++) {
-					if (iface.getComponent(i).getText() != null
-							&& iface.getComponent(i).getText().contains(s)) {
-						return true;
+				for (final Iterator<Group> it = groups.iterator(); it.hasNext() && tmpID >= 0;) {
+					final Group g = it.next();
+					if (g.isGroup(items)) {
+						g.coffinID = tmpID;
+						tmpID = -1;
 					}
 				}
 			}
-		}
-		return false;
-	}
-
-	public boolean atLever() {
-		if (interfaces.get(273).getComponent(3).isValid()) {
-			final Filter<RSModel> filter = RSModel
-					.newVertexFilter(setItemIDs(interfaces.get(273)
-							.getComponent(3).getModelID()));
-			balloonToPop = npcs.getNearest(new Filter<RSNPC>() {
-				@Override
-				public boolean accept(final RSNPC n) {
-					return filter.accept(n.getModel());
+			atCloseInterface(GraveDigger.INTERFACE_CHECK_COFFIN, GraveDigger.INTERFACE_CHECK_COFFIN_CLOSE);
+		} else if (interfaces.get(GraveDigger.INTERFACE_READ_GRAVESTONE).isValid()) {
+			final int modelID = interfaces.get(GraveDigger.INTERFACE_READ_GRAVESTONE).getComponent(GraveDigger.INTERFACE_READ_GRAVESTONE_MODEL).getComponentID();
+			for (final Group g : groups) {
+				if (g.isGroup(modelID)) {
+					g.graveID = tmpID;
 				}
-			});
-			if (balloonToPop != null) {
-				return true;
+			}
+			atCloseInterface(GraveDigger.INTERFACE_READ_GRAVESTONE, GraveDigger.INTERFACE_READ_GRAVESTONE_CLOSE);
+		} else if (tmpStatus == 0 && tmpID != -1) {
+			for (final Group g : groups) {
+				if (g.graveID == tmpID) {
+					final RSObject obj = objects.getNearest(g.graveID);
+					if (obj == null || !setObjectInScreen(obj)) {
+						log.info("Couldn't find grave, shutting down.");
+						game.logout(false);
+						return -1;
+					}
+					// if (isItemSelected() > 0) {
+					// inventory.atItem(GraveDigger.coffinIDs[g.coffinID],
+					// "Cancel");
+					// }
+
+					inventory.useItem(inventory.getItem(GraveDigger.coffinIDs[g.coffinID]), obj);
+
+					// Wait for about 10s to finish
+					final long cTime = System.currentTimeMillis();
+					while (System.currentTimeMillis() - cTime < 10000) {
+						if (inventory.getItem(GraveDigger.coffinIDs[g.coffinID]) == null) {
+							break;
+						}
+						sleep(random(400, 700));
+					}
+					break;
+				}
+			}
+			tmpID = -1;
+		} else if (tmpStatus == -1 && objects.getNearest(GraveDigger.filledGraveIDs) != null) {
+			final RSObject obj = objects.getNearest(GraveDigger.filledGraveIDs);
+			if (obj == null || !setObjectInScreen(obj)) {
+				log.severe("Couldn't find grave, shutting down.");
+				game.logout(false);
+				return -1;
+			}
+			obj.doAction("Take-coffin");
+		} else if (tmpStatus == 0 && objects.getNearest(GraveDigger.emptyGraveIDs) != null) {
+			final RSObject obj = objects.getNearest(GraveDigger.emptyGraveIDs);
+			final int id = obj.getID();
+			for (int i = 0; i < GraveDigger.emptyGraveIDs.length; i++) {
+				if (GraveDigger.emptyGraveIDs[i] == id) {
+					final RSObject objGS = objects.getNearest(GraveDigger.graveStoneIDs[i]);
+					if (objGS == null || !setObjectInScreen(objGS)) {
+						log.severe("Couldn't find grave stone, shutting down.");
+						game.logout(false);
+						return -1;
+					}
+					tmpID = obj.getID();
+					// if (Bot.getClient().isItemSelected() == 1) {
+					// objects.atObject(objGS, "Use");
+					// }
+					objGS.doAction("Read");
+				}
+			}
+		} else if (tmpStatus == -1) {
+			final ArrayList<Integer> agc = new ArrayList<Integer>();
+			for (int i = 0; i < GraveDigger.coffinIDs.length; i++) {
+				agc.add(i);
+			}
+			for (final Group g : groups) {
+				if (g.coffinID != -1) {
+					agc.remove(new Integer(g.coffinID));
+				}
+			}
+			if (tmpStatus == -1 && agc.size() == 0) {
+				tmpStatus++;
+			}
+			while (tmpStatus == -1) {
+				final int i = random(0, agc.size());
+				if (inventory.getCount(GraveDigger.coffinIDs[agc.get(i)]) > 0) {
+					tmpID = agc.get(i);
+					inventory.getItem(GraveDigger.coffinIDs[agc.get(i)]).doAction("Check");
+
+					return random(1800, 2400); // We are looking at the model
+				}
+			}
+		} else if (tmpStatus == 0) {
+			// Done
+			final RSNPC leo = npcs.getNearest("Leo");
+			if (leo == null || !setCharacterInScreen(leo)) {
+				log.severe("Couldn't find Leo, shutting down.");
+				game.logout(false);
+				return -1;
+			}
+			//Teleport Ani - 8939
+			if (getMyPlayer().getAnimation() == -1) {
+				leo.doAction("Talk-to");
 			}
 		}
-		return false;
+		return random(1400, 1800);
 	}
 
+	public boolean atCloseInterface(final int parent, final int child) {
+		final RSComponent i = interfaces.getComponent(parent, child);
+		if (!i.isValid()) {
+			return false;
+		}
+		final Rectangle pos = i.getArea();
+		if (pos.x == -1 || pos.y == -1 || pos.width == -1 || pos.height == -1) {
+			return false;
+		}
+		final int dx = (int) (pos.getWidth() - 4) / 2;
+		final int dy = (int) (pos.getHeight() - 4) / 2;
+		final int midx = (int) (pos.getMinX() + pos.getWidth() / 2);
+		final int midy = (int) (pos.getMinY() + pos.getHeight() / 2);
+		mouse.click(midx + random(-dx, dx) - 5, midy + random(-dy, dy), true);
+		return true;
+	}
+
+	public boolean setCharacterInScreen(final RSCharacter ch) {
+		// Check if it's on screen, if not make it on screen.
+		for (int i = 0; i < 3; i++) {
+			final Point screenLocation = ch.getScreenLocation();
+			if (!calc.pointOnScreen(screenLocation)) {
+				switch (i) {
+					case 0:
+						camera.turnTo(ch);
+						sleep(random(200, 500));
+						break;
+					case 1:
+						walking.walkTileMM(walking.getClosestTileOnMap(ch.getLocation().randomize(2, 2)));
+						sleep(random(1800, 2000));
+						while (getMyPlayer().isMoving()) {
+							sleep(random(200, 500));
+						}
+						break;
+					default:
+						return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	public boolean setObjectInScreen(final RSObject obj) {
+		// Check if it's on screen, if not make it on screen.
+		for (int i = 0; i < 3; i++) {
+			final Point screenLocation = calc.tileToScreen(obj.getLocation());
+			if (!calc.pointOnScreen(screenLocation)) {
+				switch (i) {
+					case 0:
+						camera.turnTo(obj);
+						sleep(random(200, 500));
+						break;
+					case 1:
+						walking.walkTileMM(walking.getClosestTileOnMap(obj.getLocation().randomize(2, 2)));
+						sleep(random(1800, 2000));
+						while (getMyPlayer().isMoving()) {
+							sleep(random(200, 500));
+						}
+						break;
+					default:
+						return false;
+				}
+			}
+		}
+		return true;
+	}
 }
