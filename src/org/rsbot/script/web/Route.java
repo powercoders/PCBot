@@ -1,9 +1,7 @@
 package org.rsbot.script.web;
 
-
 import java.util.Arrays;
 import org.rsbot.script.wrappers.RSTile;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
