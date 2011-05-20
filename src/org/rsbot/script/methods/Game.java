@@ -28,12 +28,63 @@ public class Game extends MethodProvider {
 		VIEW, ON, FRIENDS, OFF, HIDE, ALL, FILTER
 	}
 
+	/**
+	 * The chat filter buttons
+	 *
+	 * @author kiko
+	 */
+	public enum ChatButton {
+		ALL (2, -1, 31),
+		GAME (3, 30, 28, ChatMode.ALL, ChatMode.FILTER),
+		PUBLIC (4, 27, 25, ChatMode.ON, ChatMode.FRIENDS, ChatMode.OFF, ChatMode.HIDE),
+		PRIVATE (5, 24, 22, ChatMode.ON, ChatMode.FRIENDS, ChatMode.OFF),
+		FRIENDS (7, 35, 33, ChatMode.ON, ChatMode.FRIENDS, ChatMode.OFF),
+		CLAN (6, 21, 19, ChatMode.ON, ChatMode.FRIENDS, ChatMode.OFF),
+		TRADE (8, 18, 16, ChatMode.ON, ChatMode.FRIENDS, ChatMode.OFF),
+		ASSIST (9, 15, 13, ChatMode.ON, ChatMode.FRIENDS, ChatMode.OFF);
+
+		private final int component;
+		private final int textComponent;
+		private final int selectComponent;
+		private final ChatMode[] options;
+
+		ChatButton(final int component, final int textComponent, final int selectComponent, final ChatMode... options) {
+			this.component = component;
+			this.textComponent = textComponent;
+			this.selectComponent = selectComponent;
+			this.options = options;
+		}
+
+		public boolean hasMode(final ChatMode mode) {
+			if (mode == ChatMode.VIEW)
+				return true;
+			for (ChatMode option : options) {
+				if (mode == option)
+					return true;
+			}
+			return false;
+		}
+
+		public int idx() {
+			return component;
+		}
+
+		public int selectIdx() {
+			return selectComponent;
+		}
+
+		public int textIdx() {
+			return textComponent;
+		}
+	}
+
 	public static final int INDEX_LOGIN_SCREEN = 3;
 	public static final int INDEX_LOBBY_SCREEN = 7;
 	public static final int[] INDEX_LOGGED_IN = {10, 11};
 	public static final int INDEX_FIXED = 746;
 
-	public static final int[] TAB_FUNCTION_KEYS = {KeyEvent.VK_F5, // Attack
+	public static final int[] TAB_FUNCTION_KEYS = {
+		KeyEvent.VK_F5, // Attack
 		0, // Achievements
 		0, // Stats
 		0, // Quests
@@ -120,12 +171,8 @@ public class Game extends MethodProvider {
 	 * @see #setChatOption(int, ChatMode)
 	 */
 	@Deprecated
-	public boolean setTradeMode(final Game.ChatMode mode) {
-		if (mode.equals(Game.ChatMode.HIDE)) {
-			throw new IllegalArgumentException("Bad mode: HIDE");
-		}
-		mouseChatButton(CHAT_OPTION_TRADE, false);
-		return methods.menu.doAction(mode.toString());
+	public boolean setTradeMode(final ChatMode mode) {
+		return setChatOption(ChatButton.TRADE, mode);
 	}
 
 	/**
@@ -136,7 +183,7 @@ public class Game extends MethodProvider {
 	 */
 	@Deprecated
 	public void showAllChatMessages() {
-		mouseChatButton(CHAT_OPTION_ALL, true);
+		mouseChatButton(ChatButton.ALL, true);
 	}
 
 	/**
@@ -147,7 +194,7 @@ public class Game extends MethodProvider {
 	 */
 	@Deprecated
 	public void showGameChatMessages() {
-		mouseChatButton(CHAT_OPTION_GAME, true);
+		mouseChatButton(ChatButton.GAME, true);
 	}
 
 	/**
@@ -159,12 +206,8 @@ public class Game extends MethodProvider {
 	 * @see #setChatOption(int, ChatMode)
 	 */
 	@Deprecated
-	public boolean setPrivateChat(final Game.ChatMode mode) {
-		if (mode.equals(Game.ChatMode.HIDE)) {
-			throw new IllegalArgumentException("Bad mode: HIDE");
-		}
-		mouseChatButton(CHAT_OPTION_PRIVATE, false);
-		return methods.menu.doAction(mode.toString());
+	public boolean setPrivateChat(final ChatMode mode) {
+		return setChatOption(ChatButton.PRIVATE, mode);
 	}
 
 	/**
@@ -176,9 +219,8 @@ public class Game extends MethodProvider {
 	 * @see #setChatOption(int, ChatMode)
 	 */
 	@Deprecated
-	public boolean setPublicChat(final Game.ChatMode mode) {
-		mouseChatButton(CHAT_OPTION_PUBLIC, false);
-		return methods.menu.doAction(mode.toString());
+	public boolean setPublicChat(final ChatMode mode) {
+		return setChatOption(ChatButton.PUBLIC, mode);
 	}
 
 	/**
@@ -190,12 +232,8 @@ public class Game extends MethodProvider {
 	 * @see #setChatOption(int, ChatMode)
 	 */
 	@Deprecated
-	public boolean setAssistMode(final Game.ChatMode mode) {
-		if (mode.equals(Game.ChatMode.HIDE)) {
-			throw new IllegalArgumentException("Bad mode: HIDE");
-		}
-		mouseChatButton(CHAT_OPTION_ASSIST, false);
-		return methods.menu.doAction(mode.toString());
+	public boolean setAssistMode(final ChatMode mode) {
+		return setChatOption(ChatButton.ASSIST, mode);
 	}
 
 	/**
@@ -207,12 +245,8 @@ public class Game extends MethodProvider {
 	 * @see #setChatOption(int, ChatMode)
 	 */
 	@Deprecated
-	public boolean setClanMode(final Game.ChatMode mode) {
-		if (mode.equals(Game.ChatMode.HIDE)) {
-			throw new IllegalArgumentException("Bad mode: HIDE");
-		}
-		mouseChatButton(CHAT_OPTION_CLAN, false);
-		return methods.menu.doAction(mode.toString());
+	public boolean setClanMode(final ChatMode mode) {
+		return setChatOption(ChatButton.CLAN, mode);
 	}
 
 	/**
@@ -223,8 +257,35 @@ public class Game extends MethodProvider {
 	 * @return <tt>true</tt> if item was clicked correctly; otherwise
 	 *         <tt>false</tt>
 	 */
+	@Deprecated
 	public boolean setChatOption(final int chatOption, final ChatMode mode) {
-		mouseChatButton(chatOption, false);
+		return setChatOption(getButton(chatOption), mode);
+	}
+
+	/**
+	 * Sets the specified chat mode
+	 *
+	 * @param option	one of ChatButton
+	 * @param mode		one of ChatMode
+	 * @return <tt>true</tt> if item was clicked correctly; otherwise
+	 *         <tt>false</tt>
+	 */
+	public boolean setChatOption(final ChatButton option, final ChatMode mode) {
+		if (option == null || !option.hasMode(mode)) {
+			return false;
+		}
+		if (mode == ChatMode.VIEW) {
+			return mouseChatButton(option, true);
+		}
+		final RSComponent chat = methods.interfaces.getComponent(CHAT_OPTION, option.textIdx());
+		if (chat != null) {
+			String setting = chat.getText();
+			setting = setting.substring(setting.indexOf(">") + 1);
+			if (setting.toUpperCase().equals(mode.toString())) {
+				return false;
+			}
+		}
+		mouseChatButton(option, false);
 		return methods.menu.doAction(mode.toString());
 	}
 
@@ -267,10 +328,6 @@ public class Game extends MethodProvider {
 	 *         <tt>false</tt>.
 	 */
 	public boolean open(final int tab, final boolean functionKey) {
-		/*
-		 * Only attempts by fn key if there is a valid hotkey available Returns
-		 * faster when the new tab has been selected
-		 */
 		if (tab == getCurrentTab()) {
 			return true;
 		}
@@ -349,9 +406,40 @@ public class Game extends MethodProvider {
 	 * @param left   Left or right button? Left = true. Right = false.
 	 * @return <tt>true</tt> if it was clicked.
 	 */
+	@Deprecated
 	public boolean mouseChatButton(final int button, final boolean left) {
-		final RSComponent chatButton = methods.interfaces.get(CHAT_OPTION).getComponent(button);
+		return mouseChatButton(getButton(button), left);
+	}
+
+	/**
+	 * Click the specified chat button.
+	 *
+	 * @param button One of ChatButton
+	 * @param left   true to left click, false for right click.
+	 * @return <tt>true</tt> if the button was successfully clicked.
+	 */
+	public boolean mouseChatButton(final ChatButton button, final boolean left) {
+		if (button == null || (left && isButtonSelected(button))) {
+			return false;
+		}
+		final RSComponent chatButton = methods.interfaces.getComponent(CHAT_OPTION, button.idx());
 		return chatButton.isValid() && chatButton.doClick(left);
+	}
+
+	public boolean isButtonSelected(final ChatButton button) {
+		return methods.interfaces.getComponent(CHAT_OPTION, button.selectIdx()).getBackgroundColor() == 1022;
+	}
+
+	/**
+	 * Fetch the chat button of the index for depreciated methods.
+	 * For internal use only.
+	 */
+	private ChatButton getButton(final int idx) {
+		for (ChatButton b : ChatButton.values()) {
+			if (b.idx() == idx)
+				return b;
+		}
+		return null;
 	}
 
 	/**
@@ -472,7 +560,7 @@ public class Game extends MethodProvider {
 	 * @return <tt>true</tt> if on the logout tab.
 	 */
 	public boolean isOnLogoutTab() {
-		for (int i = 0; i < Game.TAB_NAMES.length; i++) {
+		for (int i = 0; i < TAB_NAMES.length; i++) {
 			final org.rsbot.client.RSInterface tab = methods.gui.getTab(i);
 			if (tab == null) {
 				continue;
