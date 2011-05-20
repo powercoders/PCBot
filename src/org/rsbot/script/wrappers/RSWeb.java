@@ -14,6 +14,7 @@ import java.util.List;
  * @author Timer
  */
 public class RSWeb {
+
 	private final LinkedList<Route> routes = new LinkedList<Route>();
 	private int oldCount = 0;
 	private RSTile[] path;
@@ -59,6 +60,7 @@ public class RSWeb {
 		return routes.size() == 0;
 	}
 
+	@Deprecated
 	public List<RSTile[]> getPaths() {
 		List<RSTile[]> l = new ArrayList<RSTile[]>();
 		for (Route route : getRoutes()) {
@@ -71,16 +73,18 @@ public class RSWeb {
 		return l;
 	}
 
+	@Deprecated
 	public RSTile[] getPath() {//For scripters that wish to draw paths.
 		return path;
 	}
 
+	@Deprecated
 	public double getDistance() {
 		List<RSTile[]> paths = getPaths();
 		double d = 0.0D;
-		for (RSTile[] path : paths) {
+		for (RSTile[] tiles : paths) {
 			RSTile last = null;
-			for (RSTile tile : path) {
+			for (RSTile tile : tiles) {
 				if (last != null) {
 					d += tile.getX() != last.getX() && tile.getY() != last.getY() ? 1.41421356D : 1.0D;
 				}

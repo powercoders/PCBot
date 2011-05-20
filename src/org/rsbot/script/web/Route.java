@@ -1,13 +1,15 @@
 package org.rsbot.script.web;
 
+
+import java.util.Arrays;
 import org.rsbot.script.wrappers.RSTile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Route {
+
 	private final LinkedList<RouteStep> subRoutes = new LinkedList<RouteStep>();
 
 	public Route(final RouteStep[] steps) {
@@ -34,6 +36,7 @@ public class Route {
 		return subRoutes.size() == 0;
 	}
 
+	@Deprecated
 	public List<RSTile[]> getPaths() {
 		List<RSTile[]> l = new ArrayList<RSTile[]>();
 		for (RouteStep route : subRoutes) {
@@ -44,6 +47,7 @@ public class Route {
 		return l;
 	}
 
+	@Deprecated
 	public RSTile[] getPath() {
 		List<RSTile> l = new ArrayList<RSTile>();
 		for (RSTile[] tiles : getPaths()) {
