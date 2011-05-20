@@ -5,8 +5,9 @@ import org.rsbot.Configuration;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.script.AccountStore;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
-import org.rsbot.script.provider.ScriptDownloader;
 import org.rsbot.util.UpdateChecker;
+import org.rsbot.util.io.JavaCompiler;
+
 import sun.font.FontManager;
 
 import java.io.File;
@@ -161,7 +162,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	@Override
 	public void checkExec(final String cmd) {
 		final String calling = getCallingClass();
-		for (final Class<?> c : new Class<?>[]{ScriptDeliveryNetwork.class, BotGUI.class, UpdateChecker.class, ScriptDownloader.class}) {
+		for (final Class<?> c : new Class<?>[]{ScriptDeliveryNetwork.class, BotGUI.class, UpdateChecker.class, JavaCompiler.class}) {
 			if (calling.equals(c.getName())) {
 				super.checkExec(cmd);
 				return;
