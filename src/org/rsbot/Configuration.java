@@ -178,10 +178,6 @@ public class Configuration {
 			return Paths.getHomeDirectory() + File.separator + "Settings";
 		}
 
-		public static String getMenuBarPrefs() {
-			return Paths.getSettingsDirectory() + File.separator + "Menu.txt";
-		}
-
 		public static String getGarbageDirectory() {
 			final File dir = new File(Configuration.Paths.getScriptCacheDirectory(), ".java");
 			if (!dir.exists()) {

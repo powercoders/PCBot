@@ -61,7 +61,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		settings = new SettingsManager(this, new File(Configuration.Paths.getSettingsDirectory(), "preferences.ini"));
 		prefs = settings.getPreferences();
 		prefs.load();
-		menuBar.loadPrefs();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -607,7 +606,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 		if (doExit) {
 			prefs.save();
-			menuBar.savePrefs();
 			try {
 				Monitoring.stop();
 			} catch (NoClassDefFoundError ncdfe) {

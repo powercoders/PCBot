@@ -9,7 +9,6 @@ import org.rsbot.event.listeners.TextPaintListener;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
@@ -234,69 +233,6 @@ public class BotMenuBar extends JMenuBar {
 
 	public boolean isTicked(final String item) {
 		return commandCheckMap.get(item).isSelected();
-	}
-
-	public void loadPrefs() {
-		final String path = Configuration.Paths.getMenuBarPrefs();
-		if (!new File(path).exists()) {
-			return;
-		}
-		FileReader freader = null;
-		BufferedReader in = null;
-		try {
-			freader = new FileReader(path);
-			in = new BufferedReader(freader);
-			String line;
-			while ((line = in.readLine()) != null) {
-				line = line.trim();
-				if (commandCheckMap.containsKey(line)) {
-					commandCheckMap.get(line).doClick();
-				}
-			}
-		} catch (final IOException ioe) {
-			try {
-				if (in != null) {
-					in.close();
-				}
-				if (freader != null) {
-					freader.close();
-				}
-			} catch (final IOException ioe1) {
-			}
-		}
-	}
-
-	public void savePrefs() {
-		final String path = Configuration.Paths.getMenuBarPrefs();
-		FileWriter fstream = null;
-		BufferedWriter out = null;
-		try {
-			final File f = new File(path);
-			if (f.exists()) {
-				f.delete();
-			}
-			fstream = new FileWriter(path);
-			out = new BufferedWriter(fstream);
-			for (final Entry<String, JCheckBoxMenuItem> item : commandCheckMap.entrySet()) {
-				final boolean checked = item.getValue().isSelected();
-				if (!checked) {
-					continue;
-				}
-				out.write(item.getKey());
-				out.newLine();
-			}
-		} catch (final IOException ioe) {
-		} finally {
-			try {
-				if (out != null) {
-					out.close();
-				}
-				if (fstream != null) {
-					fstream.close();
-				}
-			} catch (final IOException ioe1) {
-			}
-		}
 	}
 
 	private JMenu constructMenu(final String title, final String[] elems) {
