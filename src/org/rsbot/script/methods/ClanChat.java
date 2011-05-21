@@ -10,6 +10,7 @@ import java.util.ArrayList;
  * @author Debauchery
  */
 public class ClanChat extends MethodProvider {
+
 	public static final int INTERFACE_CLAN_CHAT = 1110;
 	public static final int INTERFACE_CLAN_CHAT_CHECK = 55;
 	public static final int INTERFACE_CLAN_CHAT_USERS_LIST = 9;

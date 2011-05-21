@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
  * @author Jacmob
  */
 public class Environment extends MethodProvider {
+
 	public static final int INPUT_MOUSE = 1;
 	public static final int INPUT_KEYBOARD = 2;
 
@@ -111,6 +112,16 @@ public class Environment extends MethodProvider {
 				random.setEnabled(true);
 			}
 		}
+	}
+
+	/**
+	 * Disables all randoms.
+	 *
+	 * @deprecated Use {@link org.rsbot.script.methods.Environment#disableRandoms()}
+	 */
+	@Deprecated
+	public void disbleRandoms() {
+		disableRandoms();
 	}
 
 	public void disableRandoms() {
