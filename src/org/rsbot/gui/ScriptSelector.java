@@ -49,7 +49,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	public ScriptSelector(final Frame frame, final Bot bot) {
-		super(frame, "Script Selector");
+		super(frame, "Script Selector", true);
 		this.bot = bot;
 		scripts = new ArrayList<ScriptDefinition>();
 		model = new ScriptTableModel(scripts);
@@ -58,8 +58,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	public void showGUI() {
 		init();
 		update();
-		setVisible(true);
 		load();
+		setVisible(true);
 	}
 
 	public void update() {
