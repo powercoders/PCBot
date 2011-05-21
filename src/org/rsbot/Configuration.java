@@ -30,6 +30,7 @@ public class Configuration {
 			public static final String ICON_APPADD = ROOT_IMG + "/application_add.png";
 			public static final String ICON_APPDELETE = ROOT_IMG + "/application_delete.png";
 			public static final String ICON_ARROWIN = ROOT_IMG + "/arrow_in.png";
+			public static final String ICON_REFRESH = ROOT_IMG + "/arrow_refresh.png";
 			public static final String ICON_DELETE = ROOT_IMG + "/delete.png";
 			public static final String ICON_GITHUB = ROOT_IMG + "/github.png";
 			public static final String ICON_PLAY = ROOT_IMG + "/control_play_blue.png";

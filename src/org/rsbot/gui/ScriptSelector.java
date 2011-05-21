@@ -93,6 +93,28 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				dispose();
 			}
 		});
+		final Color searchAltColor = Color.GRAY;
+		final JButton refresh = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
+		refresh.setToolTipText("Refresh");
+		refresh.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				refresh.setEnabled(false);
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						new Thread() {
+							@Override
+							public void run() {
+								ScriptDeliveryNetwork.getInstance().forceUpdate();
+								load();
+								refresh.setEnabled(true);
+							}
+						}.start();
+					}
+				});
+			}
+		});
 		table = new JTable(model) {
 			private static final long serialVersionUID = 6969410339933692133L;
 
@@ -163,6 +185,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						} else {
 							log.warning("Could not delete " + def.name);
 						}
+						scripts.remove(def);
+						model.search(search.getForeground() == searchAltColor ? "" : search.getText());
 					}
 				});
 
@@ -186,7 +210,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		toolBar.setMargin(new Insets(1, 1, 1, 1));
 		toolBar.setFloatable(false);
 		search = new JTextField();
-		final Color searchDefaultColor = search.getForeground(), searchAltColor = Color.GRAY;
+		final Color searchDefaultColor = search.getForeground();
 		final String searchDefaultText = "Type to filter...";
 		search.setText(searchDefaultText);
 		search.setForeground(searchAltColor);
@@ -253,6 +277,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		toolBar.add(search);
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(accounts);
+		toolBar.add(Box.createHorizontalStrut(5));
+		toolBar.add(refresh);
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(connect);
 		toolBar.add(Box.createHorizontalStrut(5));
