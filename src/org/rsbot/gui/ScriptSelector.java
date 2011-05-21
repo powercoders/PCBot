@@ -278,7 +278,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			connect.addActionListener(listenConnect);
 		}
 		accounts = new JComboBox(AccountManager.getAccountNames());
-		accounts.setMinimumSize(new Dimension(200, 20));
 		accounts.setPreferredSize(new Dimension(200, 20));
 		toolBar.add(search);
 		toolBar.add(Box.createHorizontalStrut(5));
