@@ -18,21 +18,19 @@ public class Pinball extends Random {
 
 	private static final int INTERFACE_PINBALL = 263;
 
-	@Override
 	public boolean activateCondition() {
 		return game.isLoggedIn() && objects.getNearest(OBJ_ACTIVATE) != null;
 	}
 
 	private int getScore() {
-		final RSComponent score = interfaces.get(INTERFACE_PINBALL).getComponent(1);
+		RSComponent score = interfaces.get(INTERFACE_PINBALL).getComponent(1);
 		try {
 			return Integer.parseInt(score.getText().split(" ")[1]);
-		} catch (final java.lang.ArrayIndexOutOfBoundsException t) {
+		} catch (java.lang.ArrayIndexOutOfBoundsException t) {
 			return 10;
 		}
 	}
 
-	@Override
 	public int loop() {
 		if (!activateCondition()) {
 			return -1;
@@ -41,8 +39,8 @@ public class Pinball extends Random {
 			return random(300, 500);
 		}
 		if (getScore() >= 10) {
-			final int OBJ_EXIT = 15010;
-			final RSObject exit = objects.getNearest(OBJ_EXIT);
+			int OBJ_EXIT = 15010;
+			RSObject exit = objects.getNearest(OBJ_EXIT);
 			if (exit != null) {
 				if (calc.tileOnScreen(exit.getLocation()) && exit.doAction("Exit")) {
 					sleep(random(2000, 2200));
@@ -56,7 +54,7 @@ public class Pinball extends Random {
 
 			}
 		}
-		final RSObject pillar = objects.getNearest(OBJ_PILLARS);
+		RSObject pillar = objects.getNearest(OBJ_PILLARS);
 		if (pillar != null) {
 			if (calc.distanceTo(pillar) > 2 && !pillar.isOnScreen()) {
 				walking.walkTileOnScreen(pillar.getLocation());
@@ -65,7 +63,7 @@ public class Pinball extends Random {
 			if (pillar != null) {
 				doClick(pillar);
 			}
-			final int before = getScore();
+			int before = getScore();
 			for (int i = 0; i < 50; i++) {
 				if (getScore() > before) {
 					return random(50, 100);
@@ -76,16 +74,16 @@ public class Pinball extends Random {
 		return random(50, 100);
 	}
 
-	private void doClick(final RSObject pillar) {
-		final RSModel model = pillar.getModel();
+	private void doClick(RSObject pillar) {
+		RSModel model = pillar.getModel();
 		if (model != null) {
-			final Point central = model.getCentralPoint();
+			Point central = model.getCentralPoint();
 			mouse.click(central.x, central.y, 4, 4, true);
 			return;
 		} else {
-			final Point p = calc.tileToScreen(pillar.getLocation());
+			Point p = calc.tileToScreen(pillar.getLocation());
 			if (calc.pointOnScreen(p)) {
-				mouse.click(p.x, p.y - 25, 4, 20, true);
+				mouse.click(p.x, p.y, 4, 20, true);
 			}
 			return;
 		}

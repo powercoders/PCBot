@@ -1,7 +1,7 @@
 *.class
 *.diff
 *.patch
-/.svn
+.svn
 .DS_Store
 /*.iml
 /*.ipr
@@ -16,9 +16,4 @@
 /bin
 /lib/*.jar
 /scripts/*.class
-/temp/*
-/scripts/
 /temp.txt
-/build.xml
-/manifest.mf
-/nbproject

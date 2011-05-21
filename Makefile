@@ -1,5 +1,5 @@
 CC=javac
-CFLAGS=-g:none -Xlint:deprecation
+CFLAGS=-g -Xlint:deprecation
 SRC=src
 LIB=lib
 RES=resources
@@ -24,7 +24,7 @@ Bot:
 	$(CC) $(CFLAGS) -d "$(BINDIR)" `find "$(SRC)" -name \*.java`
 
 Scripts: mostlyclean Bot
-	@if [ -d "$(SCRIPTS)" ]; then $(CC) $(CFLAGS) -cp "$(BINDIR)" "$(SCRIPTS)"/*.java; fi
+	$(CC) $(CFLAGS) -cp "$(BINDIR)" "$(SCRIPTS)"/*.java
 
 Bundle: Scripts
 	@rm -fv "$(LSTF)"
@@ -36,7 +36,7 @@ Bundle: Scripts
 	@rm -f "$(LSTF)"
 
 mostlyclean:
-	@if [ -d "$(SCRIPTS)" ]; then rm -fv "$(SCRIPTS)"/*.class; fi
+	@rm -fv "$(SCRIPTS)"/*.class
 
 clean: mostlyclean
 	@rm -fv "$(DIST)"

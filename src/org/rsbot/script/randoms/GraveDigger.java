@@ -89,7 +89,6 @@ public class GraveDigger extends Random {
 	private int tmpID = -1, tmpStatus = -1; // used to store some data across
 	// loops
 
-	@Override
 	public void onFinish() {
 		tmpID = -1;
 		tmpStatus = -1;
@@ -105,7 +104,7 @@ public class GraveDigger extends Random {
 
 	@Override
 	public boolean activateCondition() {
-		if (settings.getSetting(696) != 0 && objects.getNearest(12731) != null) {
+		if ((settings.getSetting(696) != 0) && (objects.getNearest(12731) != null)) {
 			return true;
 		}
 		return false;
@@ -121,7 +120,7 @@ public class GraveDigger extends Random {
 				interfaces.clickContinue();
 				sleep(random(1500, 2000));
 			}
-			final RSObject depo = objects.getNearest(12731);
+			RSObject depo = objects.getNearest(12731);
 			if (depo != null) {
 				if (!calc.tileOnScreen(depo.getLocation())) {
 					walking.getPath(depo.getLocation()).traverse();
@@ -145,7 +144,7 @@ public class GraveDigger extends Random {
 				interfaces.getComponent(11, 15).doClick();
 				return random(500, 700);
 			}
-			return random(2000, 3000);
+			return (random(2000, 3000));
 		}
 		if (getMyPlayer().isMoving()) {
 		} else if (getMyPlayer().getAnimation() == 827) {
@@ -172,11 +171,11 @@ public class GraveDigger extends Random {
 		} else if (interfaces.get(GraveDigger.INTERFACE_CHECK_COFFIN).isValid()) {
 			if (tmpID >= 0) {
 				final int[] items = new int[GraveDigger.INTERFACE_CHECK_COFFIN_ITEMS.length];
-				final RSInterface inters = interfaces.get(GraveDigger.INTERFACE_CHECK_COFFIN);
+				RSInterface inters = interfaces.get(GraveDigger.INTERFACE_CHECK_COFFIN);
 				for (int i = 0; i < GraveDigger.INTERFACE_CHECK_COFFIN_ITEMS.length; i++) {
 					items[i] = inters.getComponent(GraveDigger.INTERFACE_CHECK_COFFIN_ITEMS[i]).getComponentID();
 				}
-				for (final Iterator<Group> it = groups.iterator(); it.hasNext() && tmpID >= 0;) {
+				for (final Iterator<Group> it = groups.iterator(); it.hasNext() && (tmpID >= 0);) {
 					final Group g = it.next();
 					if (g.isGroup(items)) {
 						g.coffinID = tmpID;
@@ -193,11 +192,11 @@ public class GraveDigger extends Random {
 				}
 			}
 			atCloseInterface(GraveDigger.INTERFACE_READ_GRAVESTONE, GraveDigger.INTERFACE_READ_GRAVESTONE_CLOSE);
-		} else if (tmpStatus == 0 && tmpID != -1) {
+		} else if ((tmpStatus == 0) && (tmpID != -1)) {
 			for (final Group g : groups) {
 				if (g.graveID == tmpID) {
 					final RSObject obj = objects.getNearest(g.graveID);
-					if (obj == null || !setObjectInScreen(obj)) {
+					if ((obj == null) || !setObjectInScreen(obj)) {
 						log.info("Couldn't find grave, shutting down.");
 						game.logout(false);
 						return -1;
@@ -221,21 +220,21 @@ public class GraveDigger extends Random {
 				}
 			}
 			tmpID = -1;
-		} else if (tmpStatus == -1 && objects.getNearest(GraveDigger.filledGraveIDs) != null) {
+		} else if ((tmpStatus == -1) && (objects.getNearest(GraveDigger.filledGraveIDs) != null)) {
 			final RSObject obj = objects.getNearest(GraveDigger.filledGraveIDs);
-			if (obj == null || !setObjectInScreen(obj)) {
+			if ((obj == null) || !setObjectInScreen(obj)) {
 				log.severe("Couldn't find grave, shutting down.");
 				game.logout(false);
 				return -1;
 			}
 			obj.doAction("Take-coffin");
-		} else if (tmpStatus == 0 && objects.getNearest(GraveDigger.emptyGraveIDs) != null) {
+		} else if ((tmpStatus == 0) && (objects.getNearest(GraveDigger.emptyGraveIDs) != null)) {
 			final RSObject obj = objects.getNearest(GraveDigger.emptyGraveIDs);
 			final int id = obj.getID();
 			for (int i = 0; i < GraveDigger.emptyGraveIDs.length; i++) {
 				if (GraveDigger.emptyGraveIDs[i] == id) {
 					final RSObject objGS = objects.getNearest(GraveDigger.graveStoneIDs[i]);
-					if (objGS == null || !setObjectInScreen(objGS)) {
+					if ((objGS == null) || !setObjectInScreen(objGS)) {
 						log.severe("Couldn't find grave stone, shutting down.");
 						game.logout(false);
 						return -1;
@@ -257,7 +256,7 @@ public class GraveDigger extends Random {
 					agc.remove(new Integer(g.coffinID));
 				}
 			}
-			if (tmpStatus == -1 && agc.size() == 0) {
+			if ((tmpStatus == -1) && (agc.size() == 0)) {
 				tmpStatus++;
 			}
 			while (tmpStatus == -1) {
@@ -272,7 +271,7 @@ public class GraveDigger extends Random {
 		} else if (tmpStatus == 0) {
 			// Done
 			final RSNPC leo = npcs.getNearest("Leo");
-			if (leo == null || !setCharacterInScreen(leo)) {
+			if ((leo == null) || !setCharacterInScreen(leo)) {
 				log.severe("Couldn't find Leo, shutting down.");
 				game.logout(false);
 				return -1;
@@ -285,19 +284,19 @@ public class GraveDigger extends Random {
 		return random(1400, 1800);
 	}
 
-	public boolean atCloseInterface(final int parent, final int child) {
-		final RSComponent i = interfaces.getComponent(parent, child);
+	public boolean atCloseInterface(int parent, int child) {
+		RSComponent i = interfaces.getComponent(parent, child);
 		if (!i.isValid()) {
 			return false;
 		}
-		final Rectangle pos = i.getArea();
+		Rectangle pos = i.getArea();
 		if (pos.x == -1 || pos.y == -1 || pos.width == -1 || pos.height == -1) {
 			return false;
 		}
-		final int dx = (int) (pos.getWidth() - 4) / 2;
-		final int dy = (int) (pos.getHeight() - 4) / 2;
-		final int midx = (int) (pos.getMinX() + pos.getWidth() / 2);
-		final int midy = (int) (pos.getMinY() + pos.getHeight() / 2);
+		int dx = (int) (pos.getWidth() - 4) / 2;
+		int dy = (int) (pos.getHeight() - 4) / 2;
+		int midx = (int) (pos.getMinX() + pos.getWidth() / 2);
+		int midy = (int) (pos.getMinY() + pos.getHeight() / 2);
 		mouse.click(midx + random(-dx, dx) - 5, midy + random(-dy, dy), true);
 		return true;
 	}
