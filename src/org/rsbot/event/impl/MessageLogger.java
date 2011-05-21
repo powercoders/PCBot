@@ -1,9 +1,9 @@
 package org.rsbot.event.impl;
 
+import java.util.logging.Logger;
+
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
-
-import java.util.logging.Logger;
 
 public class MessageLogger implements MessageListener {
 

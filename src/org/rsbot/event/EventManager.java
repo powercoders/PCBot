@@ -1,12 +1,12 @@
 package org.rsbot.event;
 
-import org.rsbot.event.events.RSEvent;
-
 import java.util.EventListener;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import org.rsbot.event.events.RSEvent;
 
 public class EventManager implements Runnable {
 

@@ -1,11 +1,13 @@
 package org.rsbot.event.impl;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.util.Arrays;
+
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.methods.Settings;
-
-import java.awt.*;
-import java.util.Arrays;
 
 public class DrawSettings implements PaintListener {
 

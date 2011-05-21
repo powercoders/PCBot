@@ -1,13 +1,13 @@
 package org.rsbot.client;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.rsbot.Application;
 import org.rsbot.bot.Bot;
 import org.rsbot.util.io.PreferenceData;
 import org.rsbot.util.io.UIDData;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class RandomAccessFile {
 	private UIDData uidData = null;
