@@ -1,3 +1,0 @@
-Make the "RSBot is Hidden" message only appear once per-bot boot.
-Add a working disable canvas.
-Update getClosestBank() to work with everything + account for members/reqs.
