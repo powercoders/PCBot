@@ -23,6 +23,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.TrayIcon.MessageType;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -37,6 +38,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public static final int MAX_BOTS = 6;
 	private static final long serialVersionUID = -5411033752001988794L;
 	private static final Logger log = Logger.getLogger(BotGUI.class.getName());
+	private SettingsManager settings;
+	private SettingsManager.Preferences prefs;
 	private BotPanel panel;
 	private JScrollPane scrollableBotPanel;
 	private BotToolBar toolBar;
@@ -44,8 +47,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private JScrollPane textScroll;
 	private BotHome home;
 	private final List<Bot> bots = new ArrayList<Bot>();
-	private boolean showAds = true;
-	private boolean disableConfirmations = false;
 	private TrayIcon tray = null;
 	private java.util.Timer shutdown = null;
 
@@ -56,12 +57,15 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		setLocationRelativeTo(getOwner());
 		setMinimumSize(getSize());
 		setResizable(true);
+		settings = new SettingsManager(this, new File(Configuration.Paths.getSettingsDirectory(), "preferences.ini"));
+		prefs = settings.getPreferences();
+		prefs.load();
 		menuBar.loadPrefs();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 				ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
-				if (showAds) {
+				if (!prefs.ads) {
 					new SplashAd(BotGUI.this).display();
 				}
 				UpdateChecker.notify(BotGUI.this);
@@ -155,57 +159,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		} else if (menu.equals(Messages.EDIT)) {
 			if (option.equals(Messages.ACCOUNTS)) {
 				AccountManager.getInstance().showGUI();
-			} else if (option.equals(Messages.DISABLEADS)) {
-				showAds = !((JCheckBoxMenuItem) evt.getSource()).isSelected();
-			} else if (option.equals(Messages.DISABLEMONITORING)) {
-				Monitoring.setEnabled(!((JCheckBoxMenuItem) evt.getSource()).isSelected());
-				if (!Monitoring.isEnabled()) {
-					log.info("Monitoring data is used to improve development, please enable it to help us");
-				}
-			} else if (option.equals(Messages.DISABLECONFIRMATIONS)) {
-				disableConfirmations = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
-			} else if (option.equals(Messages.AUTOSHUTDOWN)) {
-				final boolean enabled = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
-				if (!enabled) {
-					if (shutdown != null) {
-						shutdown.cancel();
-						shutdown.purge();
-					}
-					shutdown = null;
-				} else {
-					final long interval = 10 * 60 * 1000; // 10mins
-					shutdown = new java.util.Timer(true);
-					shutdown.schedule(new TimerTask() {
-						@Override
-						public void run() {
-							for (final Bot bot : bots) {
-								if (bot.getScriptHandler().getRunningScripts().size() != 0) {
-									return;
-								}
-							}
-							final int delay = 3;
-							log.info("Shutdown pending in " + delay + " minutes...");
-							final Point[] mouse = new Point[]{MouseInfo.getPointerInfo().getLocation(), null};
-							try {
-								Thread.sleep(delay * 60 * 1000);
-							} catch (InterruptedException ignored) {
-							}
-							mouse[1] = MouseInfo.getPointerInfo().getLocation();
-							if (mouse[0].x != mouse[1].x || mouse[0].y != mouse[1].y) {
-								log.info("Mouse activity detected, delaying shutdown");
-							} else if (!menuBar.isTicked(option)) {
-								log.info("Shutdown cancelled");
-							} else if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
-								try {
-									Runtime.getRuntime().exec("shutdown.exe", new String[]{"-s"});
-									cleanExit(true);
-								} catch (IOException ignored) {
-									log.severe("Could not shutdown system");
-								}
-							}
-						}
-					}, interval, interval);
-				}
 			} else {
 				final Bot current = getCurrentBot();
 				if (current != null) {
@@ -257,6 +210,10 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 						current.removeListener(el);
 					}
 				}
+			}
+		} else if (menu.equals(Messages.TOOLS)) {
+			if (option.equals(Messages.OPTIONS)) {
+				settings.display();
 			}
 		} else if (menu.equals(Messages.HELP)) {
 			if (option.equals(Messages.SITE)) {
@@ -559,7 +516,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	private boolean confirmRemoveBot() {
-		if (!disableConfirmations) {
+		if (!prefs.confirmations) {
 			final int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to close this bot?", Messages.CLOSEBOT, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 			return result == JOptionPane.OK_OPTION;
 		} else {
@@ -567,21 +524,64 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 	}
 
+	public void setShutdownTimer(final boolean enabled) {
+		if (!enabled) {
+			if (shutdown != null) {
+				shutdown.cancel();
+				shutdown.purge();
+			}
+			shutdown = null;
+		} else {
+			final long interval = prefs.shutdownTime * 60 * 1000;
+			shutdown = new java.util.Timer(true);
+			shutdown.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					for (final Bot bot : bots) {
+						if (bot.getScriptHandler().getRunningScripts().size() != 0) {
+							return;
+						}
+					}
+					final int delay = 3;
+					log.info("Shutdown pending in " + delay + " minutes...");
+					final Point[] mouse = new Point[]{MouseInfo.getPointerInfo().getLocation(), null};
+					try {
+						Thread.sleep(delay * 60 * 1000);
+					} catch (InterruptedException ignored) {
+					}
+					mouse[1] = MouseInfo.getPointerInfo().getLocation();
+					if (mouse[0].x != mouse[1].x || mouse[0].y != mouse[1].y) {
+						log.info("Mouse activity detected, delaying shutdown");
+					} else if (!prefs.shutdown) {
+						log.info("Shutdown cancelled");
+					} else if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
+						try {
+							Runtime.getRuntime().exec("shutdown.exe", new String[]{"-s"});
+							cleanExit(true);
+						} catch (IOException ignored) {
+							log.severe("Could not shutdown system");
+						}
+					}
+				}
+			}, interval, interval);
+		}
+	}
+
 	public boolean cleanExit(final boolean silent) {
 		if (silent) {
-			disableConfirmations = true;
+			prefs.confirmations = true;
 		}
-		if (!disableConfirmations) {
-			disableConfirmations = true;
+		if (!prefs.confirmations) {
+			prefs.confirmations = true;
 			for (final Bot bot : bots) {
 				if (bot.getAccountName() != null) {
-					disableConfirmations = true;
+					prefs.confirmations = true;
 					break;
 				}
 			}
 		}
 		boolean doExit = true;
-		if (!disableConfirmations) {
+		if (!prefs.confirmations) {
 			final String message = "Are you sure you want to exit?";
 			final int result = JOptionPane.showConfirmDialog(this, message, Messages.EXIT, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result != JOptionPane.OK_OPTION) {
@@ -594,10 +594,11 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 		setVisible(false);
 		try {
-			Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(showAds));
+			Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(!prefs.ads));
 		} catch (NoClassDefFoundError ncdfe) {
 		}
 		if (doExit) {
+			prefs.save();
 			menuBar.savePrefs();
 			try {
 				Monitoring.stop();

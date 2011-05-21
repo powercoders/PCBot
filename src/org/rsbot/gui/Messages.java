@@ -4,6 +4,7 @@ public interface Messages {
 	public static final String FILE = "File";
 	public static final String EDIT = "Edit";
 	public static final String VIEW = "View";
+	public static final String TOOLS = "Tools";
 	public static final String HELP = "Help";
 
 	public static final String NEWBOT = "New Bot";
@@ -31,6 +32,8 @@ public interface Messages {
 	public static final String HIDETOOLBAR = "Hide Toolbar";
 	public static final String HIDELOGPANE = "Hide Log Pane";
 	public static final String ALLDEBUGGING = "All Debugging";
+
+	public static final String OPTIONS = "Options";
 
 	public static final String SITE = "Site";
 	public static final String PROJECT = "Project";

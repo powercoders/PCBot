@@ -1,7 +1,6 @@
 package org.rsbot.gui;
 
 import org.rsbot.Configuration;
-import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.bot.Bot;
 import org.rsbot.event.impl.*;
 import org.rsbot.event.listeners.PaintListener;
@@ -54,7 +53,7 @@ public class BotMenuBar extends JMenuBar {
 		// Other
 		DEBUG_MAP.put("Log Messages", MessageLogger.class);
 
-		TITLES = new String[]{Messages.FILE, Messages.EDIT, Messages.VIEW, Messages.HELP};
+		TITLES = new String[]{Messages.FILE, Messages.EDIT, Messages.VIEW, Messages.TOOLS, Messages.HELP};
 		ELEMENTS = new String[][]{
 				{Messages.NEWBOT, Messages.CLOSEBOT, Messages.MENUSEPERATOR,
 						Messages.SERVICEKEY, Messages.ADDSCRIPT,
@@ -67,13 +66,8 @@ public class BotMenuBar extends JMenuBar {
 						Messages.TOGGLEFALSE + Messages.LESSCPU,
 						Messages.MENUSEPERATOR,
 						Messages.TOGGLEFALSE + Messages.DISABLEANTIRANDOMS,
-						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN,
-						Messages.MENUSEPERATOR,
-						Messages.TOGGLEFALSE + Messages.DISABLEADS,
-						Messages.TOGGLEFALSE + Messages.DISABLEMONITORING,
-						Messages.TOGGLEFALSE + Messages.DISABLECONFIRMATIONS,
-						Messages.TOGGLEFALSE + Messages.AUTOSHUTDOWN},
-				constructDebugs(), {Messages.SITE, Messages.PROJECT, Messages.ABOUT}};
+						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN},
+				constructDebugs(), {Messages.OPTIONS}, {Messages.SITE, Messages.PROJECT, Messages.ABOUT}};
 	}
 
 	private static String[] constructDebugs() {
@@ -124,6 +118,7 @@ public class BotMenuBar extends JMenuBar {
 		map.put(Messages.HIDEBOT, Configuration.Paths.Resources.ICON_ARROWIN);
 		map.put(Messages.EXIT, Configuration.Paths.Resources.ICON_CLOSE);
 		map.put(Messages.ACCOUNTS, Configuration.Paths.Resources.ICON_REPORTKEY);
+		map.put(Messages.OPTIONS, Configuration.Paths.Resources.ICON_WRENCH);
 		map.put(Messages.SITE, Configuration.Paths.Resources.ICON_WEBLINK);
 		map.put(Messages.PROJECT, Configuration.Paths.Resources.ICON_GITHUB);
 		map.put(Messages.ABOUT, Configuration.Paths.Resources.ICON_INFO);
@@ -147,9 +142,7 @@ public class BotMenuBar extends JMenuBar {
 		}
 		constructItemIcons();
 		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
-		commandCheckMap.get(Messages.DISABLEMONITORING).setVisible(false);
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
-		commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
 		if (Configuration.RUNNING_FROM_JAR) {
 			for (String disableFeature : DEVELOPER_CHECK_FEATURES) {
 				if (commandCheckMap.containsKey(disableFeature)) {
