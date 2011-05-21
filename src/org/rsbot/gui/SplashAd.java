@@ -90,7 +90,7 @@ public class SplashAd extends JDialog implements MouseListener {
 			return false;
 		}
 
-		if (keys == null || keys.isEmpty() || !keys.containsKey("enabled") || !parseBool(keys.get("enabled"))) {
+		if (keys == null || keys.isEmpty() || !keys.containsKey("enabled") || !IniParser.parseBool(keys.get("enabled"))) {
 			return false;
 		}
 		if (!keys.containsKey("link")) {
@@ -115,10 +115,6 @@ public class SplashAd extends JDialog implements MouseListener {
 		}
 
 		return true;
-	}
-
-	private boolean parseBool(final String mode) {
-		return mode.equals("1") || mode.equalsIgnoreCase("true") || mode.equalsIgnoreCase("yes");
 	}
 
 	public void display() {

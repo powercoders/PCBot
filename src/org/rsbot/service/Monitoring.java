@@ -46,7 +46,7 @@ public class Monitoring {
 			return;
 		}
 
-		if (keys == null || keys.isEmpty() || !keys.containsKey("enabled") || !parseBool(keys.get("enabled"))) {
+		if (keys == null || keys.isEmpty() || !keys.containsKey("enabled") || !IniParser.parseBool(keys.get("enabled"))) {
 			return;
 		}
 
@@ -54,10 +54,6 @@ public class Monitoring {
 			uri = keys.get(uri);
 			enabled = !uri.isEmpty();
 		}
-	}
-
-	private static boolean parseBool(final String mode) {
-		return mode.equals("1") || mode.equalsIgnoreCase("true") || mode.equalsIgnoreCase("yes");
 	}
 
 	public static void start() {

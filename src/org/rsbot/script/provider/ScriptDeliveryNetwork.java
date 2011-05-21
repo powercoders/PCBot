@@ -70,7 +70,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			enabled = false;
 		}
 
-		if (keys == null || keys.isEmpty() || keys.containsKey("enabled") && !parseBool(keys.get("enabled"))) {
+		if (keys == null || keys.isEmpty() || keys.containsKey("enabled") && !IniParser.parseBool(keys.get("enabled"))) {
 			enabled = false;
 		} else {
 			if (keys.containsKey("error")) {
@@ -223,10 +223,6 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 
 	private File getChachedFile(final String name) {
 		return new File(Configuration.Paths.getCacheDirectory(), "sdn-" + name);
-	}
-
-	private boolean parseBool(final String mode) {
-		return mode.equals("1") || mode.equalsIgnoreCase("true") || mode.equalsIgnoreCase("yes");
 	}
 
 	public String getKey() {

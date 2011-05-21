@@ -93,4 +93,8 @@ public class IniParser {
 
 		return data;
 	}
+
+	public static boolean parseBool(final String mode) {
+		return mode.equals("1") || mode.equalsIgnoreCase("true") || mode.equalsIgnoreCase("yes");
+	}
 }
