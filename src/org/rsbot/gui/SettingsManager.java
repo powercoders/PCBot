@@ -6,6 +6,8 @@ import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
@@ -31,6 +33,7 @@ import javax.swing.SpinnerNumberModel;
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.service.Monitoring;
+import org.rsbot.util.StringUtil;
 import org.rsbot.util.io.IniParser;
 
 /**
@@ -192,7 +195,13 @@ public class SettingsManager extends JDialog {
 		final JCheckBox checkWebPass = new JCheckBox(Messages.USEPASSWORD);
 		checkWebPass.setSelected(prefs.webPassRequire);
 		panelWebOptions[1].add(checkWebPass);
-		final JPasswordField textWebPass = new JPasswordField(prefs.webPass);
+		final JPasswordField textWebPass = new JPasswordField("\0\0\0\0\0\0\0\0");
+		textWebPass.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(final FocusEvent e) {
+				textWebPass.setText("");
+			}
+		});
 		panelWebOptions[1].add(textWebPass);
 		checkWebPass.addActionListener(new ActionListener() {
 			@Override
@@ -242,7 +251,10 @@ public class SettingsManager extends JDialog {
 				prefs.shutdownTime = modelShutdown.getNumber().intValue();
 				prefs.web = checkWeb.isSelected();
 				prefs.webBind = textWebBind.getText();
-				prefs.webPass = new String(textWebPass.getPassword());
+				final char[] pass = textWebPass.getPassword();
+				if (pass.length > 0 && pass[0] != '\0') {
+					prefs.webPass = StringUtil.sha1sum(new String(pass));
+				}
 				prefs.webPassRequire = checkWebPass.isSelected() && checkWebPass.isEnabled();
 				prefs.commit();
 				prefs.save();

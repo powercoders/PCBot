@@ -7,6 +7,8 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -120,5 +122,21 @@ public class StringUtil {
 		}
 	}
 
+	public static String sha1sum(final String data) {
+		final MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("SHA-1");
+		} catch (final NoSuchAlgorithmException ignored) {
+			return data;
+		}
+		return byteArrayToHexString(md.digest(getBytesUtf8(data)));
+	}
 
+	public static String byteArrayToHexString(byte[] b) {
+		final StringBuilder s = new StringBuilder(b.length * 2);
+		for (int i = 0; i < b.length; i++) {
+			s.append(Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1));
+		}
+		return s.toString();
+	}
 }
