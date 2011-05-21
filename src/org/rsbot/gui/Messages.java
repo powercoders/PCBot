@@ -23,13 +23,13 @@ public interface Messages {
 	public static final String FORCEINPUT = "Force Input";
 	public static final String DISABLEANTIRANDOMS = "Disable Anti-Randoms";
 	public static final String DISABLEAUTOLOGIN = "Disable Auto Login";
-	public static final String DISABLEADS = "Disable Advertisements";
-	public static final String DISABLEMONITORING = "Disable Monitoring";
-	public static final String DISABLECONFIRMATIONS = "Disable Confirmations";
+	public static final String DISABLEADS = "Disable advertisements";
+	public static final String DISABLEMONITORING = "Disable monitoring";
+	public static final String DISABLECONFIRMATIONS = "Disable confirmations";
 	public static final String BINDTO = "Bind to address:";
 	public static final String USEPASSWORD = "Use password:";
 	public static final String LESSCPU = "Less CPU";
-	public static final String AUTOSHUTDOWN = "Auto Shutdown";
+	public static final String AUTOSHUTDOWN = "Shutdown (mins):";
 
 	public static final String HIDETOOLBAR = "Hide Toolbar";
 	public static final String HIDELOGPANE = "Hide Log Pane";
