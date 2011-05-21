@@ -1,40 +1,17 @@
 package org.rsbot.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.logging.Logger;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.service.Monitoring;
 import org.rsbot.util.StringUtil;
 import org.rsbot.util.io.IniParser;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * @author Paris
@@ -68,6 +45,9 @@ public class SettingsManager extends JDialog {
 		public void load() {
 			HashMap<String, String> keys = null;
 			try {
+				if (!store.exists()) {
+					store.createNewFile();
+				}
 				final BufferedReader reader = new BufferedReader(new FileReader(store));
 				keys = IniParser.deserialise(reader).get(IniParser.emptySection);
 				reader.close();
@@ -302,18 +282,30 @@ public class SettingsManager extends JDialog {
 			public void windowClosing(WindowEvent arg0) {
 				buttonCancel.doClick();
 			}
+
 			@Override
-			public void windowActivated(WindowEvent arg0) {	}
+			public void windowActivated(WindowEvent arg0) {
+			}
+
 			@Override
-			public void windowClosed(WindowEvent arg0) { }
+			public void windowClosed(WindowEvent arg0) {
+			}
+
 			@Override
-			public void windowDeactivated(WindowEvent arg0) { }
+			public void windowDeactivated(WindowEvent arg0) {
+			}
+
 			@Override
-			public void windowDeiconified(WindowEvent arg0) { }
+			public void windowDeiconified(WindowEvent arg0) {
+			}
+
 			@Override
-			public void windowIconified(WindowEvent arg0) { }
+			public void windowIconified(WindowEvent arg0) {
+			}
+
 			@Override
-			public void windowOpened(WindowEvent arg0) { }
+			public void windowOpened(WindowEvent arg0) {
+			}
 		});
 	}
 
