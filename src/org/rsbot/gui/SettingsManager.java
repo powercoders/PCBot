@@ -153,7 +153,6 @@ public class SettingsManager extends JDialog {
 		final JSpinner valueShutdown = new JSpinner(modelShutdown);
 		panelShutdown.add(valueShutdown);
 		checkShutdown.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent arg0) {
 				valueShutdown.setEnabled(((JCheckBox) arg0.getSource()).isSelected());
 			}
@@ -184,13 +183,11 @@ public class SettingsManager extends JDialog {
 		});
 		panelWebOptions[1].add(textWebPass);
 		checkWebPass.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				textWebPass.setEnabled(checkWebPass.isSelected() && checkWebPass.isEnabled());
 			}
 		});
 		checkWeb.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				final boolean enabled = checkWeb.isSelected();
 				textWebBind.setEnabled(enabled);
@@ -221,7 +218,6 @@ public class SettingsManager extends JDialog {
 		final JButton buttonOk = new JButton("OK");
 		buttonOk.setPreferredSize(new Dimension(85, 30));
 		buttonOk.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
 				prefs.ads = checkAds.isSelected();
@@ -243,7 +239,6 @@ public class SettingsManager extends JDialog {
 		});
 		final JButton buttonCancel = new JButton("Cancel");
 		buttonCancel.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
 				checkAds.setSelected(prefs.ads);
@@ -278,32 +273,25 @@ public class SettingsManager extends JDialog {
 		setResizable(false);
 
 		addWindowListener(new WindowListener() {
-			@Override
 			public void windowClosing(WindowEvent arg0) {
 				buttonCancel.doClick();
 			}
 
-			@Override
 			public void windowActivated(WindowEvent arg0) {
 			}
 
-			@Override
 			public void windowClosed(WindowEvent arg0) {
 			}
 
-			@Override
 			public void windowDeactivated(WindowEvent arg0) {
 			}
 
-			@Override
 			public void windowDeiconified(WindowEvent arg0) {
 			}
 
-			@Override
 			public void windowIconified(WindowEvent arg0) {
 			}
 
-			@Override
 			public void windowOpened(WindowEvent arg0) {
 			}
 		});
