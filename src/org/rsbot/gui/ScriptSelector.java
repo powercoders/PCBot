@@ -26,10 +26,6 @@ import java.util.logging.Logger;
  * @author Jacmob
  */
 public class ScriptSelector extends JDialog implements ScriptListener {
-	public static void main(final String[] args) {
-		new ScriptSelector(null, null).setVisible(true);
-	}
-
 	private static final long serialVersionUID = 5475451138208522511L;
 	private static final Logger log = Logger.getLogger(ScriptSelector.class.getName());
 	private static final String[] COLUMN_NAMES = new String[]{"", "Name", "Version", "Author", "Description"};
