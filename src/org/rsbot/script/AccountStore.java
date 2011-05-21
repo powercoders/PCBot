@@ -1,20 +1,26 @@
 package org.rsbot.script;
 
-import org.rsbot.gui.AccountManager;
-import org.rsbot.security.RestrictedSecurityManager;
-import org.rsbot.util.Base64;
-import org.rsbot.util.StringUtil;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.rsbot.gui.AccountManager;
+import org.rsbot.security.RestrictedSecurityManager;
+import org.rsbot.util.Base64;
+import org.rsbot.util.StringUtil;
 
 /**
  * @author Jacmob

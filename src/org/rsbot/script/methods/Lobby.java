@@ -1,8 +1,8 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.wrappers.RSComponent;
-
 import java.util.ArrayList;
+
+import org.rsbot.script.wrappers.RSComponent;
 
 /**
  * Methods for lobby interface
@@ -111,9 +111,9 @@ public class Lobby extends MethodProvider {
 		if (methods.interfaces.getComponent(WORLD_SELECT_INTERFACE, WORLD_SELECT_INTERFACE_CURRENT_WORLD).isValid()) {
 			final String worldText = methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 					WORLD_SELECT_INTERFACE_CURRENT_WORLD).getText().trim().substring(
-					methods.interfaces.getComponent(
-							WORLD_SELECT_INTERFACE, WORLD_SELECT_INTERFACE_CURRENT_WORLD).getText().trim().indexOf(
-							"World ") + 6);
+							methods.interfaces.getComponent(
+									WORLD_SELECT_INTERFACE, WORLD_SELECT_INTERFACE_CURRENT_WORLD).getText().trim().indexOf(
+									"World ") + 6);
 			return Integer.parseInt(worldText);
 		}
 		return -1;
@@ -136,7 +136,7 @@ public class Lobby extends MethodProvider {
 		}
 		for (int i = 0; i < methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 				WORLD_SELECT_INTERFACE_WORLD_NAME).getComponents().length;
-		     i++) {
+		i++) {
 			final String amount = methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 					WORLD_SELECT_INTERFACE_AMOUNT_OF_PLAYERS).getComponents()[i].getText();
 			final String number = methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
@@ -224,7 +224,7 @@ public class Lobby extends MethodProvider {
 		}
 		for (int i = 0; i < methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 				WORLD_SELECT_INTERFACE_WORLD_NAME).getComponents().length;
-		     i++) {
+		i++) {
 			final RSComponent comp = methods.interfaces.getComponent(WORLD_SELECT_INTERFACE,
 					WORLD_SELECT_INTERFACE_WORLD_NAME).getComponents()[i];
 			if (comp != null) {

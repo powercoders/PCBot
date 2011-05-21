@@ -1,13 +1,15 @@
 package org.rsbot.script;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.util.logging.Level;
+
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Methods;
 import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
-
-import java.awt.*;
-import java.util.logging.Level;
 
 public abstract class Random extends Methods implements PaintListener {
 

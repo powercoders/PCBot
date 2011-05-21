@@ -1,8 +1,12 @@
 package org.rsbot.script.wrappers;
 
-import org.rsbot.script.methods.MethodContext;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
-import java.util.*;
+import org.rsbot.script.methods.MethodContext;
 
 /**
  * @author Jacmob

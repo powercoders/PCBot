@@ -1,13 +1,25 @@
 package org.rsbot.service;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import org.rsbot.Configuration;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IniParser;
-
-import java.io.*;
-import java.net.*;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 /**
@@ -182,7 +194,7 @@ public class Monitoring {
 		events.add(e);
 	}
 
-	public static enum Type {START, STOP, SYSTEM, ENVIRONMENT, SCRIPT, RANDOM}
+	public static enum Type { START, STOP, SYSTEM, ENVIRONMENT, SCRIPT, RANDOM }
 
 	private static class Event {
 		private final int time;

@@ -55,14 +55,14 @@ public class BotMenuBar extends JMenuBar {
 		DEBUG_MAP.put("Log Messages", MessageLogger.class);
 
 		TITLES = new String[]{Messages.FILE, Messages.EDIT, Messages.VIEW, Messages.HELP};
-		ELEMENTS = new String[][]{
-				{Messages.NEWBOT, Messages.CLOSEBOT, Messages.MENUSEPERATOR,
+		ELEMENTS = new String[][] {
+				{ Messages.NEWBOT, Messages.CLOSEBOT, Messages.MENUSEPERATOR,
 						Messages.SERVICEKEY, Messages.ADDSCRIPT,
 						Messages.RUNSCRIPT, Messages.STOPSCRIPT,
 						Messages.PAUSESCRIPT, Messages.MENUSEPERATOR,
 						Messages.SAVESCREENSHOT, Messages.MENUSEPERATOR,
-						Messages.HIDEBOT, Messages.EXIT},
-				{Messages.ACCOUNTS, Messages.MENUSEPERATOR,
+						Messages.HIDEBOT, Messages.EXIT },
+				{ Messages.ACCOUNTS, Messages.MENUSEPERATOR,
 						Messages.TOGGLEFALSE + Messages.FORCEINPUT,
 						Messages.TOGGLEFALSE + Messages.LESSCPU,
 						Messages.MENUSEPERATOR,
@@ -72,8 +72,8 @@ public class BotMenuBar extends JMenuBar {
 						Messages.TOGGLEFALSE + Messages.DISABLEADS,
 						Messages.TOGGLEFALSE + Messages.DISABLEMONITORING,
 						Messages.TOGGLEFALSE + Messages.DISABLECONFIRMATIONS,
-						Messages.TOGGLEFALSE + Messages.AUTOSHUTDOWN},
-				constructDebugs(), {Messages.SITE, Messages.PROJECT, Messages.ABOUT}};
+						Messages.TOGGLEFALSE + Messages.AUTOSHUTDOWN },
+				constructDebugs(), { Messages.SITE, Messages.PROJECT, Messages.ABOUT}};
 	}
 
 	private static String[] constructDebugs() {

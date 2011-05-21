@@ -1,10 +1,8 @@
 package org.rsbot.util.io;
 
-import org.rsbot.Configuration;
-import org.rsbot.bot.Bot;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
@@ -12,6 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+
+import org.rsbot.Configuration;
+import org.rsbot.bot.Bot;
 
 public class ScreenshotUtil {
 

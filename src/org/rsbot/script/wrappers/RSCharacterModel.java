@@ -41,7 +41,7 @@ class RSCharacterModel extends RSModel {
 			// in no change, as the y coordinates are always unchanged
 			// by rotation about the y axis.
 			xPoints[i] = x_base[i] * cos + z_base[i] * sin >> 15;
-			zPoints[i] = z_base[i] * cos - x_base[i] * sin >> 15;
+		zPoints[i] = z_base[i] * cos - x_base[i] * sin >> 15;
 		}
 	}
 

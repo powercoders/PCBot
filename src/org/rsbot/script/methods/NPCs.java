@@ -1,12 +1,12 @@
 package org.rsbot.script.methods;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.rsbot.client.Node;
 import org.rsbot.client.RSNPCNode;
 import org.rsbot.script.util.Filter;
 import org.rsbot.script.wrappers.RSNPC;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Provides access to non-player characters.
@@ -48,7 +48,7 @@ public class NPCs extends MethodProvider {
 		final Set<RSNPC> npcs = new HashSet<RSNPC>();
 		for (final int index : indices) {
 			final Node node = methods.nodes
-					.lookup(methods.client.getRSNPCNC(), index);
+			.lookup(methods.client.getRSNPCNC(), index);
 			if (node instanceof RSNPCNode) {
 				final RSNPC npc = new RSNPC(methods, ((RSNPCNode) node).getRSNPC());
 				if (filter.accept(npc)) {
@@ -75,7 +75,7 @@ public class NPCs extends MethodProvider {
 
 		for (final int index : indices) {
 			final Node node = methods.nodes
-					.lookup(methods.client.getRSNPCNC(), index);
+			.lookup(methods.client.getRSNPCNC(), index);
 			if (node instanceof RSNPCNode) {
 				final RSNPC npc = new RSNPC(methods, ((RSNPCNode) node).getRSNPC());
 				if (filter.accept(npc)) {

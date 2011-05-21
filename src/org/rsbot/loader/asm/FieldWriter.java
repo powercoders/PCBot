@@ -189,8 +189,8 @@ final class FieldWriter implements FieldVisitor {
 	 */
 	void put(final ByteVector out) {
 		final int mask = Opcodes.ACC_DEPRECATED
-				| ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
-				| (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) / (ClassWriter.ACC_SYNTHETIC_ATTRIBUTE / Opcodes.ACC_SYNTHETIC);
+		| ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
+		| (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) / (ClassWriter.ACC_SYNTHETIC_ATTRIBUTE / Opcodes.ACC_SYNTHETIC);
 		out.putShort(access & ~mask).putShort(name).putShort(desc);
 		int attributeCount = 0;
 		if (value != 0) {

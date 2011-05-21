@@ -1,6 +1,8 @@
 package org.rsbot.util;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -18,10 +20,10 @@ public class StringUtil {
 	public static String join(final String[] s) {
 		final int l = s.length;
 		switch (l) {
-			case 0:
-				return "";
-			case 1:
-				return s[0];
+		case 0:
+			return "";
+		case 1:
+			return s[0];
 		}
 		final String d = ", ";
 		final int x = d.length();
