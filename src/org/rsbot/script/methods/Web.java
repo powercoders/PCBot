@@ -9,7 +9,6 @@ import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.script.wrappers.RSWeb;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * The web class.
