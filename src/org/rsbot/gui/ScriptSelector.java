@@ -248,6 +248,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
 		final JButton connect = new JButton(new ImageIcon(
 				Configuration.getImage(Configuration.Paths.Resources.ICON_CONNECT)));
+		connect.setToolTipText("Show network scripts");
 		submit.setEnabled(false);
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent evt) {
