@@ -78,7 +78,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		}
 		scripts.addAll(SRC_PRECOMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
-		model.search("");
+		model.search((search == null || search.getText().contains("\0")) ? "" : search.getText());
+		table.revalidate();
 	}
 
 	private void init() {
@@ -186,7 +187,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 							log.warning("Could not delete " + def.name);
 						}
 						scripts.remove(def);
-						model.search(search.getForeground() == searchAltColor ? "" : search.getText());
+						load();
 					}
 				});
 
@@ -211,7 +212,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		toolBar.setFloatable(false);
 		search = new JTextField();
 		final Color searchDefaultColor = search.getForeground();
-		final String searchDefaultText = "Type to filter...";
+		final String searchDefaultText = "Type to filter...\0";
 		search.setText(searchDefaultText);
 		search.setForeground(searchAltColor);
 		search.addFocusListener(new FocusAdapter() {
@@ -237,6 +238,10 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			public void keyTyped(final KeyEvent e) {
 				model.search(search.getText());
 				table.revalidate();
+			}
+			@Override
+			public void keyReleased(final KeyEvent e) {
+				keyTyped(e);
 			}
 		});
 		submit = new JButton("Start", new ImageIcon(
