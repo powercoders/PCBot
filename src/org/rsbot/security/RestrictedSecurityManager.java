@@ -1,14 +1,18 @@
 package org.rsbot.security;
 
 import org.rsbot.Application;
+import org.rsbot.Configuration;
 import org.rsbot.gui.BotGUI;
-import org.rsbot.script.Script;
-import org.rsbot.service.ScriptDeliveryNetwork;
-import org.rsbot.util.AccountStore;
-import org.rsbot.util.GlobalConfiguration;
+import org.rsbot.script.AccountStore;
+import org.rsbot.script.provider.ScriptDeliveryNetwork;
+import org.rsbot.util.UpdateChecker;
+import org.rsbot.util.io.JavaCompiler;
+
+import sun.font.FontManager;
 
 import java.io.File;
 import java.io.FileDescriptor;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.security.Permission;
 import java.util.ArrayList;
@@ -19,8 +23,8 @@ import java.util.ArrayList;
 public class RestrictedSecurityManager extends SecurityManager {
 	private String getCallingClass() {
 		final String prefix = Application.class.getPackage().getName() + ".";
-		for (StackTraceElement s : Thread.currentThread().getStackTrace()) {
-			final String name = s.getClassName();
+		for (final Class<?> c : getClassContext()) {
+			final String name = c.getName();
 			if (name.startsWith(prefix) && !name.equals(RestrictedSecurityManager.class.getName())) {
 				return name;
 			}
@@ -28,48 +32,63 @@ public class RestrictedSecurityManager extends SecurityManager {
 		return "";
 	}
 
-	private boolean isCallerScript() {
-		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
-		for (int i = s.length - 1; i > -1; i--) {
-			if (s[i].getClassName().startsWith(Script.class.getName())) {
-				return true;
-			}
-		}
-		return false;
+	public boolean isCallerScript() {
+		return Thread.currentThread().getName().startsWith("Script-") || getCallingClass().startsWith("org.rsbot.script.Script");
 	}
 
 	public ArrayList<String> getAllowedHosts() {
-		ArrayList<String> whitelist = new ArrayList<String>(32);
+		final ArrayList<String> whitelist = new ArrayList<String>(32);
 
 		// NOTE: if whitelist item starts with a dot "." then it is checked at the end of the host
 		whitelist.add(".imageshack.us");
 		whitelist.add(".tinypic.com");
 		whitelist.add(".photobucket.com");
 		whitelist.add(".imgur.com");
+		whitelist.add(".deviantart.net");
 		whitelist.add(".powerbot.org");
 		whitelist.add(".runescape.com");
+		whitelist.add(".ipcounter.de");
 
 		whitelist.add("shadowscripting.org"); // iDungeon
 		whitelist.add("shadowscripting.wordpress.com"); // iDungeon
 		whitelist.add(".glorb.nl"); // SXForce - Swamp Lizzy Paid, Snake Killah
 		whitelist.add("scripts.johnkeech.com"); // MrSneaky - SneakyFarmerPro
 		whitelist.add("myrsdatabase.x10.mx"); // gravemindx - BPestControl, GhoulKiller
-		whitelist.add("hedealer.site11.com"); // XscripterzX - PiratePlanker, DealerTanner
+		whitelist.add("thedealer.site11.com"); // XscripterzX - PiratePlanker, DealerTanner
 		whitelist.add("elyzianpirate.web44.net"); // XscripterzX (see above)
 		whitelist.add(".wikia.com"); // common assets and images
 		whitelist.add("jtryba.com"); // jtryba - autoCook, monkR8per
 		whitelist.add("tehgamer.info"); // TehGamer - iMiner
 		whitelist.add("www.universalscripts.org"); // Fletch To 99 - UFletch
+		whitelist.add("www.dunkscripts.freeiz.com"); // Dunnkers
+		whitelist.add("www.dlolpics.com"); // DlolPics
+		whitelist.add(".logikmedia.co"); // countvidal
+		whitelist.add("letthesmokeout.com"); // MrByte
+		whitelist.add("zaszmedia.com"); // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
+		whitelist.add("pumyscript.orgfree.com"); // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
+		whitelist.add("noneevr2.r00t.la"); // noneevr2 - TakeBury
+		whitelist.add("testscriptsecurity.host22.com");//Marneus901 - Runite miner
+		whitelist.add("massacrescripting.net");//ShizZznit - Aviansie Massacre.
+		whitelist.add(".ownagebots.com"); //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
+		whitelist.add("vassdascripts.comuf.com");//Dandan Boy - ?
+		whitelist.add("doout.net84.net");
+		whitelist.add("doout5.webs.com");
+		whitelist.add("terrabubble.netai.net");
+		whitelist.add("terrabubble.webs.com");
+		whitelist.add("aaimister.webs.com");
+		whitelist.add("xscriptx.atwebpages.com");
 
 		return whitelist;
 	}
 
-	public void checkAccept(String host, int port) {
+	@Override
+	public void checkAccept(final String host, final int port) {
 		throw new SecurityException();
 	}
 
-	public void checkConnect(String host, int port) {
-		if (host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1")) {
+	@Override
+	public void checkConnect(final String host, final int port) {
+		if (host.equalsIgnoreCase("localhost") || host.startsWith("127.") || host.startsWith("192.168.") || host.startsWith("10.")) {
 			throw new SecurityException();
 		}
 
@@ -84,7 +103,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 				// NOTE: loophole in whitelist - temporarily allowed for round robin DNS without reverse host set
 				allowed = true;
 			} else {
-				for (String check : getAllowedHosts()) {
+				for (final String check : getAllowedHosts()) {
 					if (check.startsWith(".")) {
 						if (host.endsWith(check) || check.equals("." + host)) {
 							allowed = true;
@@ -106,17 +125,17 @@ public class RestrictedSecurityManager extends SecurityManager {
 		super.checkConnect(host, port);
 	}
 
-	private boolean isIpAddress(String check) {
+	private boolean isIpAddress(final String check) {
 		final int l = check.length();
 		if (l < 7 || l > 15) {
 			return false;
 		}
-		String[] parts = check.split("\\.", 4);
+		final String[] parts = check.split("\\.", 4);
 		if (parts.length != 4) {
 			return false;
 		}
 		for (int i = 0; i < 4; i++) {
-			int n = Integer.parseInt(parts[i]);
+			final int n = Integer.parseInt(parts[i]);
 			if (n < 0 || n > 255) {
 				return false;
 			}
@@ -124,66 +143,81 @@ public class RestrictedSecurityManager extends SecurityManager {
 		return true;
 	}
 
-	public void checkConnect(String host, int port, Object context) {
+	@Override
+	public void checkConnect(final String host, final int port, final Object context) {
 		checkConnect(host, port);
 	}
 
+	@Override
 	public void checkCreateClassLoader() {
 		super.checkCreateClassLoader();
 	}
 
-	public void checkDelete(String file) {
-		checkFilePath(file);
+	@Override
+	public void checkDelete(final String file) {
+		checkFilePath(file, false);
 		super.checkDelete(file);
 	}
 
-	public void checkExec(String cmd) {
+	@Override
+	public void checkExec(final String cmd) {
 		final String calling = getCallingClass();
-		if (calling.equals(ScriptDeliveryNetwork.class.getName()) || calling.equals(BotGUI.class.getName())) {
-			super.checkExec(cmd);
-		} else {
-			throw new SecurityException();
+		for (final Class<?> c : new Class<?>[]{ScriptDeliveryNetwork.class, BotGUI.class, UpdateChecker.class, JavaCompiler.class}) {
+			if (calling.equals(c.getName())) {
+				super.checkExec(cmd);
+				return;
+			}
 		}
+		throw new SecurityException();
 	}
 
-	public void checkExit(int status) {
+	@Override
+	public void checkExit(final int status) {
 		final String calling = getCallingClass();
-		if (calling.equals(BotGUI.class.getName())) {
+		if (calling.equals(BotGUI.class.getName()) || calling.equals(Application.class.getName())) {
 			super.checkExit(status);
 		} else {
 			throw new SecurityException();
 		}
 	}
 
-	public void checkLink(String lib) {
+	@Override
+	public void checkLink(final String lib) {
 		super.checkLink(lib);
 	}
 
-	public void checkListen(int port) {
+	@Override
+	public void checkListen(final int port) {
 		throw new SecurityException();
 	}
 
-	public void checkMemberAccess(Class<?> clazz, int which) {
+	@Override
+	public void checkMemberAccess(final Class<?> clazz, final int which) {
 		super.checkMemberAccess(clazz, which);
 	}
 
-	public void checkMulticast(InetAddress maddr) {
+	@Override
+	public void checkMulticast(final InetAddress maddr) {
 		throw new SecurityException();
 	}
 
-	public void checkMulticast(InetAddress maddr, byte ttl) {
+	@Override
+	public void checkMulticast(final InetAddress maddr, final byte ttl) {
 		throw new SecurityException();
 	}
 
-	public void checkPackageAccess(String pkg) {
+	@Override
+	public void checkPackageAccess(final String pkg) {
 		super.checkPackageAccess(pkg);
 	}
 
-	public void checkPackageDefinition(String pkg) {
+	@Override
+	public void checkPackageDefinition(final String pkg) {
 		super.checkPackageDefinition(pkg);
 	}
 
-	public void checkPermission(Permission perm) {
+	@Override
+	public void checkPermission(final Permission perm) {
 		if (perm instanceof RuntimePermission) {
 			if (perm.getName().equals("setSecurityManager")) {
 				throw new SecurityException();
@@ -192,96 +226,125 @@ public class RestrictedSecurityManager extends SecurityManager {
 		// super.checkPermission(perm);
 	}
 
-	public void checkPermission(Permission perm, Object context) {
+	@Override
+	public void checkPermission(final Permission perm, final Object context) {
 		checkPermission(perm);
 	}
 
+	@Override
 	public void checkPrintJobAccess() {
 		throw new SecurityException();
 	}
 
+	@Override
 	public void checkPropertiesAccess() {
 		super.checkPropertiesAccess();
 	}
 
-	public void checkPropertyAccess(String key) {
+	@Override
+	public void checkPropertyAccess(final String key) {
 		super.checkPropertyAccess(key);
 	}
 
-	public void checkRead(FileDescriptor fd) {
-		if (isCallerScript()) {
-			//throw new SecurityException();
-		}
+	@Override
+	public void checkRead(final FileDescriptor fd) {
 		super.checkRead(fd);
 	}
 
-	public void checkRead(String file) {
-		checkSuperFilePath(file);
+	@Override
+	public void checkRead(final String file) {
+		checkFilePath(file, true);
 		super.checkRead(file);
 	}
 
-	public void checkRead(String file, Object context) {
+	@Override
+	public void checkRead(final String file, final Object context) {
 		checkRead(file);
 	}
 
-	public void checkSecurityAccess(String target) {
+	@Override
+	public void checkSecurityAccess(final String target) {
 		super.checkSecurityAccess(target);
 	}
 
+	@Override
 	public void checkSetFactory() {
 		super.checkSetFactory();
 	}
 
+	@Override
 	public void checkSystemClipboardAccess() {
-		throw new SecurityException();
+		if (isCallerScript()) {
+			throw new SecurityException();
+		}
 	}
 
-	public boolean checkTopLevelWindow(Object window) {
+	@Override
+	public boolean checkTopLevelWindow(final Object window) {
 		return super.checkTopLevelWindow(window);
 	}
 
-	public void checkWrite(FileDescriptor fd) {
-		if (isCallerScript()) {
-			//throw new SecurityException();
-		}
+	@Override
+	public void checkWrite(final FileDescriptor fd) {
 		super.checkWrite(fd);
 	}
 
-	public void checkWrite(String file) {
-		checkFilePath(file, true);
+	@Override
+	public void checkWrite(final String file) {
+		checkFilePath(file, false);
 		super.checkWrite(file);
 	}
 
-	private void checkSuperFilePath(String path) {
+	private void checkFilePath(String path, final boolean readOnly) {
 		path = new File(path).getAbsolutePath();
-		if (path.equalsIgnoreCase(new File(GlobalConfiguration.Paths.getAccountsFile()).getAbsolutePath())) {
-			for (StackTraceElement s : Thread.currentThread().getStackTrace()) {
+		if (isCallerScript()) {
+			if (!path.startsWith(Configuration.Paths.getScriptCacheDirectory())) {
+				boolean fail = true;
+				if (!Configuration.RUNNING_FROM_JAR) {
+					// allow project resource directory if not running from JAR (i.e. in eclipse)
+					String check = new File(Configuration.Paths.ROOT).getAbsolutePath();
+					try {
+						check = new File(check).getCanonicalPath();
+					} catch (final IOException ignored) {
+					}
+					fail = !path.startsWith(check);
+				} else {
+					if (readOnly && path.equals(Configuration.Paths.getRunningJarPath())) {
+						fail = false;
+					}
+				}
+				for (final String prefix : new String[]{Configuration.Paths.getScreenshotsDirectory(),
+						Configuration.Paths.getScriptsDirectory(), Configuration.Paths.getWebDatabase()}) {
+					if (path.startsWith(prefix)) {
+						fail = false;
+						break;
+					}
+				}
+				final String jre = System.getProperty("java.home");
+				if (readOnly && jre != null && !jre.isEmpty() && path.startsWith(jre)) {
+					fail = false;
+				}
+				if (fail && readOnly) {
+					for (final String font : FontManager.getFontPath(true).split("\\Q" + File.pathSeparator + "\\E")) {
+						if (path.startsWith(font)) {
+							fail = false;
+							break;
+						}
+					}
+				}
+				if (fail) {
+					throw new SecurityException();
+				}
+			}
+		}
+		if (path.equalsIgnoreCase(new File(Configuration.Paths.getAccountsFile()).getAbsolutePath())) {
+			for (final StackTraceElement s : Thread.currentThread().getStackTrace()) {
 				final String name = s.getClassName();
 				if (name.equals(AccountStore.class.getName())) {
 					return;
 				}
 			}
 			throw new SecurityException();
-		}
-	}
-
-	private void checkFilePath(String path) {
-		checkSuperFilePath(path);
-		path = new File(path).getAbsolutePath();
-		if (isCallerScript()) {
-			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory())) {
-				throw new SecurityException();
-			}
-		}
-	}
-
-	private void checkFilePath(String path, boolean write) {
-		checkSuperFilePath(path);
-		path = new File(path).getAbsolutePath();
-		if (isCallerScript()) {
-			if (!path.startsWith(GlobalConfiguration.Paths.getScriptCacheDirectory()) && (!write || path.startsWith(GlobalConfiguration.Paths.getScreenshotsDirectory()))) {
-				throw new SecurityException();
-			}
 		}
 	}
 }

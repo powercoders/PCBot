@@ -1,8 +1,12 @@
 package org.rsbot.script.methods;
 
+import org.rsbot.Configuration;
+import org.rsbot.script.internal.reflection.Reflection;
 import org.rsbot.script.wrappers.*;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,6 +15,7 @@ import java.util.logging.Logger;
  * Provides access to methods that can be used by RSBot scripts.
  */
 public class Methods {
+	public MethodContext ctx;
 
 	/**
 	 * The logger instance
@@ -133,17 +138,29 @@ public class Methods {
 	 */
 	protected Prayer prayer;
 	/**
+	 * The singleton of Quests
+	 */
+	protected Quests quests;
+	/**
 	 * The singleton of FriendsChat
 	 */
 	protected FriendChat friendChat;
+	/**
+	 * The singleton of Lobby
+	 */
+	protected Lobby lobby;
 	/**
 	 * The singleton of Trade
 	 */
 	protected Trade trade;
 	/**
-	 * The singleton of Trade
+	 * The singleton of Web
 	 */
-	protected Paint paint;
+	protected Web web;
+	/**
+	 * Reflection providers.
+	 */
+	protected Reflection reflection;
 
 
 	/**
@@ -151,38 +168,47 @@ public class Methods {
 	 *
 	 * @param ctx The MethodContext.
 	 */
-	public void init(MethodContext ctx) {
-		this.skills = ctx.skills;
-		this.settings = ctx.settings;
-		this.magic = ctx.magic;
-		this.bank = ctx.bank;
-		this.players = ctx.players;
-		this.store = ctx.store;
-		this.grandExchange = ctx.grandExchange;
-		this.hiscores = ctx.hiscores;
-		this.clanChat = ctx.clanChat;
-		this.camera = ctx.camera;
-		this.npcs = ctx.npcs;
-		this.game = ctx.game;
-		this.combat = ctx.combat;
-		this.interfaces = ctx.interfaces;
-		this.mouse = ctx.mouse;
-		this.keyboard = ctx.keyboard;
-		this.menu = ctx.menu;
-		this.tiles = ctx.tiles;
-		this.objects = ctx.objects;
-		this.walking = ctx.walking;
-		this.calc = ctx.calc;
-		this.inventory = ctx.inventory;
-		this.equipment = ctx.equipment;
-		this.groundItems = ctx.groundItems;
-		this.account = ctx.account;
-		this.summoning = ctx.summoning;
-		this.env = ctx.env;
-		this.prayer = ctx.prayer;
-		this.friendChat = ctx.friendChat;
-		this.trade = ctx.trade;
-		this.paint = ctx.paint;
+	public void init(final MethodContext ctx) {
+		final File cache = new File(Configuration.Paths.getScriptCacheDirectory());
+		if (!cache.exists()) {
+			cache.mkdirs();
+		}
+		ImageIO.setCacheDirectory(cache);
+		this.ctx = ctx;
+		skills = ctx.skills;
+		settings = ctx.settings;
+		magic = ctx.magic;
+		bank = ctx.bank;
+		players = ctx.players;
+		store = ctx.store;
+		grandExchange = ctx.grandExchange;
+		hiscores = ctx.hiscores;
+		clanChat = ctx.clanChat;
+		camera = ctx.camera;
+		npcs = ctx.npcs;
+		game = ctx.game;
+		combat = ctx.combat;
+		interfaces = ctx.interfaces;
+		mouse = ctx.mouse;
+		keyboard = ctx.keyboard;
+		menu = ctx.menu;
+		tiles = ctx.tiles;
+		objects = ctx.objects;
+		walking = ctx.walking;
+		calc = ctx.calc;
+		inventory = ctx.inventory;
+		equipment = ctx.equipment;
+		groundItems = ctx.groundItems;
+		account = ctx.account;
+		summoning = ctx.summoning;
+		env = ctx.env;
+		prayer = ctx.prayer;
+		quests = ctx.quests;
+		friendChat = ctx.friendChat;
+		lobby = ctx.lobby;
+		trade = ctx.trade;
+		web = ctx.web;
+		reflection = ctx.reflection;
 	}
 
 	/**
@@ -203,8 +229,8 @@ public class Methods {
 	 * @param max The exclusive upper bound.
 	 * @return Random integer min <= n < max.
 	 */
-	public static int random(int min, int max) {
-		int n = Math.abs(max - min);
+	public static int random(final int min, final int max) {
+		final int n = Math.abs(max - min);
 		return Math.min(min, max) + (n == 0 ? 0 : random.nextInt(n));
 	}
 
@@ -214,7 +240,7 @@ public class Methods {
 	 * @param npc The NPC to check for.
 	 * @return <tt>true</tt> if found.
 	 */
-	public boolean verify(RSNPC npc) {
+	public boolean verify(final RSNPC npc) {
 		return npc != null;
 	}
 
@@ -224,7 +250,7 @@ public class Methods {
 	 * @param o The RSObject to check for.
 	 * @return <tt>true</tt> if found.
 	 */
-	public boolean verify(RSObject o) {
+	public boolean verify(final RSObject o) {
 		return o != null;
 	}
 
@@ -234,7 +260,7 @@ public class Methods {
 	 * @param t The RSTile to check for.
 	 * @return <tt>true</tt> if found.
 	 */
-	public boolean verify(RSTile t) {
+	public boolean verify(final RSTile t) {
 		return t != null;
 	}
 
@@ -244,7 +270,7 @@ public class Methods {
 	 * @param i The RSGroundItem to check for.
 	 * @return <tt>true</tt> if found.
 	 */
-	public boolean verify(RSGroundItem i) {
+	public boolean verify(final RSGroundItem i) {
 		return i != null;
 	}
 
@@ -256,7 +282,7 @@ public class Methods {
 	 * @param max The exclusive upper bound.
 	 * @return Random double min <= n < max.
 	 */
-	public static double random(double min, double max) {
+	public static double random(final double min, final double max) {
 		return Math.min(min, max) + random.nextDouble() * Math.abs(max - min);
 	}
 
@@ -268,7 +294,7 @@ public class Methods {
 	 * @see #sleep(int)
 	 * @see #random(int, int)
 	 */
-	public static void sleep(int minSleep, int maxSleep) {
+	public static void sleep(final int minSleep, final int maxSleep) {
 		sleep(random(minSleep, maxSleep));
 	}
 
@@ -277,9 +303,9 @@ public class Methods {
 	 *
 	 * @param toSleep The time to sleep in milliseconds.
 	 */
-	public static void sleep(int toSleep) {
+	public static void sleep(final int toSleep) {
 		try {
-			long start = System.currentTimeMillis();
+			final long start = System.currentTimeMillis();
 			Thread.sleep(toSleep);
 
 			// Guarantee minimum sleep
@@ -287,7 +313,7 @@ public class Methods {
 			while (start + toSleep > (now = System.currentTimeMillis())) {
 				Thread.sleep(start + toSleep - now);
 			}
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
@@ -297,7 +323,7 @@ public class Methods {
 	 *
 	 * @param message Object to log.
 	 */
-	public void log(Object message) {
+	public void log(final Object message) {
 		log.info(message.toString());
 	}
 
@@ -307,8 +333,8 @@ public class Methods {
 	 * @param color   The color of the font
 	 * @param message Object to log
 	 */
-	public void log(Color color, Object message) {
-		Object[] parameters = {color};
+	public void log(final Color color, final Object message) {
+		final Object[] parameters = {color};
 		log.log(Level.INFO, message.toString(), parameters);
 	}
 }

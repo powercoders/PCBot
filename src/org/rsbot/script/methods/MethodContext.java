@@ -3,6 +3,7 @@ package org.rsbot.script.methods;
 import org.rsbot.bot.Bot;
 import org.rsbot.client.Client;
 import org.rsbot.script.internal.InputManager;
+import org.rsbot.script.internal.reflection.Reflection;
 
 /**
  * For internal use to link MethodProviders.
@@ -167,6 +168,11 @@ public class MethodContext {
 	public final Prayer prayer = new Prayer(this);
 
 	/**
+	 * The singleton of Quests
+	 */
+	public final Quests quests = new Quests(this);
+
+	/**
 	 * The singleton of Prayer
 	 */
 	public final FriendChat friendChat = new FriendChat(this);
@@ -182,11 +188,6 @@ public class MethodContext {
 	public final Lobby lobby = new Lobby(this);
 
 	/**
-	 * The singleton of Paint
-	 */
-	public final Paint paint = new Paint(this);
-
-	/**
 	 * The Bot's input manager
 	 */
 	public final InputManager inputManager;
@@ -196,12 +197,23 @@ public class MethodContext {
 	 */
 	public final Client client;
 
+	/**
+	 * The Web
+	 */
+	public final Web web = new Web(this);
+
+	/**
+	 * Reflection providers.
+	 */
+	public final Reflection reflection;
+
 	public final Bot bot;
 
-	public MethodContext(Bot bot) {
+	public MethodContext(final Bot bot) {
 		this.bot = bot;
-		this.client = bot.getClient();
-		this.inputManager = bot.getInputManager();
+		this.reflection = new Reflection(bot);
+		client = bot.getClient();
+		inputManager = bot.getInputManager();
 	}
 
 }

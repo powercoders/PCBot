@@ -1,15 +1,18 @@
 package org.rsbot.gui;
 
+import org.rsbot.Configuration;
+import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.bot.Bot;
 import org.rsbot.event.impl.*;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.event.listeners.TextPaintListener;
-import org.rsbot.util.GlobalConfiguration;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
 
 public class BotMenuBar extends JMenuBar {
@@ -18,8 +21,10 @@ public class BotMenuBar extends JMenuBar {
 	public static final String[] TITLES;
 	public static final String[][] ELEMENTS;
 
-	static {
+	private static final String[] DEVELOPER_CHECK_FEATURES = {"Game State", "Current Tab", "Camera", "Floor Height",
+			"Mouse Position", "User Input Allowed", "Menu", "Menu Actions", "Cache", "Models", "Calc Test", "Settings"};
 
+	static {
 		// Text
 		DEBUG_MAP.put("Game State", TLoginIndex.class);
 		DEBUG_MAP.put("Current Tab", TTab.class);
@@ -32,6 +37,7 @@ public class BotMenuBar extends JMenuBar {
 		DEBUG_MAP.put("Menu Actions", TMenuActions.class);
 		DEBUG_MAP.put("Menu", TMenu.class);
 		DEBUG_MAP.put("FPS", TFPS.class);
+		DEBUG_MAP.put("Cache", TWebStatus.class);
 
 		// Paint
 		DEBUG_MAP.put("Players", DrawPlayers.class);
@@ -48,53 +54,83 @@ public class BotMenuBar extends JMenuBar {
 		// Other
 		DEBUG_MAP.put("Log Messages", MessageLogger.class);
 
-		TITLES = new String[]{"File", "Edit", "View", "Help"};
+		TITLES = new String[]{Messages.FILE, Messages.EDIT, Messages.VIEW, Messages.HELP};
 		ELEMENTS = new String[][]{
-				{"New Bot", "Close Bot", "-",
-						/*"Service Key", "-",*/
-						"Run Script", "Stop Script", "Pause Script", "-",
-						"Save Screenshot", "-",
-						"Exit"},
-				{"Accounts", "-",
-						"ToggleF Force Input", "ToggleF Disable Rendering", "ToggleF Disable Canvas", "-",
-						"ToggleF Disable Anti-Randoms", "ToggleF Disable Auto Login", "-",
-						"ToggleF Disable Advertisements", "ToggleF Disable Confirmations"}, constructDebugs(),
-				{"Site", "Project", "About"}};
+				{Messages.NEWBOT, Messages.CLOSEBOT, Messages.MENUSEPERATOR,
+						Messages.SERVICEKEY, Messages.ADDSCRIPT,
+						Messages.RUNSCRIPT, Messages.STOPSCRIPT,
+						Messages.PAUSESCRIPT, Messages.MENUSEPERATOR,
+						Messages.SAVESCREENSHOT, Messages.MENUSEPERATOR,
+						Messages.HIDEBOT, Messages.EXIT},
+				{Messages.ACCOUNTS, Messages.MENUSEPERATOR,
+						Messages.TOGGLEFALSE + Messages.FORCEINPUT,
+						Messages.TOGGLEFALSE + Messages.LESSCPU,
+						Messages.MENUSEPERATOR,
+						Messages.TOGGLEFALSE + Messages.DISABLEANTIRANDOMS,
+						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN,
+						Messages.MENUSEPERATOR,
+						Messages.TOGGLEFALSE + Messages.DISABLEADS,
+						Messages.TOGGLEFALSE + Messages.DISABLEMONITORING,
+						Messages.TOGGLEFALSE + Messages.DISABLECONFIRMATIONS,
+						Messages.TOGGLEFALSE + Messages.AUTOSHUTDOWN},
+				constructDebugs(), {Messages.SITE, Messages.PROJECT, Messages.ABOUT}};
 	}
 
 	private static String[] constructDebugs() {
-		List<String> debugItems = new ArrayList<String>();
-		debugItems.add("Hide Toolbar");
-		debugItems.add("Hide Log Window");
-		debugItems.add("All Debugging");
-		debugItems.add("-");
-		for (String key : DEBUG_MAP.keySet()) {
-			Class<?> el = DEBUG_MAP.get(key);
+		final List<String> debugItems = new ArrayList<String>();
+		debugItems.add(Messages.HIDETOOLBAR);
+		debugItems.add(Messages.HIDELOGPANE);
+		debugItems.add(Messages.ALLDEBUGGING);
+		debugItems.add(Messages.MENUSEPERATOR);
+		for (final String key : DEBUG_MAP.keySet()) {
+			final Class<?> el = DEBUG_MAP.get(key);
 			if (PaintListener.class.isAssignableFrom(el)) {
 				debugItems.add(key);
 			}
 		}
-		debugItems.add("-");
-		for (String key : DEBUG_MAP.keySet()) {
+		debugItems.add(Messages.MENUSEPERATOR);
+		for (final String key : DEBUG_MAP.keySet()) {
 			final Class<?> el = DEBUG_MAP.get(key);
 			if (TextPaintListener.class.isAssignableFrom(el)) {
 				debugItems.add(key);
 			}
 		}
-		debugItems.add("-");
-		for (String key : DEBUG_MAP.keySet()) {
-			Class<?> el = DEBUG_MAP.get(key);
-			if (!(TextPaintListener.class.isAssignableFrom(el)) && !(PaintListener.class.isAssignableFrom(el))) {
+		debugItems.add(Messages.MENUSEPERATOR);
+		for (final String key : DEBUG_MAP.keySet()) {
+			final Class<?> el = DEBUG_MAP.get(key);
+			if (!TextPaintListener.class.isAssignableFrom(el) && !PaintListener.class.isAssignableFrom(el)) {
 				debugItems.add(key);
 			}
 		}
-		for (ListIterator<String> it = debugItems.listIterator(); it.hasNext();) {
-			String s = it.next();
-			if (!s.equals("-")) {
-				it.set("ToggleF " + s);
+		for (final ListIterator<String> it = debugItems.listIterator(); it.hasNext();) {
+			final String s = it.next();
+			if (!s.equals(Messages.MENUSEPERATOR)) {
+				it.set(Messages.TOGGLEFALSE + s);
 			}
 		}
 		return debugItems.toArray(new String[debugItems.size()]);
+	}
+
+	private void constructItemIcons() {
+		final HashMap<String, String> map = new HashMap<String, String>(16);
+		map.put(Messages.NEWBOT, Configuration.Paths.Resources.ICON_APPADD);
+		map.put(Messages.CLOSEBOT, Configuration.Paths.Resources.ICON_APPDELETE);
+		map.put(Messages.SERVICEKEY, Configuration.Paths.Resources.ICON_KEY);
+		map.put(Messages.ADDSCRIPT, Configuration.Paths.Resources.ICON_SCRIPT_ADD);
+		map.put(Messages.RUNSCRIPT, Configuration.Paths.Resources.ICON_PLAY);
+		map.put(Messages.STOPSCRIPT, Configuration.Paths.Resources.ICON_DELETE);
+		map.put(Messages.PAUSESCRIPT, Configuration.Paths.Resources.ICON_PAUSE);
+		map.put(Messages.SAVESCREENSHOT, Configuration.Paths.Resources.ICON_PHOTO);
+		map.put(Messages.HIDEBOT, Configuration.Paths.Resources.ICON_ARROWIN);
+		map.put(Messages.EXIT, Configuration.Paths.Resources.ICON_CLOSE);
+		map.put(Messages.ACCOUNTS, Configuration.Paths.Resources.ICON_REPORTKEY);
+		map.put(Messages.SITE, Configuration.Paths.Resources.ICON_WEBLINK);
+		map.put(Messages.PROJECT, Configuration.Paths.Resources.ICON_GITHUB);
+		map.put(Messages.ABOUT, Configuration.Paths.Resources.ICON_INFO);
+		for (final Entry<String, String> item : map.entrySet()) {
+			final JMenuItem menu = commandMenuItem.get(item.getKey());
+			menu.setIcon(new ImageIcon(Configuration.getImage(item.getValue())));
+		}
 	}
 
 	private final Map<String, JCheckBoxMenuItem> eventCheckMap = new HashMap<String, JCheckBoxMenuItem>();
@@ -102,77 +138,113 @@ public class BotMenuBar extends JMenuBar {
 	private final Map<String, JMenuItem> commandMenuItem = new HashMap<String, JMenuItem>();
 	private final ActionListener listener;
 
-	public BotMenuBar(ActionListener listener) {
+	public BotMenuBar(final ActionListener listener) {
 		this.listener = listener;
 		for (int i = 0; i < TITLES.length; i++) {
-			String title = TITLES[i];
-			String[] elems = ELEMENTS[i];
+			final String title = TITLES[i];
+			final String[] elems = ELEMENTS[i];
 			add(constructMenu(title, elems));
+		}
+		constructItemIcons();
+		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
+		commandCheckMap.get(Messages.DISABLEMONITORING).setVisible(false);
+		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
+		commandCheckMap.get(Messages.AUTOSHUTDOWN).setVisible(Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
+		if (Configuration.RUNNING_FROM_JAR) {
+			for (String disableFeature : DEVELOPER_CHECK_FEATURES) {
+				if (commandCheckMap.containsKey(disableFeature)) {
+					commandCheckMap.get(disableFeature).setVisible(false);
+				}
+			}
 		}
 	}
 
-	public void setOverrideInput(boolean force) {
-		commandCheckMap.get("Force Input").setSelected(force);
+	public void setOverrideInput(final boolean force) {
+		commandCheckMap.get(Messages.FORCEINPUT).setSelected(force);
 	}
 
-	public void setPauseScript(boolean pause) {
-		commandMenuItem.get("Pause Script").setText(pause ? "Resume Script" : "Pause Script");
+	public void setPauseScript(final boolean pause) {
+		final JMenuItem item = commandMenuItem.get(Messages.PAUSESCRIPT);
+		item.setText(pause ? Messages.RESUMESCRIPT : Messages.PAUSESCRIPT);
+		final Image image = Configuration.getImage(pause ? Configuration.Paths.Resources.ICON_START : Configuration.Paths.Resources.ICON_PAUSE);
+		if (image != null) {
+			item.setIcon(new ImageIcon(image));
+		}
 	}
 
-	public void setBot(Bot bot) {
+	public JMenuItem getMenuItem(final String name) {
+		return commandMenuItem.get(name);
+	}
+
+	public void setBot(final Bot bot) {
 		if (bot == null) {
-			commandMenuItem.get("Close Bot").setEnabled(false);
-			commandMenuItem.get("Run Script").setEnabled(false);
-			commandMenuItem.get("Stop Script").setEnabled(false);
-			commandMenuItem.get("Pause Script").setEnabled(false);
-			commandMenuItem.get("Save Screenshot").setEnabled(false);
-			for (JCheckBoxMenuItem item : eventCheckMap.values()) {
+			commandMenuItem.get(Messages.CLOSEBOT).setEnabled(false);
+			commandMenuItem.get(Messages.RUNSCRIPT).setEnabled(false);
+			commandMenuItem.get(Messages.STOPSCRIPT).setEnabled(false);
+			commandMenuItem.get(Messages.PAUSESCRIPT).setEnabled(false);
+			commandMenuItem.get(Messages.SAVESCREENSHOT).setEnabled(false);
+			for (final JCheckBoxMenuItem item : eventCheckMap.values()) {
 				item.setSelected(false);
 				item.setEnabled(false);
 			}
-			disable("All Debugging", "Force Input", "Disable Rendering", "Disable Canvas", "Disable Anti-Randoms", "Disable Auto Login");
+			disable(Messages.ALLDEBUGGING, Messages.FORCEINPUT, Messages.LESSCPU, Messages.DISABLEANTIRANDOMS, Messages.DISABLEAUTOLOGIN);
 		} else {
-			commandMenuItem.get("Close Bot").setEnabled(true);
-			commandMenuItem.get("Run Script").setEnabled(true);
-			commandMenuItem.get("Stop Script").setEnabled(true);
-			commandMenuItem.get("Pause Script").setEnabled(true);
-			commandMenuItem.get("Save Screenshot").setEnabled(true);
+			commandMenuItem.get(Messages.CLOSEBOT).setEnabled(true);
+			commandMenuItem.get(Messages.RUNSCRIPT).setEnabled(true);
+			commandMenuItem.get(Messages.STOPSCRIPT).setEnabled(true);
+			commandMenuItem.get(Messages.PAUSESCRIPT).setEnabled(true);
+			commandMenuItem.get(Messages.SAVESCREENSHOT).setEnabled(true);
 			int selections = 0;
-			for (Map.Entry<String, JCheckBoxMenuItem> entry : eventCheckMap.entrySet()) {
+			for (final Map.Entry<String, JCheckBoxMenuItem> entry : eventCheckMap.entrySet()) {
 				entry.getValue().setEnabled(true);
-				boolean selected = bot.hasListener(DEBUG_MAP.get(entry.getKey()));
+				final boolean selected = bot.hasListener(DEBUG_MAP.get(entry.getKey()));
 				entry.getValue().setSelected(selected);
 				if (selected) {
 					++selections;
 				}
 			}
-			enable("All Debugging", selections == eventCheckMap.size());
-			enable("Force Input", bot.overrideInput);
-			enable("Disable Rendering", bot.disableRendering);
-			enable("Disable Canvas", bot.disableCanvas);
-			enable("Disable Anti-Randoms", bot.disableRandoms);
-			enable("Disable Auto Login", bot.disableAutoLogin);
+			enable(Messages.ALLDEBUGGING, selections == eventCheckMap.size());
+			enable(Messages.FORCEINPUT, bot.overrideInput);
+			enable(Messages.LESSCPU, bot.disableRendering);
+			enable(Messages.DISABLEANTIRANDOMS, bot.disableRandoms);
+			enable(Messages.DISABLEAUTOLOGIN, bot.disableAutoLogin);
 		}
 	}
 
-	public JCheckBoxMenuItem getCheckBox(String key) {
+	public JCheckBoxMenuItem getCheckBox(final String key) {
 		return commandCheckMap.get(key);
 	}
 
-	private void disable(String... items) {
-		for (String item : items) {
+	private void disable(final String... items) {
+		for (final String item : items) {
 			commandCheckMap.get(item).setSelected(false);
 			commandCheckMap.get(item).setEnabled(false);
 		}
 	}
 
-	public void enable(String item, boolean selected) {
+	public void enable(final String item, final boolean selected) {
 		commandCheckMap.get(item).setSelected(selected);
 		commandCheckMap.get(item).setEnabled(true);
 	}
 
+	public void setEnabled(final String item, final boolean mode) {
+		commandCheckMap.get(item).setEnabled(mode);
+	}
+
+	public void doClick(final String item) {
+		commandMenuItem.get(item).doClick();
+	}
+
+	public void doTick(final String item) {
+		commandCheckMap.get(item).doClick();
+	}
+
+	public boolean isTicked(final String item) {
+		return commandCheckMap.get(item).isSelected();
+	}
+
 	public void loadPrefs() {
-		String path = GlobalConfiguration.Paths.getMenuBarPrefs();
+		final String path = Configuration.Paths.getMenuBarPrefs();
 		if (!new File(path).exists()) {
 			return;
 		}
@@ -188,7 +260,7 @@ public class BotMenuBar extends JMenuBar {
 					commandCheckMap.get(line).doClick();
 				}
 			}
-		} catch (IOException ioe) {
+		} catch (final IOException ioe) {
 			try {
 				if (in != null) {
 					in.close();
@@ -196,31 +268,31 @@ public class BotMenuBar extends JMenuBar {
 				if (freader != null) {
 					freader.close();
 				}
-			} catch (IOException ioe1) {
+			} catch (final IOException ioe1) {
 			}
 		}
 	}
 
 	public void savePrefs() {
-		String path = GlobalConfiguration.Paths.getMenuBarPrefs();
+		final String path = Configuration.Paths.getMenuBarPrefs();
 		FileWriter fstream = null;
 		BufferedWriter out = null;
 		try {
-			File f = new File(path);
+			final File f = new File(path);
 			if (f.exists()) {
 				f.delete();
 			}
 			fstream = new FileWriter(path);
 			out = new BufferedWriter(fstream);
-			for (Entry<String, JCheckBoxMenuItem> item : commandCheckMap.entrySet()) {
-				boolean checked = item.getValue().isSelected();
+			for (final Entry<String, JCheckBoxMenuItem> item : commandCheckMap.entrySet()) {
+				final boolean checked = item.getValue().isSelected();
 				if (!checked) {
 					continue;
 				}
 				out.write(item.getKey());
 				out.newLine();
 			}
-		} catch (IOException ioe) {
+		} catch (final IOException ioe) {
 		} finally {
 			try {
 				if (out != null) {
@@ -229,31 +301,31 @@ public class BotMenuBar extends JMenuBar {
 				if (fstream != null) {
 					fstream.close();
 				}
-			} catch (IOException ioe1) {
+			} catch (final IOException ioe1) {
 			}
 		}
 	}
 
-	private JMenu constructMenu(String title, String[] elems) {
-		JMenu menu = new JMenu(title);
+	private JMenu constructMenu(final String title, final String[] elems) {
+		final JMenu menu = new JMenu(title);
 		for (String e : elems) {
-			if (e.equals("-")) {
+			if (e.equals(Messages.MENUSEPERATOR)) {
 				menu.add(new JSeparator());
 			} else {
 				JMenuItem jmi;
-				if (e.startsWith("Toggle")) {
-					e = e.substring("Toggle".length());
-					char state = e.charAt(0);
+				if (e.startsWith(Messages.TOGGLE)) {
+					e = e.substring(Messages.TOGGLE.length());
+					final char state = e.charAt(0);
 					e = e.substring(2);
 					jmi = new JCheckBoxMenuItem(e);
-					if ((state == 't') || (state == 'T')) {
+					if (state == 't' || state == 'T') {
 						jmi.setSelected(true);
 					}
 					if (DEBUG_MAP.containsKey(e)) {
-						JCheckBoxMenuItem ji = (JCheckBoxMenuItem) jmi;
+						final JCheckBoxMenuItem ji = (JCheckBoxMenuItem) jmi;
 						eventCheckMap.put(e, ji);
 					}
-					JCheckBoxMenuItem ji = (JCheckBoxMenuItem) jmi;
+					final JCheckBoxMenuItem ji = (JCheckBoxMenuItem) jmi;
 					commandCheckMap.put(e, ji);
 				} else {
 					jmi = new JMenuItem(e);
