@@ -1,9 +1,9 @@
 package org.rsbot.script.provider;
 
 import org.rsbot.Configuration;
-import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IOHelper;
+import org.rsbot.util.io.JavaCompiler;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -18,8 +18,7 @@ public class ScriptDownloader {
 	private static final Logger log = Logger.getLogger(ScriptDownloader.class.getName());
 
 	public static void save(String sourceURL) {
-		final String javacPath = findJavac();
-		if (javacPath == null || javacPath.length() == 0) {
+		if (!JavaCompiler.isAvailable()) {
 			log.warning("JDK is not installed");
 			return;
 		}
@@ -94,29 +93,12 @@ public class ScriptDownloader {
 		} else {
 			compileClassPath = new File(Configuration.Paths.ROOT + File.separator + "bin").getAbsolutePath();
 		}
-		try {
-			Runtime.getRuntime().exec(new String[]{javacPath, "-cp", compileClassPath, classFile.getAbsolutePath()});
-		} catch (IOException e) {
-			log.severe("Could not compile script " + className);
-			return;
+		final boolean result = JavaCompiler.run(classFile, compileClassPath);
+		if (result) {
+			log.info("Compiled script " + className);
+		} else {
+			log.warning("Could not compile script " + className);
 		}
-		log.info("Compiled script " + className);
-	}
-
-	private static String readProcess(final String exec) throws IOException {
-		final Process compiler = Runtime.getRuntime().exec(exec);
-		final InputStream is = compiler.getInputStream();
-		try {
-			compiler.waitFor();
-		} catch (final InterruptedException ignored) {
-			return null;
-		}
-		final StringBuilder result = new StringBuilder(256);
-		int r;
-		while ((r = is.read()) != -1) {
-			result.append((char) r);
-		}
-		return result.toString();
 	}
 
 	private static String classFileName(final File path) {
@@ -156,23 +138,6 @@ public class ScriptDownloader {
 			}
 		}
 		return null;
-	}
-
-	private static String findJavac() {
-		try {
-			if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
-				String currentVersion = readProcess("REG QUERY \"HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\" /v CurrentVersion");
-				currentVersion = currentVersion.substring(currentVersion.indexOf("REG_SZ") + 6).trim();
-				String binPath = readProcess("REG QUERY \"HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\" + currentVersion + "\" /v JavaHome");
-				binPath = binPath.substring(binPath.indexOf("REG_SZ") + 6).trim() + "\\bin\\javac.exe";
-				return new File(binPath).exists() ? binPath : null;
-			} else {
-				String whichQuery = readProcess("which javac");
-				return whichQuery == null || whichQuery.length() == 0 ? null : whichQuery.trim();
-			}
-		} catch (Exception ignored) {
-			return null;
-		}
 	}
 
 	private static String normalisePastebin(String sourceURL) {
