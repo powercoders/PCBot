@@ -22,7 +22,9 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
@@ -51,6 +53,10 @@ public class SettingsManager extends JDialog {
 		public boolean monitoring = true;
 		public boolean shutdown = false;
 		public int shutdownTime = 10;
+		public boolean web = false;
+		public String webBind = "localhost:9500";
+		public boolean webPassRequire = false;
+		public String webPass = "";
 
 		public Preferences(final File store) {
 			this.store = store;
@@ -84,6 +90,18 @@ public class SettingsManager extends JDialog {
 				shutdownTime = Integer.parseInt(keys.get("shutdownTime"));
 				shutdownTime = Math.max(Math.min(shutdownTime, 60), 3);
 			}
+			if (keys.containsKey("web")) {
+				web = IniParser.parseBool(keys.get("web"));
+			}
+			if (keys.containsKey("webBind")) {
+				webBind = keys.get("webBind");
+			}
+			if (keys.containsKey("webPassRequire")) {
+				webPassRequire = IniParser.parseBool(keys.get("webPassRequire"));
+			}
+			if (keys.containsKey("webPass")) {
+				webPass = keys.get("webPass");
+			}
 		}
 
 		public void save() {
@@ -93,6 +111,10 @@ public class SettingsManager extends JDialog {
 			keys.put("monitoring", Boolean.toString(monitoring));
 			keys.put("shutdown", Boolean.toString(shutdown));
 			keys.put("shutdownTime", Integer.toString(shutdownTime));
+			keys.put("web", Boolean.toString(web));
+			keys.put("webBind", webBind);
+			keys.put("webPassRequire", Boolean.toString(webPassRequire));
+			keys.put("webPass", webPass);
 			final HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>(1);
 			data.put(IniParser.emptySection, keys);
 			try {
@@ -124,6 +146,8 @@ public class SettingsManager extends JDialog {
 		panelOptions.setBorder(BorderFactory.createTitledBorder("Display"));
 		final JPanel panelInternal = new JPanel(new GridLayout(0, 1));
 		panelInternal.setBorder(BorderFactory.createTitledBorder("Internal"));
+		final JPanel panelWeb = new JPanel(new GridLayout(2, 1));
+		panelWeb.setBorder(BorderFactory.createTitledBorder("Web UI"));
 
 		final JCheckBox checkAds = new JCheckBox(Messages.DISABLEADS);
 		checkAds.setToolTipText("Show advertisment on startup");
@@ -154,10 +178,49 @@ public class SettingsManager extends JDialog {
 		checkShutdown.setEnabled(Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
 		valueShutdown.setEnabled(checkShutdown.isEnabled() && checkShutdown.isSelected());
 
+		final JPanel[] panelWebOptions = new JPanel[2];
+		for (int i = 0; i < panelWebOptions.length; i++) {
+			panelWebOptions[i] = new JPanel(new GridLayout(1, 2));
+		}
+		final JCheckBox checkWeb = new JCheckBox(Messages.BINDTO);
+		checkWeb.setToolTipText("Remote control via web interface");
+		checkWeb.setSelected(prefs.web);
+		panelWebOptions[0].add(checkWeb);
+		final JFormattedTextField textWebBind = new JFormattedTextField(prefs.webBind);
+		textWebBind.setToolTipText("Example: localhost:9500");
+		panelWebOptions[0].add(textWebBind);
+		final JCheckBox checkWebPass = new JCheckBox(Messages.USEPASSWORD);
+		checkWebPass.setSelected(prefs.webPassRequire);
+		panelWebOptions[1].add(checkWebPass);
+		final JPasswordField textWebPass = new JPasswordField(prefs.webPass);
+		panelWebOptions[1].add(textWebPass);
+		checkWebPass.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				textWebPass.setEnabled(checkWebPass.isSelected() && checkWebPass.isEnabled());
+			}
+		});
+		checkWeb.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				final boolean enabled = checkWeb.isSelected();
+				textWebBind.setEnabled(enabled);
+				checkWebPass.setEnabled(enabled);
+				for (final ActionListener action : checkWebPass.getActionListeners()) {
+					action.actionPerformed(null);
+				}
+			}
+		});
+		for (final ActionListener action : checkWeb.getActionListeners()) {
+			action.actionPerformed(null);
+		}
+
 		panelOptions.add(checkAds);
 		panelOptions.add(checkConf);
 		panelInternal.add(checkMonitor);
 		panelInternal.add(panelShutdown);
+		panelWeb.add(panelWebOptions[0]);
+		panelWeb.add(panelWebOptions[1]);
 
 		final GridLayout gridAction = new GridLayout(1, 2);
 		gridAction.setHgap(5);
@@ -177,6 +240,10 @@ public class SettingsManager extends JDialog {
 				prefs.monitoring = checkMonitor.isSelected();
 				prefs.shutdown = checkShutdown.isSelected();
 				prefs.shutdownTime = modelShutdown.getNumber().intValue();
+				prefs.web = checkWeb.isSelected();
+				prefs.webBind = textWebBind.getText();
+				prefs.webPass = new String(textWebPass.getPassword());
+				prefs.webPassRequire = checkWebPass.isSelected() && checkWebPass.isEnabled();
 				prefs.commit();
 				prefs.save();
 				dispose();
@@ -203,6 +270,10 @@ public class SettingsManager extends JDialog {
 		panel.setBorder(panelAction.getBorder());
 		panel.add(panelOptions);
 		panel.add(panelInternal);
+
+		if (!Configuration.RUNNING_FROM_JAR) {
+			panel.add(panelWeb); // hide web options from non-development builds for now
+		}
 
 		add(panel);
 		add(panelAction, BorderLayout.SOUTH);

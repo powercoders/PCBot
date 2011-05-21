@@ -26,6 +26,8 @@ public interface Messages {
 	public static final String DISABLEADS = "Disable Advertisements";
 	public static final String DISABLEMONITORING = "Disable Monitoring";
 	public static final String DISABLECONFIRMATIONS = "Disable Confirmations";
+	public static final String BINDTO = "Bind to address:";
+	public static final String USEPASSWORD = "Use password:";
 	public static final String LESSCPU = "Less CPU";
 	public static final String AUTOSHUTDOWN = "Auto Shutdown";
 
