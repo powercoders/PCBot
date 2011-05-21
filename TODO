@@ -1,4 +1,3 @@
 Make the "RSBot is Hidden" message only appear once per-bot boot.
 Add a working disable canvas.
-Make the web use A* path generation to account for objects during pathing.
 Update getClosestBank() to work with everything + account for members/reqs.

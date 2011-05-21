@@ -49,6 +49,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private final List<Bot> bots = new ArrayList<Bot>();
 	private TrayIcon tray = null;
 	private java.util.Timer shutdown = null;
+	private java.util.Timer clean = null;
 
 	public BotGUI() {
 		init();
@@ -84,6 +85,13 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				System.gc();
 			}
 		});
+		clean = new java.util.Timer(true);
+		clean.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				System.gc();
+			}
+		}, 1000 * 60 * 10, 1000 * 60 * 10);
 	}
 
 	@Override
@@ -167,7 +175,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 						current.overrideInput = selected;
 						updateScriptControls();
 					} else if (option.equals(Messages.LESSCPU)) {
-						lessCpu(true);
+						lessCpu(((JCheckBoxMenuItem) evt.getSource()).isSelected());
 					} else if (option.equals(Messages.DISABLEANTIRANDOMS)) {
 						current.disableRandoms = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals(Messages.DISABLEAUTOLOGIN)) {

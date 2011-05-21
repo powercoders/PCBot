@@ -3,6 +3,7 @@ package org.rsbot.script.web;
 import java.util.LinkedList;
 
 public class Route {
+
 	private final LinkedList<RouteStep> subRoutes = new LinkedList<RouteStep>();
 
 	public Route(final RouteStep[] steps) {
