@@ -37,6 +37,7 @@ public class SettingsManager extends JDialog {
 		public String webBind = "localhost:9500";
 		public boolean webPassRequire = false;
 		public String webPass = "";
+		public boolean allowResize = false;
 
 		public Preferences(final File store) {
 			this.store = store;
@@ -63,6 +64,9 @@ public class SettingsManager extends JDialog {
 			if (keys.containsKey("confirmations")) {
 				confirmations = IniParser.parseBool(keys.get("confirmations"));
 			}
+			if (keys.containsKey("botresize")) {
+				allowResize = IniParser.parseBool(keys.get("botresize"));
+			}
 			if (keys.containsKey("monitoring")) {
 				monitoring = IniParser.parseBool(keys.get("ads"));
 			}
@@ -88,9 +92,10 @@ public class SettingsManager extends JDialog {
 		}
 
 		public void save() {
-			final HashMap<String, String> keys = new HashMap<String, String>(5);
+			final HashMap<String, String> keys = new HashMap<String, String>();
 			keys.put("ads", Boolean.toString(ads));
 			keys.put("confirmations", Boolean.toString(confirmations));
+			keys.put("botresize", Boolean.toString(allowResize));
 			keys.put("monitoring", Boolean.toString(monitoring));
 			keys.put("shutdown", Boolean.toString(shutdown));
 			keys.put("shutdownTime", Integer.toString(shutdownTime));
@@ -98,7 +103,7 @@ public class SettingsManager extends JDialog {
 			keys.put("webBind", webBind);
 			keys.put("webPassRequire", Boolean.toString(webPassRequire));
 			keys.put("webPass", webPass);
-			final HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>(1);
+			final HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
 			data.put(IniParser.emptySection, keys);
 			try {
 				final BufferedWriter out = new BufferedWriter(new FileWriter(store));
@@ -122,6 +127,7 @@ public class SettingsManager extends JDialog {
 		super(owner, Messages.OPTIONS, true);
 		prefs = new Preferences(store);
 		prefs.load();
+		owner.setMinimumSize(prefs.allowResize ? new Dimension(300, 300) : owner.getPreferredSize());
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_WRENCH));
 
@@ -139,6 +145,10 @@ public class SettingsManager extends JDialog {
 		final JCheckBox checkConf = new JCheckBox(Messages.DISABLECONFIRMATIONS);
 		checkConf.setToolTipText("Supress confirmation messages");
 		checkConf.setSelected(prefs.confirmations);
+
+		final JCheckBox allowResize = new JCheckBox(Messages.ALLOWGUIRESIZE);
+		allowResize.setToolTipText("Allow resizing of the bot gui");
+		allowResize.setSelected(prefs.allowResize);
 
 		final JCheckBox checkMonitor = new JCheckBox(Messages.DISABLEMONITORING);
 		checkMonitor.setToolTipText("Monitor system information to improve development");
@@ -203,6 +213,7 @@ public class SettingsManager extends JDialog {
 
 		panelOptions.add(checkAds);
 		panelOptions.add(checkConf);
+		panelOptions.add(allowResize);
 		panelInternal.add(checkMonitor);
 		panelInternal.add(panelShutdown);
 		panelWeb.add(panelWebOptions[0]);
@@ -222,6 +233,8 @@ public class SettingsManager extends JDialog {
 				setVisible(false);
 				prefs.ads = checkAds.isSelected();
 				prefs.confirmations = checkConf.isSelected();
+				prefs.allowResize = allowResize.isSelected();
+				owner.setMinimumSize(prefs.allowResize ? new Dimension(300, 300) : owner.getPreferredSize());
 				prefs.monitoring = checkMonitor.isSelected();
 				prefs.shutdown = checkShutdown.isSelected();
 				prefs.shutdownTime = modelShutdown.getNumber().intValue();
@@ -243,6 +256,8 @@ public class SettingsManager extends JDialog {
 				setVisible(false);
 				checkAds.setSelected(prefs.ads);
 				checkConf.setSelected(prefs.confirmations);
+				allowResize.setSelected(prefs.allowResize);
+				owner.setMinimumSize(prefs.allowResize ? new Dimension(300, 300) : owner.getPreferredSize());
 				checkMonitor.setSelected(prefs.monitoring);
 				checkShutdown.setSelected(prefs.shutdown);
 				modelShutdown.setValue(prefs.shutdownTime);
