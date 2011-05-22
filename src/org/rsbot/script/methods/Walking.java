@@ -95,6 +95,17 @@ public class Walking extends MethodProvider {
 	 * Walks to the given tile using the minimap with given randomness.
 	 *
 	 * @param t The tile to walk to.
+	 * @param r The maximum deviation from the tile to allow.
+	 * @return <tt>true</tt> if the tile was clicked; otherwise <tt>false</tt>.
+	 */
+	public boolean walkTileMM(final RSTile t, final int r) {
+		return walkTileMM(t, r, r, 0, 0, 0);
+	}
+
+	/**
+	 * Walks to the given tile using the minimap with given randomness.
+	 *
+	 * @param t The tile to walk to.
 	 * @param x The x randomness (between 0 and x-1).
 	 * @param y The y randomness (between 0 and y-1).
 	 * @return <tt>true</tt> if the tile was clicked; otherwise <tt>false</tt>.
@@ -153,30 +164,6 @@ public class Walking extends MethodProvider {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Walks to the given tile using the minimap with given randomness.
-	 *
-	 * @param t The tile to walk to.
-	 * @param r The maximum deviation from the tile to allow.
-	 * @return <tt>true</tt> if the tile was clicked; otherwise <tt>false</tt>.
-	 */
-	public boolean walkTileMM(final RSTile t, final int r) {
-		int x = t.getX();
-		int y = t.getY();
-		if (random(1, 3) == random(1, 3)) {
-			x += random(0, r);
-		} else {
-			x -= random(0, r);
-		}
-		if (random(1, 3) == random(1, 3)) {
-			y += random(0, r);
-		} else {
-			y -= random(0, r);
-		}
-		final RSTile dest = new RSTile(x, y);
-		return !methods.players.getMyPlayer().getLocation().equals(dest) && walkTileMM(dest, 0, 0);
 	}
 
 	/**
