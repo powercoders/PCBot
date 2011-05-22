@@ -49,7 +49,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	public ScriptSelector(final Frame frame, final Bot bot) {
-		super(frame, "Script Selector");
+		super(frame, "Script Selector", true);
 		this.bot = bot;
 		scripts = new ArrayList<ScriptDefinition>();
 		model = new ScriptTableModel(scripts);
@@ -58,8 +58,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	public void showGUI() {
 		init();
 		update();
-		setVisible(true);
 		load();
+		setVisible(true);
 	}
 
 	public void update() {
@@ -78,7 +78,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		}
 		scripts.addAll(SRC_PRECOMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
-		model.search("");
+		model.search((search == null || search.getText().contains("\0")) ? "" : search.getText());
+		table.revalidate();
 	}
 
 	private void init() {
@@ -91,6 +92,28 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			public void windowClosing(final WindowEvent e) {
 				bot.getScriptHandler().removeScriptListener(ScriptSelector.this);
 				dispose();
+			}
+		});
+		final Color searchAltColor = Color.GRAY;
+		final JButton refresh = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
+		refresh.setToolTipText("Refresh");
+		refresh.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				refresh.setEnabled(false);
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						new Thread() {
+							@Override
+							public void run() {
+								ScriptDeliveryNetwork.getInstance().forceUpdate();
+								load();
+								refresh.setEnabled(true);
+							}
+						}.start();
+					}
+				});
 			}
 		});
 		table = new JTable(model) {
@@ -163,6 +186,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						} else {
 							log.warning("Could not delete " + def.name);
 						}
+						scripts.remove(def);
+						load();
 					}
 				});
 
@@ -186,8 +211,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		toolBar.setMargin(new Insets(1, 1, 1, 1));
 		toolBar.setFloatable(false);
 		search = new JTextField();
-		final Color searchDefaultColor = search.getForeground(), searchAltColor = Color.GRAY;
-		final String searchDefaultText = "Type to filter...";
+		final Color searchDefaultColor = search.getForeground();
+		final String searchDefaultText = "Type to filter...\0";
 		search.setText(searchDefaultText);
 		search.setForeground(searchAltColor);
 		search.addFocusListener(new FocusAdapter() {
@@ -214,11 +239,16 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				model.search(search.getText());
 				table.revalidate();
 			}
+			@Override
+			public void keyReleased(final KeyEvent e) {
+				keyTyped(e);
+			}
 		});
 		submit = new JButton("Start", new ImageIcon(
 				Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
 		final JButton connect = new JButton(new ImageIcon(
 				Configuration.getImage(Configuration.Paths.Resources.ICON_CONNECT)));
+		connect.setToolTipText("Show network scripts");
 		submit.setEnabled(false);
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent evt) {
@@ -248,11 +278,12 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			connect.addActionListener(listenConnect);
 		}
 		accounts = new JComboBox(AccountManager.getAccountNames());
-		accounts.setMinimumSize(new Dimension(200, 20));
 		accounts.setPreferredSize(new Dimension(200, 20));
 		toolBar.add(search);
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(accounts);
+		toolBar.add(Box.createHorizontalStrut(5));
+		toolBar.add(refresh);
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(connect);
 		toolBar.add(Box.createHorizontalStrut(5));

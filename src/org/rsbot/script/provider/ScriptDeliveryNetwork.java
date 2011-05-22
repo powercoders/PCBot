@@ -30,6 +30,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 	private final String defaultKey = "0000000000000000000000000000000000000000";
 	private final int version = 1;
 	private URL base = null;
+	private boolean forceUpdate = false;
 
 	private ScriptDeliveryNetwork() {
 		super(new File(Configuration.Paths.getScriptsNetworkDirectory()));
@@ -52,6 +53,14 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			instance = new ScriptDeliveryNetwork();
 		}
 		return instance;
+	}
+
+	public void forceUpdate() {
+		forceUpdate = true;
+		try {
+			init();
+		} catch (final IOException ignored) {
+		}
 	}
 
 	private boolean load() {
@@ -134,7 +143,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 				mod = pack.lastModified();
 			}
 			final HttpURLConnection packCon = HttpClient.download(packUrl, pack);
-			if (pack.lastModified() == mod) {
+			if (pack.lastModified() == mod && !forceUpdate) {
 				continue;
 			}
 			br1 = new BufferedReader(new FileReader(pack));
@@ -150,6 +159,8 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		if (!scripts.isEmpty()) {
 			sync(scripts);
 		}
+
+		forceUpdate = false;
 	}
 
 	private void sync(final HashMap<String, URL> scripts) {
