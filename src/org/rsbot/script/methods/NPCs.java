@@ -63,13 +63,12 @@ public class NPCs extends MethodProvider {
 	 *
 	 * @param ids Allowed NPC IDs.
 	 * @return An array of the loaded RSNPCs matching the provided ID(s).
-
 	 */
 	public RSNPC[] getAll(final int... ids) {
 		return getAll(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
 				for (final int id : ids) {
-					if (npc.getID() == id) {
+					if (npc != null && npc.getID() == id) {
 						return true;
 					}
 				}
@@ -88,7 +87,7 @@ public class NPCs extends MethodProvider {
 		return getAll(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
 				for (final String name : names) {
-					if (npc.getName().equals(name)) {
+					if (npc != null && npc.getName() != null && npc.getName().equalsIgnoreCase(name)) {
 						return true;
 					}
 				}
@@ -141,7 +140,7 @@ public class NPCs extends MethodProvider {
 		return getNearest(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
 				for (final int id : ids) {
-					if (npc.getID() == id) {
+					if (npc != null && npc.getID() == id) {
 						return true;
 					}
 				}
@@ -163,7 +162,7 @@ public class NPCs extends MethodProvider {
 		return getNearest(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
 				for (final String name : names) {
-					if (npc.getName().equals(name)) {
+					if (npc != null && npc.getName() != null && npc.getName().equalsIgnoreCase(name)) {
 						return true;
 					}
 				}
