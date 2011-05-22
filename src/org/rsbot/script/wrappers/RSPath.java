@@ -11,7 +11,6 @@ import java.util.EnumSet;
  * @author Jacmob
  */
 public abstract class RSPath extends MethodProvider {
-
 	/**
 	 * Defines the path traversal options.
 	 */
@@ -84,5 +83,4 @@ public abstract class RSPath extends MethodProvider {
 	 * @return The end <code>RSTile</code>.
 	 */
 	public abstract RSTile getEnd();
-
 }

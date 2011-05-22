@@ -9,7 +9,6 @@ import java.util.ArrayList;
  * @author SpeedWing
  */
 public class RSArea {
-
 	private final Polygon area;
 	private final int plane;
 
@@ -97,6 +96,14 @@ public class RSArea {
 	}
 
 	/**
+     * @return The bounding box of the <b>RSArea</b>.
+     */
+    public Rectangle getBounds() {
+    	return new Rectangle(area.getBounds().x + 1,
+    			area.getBounds().y + 1, getWidth(), getHeight());
+    }
+
+	/**
 	 * @return The central <b>RSTile</b> of the <b>RSArea</b>.
 	 */
 	public RSTile getCentralTile() {
@@ -133,6 +140,13 @@ public class RSArea {
 		}
 		return cur;
 	}
+
+	/**
+     * @return The plane of the <b>RSArea</b>.
+     */
+    public int getPlane() {
+    	return plane;
+    }
 
 	/**
 	 * @return The <b>RSTiles</b> the <b>RSArea</b> contains.
@@ -199,21 +213,6 @@ public class RSArea {
 	}
 
 	/**
-	 * @return The plane of the <b>RSArea</b>.
-	 */
-	public int getPlane() {
-		return plane;
-	}
-
-	/**
-	 * @return The bounding box of the <b>RSArea</b>.
-	 */
-	public Rectangle getBounds() {
-		return new Rectangle(area.getBounds().x + 1,
-				area.getBounds().y + 1, getWidth(), getHeight());
-	}
-
-	/**
 	 * Converts an shape made of <b>RSTile</b> to a polygon.
 	 *
 	 * @param tiles The <b>RSTile</b> of the Polygon.
@@ -237,5 +236,4 @@ public class RSArea {
 				* (curr.getX() - dest.getX()) + (curr.getY() - dest.getY())
 				* (curr.getY() - dest.getY()));
 	}
-
 }

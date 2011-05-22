@@ -10,7 +10,6 @@ import org.rsbot.script.methods.MethodProvider;
  * wrap a component.
  */
 public class RSItem extends MethodProvider {
-
 	private final int id;
 	private final int stack;
 	private RSComponent component;
@@ -179,5 +178,4 @@ public class RSItem extends MethodProvider {
 	public boolean isComponentValid() {
 		return component != null && component.isValid();
 	}
-
 }

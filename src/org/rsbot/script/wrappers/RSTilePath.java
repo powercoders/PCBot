@@ -11,7 +11,6 @@ import java.util.EnumSet;
  * @author Jacmob
  */
 public class RSTilePath extends RSPath {
-
 	protected RSTile[] tiles;
 	protected RSTile[] orig;
 
@@ -135,5 +134,4 @@ public class RSTilePath extends RSPath {
 		System.arraycopy(tiles, 0, a, 0, tiles.length);
 		return a;
 	}
-
 }

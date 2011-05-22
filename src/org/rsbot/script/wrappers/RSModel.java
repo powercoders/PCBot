@@ -13,10 +13,10 @@ import java.util.LinkedList;
 /**
  * A screen space model.
  *
- * @author Jacmob, SpeedWing
+ * @author Jacmob
+ * @author SpeedWing
  */
 public abstract class RSModel extends MethodProvider {
-
 	/**
 	 * Returns a filter that matches against the array of point indices for the
 	 * A vertices of each triangle. Use in scripts is discouraged.
@@ -336,5 +336,4 @@ public abstract class RSModel extends MethodProvider {
 		}
 		return null;
 	}
-
 }
