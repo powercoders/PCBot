@@ -81,6 +81,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				Monitoring.start();
 				addBot();
 				updateScriptControls();
+				setShutdownTimer(prefs.shutdown);
 				System.gc();
 			}
 		});
