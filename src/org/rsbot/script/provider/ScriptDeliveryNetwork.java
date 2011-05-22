@@ -207,7 +207,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			});
 		}
 
-		final int threads = 2;
+		int threads = Runtime.getRuntime().availableProcessors();
 		final ExecutorService executorService = Executors.newFixedThreadPool(threads);
 		try {
 			executorService.invokeAll(tasks);
