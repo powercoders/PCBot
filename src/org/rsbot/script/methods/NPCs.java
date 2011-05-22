@@ -46,8 +46,7 @@ public class NPCs extends MethodProvider {
 		final int[] indices = methods.client.getRSNPCIndexArray();
 		final Set<RSNPC> npcs = new HashSet<RSNPC>();
 		for (final int index : indices) {
-			final Node node = methods.nodes
-					.lookup(methods.client.getRSNPCNC(), index);
+			final Node node = methods.nodes.lookup(methods.client.getRSNPCNC(), index);
 			if (node instanceof RSNPCNode) {
 				final RSNPC npc = new RSNPC(methods, ((RSNPCNode) node).getRSNPC());
 				if (npc != null && filter.accept(npc)) {
@@ -67,9 +66,11 @@ public class NPCs extends MethodProvider {
 	public RSNPC[] getAll(final int... ids) {
 		return getAll(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
-				for (final int id : ids) {
-					if (npc.getID() == id) {
-						return true;
+				if (npc != null) {
+					for (final int id : ids) {
+						if (npc.getID() == id) {
+							return true;
+						}
 					}
 				}
 				return false;
@@ -86,7 +87,7 @@ public class NPCs extends MethodProvider {
 	public RSNPC[] getAll(final String... names) {
 		return getAll(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
-				final String name = npc.getName();
+				final String name = npc != null ? npc.getName() : null;
 				if (name != null) {
 					for (final String n : names) {
 						if (n != null && n.equalsIgnoreCase(name)) {
@@ -114,8 +115,7 @@ public class NPCs extends MethodProvider {
 		final int[] indices = methods.client.getRSNPCIndexArray();
 
 		for (final int index : indices) {
-			final Node node = methods.nodes
-					.lookup(methods.client.getRSNPCNC(), index);
+			final Node node = methods.nodes.lookup(methods.client.getRSNPCNC(), index);
 			if (node instanceof RSNPCNode) {
 				final RSNPC npc = new RSNPC(methods, ((RSNPCNode) node).getRSNPC());
 				if (npc != null && filter.accept(npc)) {
@@ -142,9 +142,11 @@ public class NPCs extends MethodProvider {
 	public RSNPC getNearest(final int... ids) {
 		return getNearest(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
-				for (final int id : ids) {
-					if (npc.getID() == id) {
-						return true;
+				if (npc != null) {
+					for (final int id : ids) {
+						if (npc.getID() == id) {
+							return true;
+						}
 					}
 				}
 				return false;
@@ -164,7 +166,7 @@ public class NPCs extends MethodProvider {
 	public RSNPC getNearest(final String... names) {
 		return getNearest(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
-				final String name = npc.getName();
+				final String name = npc != null ? npc.getName() : null;
 				if (name != null) {
 					for (final String n : names) {
 						if (n != null && n.equalsIgnoreCase(name)) {

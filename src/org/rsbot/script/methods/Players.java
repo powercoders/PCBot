@@ -105,7 +105,7 @@ public class Players extends MethodProvider {
 	public RSPlayer getNearest(final String name) {
 		return getNearest(new Filter<RSPlayer>() {
 			public boolean accept(final RSPlayer player) {
-				return player.getName().equalsIgnoreCase(name);
+				return player != null && player.getName() != null && player.getName().equalsIgnoreCase(name);
 			}
 		});
 	}
@@ -123,7 +123,7 @@ public class Players extends MethodProvider {
 	public RSPlayer getNearest(final int level) {
 		return getNearest(new Filter<RSPlayer>() {
 			public boolean accept(final RSPlayer player) {
-				return player.getCombatLevel() == level;
+				return player != null && player.getCombatLevel() == level;
 			}
 		});
 	}
