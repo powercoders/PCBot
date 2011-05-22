@@ -64,7 +64,7 @@ public class ImprovedRewardsBox extends Random {
 	}
 
 	private boolean cachedInventoryContainedOneOf(final int... ids) {
-		for (final RSItem item : inventory.getCachedItems()) {
+		for (final RSItem item : inventory.getItems(true)) {
 			for (final int id : ids) {
 				if (item.getID() == id) {
 					return true;
