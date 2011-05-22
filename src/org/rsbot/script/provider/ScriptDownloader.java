@@ -21,6 +21,7 @@ public class ScriptDownloader {
 	private static final Logger log = Logger.getLogger(ScriptDownloader.class.getName());
 
 	public static void save(String sourceURL) {
+		// check the source URL is valid
 		sourceURL = sourceURL.trim();
 		if (sourceURL.startsWith("https:")) {
 			sourceURL = "http" + sourceURL.substring(5);
@@ -30,6 +31,8 @@ public class ScriptDownloader {
 			return;
 		}
 		sourceURL = normalisePastebin(sourceURL);
+
+		// download the file
 		log.fine("Downloading: " + sourceURL);
 		final File temporaryFile = new File(Configuration.Paths.getGarbageDirectory(), Integer.toString(sourceURL.hashCode()) + ".script.bin");
 		HttpURLConnection httpURLConnection = null;
@@ -38,6 +41,8 @@ public class ScriptDownloader {
 		} catch (Exception e) {
 			log.warning("Could not download script");
 		}
+
+		// if file is a .class then move as precompiled script
 		String className = classFileName(temporaryFile);
 		if (className != null) {
 			final File saveTo = new File(Configuration.Paths.getScriptsPrecompiledDirectory());
@@ -48,11 +53,15 @@ public class ScriptDownloader {
 			}
 			return;
 		}
+
+		// otherwise read file as plaintext
 		final byte[] scriptBytes = IOHelper.read(temporaryFile);
 		if (scriptBytes == null) {
 			log.severe("Could not read downloaded file");
 			return;
 		}
+
+		// parse out any html
 		String source = new String(scriptBytes);
 		if (httpURLConnection.getContentType().contains("html")) {
 			final int z = source.indexOf("<body");
@@ -67,6 +76,8 @@ public class ScriptDownloader {
 			source = source.replaceAll("&gt;", ">");
 			source = source.replaceAll("&amp;", "&");
 		}
+
+		// check that the text represents java code for a script
 		final Matcher m = Pattern.compile("public\\s+class\\s+(\\w+)\\s+extends\\s+Script").matcher(source);
 		if (!m.find()) {
 			log.severe("Specified URL is not a script");
@@ -77,6 +88,8 @@ public class ScriptDownloader {
 		if (!saveDirectory.exists()) {
 			saveDirectory.mkdirs();
 		}
+
+		// save the code in the folder for source scripts
 		final File classFile = new File(saveDirectory, className + ".java");
 		try {
 			final FileWriter fileWriterOut = new FileWriter(classFile);
@@ -86,6 +99,8 @@ public class ScriptDownloader {
 			log.severe("Could not save script " + className);
 			return;
 		}
+
+		// compile the script
 		boolean result = false;
 		if (JavaCompiler.isAvailable()) {
 			String compileClassPath;
@@ -102,6 +117,8 @@ public class ScriptDownloader {
 			}
 			result = JavaCompiler.compileWeb(sourceURL, compiledJar);
 		}
+
+		// notify user of result
 		if (result) {
 			log.info("Compiled script " + className);
 		} else {
