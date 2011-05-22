@@ -163,7 +163,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	public void checkExec(final String cmd) {
 		final String calling = getCallingClass();
 		for (final Class<?> c : new Class<?>[]{ScriptDeliveryNetwork.class, BotGUI.class, UpdateChecker.class, JavaCompiler.class}) {
-			if (calling.equals(c.getName())) {
+			if (calling.startsWith(c.getName())) {
 				super.checkExec(cmd);
 				return;
 			}
