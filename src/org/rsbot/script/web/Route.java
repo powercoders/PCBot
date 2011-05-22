@@ -3,8 +3,8 @@ package org.rsbot.script.web;
 import java.util.LinkedList;
 
 public class Route {
-
 	private final LinkedList<RouteStep> subRoutes = new LinkedList<RouteStep>();
+	public Route parent = null;
 
 	public Route(final RouteStep[] steps) {
 		for (RouteStep step : steps) {
@@ -28,6 +28,10 @@ public class Route {
 
 	public boolean finished() {
 		return subRoutes.size() == 0;
+	}
+
+	public void add(final RouteStep step) {
+		subRoutes.addLast(step);
 	}
 
 	public void updateRoute() {

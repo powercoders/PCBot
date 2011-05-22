@@ -11,8 +11,10 @@ import java.util.List;
  * @author Debauchery
  */
 public class Prayer extends MethodProvider {
-
 	public static final int PRAYER_INTERFACE = 271;
+
+	public static final int INTERFACE_PRAYER_ORB = 749;
+	public static final int INTERFACE_PRAYER = 271;
 
 	Prayer(final MethodContext ctx) {
 		super(ctx);
@@ -190,6 +192,41 @@ public class Prayer extends MethodProvider {
 		return isQuickPrayerOn() == activate;
 	}
 
+	private boolean isQuickPrayerSet(Book thePrayer) {
+		return methods.interfaces.getComponent(INTERFACE_PRAYER, 42).getComponent(thePrayer.getComponentIndex()).getBackgroundColor() == 181;
+	}
+
+	private boolean isQuickPrayerSet(Book... prayers) {
+		for (Book effect : prayers) {
+			if (!isQuickPrayerSet(effect)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	/**
+	 * Sets the character's quick prayers to the given prayers.
+	 *
+	 * @param prayers The prayers to set the quick prayers to.
+	 * @return <tt>true</tt> if the quick prayers were set; otherwise <tt>false</tt>.
+	 */
+	public boolean setQuickPrayers(Book... prayers) {
+		if (!isQuickPrayerOn()) {
+			methods.interfaces.getComponent(INTERFACE_PRAYER_ORB, 1).doAction("Select quick prayers");
+		}
+		for (Book effect : prayers) {
+			if (isQuickPrayerSet(effect)) {
+				continue;
+			}
+			methods.interfaces.getComponent(INTERFACE_PRAYER, 42).getComponent(effect.getComponentIndex()).doAction("Select");
+			sleep(random(750, 1100));
+		}
+		return isQuickPrayerSet(prayers) && methods.interfaces.getComponent(INTERFACE_PRAYER, 42).getComponent(43).doAction("Confirm Selection");
+	}
+
+
 	/**
 	 * Gets the remaining prayer points.
 	 *
@@ -206,8 +243,7 @@ public class Prayer extends MethodProvider {
 	 * @return The percentage of prayer points left.
 	 */
 	public int getPrayerPercentLeft() {
-		return 100 * getPrayerLeft()
-				/ methods.skills.getCurrentLevel(Skills.PRAYER);
+		return 100 * getPrayerLeft() / methods.skills.getCurrentLevel(Skills.PRAYER);
 	}
 
 	/**

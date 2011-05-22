@@ -110,7 +110,7 @@ public class RouteStep extends MethodProvider {
 		if (path != null && path.length > 1) {
 			RSTile startTile = path[0];
 			RSTile endTile = path[path.length - 1];
-			path = methods.web.generateNodePath(startTile, endTile);
+			path = methods.web.generateTilePath(startTile, endTile);
 			rspath = null;
 		}
 	}

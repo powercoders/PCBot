@@ -4,7 +4,6 @@ package org.rsbot.script.wrappers;
  * A tile at an absolute location in the game world.
  */
 public class RSTile {
-
 	private final int x;
 	private final int y;
 	private final int z;

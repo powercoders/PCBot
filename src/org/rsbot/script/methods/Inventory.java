@@ -14,6 +14,8 @@ import java.util.LinkedList;
 public class Inventory extends MethodProvider {
 	public static final int INTERFACE_INVENTORY = 149;
 	public static final int INTERFACE_INVENTORY_BANK = 763;
+	public static final int INTERFACE_INVENTORY_PRICE_CHECK = 204;
+	public static final int INTERFACE_INVENTORY_EQUIPMENT_BONUSES = 670;
 	public static final int INTERFACE_INVENTORY_SHOP = 621;
 
 	Inventory(final MethodContext ctx) {
@@ -38,6 +40,18 @@ public class Inventory extends MethodProvider {
 					INTERFACE_INVENTORY_SHOP, 0);
 			if (shopInv != null && shopInv.getAbsoluteX() > 50) {
 				return shopInv;
+			}
+		}
+		if (methods.interfaces.get(INTERFACE_INVENTORY_PRICE_CHECK).isValid()) {
+			final RSComponent priceInv = methods.interfaces.getComponent(INTERFACE_INVENTORY_PRICE_CHECK, 0);
+			if (priceInv != null && priceInv.getAbsoluteX() > 50) {
+				return priceInv;
+			}
+		}
+		if (methods.interfaces.get(INTERFACE_INVENTORY_EQUIPMENT_BONUSES).isValid()) {
+			final RSComponent equipInv = methods.interfaces.getComponent(INTERFACE_INVENTORY_EQUIPMENT_BONUSES, 0);
+			if (equipInv != null && equipInv.getAbsoluteX() > 50) {
+				return equipInv;
 			}
 		}
 
