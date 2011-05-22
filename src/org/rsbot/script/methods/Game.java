@@ -424,14 +424,15 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Closes the bank if it is open and logs out.
-	 *
+	 * 
 	 * @param lobby <tt>true</tt> if player should be logged out to the lobby
 	 * @return <tt>true</tt> if the player was logged out.
 	 */
 	public boolean logout(final boolean lobby) {
 		if (methods.bank.isOpen()) {
-			methods.bank.close();
-			sleep(random(200, 400));
+			if (methods.bank.close()) {
+				sleep(random(200, 400));
+			}
 		}
 		if (methods.bank.isOpen()) {
 			return false;
@@ -443,8 +444,9 @@ public class Game extends MethodProvider {
 			while (randomTab == currentTab) {
 				randomTab = random(1, 6);
 			}
-			methods.game.openTab(randomTab);
-			sleep(random(400, 800));
+			if (methods.game.openTab(randomTab)) {
+				sleep(random(400, 800));
+			}
 		}
 		if (methods.client.isSpellSelected()
 				|| methods.inventory.isItemSelected()) {
@@ -452,18 +454,25 @@ public class Game extends MethodProvider {
 		}
 		if (!isOnLogoutTab()) {
 			final int idx = methods.client.getGUIRSInterfaceIndex();
-			// Logout button in the top right hand corner
-			methods.interfaces.getComponent(idx, isFixed() ? 181 : 172)
-					.doClick();
-			int timesToWait = 0;
-			while (!isOnLogoutTab() && timesToWait < 5) {
-				sleep(random(200, 400));
-				timesToWait++;
+			RSComponent exitComponent = methods.interfaces.getComponent(idx,
+					isFixed() ? 181 : 173);
+			if (exitComponent == null || !exitComponent.doClick()) {
+				return false;
+			}
+			long time = System.currentTimeMillis();
+			while (!isOnLogoutTab()) {
+				// Time-out after 2 seconds
+				if (System.currentTimeMillis() - time > 2000) {
+					break;
+				}
+				sleep(random(50, 100));
 			}
 		}
-		methods.interfaces.getComponent(182, lobby ? 1 : 6).doClick();
-		// Final logout button in the logout tab
-		sleep(random(1500, 2000));
+		RSComponent exitToComponent = methods.interfaces.getComponent(182,
+				lobby ? 5 : 10);
+		if (exitToComponent.doClick()) {
+			sleep(random(1500, 2000));
+		}
 		return !isLoggedIn();
 	}
 
