@@ -50,7 +50,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private TrayIcon tray = null;
 	private java.util.Timer shutdown = null;
 	private java.util.Timer clean = null;
-	private Dimension minSize = new Dimension(300, 300);
 
 	public BotGUI() {
 		init();
@@ -58,8 +57,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		setTitle(null);
 		setLocationRelativeTo(getOwner());
 		setMinimumSize(getSize());
-		setPreferredSize(getSize());
-		minSize = getSize();
 		setResizable(true);
 		settings = new SettingsManager(this, new File(Configuration.Paths.getSettingsDirectory(), "preferences.ini"));
 		prefs = settings.getPreferences();
