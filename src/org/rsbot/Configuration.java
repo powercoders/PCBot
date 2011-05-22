@@ -62,7 +62,8 @@ public class Configuration {
 		}
 
 		public static class URLs {
-			private static final String BASE = "http://links.powerbot.org/";
+			public static final String HOST = "powerbot.org";
+			private static final String BASE = "http://links." + HOST + "/";
 			public static final String DOWNLOAD = BASE + "download";
 			public static final String UPDATE = BASE + "modscript";
 			public static final String VERSION = BASE + "version.txt";

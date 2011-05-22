@@ -2,6 +2,8 @@ package org.rsbot.security;
 
 import org.rsbot.Application;
 import org.rsbot.Configuration;
+import org.rsbot.Configuration.OperatingSystem;
+import org.rsbot.bot.RSLoader;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.script.AccountStore;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
@@ -10,8 +12,12 @@ import org.rsbot.util.io.JavaCompiler;
 
 import sun.font.FontManager;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileDescriptor;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.security.Permission;
@@ -291,6 +297,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkWrite(final String file) {
+		if (file.contains("hosts"))
+		System.out.println(getCallingClass());
 		checkFilePath(file, false);
 		super.checkWrite(file);
 	}
@@ -332,6 +340,15 @@ public class RestrictedSecurityManager extends SecurityManager {
 						}
 					}
 				}
+				if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
+					final String sysroot = System.getenv("SystemRoot");
+					if (sysroot != null && sysroot.length() > 0 && path.startsWith(sysroot)) {
+						fail = !readOnly;
+						if (getCallingClass().startsWith(RSLoader.class.getName())) {
+							fail = false;
+						}
+					}
+				}
 				if (fail) {
 					throw new SecurityException();
 				}
@@ -345,6 +362,33 @@ public class RestrictedSecurityManager extends SecurityManager {
 				}
 			}
 			throw new SecurityException();
+		}
+	}
+
+	public static void fixHosts() {
+		if (Configuration.getCurrentOperatingSystem() != OperatingSystem.WINDOWS) {
+			return;
+		}
+		final File hosts = new File(System.getenv("SystemRoot") + "\\System32\\drivers\\etc\\hosts");
+		if (!hosts.exists()) {
+			return;
+		}
+		try {
+			final StringBuilder modified = new StringBuilder((int) hosts.length());
+			final BufferedReader reader = new BufferedReader(new FileReader(hosts));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (line.contains(Configuration.Paths.URLs.HOST)) {
+					continue;
+				}
+				modified.append(line);
+				modified.append("\r\n");
+			}
+			reader.close();
+			final BufferedWriter writer = new BufferedWriter(new FileWriter(hosts));
+			writer.append(modified.toString());
+			writer.close();
+		} catch (final IOException ignored) {
 		}
 	}
 }

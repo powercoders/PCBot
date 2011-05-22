@@ -25,6 +25,7 @@ public class Application {
 	public static void main(final String[] args) {
 		try {
 			bootstrap();
+			RestrictedSecurityManager.fixHosts();
 			extractResources();
 			commands(args);
 			System.setSecurityManager(new RestrictedSecurityManager());
