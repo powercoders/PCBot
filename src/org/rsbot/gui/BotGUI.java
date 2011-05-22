@@ -56,7 +56,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		pack();
 		setTitle(null);
 		setLocationRelativeTo(getOwner());
-		setMinimumSize(getSize());
+		setMinimumSize(new Dimension((int) (getSize().width * .8), (int) (getSize().height * .8)));
 		setResizable(true);
 		settings = new SettingsManager(this, new File(Configuration.Paths.getSettingsDirectory(), "preferences.ini"));
 		prefs = settings.getPreferences();
