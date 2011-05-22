@@ -357,17 +357,18 @@ public class Inventory extends MethodProvider {
     }
 
 	/**
-     * Gets the first item in the inventory with any of the provided name(s).
+     * Gets the first item in the inventory containing any of the provided names.
      *
      * @param names The names of the item to find.
      * @return The first <tt>RSItem</tt> for the given name(s); otherwise null.
      */
     public RSItem getItem(final String... names) {
     	for (final RSItem item : getItems()) {
-    		final String name = item.getName();
+    		String name = item.getName();
     		if (name != null) {
+    			name = name.toLowerCase();
     			for (final String n : names) {
-    				if (n != null && n.equalsIgnoreCase(name)) {
+    				if (n != null && name.contains(n.toLowerCase())) {
     					return item;
     				}
     			}
