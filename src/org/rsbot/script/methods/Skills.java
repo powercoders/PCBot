@@ -1,5 +1,7 @@
 package org.rsbot.script.methods;
 
+import org.rsbot.script.util.SkillData;
+
 /**
  * This class is for all the skill calculations.
  * <p/>
@@ -482,13 +484,13 @@ public class Skills extends MethodProvider {
 		return methods.interfaces.getComponent(INTERFACE_TAB_STATS, component)
 				.doHover();
 	}
-	
+
 	/**
 	 * Checks if one of the given skills is boosted.
-	 * 
-	 * @author Dunnkers
+	 *
 	 * @param index The index of the skill.
 	 * @return <tt>true</tt> if one the given skills is boosted.
+	 * @author Dunnkers
 	 */
 	public boolean isSkillBoosted(final int... index) {
 		if (!isSkill(index)) {
@@ -497,13 +499,13 @@ public class Skills extends MethodProvider {
 		for (int i : index) {
 			int realLevel = getRealLevel(i);
 			if (realLevel > getMaxLevel(i)) {
-				switch(i) {
-				case Skills.DUNGEONEERING:
-					realLevel = 120;
-					break;
-				default:
-					realLevel = 99;
-					break;
+				switch (i) {
+					case Skills.DUNGEONEERING:
+						realLevel = 120;
+						break;
+					default:
+						realLevel = 99;
+						break;
 				}
 			}
 			if (realLevel == getCurrentLevel(i)) {
@@ -512,10 +514,10 @@ public class Skills extends MethodProvider {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Checks if this index is not out of range.
-	 * 
+	 *
 	 * @param index The index of the skill.
 	 * @return <tt>true</tt> if this index is not out of range.
 	 */
@@ -526,5 +528,14 @@ public class Skills extends MethodProvider {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Gets a skill data class.
+	 *
+	 * @return The <tt>SkillData</tt> class.
+	 */
+	public SkillData getSkillDataInstance() {
+		return new SkillData(methods, null);
 	}
 }
