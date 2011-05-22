@@ -45,17 +45,6 @@ public abstract class RSCharacter extends MethodProvider {
 		return model != null && isValid() && getModel().doAction(action, option);
 	}
 
-	public RSModel getModel() {
-		final org.rsbot.client.RSCharacter c = getAccessor();
-		if (c != null) {
-			final Model model = c.getModel();
-			if (model != null) {
-				return new RSCharacterModel(methods, model, c);
-			}
-		}
-		return null;
-	}
-
 	public int getAnimation() {
 		return getAccessor().getAnimation();
 	}
@@ -97,6 +86,10 @@ public abstract class RSCharacter extends MethodProvider {
 		}
 	}
 
+	public int getLevel() {
+    	return -1; // should be overridden too
+    }
+
 	public RSTile getLocation() {
 		final org.rsbot.client.RSCharacter c = getAccessor();
 		if (c == null) {
@@ -124,12 +117,19 @@ public abstract class RSCharacter extends MethodProvider {
 		return methods.calc.worldToMinimap(cX, cY);
 	}
 
-	public String getName() {
-		return null; // should be overridden, obviously
-	}
+	public RSModel getModel() {
+    	final org.rsbot.client.RSCharacter c = getAccessor();
+    	if (c != null) {
+    		final Model model = c.getModel();
+    		if (model != null) {
+    			return new RSCharacterModel(methods, model, c);
+    		}
+    	}
+    	return null;
+    }
 
-	public int getLevel() {
-		return -1; // should be overridden too
+	public String getName() {
+		return ""; // should be overridden, obviously
 	}
 
 	public int getOrientation() {
@@ -154,6 +154,12 @@ public abstract class RSCharacter extends MethodProvider {
 		getModel().hover();
 	}
 
+	public boolean isInCombat() {
+    	return methods.game.isLoggedIn()
+    			&& methods.client.getLoopCycle() < getAccessor()
+    			.getLoopCycleStatus();
+    }
+
 	/**
 	 * Determines whether the character is dead or dying
 	 *
@@ -162,12 +168,6 @@ public abstract class RSCharacter extends MethodProvider {
 	 */
 	public boolean isDead() {
 		return !isValid() || getAnimation() == 836;
-	}
-
-	public boolean isInCombat() {
-		return methods.game.isLoggedIn()
-				&& methods.client.getLoopCycle() < getAccessor()
-				.getLoopCycleStatus();
 	}
 
 	public boolean isInteractingWithLocalPlayer() {
@@ -193,11 +193,6 @@ public abstract class RSCharacter extends MethodProvider {
 	}
 
 	@Override
-	public int hashCode() {
-		return System.identityHashCode(getAccessor());
-	}
-
-	@Override
 	public boolean equals(final Object obj) {
 		if (obj instanceof RSCharacter) {
 			final RSCharacter cha = (org.rsbot.script.wrappers.RSCharacter) obj;
@@ -207,15 +202,18 @@ public abstract class RSCharacter extends MethodProvider {
 	}
 
 	@Override
+    public int hashCode() {
+    	return System.identityHashCode(getAccessor());
+    }
+
+	@Override
 	public String toString() {
 		final RSCharacter inter = getInteracting();
-		return "[anim="
-				+ getAnimation()
-				+ ",msg="
-				+ getMessage()
-				+ ",interact="
-				+ (inter == null ? "null" : inter.isValid() ? inter
-				.getMessage() : "Invalid") + "]";
+		final String msg = getMessage();
+		return "[anim=" + getAnimation()
+				+ (msg != null ?",msg=" + getMessage() : "")
+				+ ",interact=" + (inter == null ? "null" :
+					inter.isValid() ? inter.getName() : "Invalid") + "]";
 	}
 
 }
