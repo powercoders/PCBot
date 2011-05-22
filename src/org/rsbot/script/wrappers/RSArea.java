@@ -9,7 +9,6 @@ import java.util.ArrayList;
  * @author SpeedWing
  */
 public class RSArea {
-
 	private final Polygon area;
 	private final int plane;
 
@@ -237,5 +236,4 @@ public class RSArea {
 				* (curr.getX() - dest.getX()) + (curr.getY() - dest.getY())
 				* (curr.getY() - dest.getY()));
 	}
-
 }

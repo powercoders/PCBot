@@ -16,7 +16,6 @@ import java.awt.*;
  * @author Jacmob
  */
 public class RSComponent extends MethodProvider {
-
 	/**
 	 * The index of this interface in the parent. If this
 	 * component does not have a parent component, this
@@ -941,5 +940,4 @@ public class RSComponent extends MethodProvider {
 		}
 		return null;
 	}
-
 }

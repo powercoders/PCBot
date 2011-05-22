@@ -85,5 +85,4 @@ public class RSTile {
 	public String toString() {
 		return "(X: " + x + ", Y:" + y + ", Z:" + z + ")";
 	}
-
 }

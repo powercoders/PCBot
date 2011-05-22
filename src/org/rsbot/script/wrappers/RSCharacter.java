@@ -9,7 +9,6 @@ import org.rsbot.script.methods.MethodProvider;
 import java.awt.*;
 
 public abstract class RSCharacter extends MethodProvider {
-
 	public RSCharacter(final MethodContext ctx) {
 		super(ctx);
 	}
@@ -236,5 +235,4 @@ public abstract class RSCharacter extends MethodProvider {
 				+ ",interact=" + (inter == null ? "null" :
 					inter.isValid() ? inter.getName() : "Invalid") + "]";
 	}
-
 }

@@ -11,7 +11,6 @@ import org.rsbot.script.methods.MethodProvider;
  * @author Jacmob
  */
 public class RSGroundItem extends MethodProvider {
-
 	private final RSItem groundItem;
 	private final RSTile location;
 
@@ -86,5 +85,4 @@ public class RSGroundItem extends MethodProvider {
 			return methods.calc.pointOnScreen(model.getPoint());
 		}
 	}
-
 }

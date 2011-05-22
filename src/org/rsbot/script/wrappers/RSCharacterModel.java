@@ -8,7 +8,6 @@ import org.rsbot.script.methods.MethodContext;
  * @author Jacmob
  */
 class RSCharacterModel extends RSModel {
-
 	private final org.rsbot.client.RSCharacter c;
 
 	private final int[] x_base, z_base;
@@ -54,5 +53,4 @@ class RSCharacterModel extends RSModel {
 	protected int getLocalY() {
 		return c.getY();
 	}
-
 }

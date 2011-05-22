@@ -56,5 +56,4 @@ public class RSPlayer extends RSCharacter {
 	public String toString() {
 		return "Player[" + getName() + "]" + super.toString();
 	}
-
 }

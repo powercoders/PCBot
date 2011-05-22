@@ -4,7 +4,6 @@ import org.rsbot.client.LDModel;
 import org.rsbot.script.methods.MethodContext;
 
 class RSStaticModel extends RSModel {
-
 	private final int x, y;
 
 	RSStaticModel(final MethodContext ctx, final LDModel model, final int x, final int y) {
@@ -27,5 +26,4 @@ class RSStaticModel extends RSModel {
 	protected int getLocalY() {
 		return y;
 	}
-
 }
