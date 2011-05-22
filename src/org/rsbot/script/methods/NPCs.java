@@ -59,7 +59,46 @@ public class NPCs extends MethodProvider {
 	}
 
 	/**
-	 * Returns the RSNPC that is nearest out of all of loaded RSPNCs accepted by
+	 * Returns an array of all loaded RSNPCs with the provided ID(s).
+	 *
+	 * @param ids Allowed NPC IDs.
+	 * @return An array of the loaded RSNPCs matching the provided ID(s).
+
+	 */
+	public RSNPC[] getAll(final int... ids) {
+		return getAll(new Filter<RSNPC>() {
+			public boolean accept(final RSNPC npc) {
+				for (final int id : ids) {
+					if (npc.getID() == id) {
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+	}
+
+	/**
+	 * Returns an array of all loaded RSNPCs with the provided name(s).
+	 *
+	 * @param names Allowed NPC names.
+	 * @return An array of the loaded RSNPCs matching the provided name(s).
+	 */
+	public RSNPC[] getAll(final String... names) {
+		return getAll(new Filter<RSNPC>() {
+			public boolean accept(final RSNPC npc) {
+				for (final String name : names) {
+					if (npc.getName().equals(name)) {
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+	}
+
+	/**
+	 * Returns the RSNPC that is nearest out of all of loaded RSNPCs accepted by
 	 * the provided Filter.
 	 *
 	 * @param filter Filters out unwanted matches.
@@ -90,7 +129,7 @@ public class NPCs extends MethodProvider {
 	}
 
 	/**
-	 * Returns the RSNPC that is nearest out of all of the RSPNCs with the
+	 * Returns the RSNPC that is nearest out of all of the RSNPCs with the
 	 * provided ID(s). Can return null.
 	 *
 	 * @param ids Allowed NPC IDs.
@@ -112,7 +151,7 @@ public class NPCs extends MethodProvider {
 	}
 
 	/**
-	 * Returns the RSNPC that is nearest out of all of the RSPNCs with the
+	 * Returns the RSNPC that is nearest out of all of the RSNPCs with the
 	 * provided name(s). Can return null.
 	 *
 	 * @param names Allowed NPC names.
@@ -132,4 +171,5 @@ public class NPCs extends MethodProvider {
 			}
 		});
 	}
+
 }
