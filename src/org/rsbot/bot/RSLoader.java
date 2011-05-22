@@ -117,7 +117,7 @@ public class RSLoader extends Applet implements Runnable, Loader {
 			if (ms.exists()) {
 				ms.delete();
 			}
-			log.severe("Restart RSBot to solve this issue!");
+			log.severe("Cached objects deleted, please try restarting the application");
 		}
 	}
 
