@@ -61,7 +61,7 @@ public class RSTile {
 			d *= maxYDeviation;
 			y += (int) d;
 		}
-		return new RSTile(x, y);
+		return new RSTile(x, y, getZ());
 	}
 
 	@Override
