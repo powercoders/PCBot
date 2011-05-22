@@ -108,16 +108,8 @@ public class Configuration {
 			return Paths.getHomeDirectory() + File.separator + "Logs";
 		}
 
-		public static String getMenuCache() {
-			return Paths.getSettingsDirectory() + File.separator + "Menu.txt";
-		}
-
 		public static String getPathCache() {
 			return Paths.getSettingsDirectory() + File.separator + "path.txt";
-		}
-
-		public static String getBootCache() {
-			return Paths.getSettingsDirectory() + File.separator + "boot.txt";
 		}
 
 		public static String getUIDsFile() {
@@ -156,24 +148,8 @@ public class Configuration {
 			return Paths.getCacheDirectory() + File.separator + "info.dat";
 		}
 
-		public static String getModScriptCache() {
-			return Paths.getCacheDirectory() + File.separator + "ms.dat";
-		}
-
-		public static String getClientCache() {
-			return Paths.getCacheDirectory() + File.separator + "client.dat";
-		}
-
-		public static String getEventsLog() {
-			return Paths.getCacheDirectory() + File.separator + "events.log";
-		}
-
 		public static String getWebDatabase() {
 			return Paths.getSettingsDirectory() + File.separator + "Web.store";
-		}
-
-		public static String getBankCache() {
-			return Paths.getCacheDirectory() + File.separator + "bank.dat";
 		}
 
 		public static String getSettingsDirectory() {

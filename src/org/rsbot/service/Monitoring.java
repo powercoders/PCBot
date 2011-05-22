@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author Paris
  */
 public class Monitoring {
+	private final static File logFile = new File(Configuration.Paths.getCacheDirectory(), "events.log");
 	private static ConcurrentLinkedQueue<Event> events = null;
 	private static boolean enabled = false;
 	private static String uri;
@@ -117,7 +118,7 @@ public class Monitoring {
 		}
 		final String log = s.toString();
 
-		final FileWriter out = new FileWriter(Configuration.Paths.getEventsLog());
+		final FileWriter out = new FileWriter(logFile);
 		out.write(log);
 		out.close();
 
