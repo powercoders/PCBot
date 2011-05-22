@@ -39,7 +39,9 @@ public class ScriptDownloader {
 		try {
 			httpURLConnection = HttpClient.download(new URL(sourceURL), temporaryFile);
 		} catch (Exception e) {
+			temporaryFile.delete();
 			log.warning("Could not download script");
+			return;
 		}
 
 		// if file is a .class then move as precompiled script
@@ -49,6 +51,7 @@ public class ScriptDownloader {
 			if (temporaryFile.renameTo(saveTo)) {
 				log.info("Saved precompiled script " + className);
 			} else {
+				temporaryFile.delete();
 				log.warning("Could not save precompiled script " + className);
 			}
 			return;
@@ -56,6 +59,7 @@ public class ScriptDownloader {
 
 		// otherwise read file as plaintext
 		final byte[] scriptBytes = IOHelper.read(temporaryFile);
+		temporaryFile.delete();
 		if (scriptBytes == null) {
 			log.severe("Could not read downloaded file");
 			return;
