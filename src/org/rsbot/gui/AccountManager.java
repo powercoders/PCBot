@@ -26,6 +26,7 @@ import java.util.logging.Logger;
  * @author Jacmob
  * @author Aion
  * @author Timer
+ * @author Paris
  */
 public class AccountManager extends JDialog implements ActionListener {
 	private static final long serialVersionUID = 2834954922670757338L;

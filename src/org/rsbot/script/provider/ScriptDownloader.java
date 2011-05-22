@@ -14,6 +14,9 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * author @Paris
+ */
 public class ScriptDownloader {
 	private static final Logger log = Logger.getLogger(ScriptDownloader.class.getName());
 

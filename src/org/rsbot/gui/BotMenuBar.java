@@ -13,6 +13,10 @@ import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
 
+/**
+ * @author Paris
+ * @author Timer
+ */
 public class BotMenuBar extends JMenuBar {
 	private static final long serialVersionUID = 971579975301998332L;
 	public static final Map<String, Class<?>> DEBUG_MAP = new LinkedHashMap<String, Class<?>>();

@@ -1,5 +1,8 @@
 package org.rsbot.gui;
 
+/**
+ * @author Paris
+ */
 public interface Messages {
 	public static final String FILE = "File";
 	public static final String EDIT = "Edit";

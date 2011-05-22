@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
+ * @author Paris
  * @author Jacmob
  */
 public class BotGUI extends JFrame implements ActionListener, ScriptListener {
