@@ -41,7 +41,7 @@ public class DrawNPCs implements PaintListener {
 			render.drawString(s, location.x - metrics.stringWidth(s) / 2, location.y - metrics.getHeight() / 2);
 			// int x = element.getX();
 			// x -= ((int)(x >> 7)) << 7;
-			if (npc.getAnimation() != -1 || npc.getGraphic() != -1) {
+			if (npc.getAnimation() != -1 || npc.getGraphic() > 0) {
 				s = "(A: " + npc.getAnimation() + " | G: " + npc.getGraphic() + ")";
 				render.drawString(s, location.x - metrics.stringWidth(s) / 2, location.y - metrics.getHeight() * 3 / 2);
 			}
