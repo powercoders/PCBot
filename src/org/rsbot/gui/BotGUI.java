@@ -53,6 +53,10 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private java.util.Timer clean = null;
 
 	public BotGUI() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (final Exception ignored) {
+		}
 		init();
 		pack();
 		setTitle(null);
@@ -429,10 +433,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		});
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON));
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (final Exception ignored) {
-		}
 		WindowUtil.setFrame(this);
 		home = new BotHome();
 		panel = new BotPanel(home);
