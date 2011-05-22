@@ -5,6 +5,7 @@ import org.rsbot.gui.BotGUI;
 import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.security.RestrictedSecurityManager;
+import org.rsbot.util.ApplicationException;
 import org.rsbot.util.io.IOHelper;
 
 import javax.swing.*;
@@ -38,7 +39,7 @@ public class Application {
 				}
 			} catch (final Exception ignored) {
 			}
-			final String msg = "Error: " + e.toString() + "\nUnable to start.";
+			final String msg = (e.getClass().isAssignableFrom(ApplicationException.class)) ? e.getMessage() : "Error: " + e.toString() + "\nUnable to start.";
 			try {
 				JOptionPane.showMessageDialog(null, msg, Configuration.NAME, JOptionPane.ERROR_MESSAGE);
 			} catch (final HeadlessException ignored) {
