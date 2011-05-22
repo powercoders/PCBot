@@ -60,6 +60,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 		if (UpdateChecker.isError()) {
 			throw new ApplicationException("Unable to obtain latest version information.\nPlease check your internet connection and try again.");
+		} else if (Configuration.RUNNING_FROM_JAR && UpdateChecker.isDeprecatedVersion()) {
+			throw new ApplicationException("This version has been deprecated, please update at " + Configuration.Paths.URLs.DOWNLOAD);
 		}
 		init();
 		pack();
