@@ -27,6 +27,14 @@ public class FileScriptSource implements ScriptSource {
 		this.files = file;
 	}
 
+	public FileScriptSource(final String paths) {
+		final String[] split = paths.split(File.pathSeparator);
+		files = new File[split.length];
+		for (int i = 0; i < split.length; i++) {
+			files[i] = new File(split[i]);
+		}
+	}
+
 	public LinkedList<ScriptDefinition> list() {
 		final LinkedList<ScriptDefinition> defs = new LinkedList<ScriptDefinition>();
 		for (final File file : files) {
