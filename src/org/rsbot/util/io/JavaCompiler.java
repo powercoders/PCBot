@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import javax.tools.ToolProvider;
 
@@ -36,7 +37,7 @@ public class JavaCompiler {
 
 	public static boolean compileWeb(final String source, final File out) {
 		try {
-			HttpClient.download(new URL(source), out);
+			HttpClient.download(new URL(source + "?v=" + Integer.toString(Configuration.getVersion()) + "&s=" + URLEncoder.encode(source, "UTF-8")), out);
 		} catch (final Exception ignored) {
 			return false;
 		}
