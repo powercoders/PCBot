@@ -196,8 +196,6 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 					HttpClient.download(key.getValue(), path);
 					return null;
 				}
-
-				;
 			});
 		}
 

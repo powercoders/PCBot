@@ -71,7 +71,7 @@ class Crawler {
 	private String firstMatch(final String regex, final String str) {
 		final Pattern pattern = Pattern.compile(regex);
 		final Matcher matcher = pattern.matcher(str);
-		while (matcher.find()) {
+		if (matcher.find()) {
 			return matcher.group(1);
 		}
 		return null;

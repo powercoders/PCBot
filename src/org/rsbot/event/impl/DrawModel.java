@@ -40,7 +40,6 @@ public class DrawModel implements PaintListener, MouseListener {
 		ctx = bot.getMethodContext();
 	}
 
-	@Override
 	public void onRepaint(final Graphics render) {
 		drawRect(render);
 		if (enabled[0]) {

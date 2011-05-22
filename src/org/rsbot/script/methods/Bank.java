@@ -627,7 +627,7 @@ public class Bank extends MethodProvider {
 			return false;
 		}
 		final int invCount = methods.inventory.getCount(true);
-		item.doClick(count == 1 ? true : false);
+		item.doClick(count == 1);
 		final String defaultAction = "Withdraw-" + count;
 		String action = null;
 		switch (count) {

@@ -4,7 +4,6 @@ import org.rsbot.bot.Bot;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
-import org.rsbot.security.RestrictedSecurityManager;
 import org.rsbot.util.io.IOHelper;
 
 import java.awt.*;
@@ -26,7 +25,6 @@ public class Application {
 			bootstrap();
 			extractResources();
 			commands(args);
-			System.setSecurityManager(new RestrictedSecurityManager());
 			System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
 			gui = new BotGUI();
 			gui.setVisible(true);

@@ -75,14 +75,14 @@ public class Molly extends Random {
 	@Override
 	public int loop() {
 		if (!activateCondition()) {
-			log("Molly random finished!");
 			sleep(500);
 			if (!activateCondition()) {
+				log("Molly random finished!");
 				return -1;
 			}
 		}
 		controlPanel = objects.getNearest(Molly.CONTROL_PANEL_ID);
-		while (getMyPlayer().isMoving() || getMyPlayer().getAnimation() != -1) {
+		if (getMyPlayer().isMoving() || getMyPlayer().getAnimation() != -1) {
 			return random(800, 1300);
 		}
 		if (interfaces.canContinue()) {

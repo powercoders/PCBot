@@ -397,11 +397,11 @@ public class Game extends MethodProvider {
 	 */
 	public Boolean inRandom() {
 		for (final Random random : methods.bot.getScriptHandler().getRandoms()) {
-			if (random.getClass().equals(new LoginBot())
-					|| random.getClass().equals(new BankPins())
-					|| random.getClass().equals(new TeleotherCloser())
-					|| random.getClass().equals(new CloseAllInterface())
-					|| random.getClass().equals(new ImprovedRewardsBox())) {
+			if (random instanceof LoginBot
+					|| random instanceof BankPins
+					|| random instanceof TeleotherCloser
+					|| random instanceof CloseAllInterface
+					|| random instanceof ImprovedRewardsBox) {
 				continue;
 			} else {
 				if (random.activateCondition()) {

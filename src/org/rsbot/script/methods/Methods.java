@@ -152,11 +152,6 @@ public class Methods {
 	 * The singleton of Trade
 	 */
 	protected Trade trade;
-	/**
-	 * The singleton of Web
-	 */
-	protected Web web;
-
 
 	/**
 	 * For internal use only: initializes the method providers.
@@ -202,7 +197,6 @@ public class Methods {
 		friendChat = ctx.friendChat;
 		lobby = ctx.lobby;
 		trade = ctx.trade;
-		web = ctx.web;
 	}
 
 	/**

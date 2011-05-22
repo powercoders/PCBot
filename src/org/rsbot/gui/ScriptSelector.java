@@ -237,7 +237,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				}
 			}
 		});
-		connect.setEnabled(Configuration.SCRIPT_DRM ? true : false);
+		connect.setEnabled(Configuration.SCRIPT_DRM);
 		if (connect.isEnabled()) {
 			final ActionListener listenConnect = new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {

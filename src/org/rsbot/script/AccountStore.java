@@ -17,8 +17,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.rsbot.gui.AccountManager;
-import org.rsbot.security.RestrictedSecurityManager;
 import org.rsbot.util.Base64;
 import org.rsbot.util.StringUtil;
 
@@ -98,16 +96,6 @@ public class AccountStore {
 	private final Map<String, Account> accounts = new TreeMap<String, Account>();
 
 	public AccountStore(final File file) {
-		if (((RestrictedSecurityManager) System.getSecurityManager()).isCallerScript()) {
-			throw new SecurityException();
-		}
-		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
-		if (s.length < 3 ||
-				!s[0].getClassName().equals(Thread.class.getName()) ||
-				!s[1].getClassName().equals(AccountStore.class.getName()) ||
-				!s[2].getClassName().equals(AccountManager.class.getName())) {
-			throw new SecurityException();
-		}
 		this.file = file;
 	}
 

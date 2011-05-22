@@ -196,11 +196,6 @@ public class MethodContext {
 	 */
 	public final Client client;
 
-	/**
-	 * The Web
-	 */
-	public final Web web = new Web(this);
-
 	public final Bot bot;
 
 	public MethodContext(final Bot bot) {

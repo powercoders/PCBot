@@ -22,7 +22,6 @@ public interface Messages {
 	public static final String FORCEINPUT = "Force Input";
 	public static final String DISABLEANTIRANDOMS = "Disable Anti-Randoms";
 	public static final String DISABLEAUTOLOGIN = "Disable Auto Login";
-	public static final String DISABLEADS = "Disable Advertisements";
 	public static final String DISABLEMONITORING = "Disable Monitoring";
 	public static final String DISABLECONFIRMATIONS = "Disable Confirmations";
 	public static final String LESSCPU = "Less CPU";

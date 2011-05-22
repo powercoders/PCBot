@@ -22,7 +22,7 @@ public class BotMenuBar extends JMenuBar {
 	public static final String[][] ELEMENTS;
 
 	private static final String[] DEVELOPER_CHECK_FEATURES = {"Game State", "Current Tab", "Camera", "Floor Height",
-			"Mouse Position", "User Input Allowed", "Menu", "Menu Actions", "Cache", "Models", "Calc Test", "Settings"};
+			"Mouse Position", "User Input Allowed", "Menu", "Menu Actions", "Cache", "Models", "Boundaries", "Settings"};
 
 	static {
 		// Text
@@ -37,7 +37,6 @@ public class BotMenuBar extends JMenuBar {
 		DEBUG_MAP.put("Menu Actions", TMenuActions.class);
 		DEBUG_MAP.put("Menu", TMenu.class);
 		DEBUG_MAP.put("FPS", TFPS.class);
-		DEBUG_MAP.put("Cache", TWebStatus.class);
 
 		// Paint
 		DEBUG_MAP.put("Players", DrawPlayers.class);
@@ -47,10 +46,8 @@ public class BotMenuBar extends JMenuBar {
 		DEBUG_MAP.put("Mouse", DrawMouse.class);
 		DEBUG_MAP.put("Inventory", DrawInventory.class);
 		DEBUG_MAP.put("Ground Items", DrawItems.class);
-		DEBUG_MAP.put("Calc Test", DrawBoundaries.class);
+		DEBUG_MAP.put("Boundaries", DrawBoundaries.class);
 		DEBUG_MAP.put("Settings", DrawSettings.class);
-		DEBUG_MAP.put("Web", DrawWeb.class);
-
 		// Other
 		DEBUG_MAP.put("Log Messages", MessageLogger.class);
 
@@ -69,7 +66,6 @@ public class BotMenuBar extends JMenuBar {
 						Messages.TOGGLEFALSE + Messages.DISABLEANTIRANDOMS,
 						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN,
 						Messages.MENUSEPERATOR,
-						Messages.TOGGLEFALSE + Messages.DISABLEADS,
 						Messages.TOGGLEFALSE + Messages.DISABLEMONITORING,
 						Messages.TOGGLEFALSE + Messages.DISABLECONFIRMATIONS,
 						Messages.TOGGLEFALSE + Messages.AUTOSHUTDOWN },

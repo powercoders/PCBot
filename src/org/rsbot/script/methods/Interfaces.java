@@ -338,9 +338,9 @@ public class Interfaces extends MethodProvider {
 	 * @return <tt>true</tt> if the interface was successfully closed/opened.
 	 */
 	public boolean waitFor(final RSInterface iface, final boolean valid, final int timer) {
-		for (int w = 0; w < timer && iface.isValid() == valid ? true : false; w++) {
+		for (int w = 0; w < timer && iface.isValid() == valid; w++) {
 			sleep(1);
 		}
-		return iface.isValid() == valid ? true : false;
+		return iface.isValid() == valid;
 	}
 }

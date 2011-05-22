@@ -15,7 +15,6 @@ import org.rsbot.script.util.WindowUtil;
 import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
 import org.rsbot.service.TwitterUpdates;
-import org.rsbot.service.WebQueue;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.ScreenshotUtil;
 
@@ -37,7 +36,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private static final long serialVersionUID = -5411033752001988794L;
 	private static final Logger log = Logger.getLogger(BotGUI.class.getName());
 	private BotPanel panel;
-	private JScrollPane scrollableBotPanel;
 	private BotToolBar toolBar;
 	private BotMenuBar menuBar;
 	private JScrollPane textScroll;
@@ -61,9 +59,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			public void run() {
 				JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 				ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
-				if (showAds) {
-					new SplashAd(BotGUI.this).display();
-				}
 				UpdateChecker.notify(BotGUI.this);
 				if (Configuration.Twitter.ENABLED) {
 					TwitterUpdates.loadTweets(Configuration.Twitter.MESSAGES);
@@ -155,8 +150,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		} else if (menu.equals(Messages.EDIT)) {
 			if (option.equals(Messages.ACCOUNTS)) {
 				AccountManager.getInstance().showGUI();
-			} else if (option.equals(Messages.DISABLEADS)) {
-				showAds = !((JCheckBoxMenuItem) evt.getSource()).isSelected();
 			} else if (option.equals(Messages.DISABLEMONITORING)) {
 				Monitoring.setEnabled(!((JCheckBoxMenuItem) evt.getSource()).isSelected());
 				if (!Monitoring.isEnabled()) {
@@ -210,8 +203,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				final Bot current = getCurrentBot();
 				if (current != null) {
 					if (option.equals(Messages.FORCEINPUT)) {
-						final boolean selected = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
-						current.overrideInput = selected;
+						current.overrideInput = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 						updateScriptControls();
 					} else if (option.equals(Messages.LESSCPU)) {
 						lessCpu(true);
@@ -372,7 +364,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		final int idx = bots.indexOf(bot);
 		bot.getScriptHandler().stopAllScripts();
 		bot.getScriptHandler().removeScriptListener(this);
-		bot.getBackgroundScriptHandler().stopAllScripts();
 		if (idx >= 0) {
 			toolBar.removeTab(idx + botsIndex);
 		}
@@ -479,7 +470,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		textScroll.setBorder(null);
 		textScroll.setPreferredSize(new Dimension(PANEL_WIDTH, LOG_HEIGHT));
 		textScroll.setVisible(true);
-		scrollableBotPanel = new JScrollPane(panel);
+		JScrollPane scrollableBotPanel = new JScrollPane(panel);
 		add(toolBar, BorderLayout.NORTH);
 		add(scrollableBotPanel, BorderLayout.CENTER);
 		add(textScroll, BorderLayout.SOUTH);
@@ -587,10 +578,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			if (result != JOptionPane.OK_OPTION) {
 				doExit = false;
 			}
-		}
-		try {
-			WebQueue.Destroy();
-		} catch (NoClassDefFoundError ncdfe) {
 		}
 		setVisible(false);
 		try {

@@ -165,10 +165,6 @@ public class Configuration {
 			return Paths.getCacheDirectory() + File.separator + "events.log";
 		}
 
-		public static String getWebDatabase() {
-			return Paths.getSettingsDirectory() + File.separator + "Web.store";
-		}
-
 		public static String getBankCache() {
 			return Paths.getCacheDirectory() + File.separator + "bank.dat";
 		}
