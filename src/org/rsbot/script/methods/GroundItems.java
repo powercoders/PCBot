@@ -72,7 +72,7 @@ public class GroundItems extends MethodProvider {
 			for (int y = minY; y < maxY; y++) {
 				final RSGroundItem[] items = getAllAt(x, y);
 				for (final RSGroundItem item : items) {
-					if (filter.accept(item)) {
+					if (item != null && filter.accept(item)) {
 						temp.add(item);
 					}
 				}
@@ -99,7 +99,7 @@ public class GroundItems extends MethodProvider {
 			for (int y = minY; y <= maxY; y++) {
 				final RSGroundItem[] items = getAllAt(x, y);
 				for (final RSGroundItem item : items) {
-					if (filter.accept(item)
+					if (item != null && filter.accept(item)
 							&& methods.calc.distanceTo(item.getLocation()) < dist) {
 						dist = methods.calc.distanceTo(item.getLocation());
 						itm = item;
@@ -115,9 +115,8 @@ public class GroundItems extends MethodProvider {
 	 * IDs provided.
 	 *
 	 * @param ids The IDs to look for.
-	 * @return RSItemTile of the nearest item with the an ID that matches any in
-	 *         the array of IDs provided; or null if no matching ground items
-	 *         were found.
+	 * @return The nearest RSGroundItem with an ID that matches any in the array
+	 * 		   of IDs provided; or null if no matching ground items were found.
 	 */
 	public RSGroundItem getNearest(final int... ids) {
 		return getNearest(new Filter<RSGroundItem>() {
@@ -126,6 +125,29 @@ public class GroundItems extends MethodProvider {
 				for (final int id : ids) {
 					if (id == iid) {
 						return true;
+					}
+				}
+				return false;
+			}
+		});
+	}
+
+	/**
+	 * Returns the nearest item on the ground with one of the provided names.
+	 *
+	 * @param names The names to look for.
+	 * @return The nearest RSGroundItem with a name that matches any in the
+	 * 		   array provided; or null if no matching ground items were found.
+	 */
+	public RSGroundItem getNearest(final String... names) {
+		return getNearest(new Filter<RSGroundItem>() {
+			public boolean accept(final RSGroundItem item) {
+				final String name = item.getItem().getName();
+				if (name != null) {
+					for (final String n : names) {
+						if (n.equalsIgnoreCase(name)) {
+							return true;
+						}
 					}
 				}
 				return false;

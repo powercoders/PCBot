@@ -53,7 +53,7 @@ public class Objects extends MethodProvider {
 		for (int x = 0; x < 104; x++) {
 			for (int y = 0; y < 104; y++) {
 				for (final RSObject o : getAtLocal(x, y, -1)) {
-					if (filter.accept(o)) {
+					if (o != null && filter.accept(o)) {
 						objects.add(o);
 					}
 				}
@@ -73,7 +73,7 @@ public class Objects extends MethodProvider {
 		return getAll(new Filter<RSObject>() {
 			public boolean accept(final RSObject o) {
 				for (final int id : ids) {
-					if (o != null && o.getID() == id) {
+					if (o.getID() == id) {
 						return true;
 					}
 				}
@@ -95,7 +95,7 @@ public class Objects extends MethodProvider {
 				final String name = o.getName();
 				if (!name.isEmpty()) {
 					for (final String n : names) {
-						if (n != null && n.equals(name)) {
+						if (n != null && n.equalsIgnoreCase(name)) {
 							return true;
 						}
 					}
@@ -236,7 +236,7 @@ public class Objects extends MethodProvider {
 			for (int y = 0; y < 104; y++) {
 				final Set<RSObject> objs = getAtLocal(x, y, -1);
 				for (final RSObject o : objs) {
-					if (filter.accept(o)) {
+					if (o != null && filter.accept(o)) {
 						final double distTmp = methods.calc.distanceBetween(
 								methods.players.getMyPlayer().getLocation(),
 								o.getLocation());
@@ -268,7 +268,7 @@ public class Objects extends MethodProvider {
 		return getNearest(new Filter<RSObject>() {
 			public boolean accept(final RSObject o) {
 				for (final int id : ids) {
-					if (o != null && o.getID() == id) {
+					if (o.getID() == id) {
 						return true;
 					}
 				}
@@ -292,7 +292,7 @@ public class Objects extends MethodProvider {
 				final String name = o.getName();
 				if (!name.isEmpty()) {
 					for (final String n : names) {
-						if (n != null && n.equals(name)) {
+						if (n != null && n.equalsIgnoreCase(name)) {
 							return true;
 						}
 					}

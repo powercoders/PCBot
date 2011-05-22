@@ -55,7 +55,7 @@ public class Players extends MethodProvider {
 		for (final int index : indices) {
 			if (index != 0 && array[index] != null) {
 				final RSPlayer player = new RSPlayer(methods, array[index]);
-				if (filter.accept(player)) {
+				if (player != null && filter.accept(player)) {
 					players.add(player);
 				}
 			}
@@ -82,7 +82,7 @@ public class Players extends MethodProvider {
 				continue;
 			}
 			final RSPlayer player = new RSPlayer(methods, players[index]);
-			if (filter.accept(player)) {
+			if (player != null && filter.accept(player)) {
 				final int distance = methods.calc.distanceTo(player);
 				if (distance < min) {
 					min = distance;
@@ -105,7 +105,7 @@ public class Players extends MethodProvider {
 	public RSPlayer getNearest(final String name) {
 		return getNearest(new Filter<RSPlayer>() {
 			public boolean accept(final RSPlayer player) {
-				return player.getName().equals(name);
+				return player.getName().equalsIgnoreCase(name);
 			}
 		});
 	}

@@ -50,7 +50,7 @@ public class NPCs extends MethodProvider {
 					.lookup(methods.client.getRSNPCNC(), index);
 			if (node instanceof RSNPCNode) {
 				final RSNPC npc = new RSNPC(methods, ((RSNPCNode) node).getRSNPC());
-				if (filter.accept(npc)) {
+				if (npc != null && filter.accept(npc)) {
 					npcs.add(npc);
 				}
 			}
@@ -68,7 +68,7 @@ public class NPCs extends MethodProvider {
 		return getAll(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
 				for (final int id : ids) {
-					if (npc != null && npc.getID() == id) {
+					if (npc.getID() == id) {
 						return true;
 					}
 				}
@@ -86,9 +86,12 @@ public class NPCs extends MethodProvider {
 	public RSNPC[] getAll(final String... names) {
 		return getAll(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
-				for (final String name : names) {
-					if (npc != null && npc.getName() != null && npc.getName().equalsIgnoreCase(name)) {
-						return true;
+				final String name = npc.getName();
+				if (name != null) {
+					for (final String n : names) {
+						if (n != null && n.equalsIgnoreCase(name)) {
+							return true;
+						}
 					}
 				}
 				return false;
@@ -115,7 +118,7 @@ public class NPCs extends MethodProvider {
 					.lookup(methods.client.getRSNPCNC(), index);
 			if (node instanceof RSNPCNode) {
 				final RSNPC npc = new RSNPC(methods, ((RSNPCNode) node).getRSNPC());
-				if (filter.accept(npc)) {
+				if (npc != null && filter.accept(npc)) {
 					final int distance = methods.calc.distanceTo(npc);
 					if (distance < min) {
 						min = distance;
@@ -140,7 +143,7 @@ public class NPCs extends MethodProvider {
 		return getNearest(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
 				for (final int id : ids) {
-					if (npc != null && npc.getID() == id) {
+					if (npc.getID() == id) {
 						return true;
 					}
 				}
@@ -161,9 +164,12 @@ public class NPCs extends MethodProvider {
 	public RSNPC getNearest(final String... names) {
 		return getNearest(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
-				for (final String name : names) {
-					if (npc != null && npc.getName() != null && npc.getName().equalsIgnoreCase(name)) {
-						return true;
+				final String name = npc.getName();
+				if (name != null) {
+					for (final String n : names) {
+						if (n != null && n.equalsIgnoreCase(name)) {
+							return true;
+						}
 					}
 				}
 				return false;
