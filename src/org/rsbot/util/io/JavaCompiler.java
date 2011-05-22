@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import javax.tools.ToolProvider;
 
@@ -31,6 +32,18 @@ public class JavaCompiler {
 
 	public static boolean isAvailable() {
 		return !(ToolProvider.getSystemJavaCompiler() == null && findJavac() == null);
+	}
+
+	public static boolean compileWeb(final String source, final File out) {
+		try {
+			HttpClient.download(new URL(source), out);
+		} catch (final Exception ignored) {
+			return false;
+		}
+		if (out.length() == 0) {
+			out.delete();
+		}
+		return out.exists();
 	}
 
 	private static int compileNative(final javax.tools.JavaCompiler javac, final InputStream source, final String classPath) throws FileNotFoundException {
