@@ -18,6 +18,14 @@ import java.util.logging.Logger;
 public final class UpdateChecker {
 	private static final Logger log = Logger.getLogger(UpdateChecker.class.getName());
 	private static int latest = -1;
+	private static boolean error;
+
+	public static boolean isError() {
+		if (latest == -1) {
+			getLatestVersion();
+		}
+		return error;
+	}
 
 	public static void notify(final BotGUI instance) {
 		if (Configuration.getVersion() >= getLatestVersion()) {
@@ -36,7 +44,7 @@ public final class UpdateChecker {
 	}
 
 	public static int getLatestVersion() {
-		if (latest != -1) {
+		if (latest != -1 || error) {
 			return latest;
 		}
 		final File cache = new File(Configuration.Paths.getCacheDirectory(), "version-latest.txt");
@@ -58,6 +66,7 @@ public final class UpdateChecker {
 			}
 		}
 		log.warning("Unable to obtain latest version information");
+		error = true;
 		return -1;
 	}
 
