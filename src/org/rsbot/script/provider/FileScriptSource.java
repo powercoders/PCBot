@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
@@ -22,14 +21,21 @@ public class FileScriptSource implements ScriptSource {
 
 	private final Logger log = Logger.getLogger(getClass().getSimpleName());
 
-	private final File file;
+	private final File[] files;
 
-	public FileScriptSource(final File file) {
-		this.file = file;
+	public FileScriptSource(final File... file) {
+		this.files = file;
 	}
 
-	public List<ScriptDefinition> list() {
+	public LinkedList<ScriptDefinition> list() {
 		final LinkedList<ScriptDefinition> defs = new LinkedList<ScriptDefinition>();
+		for (final File file : files) {
+			list(file, defs);
+		}
+		return defs;
+	}
+
+	private void list(final File file, final LinkedList<ScriptDefinition> defs) {
 		if (file != null) {
 			if (file.isDirectory()) {
 				try {
@@ -51,7 +57,6 @@ public class FileScriptSource implements ScriptSource {
 				}
 			}
 		}
-		return defs;
 	}
 
 	public Script load(final ScriptDefinition def) throws ServiceException {
