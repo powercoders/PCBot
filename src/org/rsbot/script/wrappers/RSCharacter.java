@@ -41,8 +41,29 @@ public abstract class RSCharacter extends MethodProvider {
 	 * @return <tt>true</tt> if the option was found; otherwise <tt>false</tt>.
 	 */
 	public boolean doAction(final String action, final String option) {
-		final RSModel model = getModel();
-		return model != null && isValid() && getModel().doAction(action, option);
+		if (isValid()) {
+			final RSModel model = getModel();
+			if (model != null) {
+				return model.doAction(action, option);
+			}
+			try {
+				Point screenLoc;
+				for (int i = 0; i < 10; i++) {
+					screenLoc = getScreenLocation();
+					if (!isValid() || !methods.calc.pointOnScreen(screenLoc)) {
+						break;
+					}
+					if (!methods.mouse.getLocation().equals(screenLoc) &&
+							methods.menu.doAction(action, option)) {
+						return true;
+					}
+					methods.mouse.move(screenLoc);
+				}
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 
 	public int getAnimation() {

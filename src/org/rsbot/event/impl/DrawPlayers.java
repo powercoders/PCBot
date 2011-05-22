@@ -36,16 +36,16 @@ public class DrawPlayers implements PaintListener {
 			}
 			render.setColor(Color.RED);
 			render.fillRect((int) location.getX() - 1, (int) location.getY() - 1, 2, 2);
-			String s = "" + player.getName() + " (" + player.getCombatLevel() + ")";
-			render.setColor(player.isInCombat() ? Color.RED : player.isMoving() ? Color.GREEN : Color.WHITE);
+			String s = player.getName() + " (" + player.getCombatLevel() + ")";
+			render.setColor(player.isInCombat() ? (player.isDead() ? Color.GRAY : Color.RED) : player.isMoving() ? Color.GREEN : Color.WHITE);
 			render.drawString(s, location.x - metrics.stringWidth(s) / 2, location.y - metrics.getHeight() / 2);
 			final String msg = player.getMessage();
 			boolean raised = false;
-			if (player.getAnimation() != -1 || player.getGraphic() != -1 || player.getNPCID() != -1) {
+			if (player.getAnimation() != -1 || player.getGraphic() > 0 || player.getNPCID() != -1) {
 				if (player.getNPCID() != -1) {
 					s = "(NPC: " + player.getNPCID() + " | L: " + player.getLevel() + " | A: " + player.getAnimation() + " | G: " + player.getGraphic() + ")";
 				} else {
-					s = "(A: " + player.getAnimation() + " | L: " + player.getLevel() + " | G: " + player.getGraphic() + ")";
+					s = "(A: " + player.getAnimation() + " | G: " + player.getGraphic() + ")";
 				}
 				render.drawString(s, location.x - metrics.stringWidth(s) / 2, location.y - metrics.getHeight() * 3 / 2);
 				raised = true;
