@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 public class SettingsManager extends JDialog {
 	private static Logger log = Logger.getLogger(SettingsManager.class.getName());
 	private static final long serialVersionUID = 1657935322078534422L;
+	private static final String DEFAULTPASSWORD = "\0\0\0\0\0\0\0\0";
 	private Preferences prefs;
 
 	public class Preferences {
@@ -174,7 +175,7 @@ public class SettingsManager extends JDialog {
 		final JCheckBox checkWebPass = new JCheckBox(Messages.USEPASSWORD);
 		checkWebPass.setSelected(prefs.webPassRequire);
 		panelWebOptions[1].add(checkWebPass);
-		final JPasswordField textWebPass = new JPasswordField("\0\0\0\0\0\0\0\0");
+		final JPasswordField textWebPass = new JPasswordField(DEFAULTPASSWORD);
 		textWebPass.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(final FocusEvent e) {
