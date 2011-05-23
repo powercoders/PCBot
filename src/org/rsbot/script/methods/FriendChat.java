@@ -135,7 +135,7 @@ public class FriendChat extends MethodProvider {
 	 * @return <tt>true</tt> if successful; otherwise <tt>false</tt>
 	 */
 	public boolean join(final String channel) {
-		methods.game.openTab(Game.TAB_FRIENDS_CHAT);
+		methods.game.openTab(Game.Tab.FRIENDS_CHAT);
 		if (isInChannel()) {
 			if (getName() == channel) {
 				return true;
@@ -167,7 +167,7 @@ public class FriendChat extends MethodProvider {
 	 * @return <tt>true</tt> if successful; otherwise <tt>false</tt>
 	 */
 	public boolean joinLastChannel() {
-		methods.game.openTab(Game.TAB_FRIENDS_CHAT);
+		methods.game.openTab(Game.Tab.FRIENDS_CHAT);
 		if (isInChannel()) {
 			return true;
 		}
@@ -193,7 +193,7 @@ public class FriendChat extends MethodProvider {
 	 * @return <tt>true</tt> if successful; otherwise <tt>false</tt>
 	 */
 	public boolean leave() {
-		methods.game.openTab(Game.TAB_FRIENDS_CHAT);
+		methods.game.openTab(Game.Tab.FRIENDS_CHAT);
 		if (isInChannel()) {
 			lastCachedChannel = getOwner();
 			methods.interfaces.getComponent(INTERFACE_FRIEND_CHAT, INTERFACE_FRIEND_CHAT_JOIN_BUTTON).doClick();
@@ -209,7 +209,7 @@ public class FriendChat extends MethodProvider {
 	 * @return <tt>true</tt> if in a channel; otherwise <tt>false</tt>
 	 */
 	public boolean isInChannel() {
-		methods.game.openTab(Game.TAB_FRIENDS_CHAT);
+		methods.game.openTab(Game.Tab.FRIENDS_CHAT);
 		if (getName() != null) {
 			lastCachedChannel = getName();
 		}
@@ -285,7 +285,7 @@ public class FriendChat extends MethodProvider {
 	 */
 	public String getName() {
 		try {
-			methods.game.openTab(Game.TAB_FRIENDS_CHAT);
+			methods.game.openTab(Game.Tab.FRIENDS_CHAT);
 			final String name = stripFormatting(methods.interfaces.getComponent(
 					INTERFACE_FRIEND_CHAT, INTERFACE_FRIEND_CHAT_CHANNEL_INFO).getText());
 			return name.substring(name.indexOf("Talking in: " + 12));
@@ -301,7 +301,7 @@ public class FriendChat extends MethodProvider {
 	 */
 	public String getOwner() {
 		try {
-			methods.game.openTab(Game.TAB_FRIENDS_CHAT);
+			methods.game.openTab(Game.Tab.FRIENDS_CHAT);
 			if (getName() != null) {
 				lastCachedChannel = getName();
 			}
@@ -524,9 +524,7 @@ public class FriendChat extends MethodProvider {
 		 * Opens the friends list tab if not already opened.
 		 */
 		public void openTab() {
-			if (methods.game.getCurrentTab() != Game.TAB_FRIENDS) {
-				methods.game.openTab(Game.TAB_FRIENDS);
-			}
+			methods.game.openTab(Game.Tab.FRIENDS);
 		}
 
 		/**

@@ -147,12 +147,9 @@ public class Combat extends MethodProvider {
      * @param enable <tt>true</tt> to enable; <tt>false</tt> to disable.
      */
     public void setAutoRetaliate(final boolean enable) {
-    	final RSComponent autoRetal = methods.interfaces.getComponent(884, 15);
-    	if (isAutoRetaliateEnabled() != enable) {
-    		if (methods.game.getCurrentTab() != Game.TAB_ATTACK) {
-    			methods.game.openTab(Game.TAB_ATTACK);
-    		}
-    		if (methods.game.getCurrentTab() == Game.TAB_ATTACK && autoRetal != null) {
+    	if (isAutoRetaliateEnabled() != enable && methods.game.openTab(Game.Tab.ATTACK)) {
+        	final RSComponent autoRetal = methods.interfaces.getComponent(884, 15);    		
+    		if (autoRetal != null) {
     			autoRetal.doClick();
     		}
     	}
@@ -170,7 +167,7 @@ public class Combat extends MethodProvider {
      */
     public boolean setFightMode(final int fightMode) {
     	if (fightMode != getFightMode()) {
-    		methods.game.openTab(Game.TAB_ATTACK);
+    		methods.game.openTab(Game.Tab.ATTACK);
     		if (fightMode == 0) {
     			return methods.interfaces.getComponent(884, 11).doClick();
     		} else if (fightMode == 1) {
@@ -192,7 +189,7 @@ public class Combat extends MethodProvider {
 	 */
 	public boolean setSpecialAttack(final boolean enabled) {
 		if (isSpecialEnabled() != enabled) {
-			methods.game.openTab(Game.TAB_ATTACK);
+			methods.game.openTab(Game.Tab.ATTACK);
 			final RSComponent specBar = methods.interfaces.getComponent(884, 4);
 			if (specBar != null && isSpecialEnabled() != enabled) {
 				return specBar.doClick();

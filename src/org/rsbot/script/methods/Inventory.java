@@ -208,10 +208,10 @@ public class Inventory extends MethodProvider {
 			methods.interfaces.clickContinue();
 			sleep(random(800, 1300));
 		}
-		if (methods.game.getCurrentTab() != Game.TAB_INVENTORY
+		if (methods.game.getTab() != Game.Tab.INVENTORY
 				&& !methods.interfaces.get(Bank.INTERFACE_BANK).isValid()
 				&& !methods.interfaces.get(Store.INTERFACE_STORE).isValid()) {
-			methods.game.openTab(Game.TAB_INVENTORY);
+			methods.game.openTab(Game.Tab.INVENTORY);
 		}
 		if (col < 0 || col > 3 || row < 0 || row > 6) {
 			return false;
@@ -505,9 +505,8 @@ public class Inventory extends MethodProvider {
 			}
 		}
 
-		if (!cached && methods.game.getCurrentTab() != Game.TAB_INVENTORY) {
-			methods.game.openTab(Game.TAB_INVENTORY);
-			sleep(random(400, 800));
+		if (!cached) {
+			methods.game.openTab(Game.Tab.INVENTORY);
 		}
 
 		return methods.interfaces.getComponent(INTERFACE_INVENTORY, 0);
@@ -648,7 +647,7 @@ public class Inventory extends MethodProvider {
 	 *         otherwise <tt>false</tt>.
 	 */
 	public boolean useItem(final RSItem item, final RSItem targetItem) {
-		methods.game.openTab(Game.TAB_INVENTORY);
+		methods.game.openTab(Game.Tab.INVENTORY);
 		return selectItem(item) && targetItem.doAction("Use");
 	}
 
@@ -661,7 +660,7 @@ public class Inventory extends MethodProvider {
 	 *         RSItem and RSObject; otherwise <tt>false</tt>.
 	 */
 	public boolean useItem(final RSItem item, final RSObject targetObject) {
-		methods.game.openTab(Game.TAB_INVENTORY);
+		methods.game.openTab(Game.Tab.INVENTORY);
 		return selectItem(item) && targetObject.doAction("Use", targetObject.getName());
 	}
 }

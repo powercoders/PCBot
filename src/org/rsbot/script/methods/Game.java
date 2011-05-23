@@ -9,6 +9,7 @@ import org.rsbot.script.wrappers.RSTile;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * Game state and GUI operations.
@@ -73,11 +74,75 @@ public class Game extends MethodProvider {
 		}
 	}
 
+	/**
+	 * The game tabs
+	 *
+	 * @author kiko
+	 */
+	public enum Tab {
+		NONE ("None", 0, -1, false),
+		ATTACK ("Combat Styles", KeyEvent.VK_F5, 884, false),
+		TASK ("Task System", 0, 1056, false),
+		STATS ("Stats", 0, Skills.INTERFACE_TAB_STATS, false),
+		QUESTS ("Quest Journal", 0, Quests.QUESTS, false),
+		INVENTORY ("Inventory", KeyEvent.VK_F1, Inventory.INTERFACE_INVENTORY, true),
+		EQUIPMENT ("Worn Equipment", KeyEvent.VK_F2, Equipment.INTERFACE_EQUIPMENT, true),
+		PRAYER ("Prayer List", KeyEvent.VK_F3, Prayer.INTERFACE_PRAYER, false),
+		MAGIC ("Magic Spellbook", KeyEvent.VK_F4, Magic.INTERFACE_DEFENSIVE_STANCE, false),
+		SUMMONING ("Summoning", 0, Summoning.INTERFACE_TAB_SUMMONING, false),
+		FRIENDS ("Friends List", 0, 550, false),
+		FRIENDS_CHAT ("Friends Chat", 0, FriendChat.INTERFACE_FRIEND_CHAT, false),
+		CLAN_CHAT ("Clan Chat", 0, ClanChat.INTERFACE_CLAN_CHAT, false),
+		OPTIONS ("Options", 0, 261, false),
+		EMOTES ("Emotes", 0, 464, false),
+		MUSIC ("Music Player", 0, 187, false),
+		LOGOUT ("Exit", 0, Game.INTERFACE_LOGOUT, false);
+
+		final String description;
+		final int functionKey;
+		final int index;
+		final int inter;
+		final boolean refresh;
+
+		Tab(final String description, final int functionKey, final int inter, final boolean refresh) {
+			this.description = description;
+			this.functionKey = functionKey;
+			this.index = this.ordinal() - 1;
+			this.inter = inter;
+			this.refresh = refresh;
+		}
+
+		public String description() {
+			return description;
+		}
+
+		public int functionKey() {
+			return functionKey;
+		}
+
+		public boolean hasFunctionKey() {
+			return functionKey != 0;
+		}
+
+		public int index() {
+			return index;
+		}
+
+		public int inter() {
+			return inter;
+		}
+
+		public boolean needsRefreshing() {
+			return refresh;
+		}
+	}
+
 	public static final int[] INDEX_LOGGED_IN = {10, 11};
 	public static final int INDEX_LOGIN_SCREEN = 3;
 	public static final int INDEX_LOBBY_SCREEN = 7;
 	public static final int INDEX_FIXED = 746;
 
+	@Deprecated
 	public static final int[] TAB_FUNCTION_KEYS = {
 			KeyEvent.VK_F5, // Attack
 			0, // Achievements
@@ -146,6 +211,7 @@ public class Game extends MethodProvider {
 			102, 161, 249, 243, 64, 65, 244, 255, 249, 230, 372, 421};
 	public static final int[] INTERFACE_OPTIONS = {230, 228};
 
+	@Deprecated
 	public static final String[] TAB_NAMES = new String[]{"Combat Styles",
 			"Task System", "Stats", "Quest Journals", "Inventory",
 			"Worn Equipment", "Prayer List", "Magic Spellbook", "",
@@ -161,8 +227,8 @@ public class Game extends MethodProvider {
 	 * Closes the currently open tab if in resizable mode.
 	 */
 	public void closeTab() {
-		final int tab = getCurrentTab();
-		if (isFixed() || tab == TAB_LOGOUT) {
+		final Tab tab = getTab();
+		if (isFixed() || tab == Tab.LOGOUT) {
 			return;
 		}
 		final org.rsbot.client.RSInterface iTab = methods.gui.getTab(tab);
@@ -216,20 +282,9 @@ public class Game extends MethodProvider {
 	 *
 	 * @return The currently open tab or the logout tab by default.
 	 */
+	@Deprecated
 	public int getCurrentTab() {
-		for (int i = 0; i < TAB_NAMES.length; i++) {
-
-			final org.rsbot.client.RSInterface tab = methods.gui.getTab(i);
-			if (tab == null) {
-				continue;
-			}
-
-			if (tab.getTextureID() != -1) {
-				return i;
-			}
-		}
-
-		return -1;
+		return getTab().index();
 	}
 
 	/**
@@ -268,6 +323,41 @@ public class Game extends MethodProvider {
 	 */
 	public int getPlane() {
 		return methods.client.getPlane();
+	}
+
+	/**
+	 * Gets a random game tab (excludes the current, summoning, and logout tabs).
+	 *
+	 * @return Returns a random selectable game tab.
+	 */
+	public Tab getRandomTab() {
+		LinkedList<Tab> tabs = new LinkedList<Tab>();
+		Tab curr = getTab();
+		for (Tab t : Tab.values()) {
+			if (t != curr && t != Tab.SUMMONING & t != Tab.LOGOUT) {
+				tabs.add(t);
+			}
+		}
+		return tabs.get(random(0, tabs.size()));
+	}
+
+	/**
+	 * Gets the currently open tab.
+	 *
+	 * @return The currently open tab.
+	 */
+	public Tab getTab() {
+		for (Tab t : Tab.values()) {
+			final org.rsbot.client.RSInterface tab = methods.gui.getTab(t);
+			if (tab == null) {
+				continue;
+			}
+
+			if (tab.getTextureID() != -1) {
+				return t;
+			}
+		}
+		return Tab.NONE;
 	}
 
 	/**
@@ -374,18 +464,9 @@ public class Game extends MethodProvider {
 	 *
 	 * @return <tt>true</tt> if on the logout tab.
 	 */
+	@Deprecated
 	public boolean isOnLogoutTab() {
-		for (int i = 0; i < TAB_NAMES.length; i++) {
-			final org.rsbot.client.RSInterface tab = methods.gui.getTab(i);
-			if (tab == null) {
-				continue;
-			}
-			final int id = tab.getTextureID();
-			if (id > -1 && id < 2201) {
-				return false;
-			}
-		}
-		return true;
+		return getTab() == Tab.LOGOUT;
 	}
 
 	/**
@@ -424,9 +505,9 @@ public class Game extends MethodProvider {
 			return false;
 		}
 		if (methods.client.isSpellSelected() || methods.inventory.isItemSelected()) {
-			final int currentTab = methods.game.getCurrentTab();
+			final Tab currentTab = methods.game.getTab();
 			int randomTab = random(1, 6);
-			while (randomTab == currentTab) {
+			while (randomTab == currentTab.index()) {
 				randomTab = random(1, 6);
 			}
 			if (methods.game.openTab(randomTab)) {
@@ -450,7 +531,7 @@ public class Game extends MethodProvider {
 				sleep(random(50, 100));
 			}
 		}
-		RSComponent exitToComponent = methods.interfaces.getComponent(182, lobby ? 5 : 10);
+		RSComponent exitToComponent = methods.interfaces.getComponent(INTERFACE_LOGOUT, lobby ? 5 : 10);
 		if (exitToComponent.doClick()) {
 			sleep(random(1500, 2000));
 		}
@@ -493,28 +574,9 @@ public class Game extends MethodProvider {
 	 * @return <tt>true</tt> if tab successfully selected; otherwise
 	 *         <tt>false</tt>.
 	 */
+	@Deprecated
 	public boolean open(final int tab, final boolean functionKey) {
-		if (tab == getCurrentTab()) {
-			return true;
-		}
-		if (functionKey && tab < TAB_FUNCTION_KEYS.length && TAB_FUNCTION_KEYS[tab] != 0) {
-			methods.keyboard.pressKey((char) TAB_FUNCTION_KEYS[tab]);
-			sleep(random(80, 200));
-			methods.keyboard.releaseKey((char) TAB_FUNCTION_KEYS[tab]);
-		} else {
-			final org.rsbot.client.RSInterface iTab = methods.gui.getTab(tab);
-			if (iTab == null) {
-				return false;
-			}
-			methods.interfaces.getComponent(iTab.getID()).doClick();
-		}
-		for (int i = 0; i < 4; i++) {
-			if (tab == getCurrentTab()) {
-				break;
-			}
-			sleep(random(100, 150));
-		}
-		return tab == getCurrentTab();
+		return openTab(getTab(tab), functionKey);
 	}
 
 	/**
@@ -526,6 +588,18 @@ public class Game extends MethodProvider {
 	 * @see #openTab(int tab, boolean functionKey)
 	 */
 	public boolean openTab(final int tab) {
+		return openTab(getTab(tab));
+	}
+
+	/**
+	 * Opens the specified game tab.
+	 *
+	 * @param tab The tab to open.
+	 * @return <tt>true</tt> if tab successfully selected; otherwise
+	 *         <tt>false</tt>.
+	 * @see #openTab(Tab tab, boolean functionKey)
+	 */
+	public boolean openTab(final Tab tab) {
 		return openTab(tab, false);
 	}
 
@@ -537,34 +611,54 @@ public class Game extends MethodProvider {
 	 * @return <tt>true</tt> if tab successfully selected; otherwise
 	 *         <tt>false</tt>.
 	 */
+	@Deprecated
 	public boolean openTab(final int tab, final boolean functionKey) {
-		if (tab == getCurrentTab()) {
-			return true;
-		}
-
-		if (functionKey && tab < TAB_FUNCTION_KEYS.length && TAB_FUNCTION_KEYS[tab] != 0) {
-			methods.keyboard.pressKey((char) TAB_FUNCTION_KEYS[tab]);
-			sleep(random(80, 200));
-			methods.keyboard.releaseKey((char) TAB_FUNCTION_KEYS[tab]);
-		} else {
-			final org.rsbot.client.RSInterface iTab = methods.gui.getTab(tab);
-			if (iTab == null) {
-				return false;
-			}
-			methods.interfaces.getComponent(iTab.getID()).doClick();
-		}
-
-		sleep(random(400, 600));
-		return tab == getCurrentTab();
+		return openTab(getTab(tab), functionKey);
 	}
 
 	/**
-	 * Gets a random game tab (excludes logout and summoning).
+	 * Opens the specified game tab.
 	 *
-	 * @return Returns a random selectable game tab.
+	 * @param tab The tab to open, functionKey if wanting to use function keys
+	 *            to switch.
+	 * @return <tt>true</tt> if tab successfully selected; otherwise
+	 *         <tt>false</tt>.
 	 */
-	public int randomTab() {
-		return random(0, 2) == 0 ? random(0, 8) : random(9, 16);
+	public boolean openTab(final Tab tab, final boolean functionKey) {
+		if (tab == Tab.NONE) {
+			return false;
+		}
+		if (tab == getTab()) {
+			return true;
+		}
+
+		if (functionKey && tab.hasFunctionKey()) {
+			methods.keyboard.pressKey((char) tab.functionKey());
+			sleep(random(80, 200));
+			methods.keyboard.releaseKey((char) tab.functionKey());
+		} else {
+			final org.rsbot.client.RSInterface iTab = methods.gui.getTab(tab);
+			if (iTab == null || !methods.interfaces.getComponent(iTab.getID()).doClick()) {
+				return false;
+			}
+		}
+
+		boolean opened = false;
+		for (int i = 0; i < 5; i++) {
+			if (!opened) {
+				opened = getTab() == tab;
+				i--;
+			} else if (methods.interfaces.get(tab.inter()).isValid()) {
+				return true;
+			} else if (i == 5) {
+				return false;
+			}
+			sleep(random(100, 150));
+		}
+		if (tab.needsRefreshing()) {
+			sleep(200);
+		}
+		return tab == getTab();
 	}
 
 	/**
@@ -648,6 +742,19 @@ public class Game extends MethodProvider {
     	for (ChatButton b : ChatButton.values()) {
     		if (b.idx() == idx) {
     			return b;
+    		}
+    	}
+    	return null;
+    }
+
+	/**
+     * Fetch the game tab at the provided index for deprecated methods.
+     * For internal use only.
+     */
+    private Tab getTab(final int idx) {
+    	for (Tab t : Tab.values()) {
+    		if (t.index() == idx) {
+    			return t;
     		}
     	}
     	return null;

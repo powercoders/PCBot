@@ -140,9 +140,7 @@ public class Quests extends MethodProvider {
 	 * Selects the quests tab if not already selected.
 	 */
 	public void openTab() {
-		if (methods.game.getCurrentTab() != Game.TAB_QUESTS) {
-			methods.game.openTab(Game.TAB_QUESTS);
-		}
+		methods.game.openTab(Game.Tab.QUESTS);
 	}
 
 }

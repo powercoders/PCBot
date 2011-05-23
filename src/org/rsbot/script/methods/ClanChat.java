@@ -43,15 +43,10 @@ public class ClanChat extends MethodProvider {
 		String temp = null;
 		if (informationOpen()) {
 			temp = methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_CHANNEL_OWNER).getText();
-		} else {
-			if (methods.game.getCurrentTab() != Game.TAB_CLAN_CHAT) {
-				methods.game.openTab(Game.TAB_CLAN_CHAT);
-			}
-			if (methods.game.getCurrentTab() == Game.TAB_CLAN_CHAT) {
-				if (openInformation()) {
-					if (informationOpen()) {
-						temp = methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_CHANNEL_OWNER).getText();
-					}
+		} else if (methods.game.openTab(Game.Tab.CLAN_CHAT)) {
+			if (openInformation()) {
+				if (informationOpen()) {
+					temp = methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_CHANNEL_OWNER).getText();
 				}
 			}
 		}
@@ -70,16 +65,9 @@ public class ClanChat extends MethodProvider {
 		String temp = null;
 		if (informationOpen()) {
 			temp = methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_CHANNEL_NAME).getText();
-		} else {
-			if (methods.game.getCurrentTab() != Game.TAB_CLAN_CHAT) {
-				methods.game.openTab(Game.TAB_CLAN_CHAT);
-			}
-			if (methods.game.getCurrentTab() == Game.TAB_CLAN_CHAT) {
-				if (openInformation()) {
-					if (informationOpen()) {
-						temp = methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_CHANNEL_NAME).getText();
-					}
-				}
+		} else if (methods.game.openTab(Game.Tab.CLAN_CHAT)) {
+			if (openInformation() && informationOpen()) {
+				temp = methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_CHANNEL_NAME).getText();
 			}
 		}
 		if (informationOpen()) {
@@ -143,10 +131,8 @@ public class ClanChat extends MethodProvider {
 	 * @return <tt>true</tt> if in a channel; otherwise <tt>false</tt>
 	 */
 	public boolean inChannel() {
-		if (methods.game.getCurrentTab() != Game.TAB_CLAN_CHAT) {
-			methods.game.openTab(Game.TAB_CLAN_CHAT);
-		}
-		return methods.game.getCurrentTab() == Game.TAB_CLAN_CHAT && methods.interfaces.getComponent(INTERFACE_CLAN_CHAT, INTERFACE_CLAN_CHAT_CHECK).containsText("If you");
+		methods.game.openTab(Game.Tab.CLAN_CHAT);
+		return methods.game.getTab() == Game.Tab.CLAN_CHAT && methods.interfaces.getComponent(INTERFACE_CLAN_CHAT, INTERFACE_CLAN_CHAT_CHECK).containsText("If you");
 	}
 
 	/**
@@ -155,16 +141,11 @@ public class ClanChat extends MethodProvider {
 	 * @return <tt>true</tt> if open/has been opened; otherwise <tt>false</tt>
 	 */
 	public boolean openInformation() {
-		if (!informationOpen()) {
-			if (methods.game.getCurrentTab() != Game.TAB_CLAN_CHAT) {
-				methods.game.openTab(Game.TAB_CLAN_CHAT);
-			}
-			if (methods.game.getCurrentTab() == Game.TAB_CLAN_CHAT) {
-				if (inChannel()) {
-					methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_BUTTON).doClick();
-				} else {
-					return false;
-				}
+		if (!informationOpen() && methods.game.openTab(Game.Tab.CLAN_CHAT)) {
+			if (inChannel()) {
+				methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_BUTTON).doClick();
+			} else {
+				return false;
 			}
 		}
 		return informationOpen();
@@ -198,16 +179,11 @@ public class ClanChat extends MethodProvider {
 	 * @return <tt>true</tt> if open/has been opened; otherwise <tt>false</tt>
 	 */
 	public boolean openSettings() {
-		if (!settingsOpen()) {
-			if (methods.game.getCurrentTab() != Game.TAB_CLAN_CHAT) {
-				methods.game.openTab(Game.TAB_CLAN_CHAT);
-			}
-			if (methods.game.getCurrentTab() == Game.TAB_CLAN_CHAT) {
-				if (inChannel()) {
-					methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_SETTINGS, INTERFACE_CLAN_CHAT_SETTINGS_BUTTON).doClick();
-				} else {
-					return false;
-				}
+		if (!settingsOpen() && methods.game.openTab(Game.Tab.CLAN_CHAT)) {
+			if (inChannel()) {
+				methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_SETTINGS, INTERFACE_CLAN_CHAT_SETTINGS_BUTTON).doClick();
+			} else {
+				return false;
 			}
 		}
 		return settingsOpen();
