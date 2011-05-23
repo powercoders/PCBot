@@ -7,6 +7,7 @@ import org.rsbot.util.StringUtil;
 import org.rsbot.util.io.IniParser;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -29,7 +30,7 @@ public class SettingsManager extends JDialog {
 		 * Whether or not to disable ads.
 		 */
 		public boolean ads = true;
-
+		public String user = "";
 		public boolean confirmations = true;
 		public boolean monitoring = true;
 		public boolean shutdown = false;
@@ -57,6 +58,9 @@ public class SettingsManager extends JDialog {
 			}
 			if (keys == null || keys.isEmpty()) {
 				return;
+			}
+			if (keys.containsKey("user")) {
+				user = keys.get("user");
 			}
 			if (keys.containsKey("ads")) {
 				ads = IniParser.parseBool(keys.get("ads"));
@@ -90,6 +94,7 @@ public class SettingsManager extends JDialog {
 
 		public void save() {
 			final HashMap<String, String> keys = new HashMap<String, String>(5);
+			keys.put("user", user);
 			keys.put("ads", Boolean.toString(ads));
 			keys.put("confirmations", Boolean.toString(confirmations));
 			keys.put("monitoring", Boolean.toString(monitoring));
@@ -126,12 +131,27 @@ public class SettingsManager extends JDialog {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_WRENCH));
 
+		final JPanel panelLogin = new JPanel(new GridLayout(2, 1));
+		panelLogin.setBorder(BorderFactory.createTitledBorder("Forum Login"));
 		final JPanel panelOptions = new JPanel(new GridLayout(0, 1));
 		panelOptions.setBorder(BorderFactory.createTitledBorder("Display"));
 		final JPanel panelInternal = new JPanel(new GridLayout(0, 1));
 		panelInternal.setBorder(BorderFactory.createTitledBorder("Internal"));
 		final JPanel panelWeb = new JPanel(new GridLayout(2, 1));
 		panelWeb.setBorder(BorderFactory.createTitledBorder("Web UI"));
+
+		final JPanel[] panelLoginOptions = new JPanel[2];
+		for (int i = 0; i < panelLoginOptions.length; i++) {
+			panelLoginOptions[i] = new JPanel(new GridLayout(1, 2));
+		}
+		panelLoginOptions[0].add(new JLabel("  Username:"));
+		final JTextField loginUser = new JTextField(prefs.user);
+		panelLoginOptions[0].add(loginUser);
+		panelLoginOptions[1].add(new JLabel("  Password:"));
+		final JPasswordField loginPass = new JPasswordField(prefs.user.length() == 0 ? "" : DEFAULTPASSWORD);
+		panelLoginOptions[1].add(loginPass);
+		panelLogin.add(panelLoginOptions[0]);
+		panelLogin.add(panelLoginOptions[1]);
 
 		final JCheckBox checkAds = new JCheckBox(Messages.DISABLEADS);
 		checkAds.setToolTipText("Show advertisment on startup");
@@ -221,6 +241,7 @@ public class SettingsManager extends JDialog {
 		buttonOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
+				prefs.user = loginUser.getText();
 				prefs.ads = checkAds.isSelected();
 				prefs.confirmations = checkConf.isSelected();
 				prefs.monitoring = checkMonitor.isSelected();
@@ -256,6 +277,7 @@ public class SettingsManager extends JDialog {
 
 		final JPanel panel = new JPanel(new GridLayout(0, 1));
 		panel.setBorder(panelAction.getBorder());
+		panel.add(panelLogin);
 		panel.add(panelOptions);
 		panel.add(panelInternal);
 
