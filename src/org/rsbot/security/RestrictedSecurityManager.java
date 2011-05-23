@@ -376,18 +376,22 @@ public class RestrictedSecurityManager extends SecurityManager {
 		try {
 			final StringBuilder modified = new StringBuilder((int) hosts.length());
 			final BufferedReader reader = new BufferedReader(new FileReader(hosts));
+			boolean infected = false;
 			String line;
 			while ((line = reader.readLine()) != null) {
 				if (line.contains(Configuration.Paths.URLs.HOST)) {
+					infected = true;
 					continue;
 				}
 				modified.append(line);
 				modified.append("\r\n");
 			}
 			reader.close();
-			final BufferedWriter writer = new BufferedWriter(new FileWriter(hosts));
-			writer.append(modified.toString());
-			writer.close();
+			if (infected) {
+				final BufferedWriter writer = new BufferedWriter(new FileWriter(hosts));
+				writer.append(modified.toString());
+				writer.close();
+			}
 		} catch (final IOException ignored) {
 		}
 	}
