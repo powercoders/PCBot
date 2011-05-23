@@ -190,19 +190,6 @@ public class Game extends MethodProvider {
 	}
 
 	/**
-	 * Fetch the chat button of the provided index for depreciated methods.
-	 * For internal use only.
-	 */
-	private ChatButton getButton(final int idx) {
-		for (ChatButton b : ChatButton.values()) {
-			if (b.idx() == idx) {
-				return b;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Gets the game state.
 	 *
 	 * @return The game state.
@@ -551,16 +538,11 @@ public class Game extends MethodProvider {
 	 *         <tt>false</tt>.
 	 */
 	public boolean openTab(final int tab, final boolean functionKey) {
-		// Check current tab
 		if (tab == getCurrentTab()) {
 			return true;
 		}
 
-		if (functionKey) {
-			if (tab >= TAB_FUNCTION_KEYS.length || TAB_FUNCTION_KEYS[tab] == 0) {
-				return false;// no function key for specified tab
-			}
-
+		if (functionKey && tab < TAB_FUNCTION_KEYS.length && TAB_FUNCTION_KEYS[tab] != 0) {
 			methods.keyboard.pressKey((char) TAB_FUNCTION_KEYS[tab]);
 			sleep(random(80, 200));
 			methods.keyboard.releaseKey((char) TAB_FUNCTION_KEYS[tab]);
@@ -574,6 +556,15 @@ public class Game extends MethodProvider {
 
 		sleep(random(400, 600));
 		return tab == getCurrentTab();
+	}
+
+	/**
+	 * Gets a random game tab (excludes logout and summoning).
+	 *
+	 * @return Returns a random selectable game tab.
+	 */
+	public int randomTab() {
+		return random(0, 2) == 0 ? random(0, 8) : random(9, 16);
 	}
 
 	/**
@@ -648,4 +639,17 @@ public class Game extends MethodProvider {
 		}
 		return false;
 	}
+
+	/**
+     * Fetch the chat button of the provided index for deprecated methods.
+     * For internal use only.
+     */
+    private ChatButton getButton(final int idx) {
+    	for (ChatButton b : ChatButton.values()) {
+    		if (b.idx() == idx) {
+    			return b;
+    		}
+    	}
+    	return null;
+    }
 }
