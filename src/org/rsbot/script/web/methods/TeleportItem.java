@@ -60,20 +60,14 @@ public class TeleportItem extends Teleport {
 				}
 			}
 		}
-		if (item != null) {
-			if (methods.game.getCurrentTab() != (equip ? Game.TAB_EQUIPMENT : Game.TAB_INVENTORY)) {
-				methods.game.openTab(equip ? Game.TAB_EQUIPMENT : Game.TAB_INVENTORY);
-				sleep(500);
-			}
-			if (item != null) {
-				for (String act : action) {
-					if (item.doAction(act)) {
-						final long tO = System.currentTimeMillis();
-						while (System.currentTimeMillis() - tO < 10000) {
-							sleep(100);
-							if (methods.calc.distanceBetween(methods.players.getMyPlayer().getLocation(), teleportationLocation()) < 15) {
-								break;
-							}
+		if (item != null && methods.game.openTab(equip ? Game.Tab.EQUIPMENT : Game.Tab.INVENTORY)) {
+			for (String act : action) {
+				if (item.doAction(act)) {
+					final long tO = System.currentTimeMillis();
+					while (System.currentTimeMillis() - tO < 10000) {
+						sleep(100);
+						if (methods.calc.distanceBetween(methods.players.getMyPlayer().getLocation(), teleportationLocation()) < 15) {
+							break;
 						}
 					}
 				}
