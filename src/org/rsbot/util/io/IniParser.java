@@ -2,6 +2,8 @@ package org.rsbot.util.io;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -48,6 +50,13 @@ public class IniParser {
 			out.write(entry.getValue());
 			out.newLine();
 		}
+	}
+
+	public static HashMap<String, HashMap<String, String>> deserialise(final File input) throws IOException {
+		final BufferedReader reader = new BufferedReader(new FileReader(input));
+		final HashMap<String, HashMap<String, String>> data = deserialise(reader);
+		reader.close();
+		return data;
 	}
 
 	public static HashMap<String, HashMap<String, String>> deserialise(final BufferedReader input) throws IOException {
