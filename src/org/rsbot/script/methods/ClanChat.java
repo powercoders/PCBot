@@ -41,16 +41,8 @@ public class ClanChat extends MethodProvider {
 	 */
 	public String getOwner() {
 		String temp = null;
-		if (informationOpen()) {
+		if (informationOpen() || (methods.game.openTab(Game.Tab.CLAN_CHAT) && openInformation())) {
 			temp = methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_CHANNEL_OWNER).getText();
-		} else if (methods.game.openTab(Game.Tab.CLAN_CHAT)) {
-			if (openInformation()) {
-				if (informationOpen()) {
-					temp = methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_CHANNEL_OWNER).getText();
-				}
-			}
-		}
-		if (informationOpen()) {
 			closeInformation();
 		}
 		return temp != null ? temp.trim() : null;
@@ -63,14 +55,8 @@ public class ClanChat extends MethodProvider {
 	 */
 	public String getChannelName() {
 		String temp = null;
-		if (informationOpen()) {
+		if (informationOpen() || (methods.game.openTab(Game.Tab.CLAN_CHAT) && openInformation())) {
 			temp = methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_CHANNEL_NAME).getText();
-		} else if (methods.game.openTab(Game.Tab.CLAN_CHAT)) {
-			if (openInformation() && informationOpen()) {
-				temp = methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_CHANNEL_NAME).getText();
-			}
-		}
-		if (informationOpen()) {
 			closeInformation();
 		}
 		return temp != null ? temp.trim() : null;
@@ -142,11 +128,10 @@ public class ClanChat extends MethodProvider {
 	 */
 	public boolean openInformation() {
 		if (!informationOpen() && methods.game.openTab(Game.Tab.CLAN_CHAT)) {
-			if (inChannel()) {
-				methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_BUTTON).doClick();
-			} else {
+			if (!inChannel()) {
 				return false;
 			}
+			methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_INFO, INTERFACE_CLAN_CHAT_INFO_BUTTON).doClick();
 		}
 		return informationOpen();
 	}
@@ -180,11 +165,10 @@ public class ClanChat extends MethodProvider {
 	 */
 	public boolean openSettings() {
 		if (!settingsOpen() && methods.game.openTab(Game.Tab.CLAN_CHAT)) {
-			if (inChannel()) {
-				methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_SETTINGS, INTERFACE_CLAN_CHAT_SETTINGS_BUTTON).doClick();
-			} else {
+			if (!inChannel()) {
 				return false;
 			}
+			methods.interfaces.getComponent(INTERFACE_CLAN_CHAT_SETTINGS, INTERFACE_CLAN_CHAT_SETTINGS_BUTTON).doClick();
 		}
 		return settingsOpen();
 	}

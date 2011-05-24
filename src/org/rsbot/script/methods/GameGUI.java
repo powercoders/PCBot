@@ -111,27 +111,26 @@ class GameGUI extends MethodProvider {
 		// Get GUI interface
 		final RSInterface[] gui = ind_GUI != -1 ? methods.client
 				.getRSInterfaceCache()[ind_GUI] : null;
-		if (gui == null) {
-			return null;
-		}
-
-		// Check if we need to find a new tab index
-		if (ind_Tabs[tab.index()] == -1) {
-			for (int i = 0; i < gui.length; i++) {
-				if (gui[i] != null && gui[i].getActions() != null
-						&& gui[i].getActions().length > 0
-						&& gui[i].getActions()[0].equals(tab.description())) {
-					ind_Tabs[tab.index()] = i;
-					break;
+		if (gui != null) {
+			// Check if we need to find a new tab index
+			if (ind_Tabs[tab.index()] == -1) {
+				for (int i = 0; i < gui.length; i++) {
+					if (gui[i] != null) {
+						final String[] actions = gui[i].getActions();
+						if (actions != null && actions.length > 0
+								&& actions[0].equals(tab.description())) {
+							ind_Tabs[tab.index()] = i;
+							break;
+						}
+					}
 				}
 			}
+	
+			// Return the tab interface
+			if (ind_Tabs[tab.index()] != -1) {
+				return gui[ind_Tabs[tab.index()]];
+			}
 		}
-
-		// Return the tab interface
-		if (ind_Tabs[tab.index()] != -1) {
-			return gui[ind_Tabs[tab.index()]];
-		}
-
 		return null;
 	}
 

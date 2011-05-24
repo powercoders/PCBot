@@ -20,7 +20,7 @@ public class TTab implements TextPaintListener {
 	public int drawLine(final Graphics render, int idx) {
 		final Tab cTab = game.getTab();
 		StringUtil.drawLine(render, idx++,
-				"Current Tab: " + cTab + " (" + cTab.description() + ")");
+				"Current Tab: " + cTab.description() + " (" + cTab.index() + ")");
 		return idx;
 	}
 
