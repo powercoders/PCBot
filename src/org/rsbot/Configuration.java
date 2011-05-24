@@ -74,6 +74,7 @@ public class Configuration {
 			public static final String AD_INFO = BASE + "botad-info";
 			public static final String MONITORING_CONTROL = BASE + "monitoring";
 			public static final String WEBCOMPILER = BASE + "webcompile";
+			public static final String SERVICELOGIN = BASE + "servicelogin";
 		}
 
 		public static final String ROOT = new File(".").getAbsolutePath();
@@ -152,6 +153,10 @@ public class Configuration {
 
 		public static String getWebDatabase() {
 			return Paths.getSettingsDirectory() + File.separator + "Web.store";
+		}
+
+		public static String getServiceKey() {
+			return Paths.getSettingsDirectory() + File.separator + "service.key";
 		}
 
 		public static String getSettingsDirectory() {

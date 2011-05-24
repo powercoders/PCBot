@@ -59,7 +59,7 @@ public class BotMenuBar extends JMenuBar {
 		TITLES = new String[]{Messages.FILE, Messages.EDIT, Messages.VIEW, Messages.TOOLS, Messages.HELP};
 		ELEMENTS = new String[][]{
 				{Messages.NEWBOT, Messages.CLOSEBOT, Messages.MENUSEPERATOR,
-						Messages.SERVICEKEY, Messages.ADDSCRIPT,
+						Messages.ADDSCRIPT,
 						Messages.RUNSCRIPT, Messages.STOPSCRIPT,
 						Messages.PAUSESCRIPT, Messages.MENUSEPERATOR,
 						Messages.SAVESCREENSHOT, Messages.MENUSEPERATOR,
@@ -112,7 +112,6 @@ public class BotMenuBar extends JMenuBar {
 		final HashMap<String, String> map = new HashMap<String, String>(16);
 		map.put(Messages.NEWBOT, Configuration.Paths.Resources.ICON_APPADD);
 		map.put(Messages.CLOSEBOT, Configuration.Paths.Resources.ICON_APPDELETE);
-		map.put(Messages.SERVICEKEY, Configuration.Paths.Resources.ICON_KEY);
 		map.put(Messages.ADDSCRIPT, Configuration.Paths.Resources.ICON_SCRIPT_ADD);
 		map.put(Messages.RUNSCRIPT, Configuration.Paths.Resources.ICON_PLAY);
 		map.put(Messages.STOPSCRIPT, Configuration.Paths.Resources.ICON_DELETE);
@@ -144,7 +143,6 @@ public class BotMenuBar extends JMenuBar {
 			add(constructMenu(title, elems));
 		}
 		constructItemIcons();
-		commandMenuItem.get(Messages.SERVICEKEY).setVisible(false);
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
 		if (Configuration.RUNNING_FROM_JAR) {
 			for (String disableFeature : DEVELOPER_CHECK_FEATURES) {

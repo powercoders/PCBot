@@ -153,8 +153,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (current != null) {
 					showScriptSelector(current);
 				}
-			} else if (option.equals(Messages.SERVICEKEY)) {
-				serviceKeyQuery(option);
 			} else if (option.equals(Messages.STOPSCRIPT)) {
 				final Bot current = getCurrentBot();
 				if (current != null) {
@@ -287,18 +285,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 
 		toolBar.updateInputButton();
-	}
-
-	private void serviceKeyQuery(final String option) {
-		final String currentKey = ScriptDeliveryNetwork.getInstance().getKey();
-		final String key = (String) JOptionPane.showInputDialog(this, null, option, JOptionPane.QUESTION_MESSAGE, null, null, currentKey);
-		if (key == null || key.length() == 0) {
-			log.info("Services have been disabled");
-		} else if (key.length() != 40) {
-			log.warning("Invalid service key");
-		} else {
-			log.info("Services have been linked to {0}");
-		}
 	}
 
 	private void lessCpu(boolean on) {

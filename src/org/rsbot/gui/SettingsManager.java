@@ -3,6 +3,7 @@ package org.rsbot.gui;
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.service.Monitoring;
+import org.rsbot.service.DRM;
 import org.rsbot.util.StringUtil;
 import org.rsbot.util.io.IniParser;
 
@@ -132,7 +133,7 @@ public class SettingsManager extends JDialog {
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_WRENCH));
 
 		final JPanel panelLogin = new JPanel(new GridLayout(2, 1));
-		panelLogin.setBorder(BorderFactory.createTitledBorder("Forum Login"));
+		panelLogin.setBorder(BorderFactory.createTitledBorder("Service Login"));
 		final JPanel panelOptions = new JPanel(new GridLayout(0, 1));
 		panelOptions.setBorder(BorderFactory.createTitledBorder("Display"));
 		final JPanel panelInternal = new JPanel(new GridLayout(0, 1));
@@ -145,11 +146,12 @@ public class SettingsManager extends JDialog {
 			panelLoginOptions[i] = new JPanel(new GridLayout(1, 2));
 		}
 		panelLoginOptions[0].add(new JLabel("  Username:"));
-		final JTextField loginUser = new JTextField(prefs.user);
-		panelLoginOptions[0].add(loginUser);
+		final JTextField textLoginUser = new JTextField(prefs.user);
+		textLoginUser.setToolTipText(Configuration.Paths.URLs.HOST + " forum account username, leave blank to log out");
+		panelLoginOptions[0].add(textLoginUser);
 		panelLoginOptions[1].add(new JLabel("  Password:"));
-		final JPasswordField loginPass = new JPasswordField(prefs.user.length() == 0 ? "" : DEFAULTPASSWORD);
-		panelLoginOptions[1].add(loginPass);
+		final JPasswordField textLoginPass = new JPasswordField(prefs.user.length() == 0 ? "" : DEFAULTPASSWORD);
+		panelLoginOptions[1].add(textLoginPass);
 		panelLogin.add(panelLoginOptions[0]);
 		panelLogin.add(panelLoginOptions[1]);
 
@@ -241,7 +243,6 @@ public class SettingsManager extends JDialog {
 		buttonOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
-				prefs.user = loginUser.getText();
 				prefs.ads = checkAds.isSelected();
 				prefs.confirmations = checkConf.isSelected();
 				prefs.monitoring = checkMonitor.isSelected();
@@ -249,13 +250,22 @@ public class SettingsManager extends JDialog {
 				prefs.shutdownTime = modelShutdown.getNumber().intValue();
 				prefs.web = checkWeb.isSelected();
 				prefs.webBind = textWebBind.getText();
-				final char[] pass = textWebPass.getPassword();
-				if (pass.length > 0 && pass[0] != '\0') {
-					prefs.webPass = StringUtil.sha1sum(new String(pass));
+				final String webUser = textLoginUser.getText(), webPass = new String(textWebPass.getPassword());
+				if (!webUser.equals(prefs.user) || !webPass.equals(DEFAULTPASSWORD)) {
+					prefs.webPass = StringUtil.sha1sum(webPass);
 				}
+				prefs.user = webUser;
 				prefs.webPassRequire = checkWebPass.isSelected() && checkWebPass.isEnabled();
 				prefs.commit();
+				final String loginPass = new String(textLoginPass.getPassword());
+				if (!loginPass.equals(DEFAULTPASSWORD)) {
+					if (!DRM.login(prefs.user, loginPass)) {
+						prefs.user = "";
+					}
+				}
 				prefs.save();
+				textLoginPass.setText(DEFAULTPASSWORD);
+				textWebPass.setText(DEFAULTPASSWORD);
 				dispose();
 			}
 		});
