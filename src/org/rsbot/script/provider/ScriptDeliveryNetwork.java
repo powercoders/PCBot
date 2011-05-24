@@ -1,6 +1,7 @@
 package org.rsbot.script.provider;
 
 import org.rsbot.Configuration;
+import org.rsbot.service.DRM;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IniParser;
 
@@ -26,15 +27,12 @@ import java.util.logging.Logger;
 public class ScriptDeliveryNetwork extends FileScriptSource {
 	private static final Logger log = Logger.getLogger("ScriptDelivery");
 	private static ScriptDeliveryNetwork instance;
-	private String key;
-	private final String defaultKey = "0000000000000000000000000000000000000000";
 	private final int version = 1;
 	private URL base = null;
 	private boolean forceUpdate = false;
 
 	private ScriptDeliveryNetwork() {
 		super(new File(Configuration.Paths.getScriptsNetworkDirectory()));
-		key = defaultKey;
 	}
 
 	public void start() {
@@ -94,7 +92,7 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 			}
 			if (keys.containsKey("url")) {
 				try {
-					base = new URL(keys.get("url").replace("%key", getKey()));
+					base = new URL(keys.get("url").replace("%key", DRM.DEFAULTKEY));
 				} catch (final MalformedURLException e) {
 				}
 			}
@@ -234,13 +232,5 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 
 	private File getChachedFile(final String name) {
 		return new File(Configuration.Paths.getCacheDirectory(), "sdn-" + name);
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(final String key) {
-		this.key = key;
 	}
 }

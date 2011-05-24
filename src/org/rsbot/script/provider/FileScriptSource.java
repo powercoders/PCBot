@@ -87,7 +87,7 @@ public class FileScriptSource implements ScriptSource {
 			final String name = e.getName().replace('/', '.');
 			final String ext = ".class";
 			if (name.endsWith(ext) && !name.contains("$")) {
-				load(loader, scripts, name.substring(0, name.length() - ext.length()), null);
+				load(loader, scripts, name.substring(0, name.length() - ext.length()), jar.getName());
 			}
 		}
 	}

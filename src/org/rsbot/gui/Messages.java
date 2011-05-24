@@ -13,7 +13,6 @@ public interface Messages {
 	public static final String NEWBOT = "New Bot";
 	public static final String CLOSEBOT = "Close Bot";
 	public static final String HIDEBOT = "Hide";
-	public static final String SERVICEKEY = "Service Key";
 	public static final String ADDSCRIPT = "Add Script";
 	public static final String RUNSCRIPT = "Run Script";
 	public static final String RESUMESCRIPT = "Resume Script";

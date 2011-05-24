@@ -7,7 +7,6 @@ import org.rsbot.log.TextAreaLogHandler;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -74,6 +73,7 @@ public class Configuration {
 			public static final String AD_INFO = BASE + "botad-info";
 			public static final String MONITORING_CONTROL = BASE + "monitoring";
 			public static final String WEBCOMPILER = BASE + "webcompile";
+			public static final String SERVICELOGIN = BASE + "servicelogin";
 		}
 
 		public static final String ROOT = new File(".").getAbsolutePath();
@@ -152,6 +152,10 @@ public class Configuration {
 
 		public static String getWebDatabase() {
 			return Paths.getSettingsDirectory() + File.separator + "Web.store";
+		}
+
+		public static String getServiceKey() {
+			return Paths.getSettingsDirectory() + File.separator + "service.key";
 		}
 
 		public static String getSettingsDirectory() {
@@ -293,37 +297,6 @@ public class Configuration {
 
 	public static OperatingSystem getCurrentOperatingSystem() {
 		return Configuration.CURRENT_OS;
-	}
-
-	static String httpUserAgent = null;
-
-	public static String getHttpUserAgent() {
-		if (httpUserAgent != null) {
-			return httpUserAgent;
-		}
-		String os = "Windows NT 6.1";
-		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.MAC) {
-			os = "Macintosh; Intel Mac OS X 10_6_6";
-		} else if (Configuration.getCurrentOperatingSystem() != Configuration.OperatingSystem.WINDOWS) {
-			os = "X11; Linux x86_64";
-		}
-		final StringBuilder buf = new StringBuilder(125);
-		buf.append("Mozilla/5.0 (").append(os).append(")");
-		buf.append(" AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.60 Safari/534.24");
-		httpUserAgent = buf.toString();
-		return httpUserAgent;
-	}
-
-	public static HttpURLConnection getHttpConnection(final URL url) throws IOException {
-		final HttpURLConnection con = (HttpURLConnection) url.openConnection();
-		con.addRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-		con.addRequestProperty("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-		con.addRequestProperty("Accept-Encoding", "gzip,deflate");
-		con.addRequestProperty("Accept-Language", "en-us,en;q=0.5");
-		con.addRequestProperty("Host", url.getHost());
-		con.addRequestProperty("User-Agent", getHttpUserAgent());
-		con.setConnectTimeout(10000);
-		return con;
 	}
 
 	public static int getVersion() {

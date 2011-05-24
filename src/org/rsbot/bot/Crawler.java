@@ -1,6 +1,6 @@
 package org.rsbot.bot;
 
-import org.rsbot.Configuration;
+import org.rsbot.util.io.HttpClient;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -50,7 +50,7 @@ class Crawler {
 
 	private String downloadPage(final String url, final String referer) {
 		try {
-			final HttpURLConnection con = Configuration.getHttpConnection(new URL(url));
+			final HttpURLConnection con = HttpClient.getHttpConnection(new URL(url));
 			if (referer != null && !referer.isEmpty()) {
 				con.addRequestProperty("Referer", referer);
 			}
