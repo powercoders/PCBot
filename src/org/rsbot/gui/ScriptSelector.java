@@ -35,6 +35,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private static final ScriptSource SRC_SOURCES;
 	private static final ScriptSource SRC_PRECOMPILED;
 	private static final ScriptSource SRC_DRM;
+	private final BotGUI frame;
 	private final Bot bot;
 	private JTable table;
 	private JTextField search;
@@ -50,8 +51,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		SRC_DRM = ScriptDeliveryNetwork.getInstance();
 	}
 
-	public ScriptSelector(final Frame frame, final Bot bot) {
+	public ScriptSelector(final BotGUI frame, final Bot bot) {
 		super(frame, "Script Selector", true);
+		this.frame = frame;
 		this.bot = bot;
 		scripts = new ArrayList<ScriptDefinition>();
 		model = new ScriptTableModel(scripts);
@@ -255,18 +257,27 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent evt) {
 				final ScriptDefinition def = model.getDefinition(table.getSelectedRow());
-				try {
-					final Script script = def.source.load(def);
-					final String account = (String) accounts.getSelectedItem();
-					bot.getScriptHandler().removeScriptListener(ScriptSelector.this);
-					dispose();
-					if (script != null) {
-						bot.setAccount(account);
-						bot.getScriptHandler().runScript(script);
+				setVisible(false);
+				final String account = (String) accounts.getSelectedItem();
+				bot.getScriptHandler().removeScriptListener(ScriptSelector.this);
+				dispose();
+				new Thread() {
+					@Override
+					public void run() {
+						Script script = null;
+						frame.updateScriptControls(true);
+						try {
+							script = def.source.load(def);
+						} catch (final ServiceException e) {
+							log.severe(e.getMessage());
+						}
+						if (script != null) {
+							bot.setAccount(account);
+							bot.getScriptHandler().runScript(script);
+							frame.updateScriptControls();
+						}
 					}
-				} catch (final ServiceException e) {
-					e.printStackTrace();
-				}
+				}.start();
 			}
 		});
 		connect.setEnabled(Configuration.SCRIPT_DRM ? true : false);

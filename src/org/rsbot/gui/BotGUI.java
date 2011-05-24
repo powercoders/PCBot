@@ -244,7 +244,11 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 	}
 
-	private void updateScriptControls() {
+	public void updateScriptControls() {
+		updateScriptControls(false);
+	}
+
+	public void updateScriptControls(final boolean block) {
 		boolean idle = true, paused = false;
 		final Bot bot = getCurrentBot();
 
@@ -256,6 +260,10 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			} else {
 				idle = true;
 			}
+		}
+
+		if (block) {
+			idle = false;
 		}
 
 		menuBar.getMenuItem(Messages.RUNSCRIPT).setVisible(idle);
