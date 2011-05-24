@@ -505,8 +505,9 @@ public class Inventory extends MethodProvider {
 			}
 		}
 
-		if (!cached) {
+		if (!cached && methods.game.getTab() != Game.Tab.INVENTORY) {
 			methods.game.openTab(Game.Tab.INVENTORY);
+			sleep(random(200, 400));
 		}
 
 		return methods.interfaces.getComponent(INTERFACE_INVENTORY, 0);

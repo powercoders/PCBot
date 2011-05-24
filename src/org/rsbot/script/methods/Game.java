@@ -200,8 +200,8 @@ public class Game extends MethodProvider {
 	public static final int INTERFACE_HP_ORB = 748;
 	public static final int INTERFACE_PRAYER_ORB = 749;
 
-	public static final int[] INTERFACE_TALKS = {211, 241, 251, 101, 242, 102, 161, 249, 243, 64,
-			65, 244, 255, 249, 230, 372, 421};
+	public static final int[] INTERFACE_TALKS = {211, 241, 251, 101, 242,
+			102, 161, 249, 243, 64, 65, 244, 255, 249, 230, 372, 421};
 	public static final int[] INTERFACE_OPTIONS = {230, 228};
 
 	@Deprecated
@@ -269,10 +269,10 @@ public class Game extends MethodProvider {
 	}
 
 	/**
-	 * Gets a color corresponding to x and y co ordinates from the current game screen.
+	 * Gets a color corresponding to x and y coordinates from the current game screen.
 	 * 
-	 * @param x The x co ordinate at which to get the color.
-	 * @param y The y co ordinate at which to get the color.
+	 * @param x The x coordinate at which to get the color.
+	 * @param y The y coordinate at which to get the color.
 	 * @return Color
 	 * @see java.awt.color
 	 */
@@ -613,7 +613,7 @@ public class Game extends MethodProvider {
 			return false;
 		}
 
-		if (tab == getTab()) {
+		if (getTab() == tab) {
 			return true;
 		}
 
@@ -641,7 +641,7 @@ public class Game extends MethodProvider {
 			}
 			sleep(random(100, 200));
 		}
-		return tab == getTab();
+		return getTab() == tab;
 	}
 
 	/**
