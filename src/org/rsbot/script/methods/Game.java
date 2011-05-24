@@ -87,7 +87,7 @@ public class Game extends MethodProvider {
 		INVENTORY(4, "Inventory", KeyEvent.VK_F1, Inventory.INTERFACE_INVENTORY),
 		EQUIPMENT(5, "Worn Equipment", KeyEvent.VK_F2, Equipment.INTERFACE_EQUIPMENT),
 		PRAYER(6, "Prayer List", KeyEvent.VK_F3, Prayer.INTERFACE_PRAYER),
-		MAGIC(7, "Magic Spellbook", KeyEvent.VK_F4, Magic.INTERFACE_DEFENSIVE_STANCE),
+		MAGIC(7, "Magic Spellbook", KeyEvent.VK_F4, 192),
 		FRIENDS(9, "Friends List", 0, 550),
 		FRIENDS_CHAT(10, "Friends Chat", 0, FriendChat.INTERFACE_FRIEND_CHAT),
 		CLAN_CHAT(11, "Clan Chat", 0, ClanChat.INTERFACE_CLAN_CHAT),
@@ -619,7 +619,7 @@ public class Game extends MethodProvider {
 
 		if (functionKey && tab.hasFunctionKey()) {
 			methods.keyboard.pressKey((char) tab.functionKey());
-			sleep(random(80, 200));
+			sleep(random(60, 200));
 			methods.keyboard.releaseKey((char) tab.functionKey());
 		} else {
 			final org.rsbot.client.RSInterface iTab = methods.gui.getTab(tab);

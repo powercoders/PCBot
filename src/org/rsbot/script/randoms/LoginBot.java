@@ -29,6 +29,7 @@ public class LoginBot extends Random {
 	private static final int INTERFACE_WELCOME_SCREEN = 906;
 	private static final int INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_1 = 160;
 	private static final int INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_2 = 171;
+	private static final int INTERFACE_WELCOME_SCREEN_BUTTON_TEXT = 173;
 	//private static final int INTERFACE_WELCOME_SCREEN_BUTTON_LOGOUT = 193;
 	private static final int INTERFACE_WELCOME_SCREEN_TEXT_RETURN = 221;
 	private static final int INTERFACE_WELCOME_SCREEN_BUTTON_BACK = 218;
@@ -66,19 +67,22 @@ public class LoginBot extends Random {
 				}
 
 				final RSInterface welcome_screen = interfaces.get(INTERFACE_WELCOME_SCREEN);
-				final RSComponent welcome_screen_button_play_1 = welcome_screen.getComponent(INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_1);
-				final RSComponent welcome_screen_button_play_2 = welcome_screen.getComponent(INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_2);
+				if (welcome_screen.getComponent(INTERFACE_WELCOME_SCREEN_BUTTON_TEXT).getText().equals("Play")) {
+					final RSComponent welcome_screen_button_play_1 = welcome_screen.getComponent(INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_1);
+					final RSComponent welcome_screen_button_play_2 = welcome_screen.getComponent(INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_2);
 
-				mouse.click(welcome_screen_button_play_1.getAbsoluteX(),
-						welcome_screen_button_play_1.getAbsoluteY(),
-						welcome_screen_button_play_2.getAbsoluteX()
-								+ welcome_screen_button_play_2.getWidth()
-								- welcome_screen_button_play_1.getAbsoluteX(),
-						welcome_screen_button_play_1.getHeight(), true);
+					mouse.click(welcome_screen_button_play_1.getAbsoluteX(),
+							welcome_screen_button_play_1.getAbsoluteY(),
+							welcome_screen_button_play_2.getAbsoluteX()
+									+ welcome_screen_button_play_2.getWidth()
+									- welcome_screen_button_play_1.getAbsoluteX(),
+							welcome_screen_button_play_1.getHeight(), true);
 
-				for (int i = 0; i < 4 && game.getClientState() == 6; i++) {
-					sleep(500);
+					for (int i = 0; i < 4 && game.getClientState() == 6; i++) {
+						sleep(500);
+					}
 				}
+
 				returnText = interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_TEXT_RETURN).getText().toLowerCase();
 
 				if (returnText.contains("total skill level of")
