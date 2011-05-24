@@ -74,7 +74,7 @@ public class IniParser {
 			if (t == sectionOpen) {
 				z = line.indexOf(sectionClose, 1);
 				z = z == -1 ? l : z;
-				section = z == 1 ? "" : line.substring(1, z - 1).trim();
+				section = z == 1 ? "" : line.substring(1, z).trim();
 			} else {
 				boolean skip = false;
 				for (final char c : comments) {
