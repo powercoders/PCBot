@@ -4,7 +4,7 @@ package org.rsbot.script.provider;
 /**
  * @author Jacmob
  */
-public class ScriptDefinition {
+public class ScriptDefinition implements Comparable<ScriptDefinition> {
 
 	public int id;
 
@@ -23,5 +23,9 @@ public class ScriptDefinition {
 	public ScriptSource source;
 
 	public String path;
+
+	public int compareTo(final ScriptDefinition def) {
+		return name.compareToIgnoreCase(def.name);
+	}
 
 }

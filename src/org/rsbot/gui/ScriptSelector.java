@@ -19,6 +19,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -79,6 +80,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		}
 		scripts.addAll(SRC_PRECOMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
+		Collections.sort(scripts);
 		model.search((search == null || search.getText().contains("\0")) ? "" : search.getText());
 		table.revalidate();
 	}
