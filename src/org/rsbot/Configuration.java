@@ -227,11 +227,9 @@ public class Configuration {
 		dirs.add(Paths.getLogsDirectory());
 		dirs.add(Paths.getCacheDirectory());
 		dirs.add(Paths.getSettingsDirectory());
-		if (Configuration.RUNNING_FROM_JAR) {
-			dirs.add(Paths.getScriptsDirectory());
-			dirs.add(Paths.getScriptsSourcesDirectory());
-			dirs.add(Paths.getScriptsPrecompiledDirectory());
-		}
+		dirs.add(Paths.getScriptsDirectory());
+		dirs.add(Paths.getScriptsSourcesDirectory());
+		dirs.add(Paths.getScriptsPrecompiledDirectory());
 		for (final String name : dirs) {
 			final File dir = new File(name);
 			if (!dir.exists()) {
