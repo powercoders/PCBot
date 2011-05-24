@@ -1,49 +1,31 @@
 package org.rsbot.script.provider;
 
-import org.rsbot.Configuration;
-import org.rsbot.service.DRM;
-import org.rsbot.util.io.HttpClient;
-import org.rsbot.util.io.IniParser;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
+
+import org.rsbot.Configuration;
+import org.rsbot.script.Script;
+import org.rsbot.script.provider.FileScriptSource.FileScriptDefinition;
+import org.rsbot.service.ServiceException;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IniParser;
 
 /**
  * @author Paris
  */
-public class ScriptDeliveryNetwork extends FileScriptSource {
+public class ScriptDeliveryNetwork implements ScriptSource {
 	private static final Logger log = Logger.getLogger("ScriptDelivery");
 	private static ScriptDeliveryNetwork instance;
-	private final int version = 1;
-	private URL base = null;
-	private boolean forceUpdate = false;
+	private URL base;
 
 	private ScriptDeliveryNetwork() {
-		super(new File(Configuration.Paths.getScriptsNetworkDirectory()));
-	}
-
-	public void start() {
-		if (load()) {
-			try {
-				init();
-			} catch (final Exception e) {
-				e.printStackTrace();
-				log.severe("Could not download scripts from the network!");
-			}
-		}
 	}
 
 	public static ScriptDeliveryNetwork getInstance() {
@@ -53,184 +35,88 @@ public class ScriptDeliveryNetwork extends FileScriptSource {
 		return instance;
 	}
 
-	public void forceUpdate() {
-		forceUpdate = true;
+	private static File getFile(final String name) {
+		return new File(Configuration.Paths.getCacheDirectory(), "sdn-" + name + ".txt");
+	}
+
+	private static void parseManifests(final HashMap<String, HashMap<String, String>> entries, final List<ScriptDefinition> defs) {
+		for (final Entry<String, HashMap<String, String>> entry : entries.entrySet()) {
+			final ScriptDefinition def = new ScriptDefinition();
+			def.path = entry.getKey();
+			final HashMap<String, String> values = entry.getValue();
+			def.id = Integer.parseInt(values.get("id"));
+			def.name = values.get("name");
+			def.version = Double.parseDouble(values.get("version"));
+			def.description = values.get("description");
+			def.authors = values.get("authors").split(ScriptList.DELIMITER);
+			def.authors = values.get("authors").split(ScriptList.DELIMITER);
+			def.website = values.get("website");
+			defs.add(def);
+		}
+	}
+
+	@Override
+	public List<ScriptDefinition> list() {
+		final File controlFile = getFile("control"), manifestFile = getFile("manifest");
 		try {
-			init();
+			HttpClient.download(new URL(Configuration.Paths.URLs.SDN_CONTROL), controlFile);
+			final HashMap<String, String> control = IniParser.deserialise(controlFile).get(IniParser.emptySection);
+			if (control == null || !IniParser.parseBool(control.get("enabled")) || !control.containsKey("manifest")) {
+				throw new ServiceException("Service currently disabled");
+			}
+			base = HttpClient.download(new URL(control.get("manifest")), manifestFile).getURL();
+			final ArrayList<ScriptDefinition> defs = new ArrayList<ScriptDefinition>();
+			parseManifests(IniParser.deserialise(manifestFile), defs);
+			for (final ScriptDefinition def : defs) {
+				def.source = this;
+			}
+			return defs;
+		} catch (final ServiceException e) {
+			log.severe(e.getMessage());
 		} catch (final IOException ignored) {
+			log.warning("Unable to load scripts from the network");
 		}
+		return null;
 	}
 
-	private boolean load() {
-		HashMap<String, String> keys = null;
-		boolean enabled = true;
-		String error = "could not load control file";
-
-		try {
-			final URL source = new URL(Configuration.Paths.URLs.SDN_CONTROL);
-			final File cache = getChachedFile("control.txt");
-			HttpClient.download(source, cache);
-			final BufferedReader reader = new BufferedReader(new FileReader(cache));
-			keys = IniParser.deserialise(reader).get(IniParser.emptySection);
-			reader.close();
-		} catch (final Exception e) {
-			enabled = false;
+	private static File getCacheDirectory() {
+		final File store = new File(Configuration.Paths.getScriptsNetworkDirectory());
+		if (!store.exists()) {
+			store.mkdirs();
 		}
-
-		if (keys == null || keys.isEmpty() || keys.containsKey("enabled") && !IniParser.parseBool(keys.get("enabled"))) {
-			enabled = false;
-		} else {
-			if (keys.containsKey("error")) {
-				error = keys.get("error");
-			}
-			if (keys.containsKey("version")) {
-				final int remoteVersion = Integer.parseInt(keys.get("version"));
-				if (version != remoteVersion) {
-					enabled = false;
-					error = "please update your version of the bot";
-				}
-			}
-			if (keys.containsKey("url")) {
-				try {
-					base = new URL(keys.get("url").replace("%key", DRM.DEFAULTKEY));
-				} catch (final MalformedURLException e) {
-				}
-			}
-		}
-
-		if (base == null) {
-			enabled = false;
-		}
-
-		if (!enabled) {
-			log.warning("Service disabled: " + error);
-		}
-
-		return enabled;
-	}
-
-	private void init() throws IOException {
-		final File cache = new File(Configuration.Paths.getScriptsNetworkDirectory());
-
-		if (!cache.exists()) {
-			cache.mkdirs();
-		}
-
 		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.WINDOWS) {
-			final String path = "\"" + cache.getAbsolutePath() + "\"";
+			final String path = "\"" + store.getAbsolutePath() + "\"";
 			try {
 				Runtime.getRuntime().exec("attrib +H " + path);
-			} catch (final IOException e) {
+			} catch (final IOException ignored) {
 			}
 		}
-
-		BufferedReader br, br1;
-		String line, line1;
-		final HashMap<String, URL> scripts = new HashMap<String, URL>(64);
-
-		final File manifest = getChachedFile("manifest.txt");
-		final HttpURLConnection con = HttpClient.download(base, manifest);
-		base = con.getURL();
-		br = new BufferedReader(new FileReader(manifest));
-
-		while ((line = br.readLine()) != null) {
-			final URL packUrl = new URL(base, line);
-			long mod = 0;
-			final File pack = getChachedFile("pack-" + getFileName(packUrl));
-			if (pack.exists()) {
-				mod = pack.lastModified();
-			}
-			final HttpURLConnection packCon = HttpClient.download(packUrl, pack);
-			if (pack.lastModified() == mod && !forceUpdate) {
-				continue;
-			}
-			br1 = new BufferedReader(new FileReader(pack));
-			while ((line1 = br1.readLine()) != null) {
-				final URL scriptUrl = new URL(packCon.getURL(), line1);
-				scripts.put(getFileName(scriptUrl), scriptUrl);
-			}
-			br1.close();
-		}
-
-		br.close();
-
-		if (!scripts.isEmpty()) {
-			sync(scripts);
-		}
-
-		forceUpdate = false;
+		return store;
 	}
 
-	private void sync(final HashMap<String, URL> scripts) {
-		int n = 0;
-		for (final String name : scripts.keySet()) {
-			if (!name.contains("$")) {
-				n++;
-			}
-		}
-		if (n > 0) {
-			log.info("Loading " + Integer.toString(n) + " scripts from the network");
-		}
-
-		int created = 0, deleted = 0, updated = 0;
-		final File dir = new File(Configuration.Paths.getScriptsNetworkDirectory());
-		final ArrayList<File> delete = new ArrayList<File>(64);
-
-		for (final File f : dir.listFiles()) {
-			if (f.getName().endsWith(".class")) {
-				delete.add(f);
-			}
-		}
-
-		final ArrayList<Callable<Collection<Object>>> tasks = new ArrayList<Callable<Collection<Object>>>();
-
-		for (final Entry<String, URL> key : scripts.entrySet()) {
-			final File path = new File(dir, key.getKey());
-			if (!path.getName().contains("$")) {
-				if (delete.contains(path)) {
-					updated++;
-				} else {
-					created++;
+	@Override
+	public Script load(ScriptDefinition def) throws ServiceException {
+		final File store = getCacheDirectory();
+		final File file = new File(store, def.path);
+		final LinkedList<ScriptDefinition> defs = new LinkedList<ScriptDefinition>();
+		if (file.exists()) {
+			try {
+				FileScriptSource.load(file, defs, null);
+				if (defs.size() != 1 || defs.getFirst().version < def.version) {
+					file.delete();
 				}
+			} catch (final IOException ignored) {
 			}
-			delete.remove(path);
-			tasks.add(new Callable<Collection<Object>>() {
-				public Collection<Object> call() throws Exception {
-					log.fine("Downloading: " + path.getName());
-					HttpClient.download(key.getValue(), path);
-					return null;
-				}
-
-				;
-			});
 		}
-
-		int threads = Runtime.getRuntime().availableProcessors();
-		final ExecutorService executorService = Executors.newFixedThreadPool(threads);
 		try {
-			executorService.invokeAll(tasks);
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		for (final File f : delete) {
-			if (!f.delete()) {
-				f.deleteOnExit();
+			if (!file.exists()) {
+				HttpClient.download(new URL(base, def.path), file);
 			}
-			if (!f.getName().contains("$")) {
-				deleted++;
-			}
+			FileScriptSource.load(file, defs, null);
+			return FileScriptSource.load((FileScriptDefinition) defs.getFirst());
+		} catch (final Exception ignored) {
+			log.severe("Unable to load script");
 		}
-
-		log.fine(String.format("Downloaded %1$d new scripts, updated %2$d and deleted %3$d", created, deleted, updated));
-	}
-
-	private String getFileName(final URL url) {
-		final String path = url.getPath();
-		return path.substring(path.lastIndexOf('/') + 1);
-	}
-
-	private File getChachedFile(final String name) {
-		return new File(Configuration.Paths.getCacheDirectory(), "sdn-" + name);
+		return null;
 	}
 }

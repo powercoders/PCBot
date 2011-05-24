@@ -9,7 +9,6 @@ import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
 import org.rsbot.script.methods.Environment;
-import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.script.provider.ScriptDownloader;
 import org.rsbot.script.util.WindowUtil;
 import org.rsbot.service.Monitoring;
@@ -83,12 +82,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (Configuration.Twitter.ENABLED) {
 					TwitterUpdates.loadTweets(Configuration.Twitter.MESSAGES);
 				}
-				new Thread() {
-					@Override
-					public void run() {
-						ScriptDeliveryNetwork.getInstance().start();
-					}
-				}.start();
 				Monitoring.start();
 				addBot();
 				updateScriptControls();
