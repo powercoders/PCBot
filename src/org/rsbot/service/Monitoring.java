@@ -142,7 +142,7 @@ public class Monitoring {
 	}
 
 	private static void uploadHttp(final URL url, final String data) throws IOException {
-		final HttpURLConnection con = Configuration.getHttpConnection(url);
+		final HttpURLConnection con = HttpClient.getHttpConnection(url);
 		con.setDoOutput(true);
 		OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
 		out.write(data);
