@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.PrintStream;
 
 public class ScriptList {
+	public static final String DELIMITER = ",";
+
 	public static void main(final String[] args) {
 		if (args.length == 0) {
 			return;
@@ -31,7 +33,7 @@ public class ScriptList {
 		out.print("=");
 		for (int i = 0; i < texts.length; i++) {
 			if (i != 0) {
-				out.print(",");
+				out.print(DELIMITER);
 			}
 			out.print(stripNewline(texts[i]));
 		}
