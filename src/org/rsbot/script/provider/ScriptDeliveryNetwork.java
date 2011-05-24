@@ -110,6 +110,7 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 		}
 		try {
 			if (!file.exists()) {
+				log.info("Downloading script " + def.name + "...");
 				HttpClient.download(new URL(base, def.path), file);
 			}
 			FileScriptSource.load(file, defs, null);
