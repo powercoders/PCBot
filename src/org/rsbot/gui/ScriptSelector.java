@@ -255,10 +255,14 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			public void actionPerformed(final ActionEvent evt) {
 				final ScriptDefinition def = model.getDefinition(table.getSelectedRow());
 				try {
-					bot.setAccount((String) accounts.getSelectedItem());
-					bot.getScriptHandler().runScript(def.source.load(def));
+					final Script script = def.source.load(def);
+					final String account = (String) accounts.getSelectedItem();
 					bot.getScriptHandler().removeScriptListener(ScriptSelector.this);
 					dispose();
+					if (script != null) {
+						bot.setAccount(account);
+						bot.getScriptHandler().runScript(script);
+					}
 				} catch (final ServiceException e) {
 					e.printStackTrace();
 				}
