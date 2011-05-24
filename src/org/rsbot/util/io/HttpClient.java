@@ -20,15 +20,22 @@ public class HttpClient {
 		if (httpUserAgent != null) {
 			return httpUserAgent;
 		}
-		String os = "Windows NT 6.1";
-		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.MAC) {
+		final boolean x64 = System.getProperty("sun.arch.data.model").equals("64");
+		final String os;
+		switch (Configuration.getCurrentOperatingSystem()) {
+		case MAC:
 			os = "Macintosh; Intel Mac OS X 10_6_6";
-		} else if (Configuration.getCurrentOperatingSystem() != Configuration.OperatingSystem.WINDOWS) {
-			os = "X11; Linux x86_64";
+			break;
+		case LINUX:
+			os = "X11; Linux " + (x64 ? "x86_64" : "i686");
+			break;
+		default:
+			os = "Windows NT 6.1" + (x64 ? "; WOW64" : "");
+			break;
 		}
 		final StringBuilder buf = new StringBuilder(125);
 		buf.append("Mozilla/5.0 (").append(os).append(")");
-		buf.append(" AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.60 Safari/534.24");
+		buf.append(" AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.68 Safari/534.24");
 		httpUserAgent = buf.toString();
 		return httpUserAgent;
 	}
