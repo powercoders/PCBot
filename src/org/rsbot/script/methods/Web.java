@@ -133,11 +133,7 @@ public class Web extends MethodProvider {
 			if (traverse.destPlane() == end.getZ()) {//TODO more complex method--prevent infinite loops once made.
 				final Route route = planeRoute(start, end, traverse);
 				route.parent = lastRoute;
-				if (route != null) {
-					return generateRoutes(traverse.dest(), end, route);
-				} else {
-					return null;//Routing failed from here.  How did this happen, oh wait, we need the more complex plane check method + distancing.
-				}
+				return generateRoutes(traverse.dest(), end, route);
 			}
 		}
 		return null;//No applicable plane transfers.
