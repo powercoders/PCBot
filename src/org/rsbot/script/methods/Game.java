@@ -229,6 +229,19 @@ public class Game extends MethodProvider {
 	}
 
 	/**
+	 * Turns accept aid off if it isn't already.
+	 * 
+	 * @return <tt>true</tt> if the setting was clicked; otherwise <tt>false</tt>.
+	 */
+	public boolean disableAid() {
+		if (methods.settings.getSetting(427) == 1 && openTab(Tab.OPTIONS)) {
+			final RSComponent toggle = methods.interfaces.getComponent(Tab.OPTIONS.interfaceID(), 7);
+			return toggle != null && toggle.doClick();
+		}
+		return false;
+	}
+
+	/**
 	 * Gets the x coordinate of the loaded map area (far west).
 	 * 
 	 * @return The region base x.

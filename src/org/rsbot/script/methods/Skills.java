@@ -479,7 +479,7 @@ public class Skills extends MethodProvider {
 	 *         index.
 	 */
 	public boolean doHover(final int component) {
-		methods.game.openTab(Game.TAB_STATS);
+		methods.game.openTab(Game.Tab.STATS);
 		sleep(random(10, 100));
 		return methods.interfaces.getComponent(INTERFACE_TAB_STATS, component)
 				.doHover();
