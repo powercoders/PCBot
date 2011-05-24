@@ -9,7 +9,7 @@ public class ScriptList {
 			return;
 		}
 		final PrintStream out = System.out;
-		final FileScriptSource source = new FileScriptSource(args[0]);
+		final FileScriptSource source = new FileScriptSource(new File(args[0]));
 		for (final ScriptDefinition item : source.list()) {
 			out.print("[");
 			out.print(new File(item.path).getName());
