@@ -12,9 +12,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -83,10 +81,8 @@ public class SplashAd extends JDialog implements MouseListener {
 			final URL source = new URL(Configuration.Paths.URLs.AD_INFO);
 			final File cache = new File(Configuration.Paths.getCacheDirectory(), "ads.txt");
 			HttpClient.download(source, cache);
-			final BufferedReader reader = new BufferedReader(new FileReader(cache));
-			keys = IniParser.deserialise(reader).get(IniParser.emptySection);
-			reader.close();
-		} catch (final Exception e) {
+			keys = IniParser.deserialise(cache).get(IniParser.emptySection);
+		} catch (final IOException e) {
 			return false;
 		}
 

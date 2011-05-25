@@ -33,12 +33,11 @@ public class Equipment extends MethodProvider {
 	 * @return the equipment interface
 	 */
 	public RSInterface getInterface() {
-		// Tab needs to be open for it to update its content -.-
-		if (methods.game.getCurrentTab() != Game.TAB_EQUIPMENT) {
+		if (methods.game.getTab() != Game.Tab.EQUIPMENT) {
 			if (methods.bank.isOpen()) {
 				methods.bank.close();
 			}
-			methods.game.openTab(Game.TAB_EQUIPMENT);
+			methods.game.openTab(Game.Tab.EQUIPMENT);
 			sleep(random(900, 1500));
 		}
 		return methods.interfaces.get(INTERFACE_EQUIPMENT);

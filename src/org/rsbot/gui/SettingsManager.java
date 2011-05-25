@@ -51,9 +51,7 @@ public class SettingsManager extends JDialog {
 				if (!store.exists()) {
 					store.createNewFile();
 				}
-				final BufferedReader reader = new BufferedReader(new FileReader(store));
-				keys = IniParser.deserialise(reader).get(IniParser.emptySection);
-				reader.close();
+				keys = IniParser.deserialise(store).get(IniParser.emptySection);
 			} catch (final IOException ignored) {
 				log.severe("Failed to load preferences");
 			}

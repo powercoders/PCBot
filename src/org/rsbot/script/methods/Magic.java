@@ -262,11 +262,7 @@ public class Magic extends MethodProvider {
      * @return <tt>true</tt> if the spell was clicked; otherwise <tt>false</tt>.
      */
     public boolean castSpell(final int spell) {
-        if (methods.game.getCurrentTab() != Game.TAB_MAGIC) {
-            methods.game.openTab(Game.TAB_MAGIC);
-            sleep(random(150, 250));
-        }
-        if (methods.game.getCurrentTab() == Game.TAB_MAGIC) {
+        if (methods.game.openTab(Game.Tab.MAGIC)) {
             final RSInterface inter = getInterface();
             if (inter != null) {
                 final RSComponent comp = inter.getComponent(spell);
@@ -285,11 +281,7 @@ public class Magic extends MethodProvider {
      * @return <tt>true</tt> if the spell was clicked; otherwise <tt>false</tt>.
      */
     public boolean hoverSpell(final int spell) {
-        if (methods.game.getCurrentTab() != Game.TAB_MAGIC) {
-            methods.game.openTab(Game.TAB_MAGIC);
-            sleep(random(150, 250));
-        }
-        if (methods.game.getCurrentTab() == Game.TAB_MAGIC) {
+        if (methods.game.openTab(Game.Tab.MAGIC)) {
             final RSInterface inter = getInterface();
             if (inter != null) {
                 final RSComponent comp = inter.getComponent(spell);
@@ -307,11 +299,7 @@ public class Magic extends MethodProvider {
      *         otherwise <tt>false</tt>.
      */
     public boolean autoCastSpell(final int spell) {
-        if (methods.settings.getSetting(43) != 4) {
-            if (methods.game.getCurrentTab() != Game.TAB_MAGIC) {
-                methods.game.openTab(Game.TAB_MAGIC);
-                sleep(random(150, 250));
-            }
+        if (methods.settings.getSetting(43) != 4 && methods.game.openTab(Game.Tab.MAGIC)) {
             final RSInterface inter = getInterface();
             if (inter != null) {
                 final RSComponent comp = inter.getComponent(spell);
@@ -327,10 +315,7 @@ public class Magic extends MethodProvider {
      * @return The current magic RSInterface.
      */
     public RSInterface getInterface() {
-        if (methods.game.getCurrentTab() != Game.TAB_MAGIC) {
-            methods.game.openTab(Game.TAB_MAGIC);
-            sleep(random(150, 250));
-        }
+    	methods.game.openTab(Game.Tab.MAGIC);
         for (Book book : Book.values()) {
             RSInterface inter = methods.interfaces.get(book.getInterfaceID());
             if (inter.isValid()) {

@@ -19,9 +19,7 @@ import java.util.logging.Logger;
  * @author Paris
  */
 public class FileScriptSource implements ScriptSource {
-
-	private final Logger log = Logger.getLogger(getClass().getSimpleName());
-
+	private static final Logger log = Logger.getLogger(FileScriptSource.class.getName());
 	private final File[] files;
 
 	public FileScriptSource(final File... file) {
@@ -48,13 +46,9 @@ public class FileScriptSource implements ScriptSource {
 		if (file != null) {
 			if (file.isDirectory()) {
 				try {
-					final ClassLoader ldr = new ScriptClassLoader(file.toURI().toURL());
-					for (final File f : file.listFiles()) {
-						if (isJar(f)) {
-							load(new ScriptClassLoader(getJarUrl(f)), defs, new JarFile(f));
-						} else {
-							load(ldr, defs, f, "");
-						}
+					final ClassLoader loader = new ScriptClassLoader(file.toURI().toURL());
+					for (final File item : file.listFiles()) {
+						load(item, defs, loader);
 					}
 				} catch (final IOException ignored) {
 				}
@@ -66,21 +60,38 @@ public class FileScriptSource implements ScriptSource {
 				}
 			}
 		}
+		for (final ScriptDefinition def : defs) {
+			def.source = this;
+		}
 	}
 
 	public Script load(final ScriptDefinition def) throws ServiceException {
 		if (!(def instanceof FileScriptDefinition)) {
 			throw new IllegalArgumentException("Invalid definition!");
 		}
-		final FileScriptDefinition fsd = (FileScriptDefinition) def;
 		try {
-			return fsd.clazz.asSubclass(Script.class).newInstance();
+			return load((FileScriptDefinition) def);
 		} catch (final Exception ex) {
 			throw new ServiceException(ex.toString());
 		}
 	}
 
-	private void load(final ClassLoader loader, final LinkedList<ScriptDefinition> scripts, final JarFile jar) {
+	public static Script load(final FileScriptDefinition def) throws InstantiationException, IllegalAccessException {
+		return def.clazz.asSubclass(Script.class).newInstance();
+	}
+
+	public static void load(final File file, final LinkedList<ScriptDefinition> defs, ClassLoader loader) throws IOException {
+		if (isJar(file)) {
+			load(new ScriptClassLoader(getJarUrl(file)), defs, new JarFile(file));
+		} else {
+			if (loader == null) {
+				loader = new ScriptClassLoader(file.getParentFile().toURI().toURL());
+			}
+			load(loader, defs, file, "");
+		}
+	}
+
+	private static void load(final ClassLoader loader, final LinkedList<ScriptDefinition> scripts, final JarFile jar) {
 		final Enumeration<JarEntry> entries = jar.entries();
 		while (entries.hasMoreElements()) {
 			final JarEntry e = entries.nextElement();
@@ -92,7 +103,7 @@ public class FileScriptSource implements ScriptSource {
 		}
 	}
 
-	private void load(final ClassLoader loader, final LinkedList<ScriptDefinition> scripts, final File file, final String prefix) {
+	private static void load(final ClassLoader loader, final LinkedList<ScriptDefinition> scripts, final File file, final String prefix) {
 		if (file.isDirectory()) {
 			if (!file.getName().startsWith(".")) {
 				for (final File f : file.listFiles()) {
@@ -109,7 +120,7 @@ public class FileScriptSource implements ScriptSource {
 		}
 	}
 
-	private void load(final ClassLoader loader, final LinkedList<ScriptDefinition> scripts, final String name, final String path) {
+	private static void load(final ClassLoader loader, final LinkedList<ScriptDefinition> scripts, final String name, final String path) {
 		Class<?> clazz;
 		try {
 			clazz = loader.loadClass(name);
@@ -132,7 +143,6 @@ public class FileScriptSource implements ScriptSource {
 			def.description = manifest.description();
 			def.website = manifest.website();
 			def.clazz = clazz;
-			def.source = this;
 			def.path = path;
 			if (manifest.requiresVersion() <= Configuration.getVersion()) {
 				scripts.add(def);
@@ -140,17 +150,17 @@ public class FileScriptSource implements ScriptSource {
 		}
 	}
 
-	private boolean isJar(final File file) {
+	public static boolean isJar(final File file) {
 		return file.getName().endsWith(".jar") || file.getName().endsWith(".dat");
 	}
 
-	private URL getJarUrl(final File file) throws IOException {
+	public static URL getJarUrl(final File file) throws IOException {
 		URL url = file.toURI().toURL();
 		url = new URL("jar:" + url.toExternalForm() + "!/");
 		return url;
 	}
 
-	private static class FileScriptDefinition extends ScriptDefinition {
+	public static class FileScriptDefinition extends ScriptDefinition {
 		Class<?> clazz;
 	}
 

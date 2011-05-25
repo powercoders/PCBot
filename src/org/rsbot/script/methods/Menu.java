@@ -119,11 +119,7 @@ public class Menu extends MethodProvider {
 				int subIdx = 0;
 				for (MenuItemNode item = subItems.getHead(); item != null; item = subItems.getNext(), ++subIdx) {
 					if (idx++ == i) {
-						if (subItems.size() == 1) {
-							return clickMain(items, mainIdx);
-						} else {
-							return clickSub(items, mainIdx, subIdx);
-						}
+						return subIdx == 0 ? clickMain(items, mainIdx) : clickSub(items, mainIdx, subIdx);
 					}
 				}
 			}
