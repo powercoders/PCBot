@@ -24,8 +24,10 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 	private static final Logger log = Logger.getLogger("ScriptDelivery");
 	private static ScriptDeliveryNetwork instance;
 	private URL base;
+	final File manifest;
 
 	private ScriptDeliveryNetwork() {
+		manifest = getFile("manifests");
 	}
 
 	public static ScriptDeliveryNetwork getInstance() {
@@ -55,28 +57,37 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 		}
 	}
 
+	public void refresh(final boolean force) {
+		final File controlFile = getFile("control");
+		if (force || !manifest.exists()) {
+			try {
+				HttpClient.download(new URL(Configuration.Paths.URLs.SDN_CONTROL), controlFile);
+				final HashMap<String, String> control = IniParser.deserialise(controlFile).get(IniParser.emptySection);
+				if (control == null || !IniParser.parseBool(control.get("enabled")) || !control.containsKey("manifest")) {
+					throw new ServiceException("Service currently disabled");
+				}
+				base = HttpClient.download(new URL(control.get("manifest")), manifest).getURL();
+			} catch (final ServiceException e) {
+				log.severe(e.getMessage());
+			} catch (final IOException ignored) {
+				log.warning("Unable to load scripts from the network");
+			}
+		}
+	}
+
 	@Override
 	public List<ScriptDefinition> list() {
-		final File controlFile = getFile("control"), manifestFile = getFile("manifest");
+		final ArrayList<ScriptDefinition> defs = new ArrayList<ScriptDefinition>();
+		refresh(false);
 		try {
-			HttpClient.download(new URL(Configuration.Paths.URLs.SDN_CONTROL), controlFile);
-			final HashMap<String, String> control = IniParser.deserialise(controlFile).get(IniParser.emptySection);
-			if (control == null || !IniParser.parseBool(control.get("enabled")) || !control.containsKey("manifest")) {
-				throw new ServiceException("Service currently disabled");
-			}
-			base = HttpClient.download(new URL(control.get("manifest")), manifestFile).getURL();
-			final ArrayList<ScriptDefinition> defs = new ArrayList<ScriptDefinition>();
-			parseManifests(IniParser.deserialise(manifestFile), defs);
-			for (final ScriptDefinition def : defs) {
-				def.source = this;
-			}
-			return defs;
-		} catch (final ServiceException e) {
-			log.severe(e.getMessage());
+			parseManifests(IniParser.deserialise(manifest), defs);
 		} catch (final IOException ignored) {
-			log.warning("Unable to load scripts from the network");
+			log.warning("Error reading network script manifests");
 		}
-		return null;
+		for (final ScriptDefinition def : defs) {
+			def.source = this;
+		}
+		return defs;
 	}
 
 	private static File getCacheDirectory() {

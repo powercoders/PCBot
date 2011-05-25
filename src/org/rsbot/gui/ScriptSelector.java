@@ -112,6 +112,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						new Thread() {
 							@Override
 							public void run() {
+								ScriptDeliveryNetwork.getInstance().refresh(true);
 								load();
 								refresh.setEnabled(true);
 							}
