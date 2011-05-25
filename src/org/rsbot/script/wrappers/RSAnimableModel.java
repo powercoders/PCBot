@@ -8,7 +8,6 @@ import org.rsbot.script.methods.MethodContext;
  * @author Jacmob
  */
 class RSAnimableModel extends RSModel {
-
 	private final RSAnimable animable;
 
 	RSAnimableModel(final MethodContext ctx, final Model model, final RSAnimable animable) {
@@ -30,5 +29,4 @@ class RSAnimableModel extends RSModel {
 	protected int getLocalY() {
 		return animable.getY();
 	}
-
 }

@@ -3,10 +3,12 @@ package org.rsbot.gui;
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.service.Monitoring;
+import org.rsbot.service.DRM;
 import org.rsbot.util.StringUtil;
 import org.rsbot.util.io.IniParser;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -19,6 +21,7 @@ import java.util.logging.Logger;
 public class SettingsManager extends JDialog {
 	private static Logger log = Logger.getLogger(SettingsManager.class.getName());
 	private static final long serialVersionUID = 1657935322078534422L;
+	private static final String DEFAULTPASSWORD = "\0\0\0\0\0\0\0\0";
 	private Preferences prefs;
 
 	public class Preferences {
@@ -28,7 +31,7 @@ public class SettingsManager extends JDialog {
 		 * Whether or not to disable ads.
 		 */
 		public boolean ads = true;
-
+		public String user = "";
 		public boolean confirmations = true;
 		public boolean monitoring = true;
 		public boolean shutdown = false;
@@ -48,14 +51,15 @@ public class SettingsManager extends JDialog {
 				if (!store.exists()) {
 					store.createNewFile();
 				}
-				final BufferedReader reader = new BufferedReader(new FileReader(store));
-				keys = IniParser.deserialise(reader).get(IniParser.emptySection);
-				reader.close();
+				keys = IniParser.deserialise(store).get(IniParser.emptySection);
 			} catch (final IOException ignored) {
 				log.severe("Failed to load preferences");
 			}
 			if (keys == null || keys.isEmpty()) {
 				return;
+			}
+			if (keys.containsKey("user")) {
+				user = keys.get("user");
 			}
 			if (keys.containsKey("ads")) {
 				ads = IniParser.parseBool(keys.get("ads"));
@@ -89,6 +93,7 @@ public class SettingsManager extends JDialog {
 
 		public void save() {
 			final HashMap<String, String> keys = new HashMap<String, String>(5);
+			keys.put("user", user);
 			keys.put("ads", Boolean.toString(ads));
 			keys.put("confirmations", Boolean.toString(confirmations));
 			keys.put("monitoring", Boolean.toString(monitoring));
@@ -125,12 +130,28 @@ public class SettingsManager extends JDialog {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_WRENCH));
 
+		final JPanel panelLogin = new JPanel(new GridLayout(2, 1));
+		panelLogin.setBorder(BorderFactory.createTitledBorder("Service Login"));
 		final JPanel panelOptions = new JPanel(new GridLayout(0, 1));
 		panelOptions.setBorder(BorderFactory.createTitledBorder("Display"));
 		final JPanel panelInternal = new JPanel(new GridLayout(0, 1));
 		panelInternal.setBorder(BorderFactory.createTitledBorder("Internal"));
 		final JPanel panelWeb = new JPanel(new GridLayout(2, 1));
 		panelWeb.setBorder(BorderFactory.createTitledBorder("Web UI"));
+
+		final JPanel[] panelLoginOptions = new JPanel[2];
+		for (int i = 0; i < panelLoginOptions.length; i++) {
+			panelLoginOptions[i] = new JPanel(new GridLayout(1, 2));
+		}
+		panelLoginOptions[0].add(new JLabel("  Username:"));
+		final JTextField textLoginUser = new JTextField(prefs.user);
+		textLoginUser.setToolTipText(Configuration.Paths.URLs.HOST + " forum account username, leave blank to log out");
+		panelLoginOptions[0].add(textLoginUser);
+		panelLoginOptions[1].add(new JLabel("  Password:"));
+		final JPasswordField textLoginPass = new JPasswordField(prefs.user.length() == 0 ? "" : DEFAULTPASSWORD);
+		panelLoginOptions[1].add(textLoginPass);
+		panelLogin.add(panelLoginOptions[0]);
+		panelLogin.add(panelLoginOptions[1]);
 
 		final JCheckBox checkAds = new JCheckBox(Messages.DISABLEADS);
 		checkAds.setToolTipText("Show advertisment on startup");
@@ -174,7 +195,7 @@ public class SettingsManager extends JDialog {
 		final JCheckBox checkWebPass = new JCheckBox(Messages.USEPASSWORD);
 		checkWebPass.setSelected(prefs.webPassRequire);
 		panelWebOptions[1].add(checkWebPass);
-		final JPasswordField textWebPass = new JPasswordField("\0\0\0\0\0\0\0\0");
+		final JPasswordField textWebPass = new JPasswordField(DEFAULTPASSWORD);
 		textWebPass.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(final FocusEvent e) {
@@ -227,13 +248,22 @@ public class SettingsManager extends JDialog {
 				prefs.shutdownTime = modelShutdown.getNumber().intValue();
 				prefs.web = checkWeb.isSelected();
 				prefs.webBind = textWebBind.getText();
-				final char[] pass = textWebPass.getPassword();
-				if (pass.length > 0 && pass[0] != '\0') {
-					prefs.webPass = StringUtil.sha1sum(new String(pass));
+				final String webUser = textLoginUser.getText(), webPass = new String(textWebPass.getPassword());
+				if (!webUser.equals(prefs.user) || !webPass.equals(DEFAULTPASSWORD)) {
+					prefs.webPass = StringUtil.sha1sum(webPass);
 				}
+				prefs.user = webUser;
 				prefs.webPassRequire = checkWebPass.isSelected() && checkWebPass.isEnabled();
 				prefs.commit();
+				final String loginPass = new String(textLoginPass.getPassword());
+				if (!loginPass.equals(DEFAULTPASSWORD)) {
+					if (!DRM.login(prefs.user, loginPass)) {
+						prefs.user = "";
+					}
+				}
 				prefs.save();
+				textLoginPass.setText(DEFAULTPASSWORD);
+				textWebPass.setText(DEFAULTPASSWORD);
 				dispose();
 			}
 		});
@@ -255,6 +285,7 @@ public class SettingsManager extends JDialog {
 
 		final JPanel panel = new JPanel(new GridLayout(0, 1));
 		panel.setBorder(panelAction.getBorder());
+		panel.add(panelLogin);
 		panel.add(panelOptions);
 		panel.add(panelInternal);
 

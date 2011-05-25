@@ -25,5 +25,4 @@ public class RSItemDef {
 	public boolean isMembers() {
 		return id.isMembersObject();
 	}
-
 }

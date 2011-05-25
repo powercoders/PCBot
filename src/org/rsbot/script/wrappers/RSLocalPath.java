@@ -8,7 +8,6 @@ import java.util.*;
  * @author Jacmob
  */
 public class RSLocalPath extends RSPath {
-
 	public static final int WALL_NORTH_WEST = 0x1;
 	public static final int WALL_NORTH = 0x2;
 	public static final int WALL_NORTH_EAST = 0x4;
@@ -320,5 +319,4 @@ public class RSLocalPath extends RSPath {
 		}
 		return tiles;
 	}
-
 }

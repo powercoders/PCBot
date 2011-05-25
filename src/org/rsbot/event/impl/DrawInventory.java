@@ -22,7 +22,7 @@ public class DrawInventory implements PaintListener {
 			return;
 		}
 
-		if (ctx.game.getCurrentTab() != Game.TAB_INVENTORY) {
+		if (ctx.game.getTab() != Game.Tab.INVENTORY) {
 			return;
 		}
 

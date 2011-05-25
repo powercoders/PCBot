@@ -14,14 +14,14 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * author @Paris
+ */
 public class ScriptDownloader {
 	private static final Logger log = Logger.getLogger(ScriptDownloader.class.getName());
 
 	public static void save(String sourceURL) {
-		if (!JavaCompiler.isAvailable()) {
-			log.warning("JDK is not installed");
-			return;
-		}
+		// check the source URL is valid
 		sourceURL = sourceURL.trim();
 		if (sourceURL.startsWith("https:")) {
 			sourceURL = "http" + sourceURL.substring(5);
@@ -31,29 +31,41 @@ public class ScriptDownloader {
 			return;
 		}
 		sourceURL = normalisePastebin(sourceURL);
+
+		// download the file
 		log.fine("Downloading: " + sourceURL);
 		final File temporaryFile = new File(Configuration.Paths.getGarbageDirectory(), Integer.toString(sourceURL.hashCode()) + ".script.bin");
 		HttpURLConnection httpURLConnection = null;
 		try {
 			httpURLConnection = HttpClient.download(new URL(sourceURL), temporaryFile);
 		} catch (Exception e) {
+			temporaryFile.delete();
 			log.warning("Could not download script");
+			return;
 		}
+
+		// if file is a .class then move as precompiled script
 		String className = classFileName(temporaryFile);
 		if (className != null) {
 			final File saveTo = new File(Configuration.Paths.getScriptsPrecompiledDirectory());
 			if (temporaryFile.renameTo(saveTo)) {
 				log.info("Saved precompiled script " + className);
 			} else {
+				temporaryFile.delete();
 				log.warning("Could not save precompiled script " + className);
 			}
 			return;
 		}
+
+		// otherwise read file as plaintext
 		final byte[] scriptBytes = IOHelper.read(temporaryFile);
+		temporaryFile.delete();
 		if (scriptBytes == null) {
 			log.severe("Could not read downloaded file");
 			return;
 		}
+
+		// parse out any html
 		String source = new String(scriptBytes);
 		if (httpURLConnection.getContentType().contains("html")) {
 			final int z = source.indexOf("<body");
@@ -68,6 +80,8 @@ public class ScriptDownloader {
 			source = source.replaceAll("&gt;", ">");
 			source = source.replaceAll("&amp;", "&");
 		}
+
+		// check that the text represents java code for a script
 		final Matcher m = Pattern.compile("public\\s+class\\s+(\\w+)\\s+extends\\s+Script").matcher(source);
 		if (!m.find()) {
 			log.severe("Specified URL is not a script");
@@ -78,6 +92,8 @@ public class ScriptDownloader {
 		if (!saveDirectory.exists()) {
 			saveDirectory.mkdirs();
 		}
+
+		// save the code in the folder for source scripts
 		final File classFile = new File(saveDirectory, className + ".java");
 		try {
 			final FileWriter fileWriterOut = new FileWriter(classFile);
@@ -87,13 +103,26 @@ public class ScriptDownloader {
 			log.severe("Could not save script " + className);
 			return;
 		}
-		String compileClassPath;
-		if (Configuration.RUNNING_FROM_JAR) {
-			compileClassPath = Configuration.Paths.getRunningJarPath();
+
+		// compile the script
+		boolean result = false;
+		if (JavaCompiler.isAvailable()) {
+			String compileClassPath;
+			if (Configuration.RUNNING_FROM_JAR) {
+				compileClassPath = Configuration.Paths.getRunningJarPath();
+			} else {
+				compileClassPath = new File(Configuration.Paths.ROOT + File.separator + "bin").getAbsolutePath();
+			}
+			result = JavaCompiler.run(classFile, compileClassPath);
 		} else {
-			compileClassPath = new File(Configuration.Paths.ROOT + File.separator + "bin").getAbsolutePath();
+			final File compiledJar = new File(Configuration.Paths.getScriptsPrecompiledDirectory(), className + ".jar");
+			if (compiledJar.exists()) {
+				compiledJar.delete();
+			}
+			result = JavaCompiler.compileWeb(sourceURL, compiledJar);
 		}
-		final boolean result = JavaCompiler.run(classFile, compileClassPath);
+
+		// notify user of result
 		if (result) {
 			log.info("Compiled script " + className);
 		} else {

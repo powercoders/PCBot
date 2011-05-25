@@ -5,7 +5,6 @@ import org.rsbot.client.RSObject;
 import org.rsbot.script.methods.MethodContext;
 
 class RSObjectModel extends RSModel {
-
 	private final RSObject object;
 
 	RSObjectModel(final MethodContext ctx, final Model model, final RSObject object) {
@@ -27,5 +26,4 @@ class RSObjectModel extends RSModel {
 	protected int getLocalY() {
 		return object.getY();
 	}
-
 }

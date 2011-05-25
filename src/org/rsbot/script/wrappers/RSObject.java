@@ -9,7 +9,6 @@ import java.awt.*;
 
 
 public class RSObject extends MethodProvider {
-
 	public static enum Type {
 		INTERACTABLE, FLOOR_DECORATION, BOUNDARY, WALL_DECORATION
 	}
@@ -25,129 +24,6 @@ public class RSObject extends MethodProvider {
 		this.obj = obj;
 		this.type = type;
 		this.plane = plane;
-	}
-
-	/**
-	 * Gets the RSTile on which this object is centered. An RSObject may cover
-	 * multiple tiles, in which case this will return the floored central tile.
-	 *
-	 * @return The central RSTile.
-	 * @see #getArea()
-	 */
-	public RSTile getLocation() {
-		return new RSTile(methods.client.getBaseX() + obj.getX() / 512,
-				methods.client.getBaseY() + obj.getY() / 512, plane);
-	}
-
-	/**
-	 * Gets the area of tiles covered by this object.
-	 *
-	 * @return The RSArea containing all the tiles on which this object can be
-	 *         found.
-	 */
-	public RSArea getArea() {
-		if (obj instanceof RSAnimable) {
-			final RSAnimable a = (RSAnimable) obj;
-			final RSTile sw = new RSTile(methods.client.getBaseX() + a.getX1(),
-					methods.client.getBaseY() + a.getY1());
-			final RSTile ne = new RSTile(methods.client.getBaseX() + a.getX2(),
-					methods.client.getBaseY() + a.getY2());
-			return new RSArea(sw, ne, plane);
-		}
-		final RSTile loc = getLocation();
-		return new RSArea(loc, loc, plane);
-	}
-
-	/**
-	 * Gets the object definition of this object.
-	 *
-	 * @return The RSObjectDef if available, otherwise <code>null</code>.
-	 */
-	public RSObjectDef getDef() {
-		final org.rsbot.client.Node ref = methods.nodes.lookup(
-				methods.client.getRSObjectDefLoader(), getID());
-		if (ref != null) {
-			if (ref instanceof org.rsbot.client.HardReference) {
-				return new RSObjectDef(
-						(org.rsbot.client.RSObjectDef) ((org.rsbot.client.HardReference) ref)
-								.get());
-			} else if (ref instanceof org.rsbot.client.SoftReference) {
-				final Object def = ((org.rsbot.client.SoftReference) ref)
-						.getReference().get();
-				if (def != null) {
-					return new RSObjectDef((org.rsbot.client.RSObjectDef) def);
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the ID of this object.
-	 *
-	 * @return The ID.
-	 */
-	public int getID() {
-		return obj.getID();
-	}
-
-	/**
-	 * Returns the name of the object.
-	 *
-	 * @param object The object to look up.
-	 * @return The object name if the definition is available; otherwise "".
-	 */
-	public String getName(final RSObject object) {
-		return object.getName();
-	}
-
-	/**
-	 * Returns the name of the object.
-	 *
-	 * @return The object name if the definition is available; otherwise "".
-	 */
-	public String getName() {
-		final RSObjectDef objectDef = getDef();
-		return objectDef != null ? objectDef.getName() : "";
-	}
-
-	/**
-	 * Gets the Model of this object.
-	 *
-	 * @return The RSModel, or null if unavailable.
-	 */
-	public RSModel getModel() {
-		try {
-			final Model model = obj.getModel();
-			if (model != null && model.getXPoints() != null) {
-				return new RSObjectModel(methods, model, obj);
-			}
-		} catch (final AbstractMethodError ignored) {
-		}
-		return null;
-	}
-
-	/**
-	 * Determines whether or not this object is on the game screen.
-	 *
-	 * @return <tt>true</tt> if the object is on screen.
-	 */
-	public boolean isOnScreen() {
-		final RSModel model = getModel();
-		if (model == null) {
-			return methods.calc.tileOnScreen(getLocation());
-		} else {
-			return methods.calc.pointOnScreen(model.getPoint());
-		}
-	}
-
-	/**
-	 * Returns this object's type.
-	 *
-	 * @return The type of the object.
-	 */
-	public Type getType() {
-		return type;
 	}
 
 	/**
@@ -231,6 +107,113 @@ public class RSObject extends MethodProvider {
 		}
 	}
 
+	/**
+	 * Gets the area of tiles covered by this object.
+	 *
+	 * @return The RSArea containing all the tiles on which this object can be
+	 *         found.
+	 */
+	public RSArea getArea() {
+		if (obj instanceof RSAnimable) {
+			final RSAnimable a = (RSAnimable) obj;
+			final RSTile sw = new RSTile(methods.client.getBaseX() + a.getX1(), methods.client.getBaseY() + a.getY1());
+			final RSTile ne = new RSTile(methods.client.getBaseX() + a.getX2(), methods.client.getBaseY() + a.getY2());
+			return new RSArea(sw, ne, plane);
+		}
+		final RSTile loc = getLocation();
+		return new RSArea(loc, loc, plane);
+	}
+
+	/**
+	 * Gets the object definition of this object.
+	 *
+	 * @return The RSObjectDef if available, otherwise <code>null</code>.
+	 */
+	public RSObjectDef getDef() {
+		final org.rsbot.client.Node ref = methods.nodes.lookup(
+				methods.client.getRSObjectDefLoader(), getID());
+		if (ref != null) {
+			if (ref instanceof org.rsbot.client.HardReference) {
+				return new RSObjectDef((org.rsbot.client.RSObjectDef) ((org.rsbot.client.HardReference) ref).get());
+			} else if (ref instanceof org.rsbot.client.SoftReference) {
+				final Object def = ((org.rsbot.client.SoftReference) ref).getReference().get();
+				if (def != null) {
+					return new RSObjectDef((org.rsbot.client.RSObjectDef) def);
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the ID of this object.
+	 *
+	 * @return The ID.
+	 */
+	public int getID() {
+		return obj.getID();
+	}
+
+	/**
+	 * Gets the RSTile on which this object is centered. An RSObject may cover
+	 * multiple tiles, in which case this will return the floored central tile.
+	 *
+	 * @return The central RSTile.
+	 * @see #getArea()
+	 */
+	public RSTile getLocation() {
+		return new RSTile(methods.client.getBaseX() + obj.getX() / 512, methods.client.getBaseY() + obj.getY() / 512, plane);
+	}
+
+	/**
+	 * Gets the Model of this object.
+	 *
+	 * @return The RSModel, or null if unavailable.
+	 */
+	public RSModel getModel() {
+		try {
+			final Model model = obj.getModel();
+			if (model != null && model.getXPoints() != null) {
+				return new RSObjectModel(methods, model, obj);
+			}
+		} catch (final AbstractMethodError ignored) {
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the name of the object.
+	 *
+	 * @return The object name if the definition is available; otherwise "".
+	 */
+	public String getName() {
+		final RSObjectDef objectDef = getDef();
+		return objectDef != null ? objectDef.getName() : "";
+	}
+
+	/**
+	 * Returns this object's type.
+	 *
+	 * @return The type of the object.
+	 */
+	public Type getType() {
+		return type;
+	}
+
+	/**
+	 * Determines whether or not this object is on the game screen.
+	 *
+	 * @return <tt>true</tt> if the object is on screen.
+	 */
+	public boolean isOnScreen() {
+		final RSModel model = getModel();
+		if (model == null) {
+			return methods.calc.tileOnScreen(getLocation());
+		} else {
+			return methods.calc.pointOnScreen(model.getPoint());
+		}
+	}
+
 	@Override
 	public boolean equals(final Object o) {
 		return o instanceof RSObject && ((RSObject) o).obj == obj;
@@ -240,5 +223,4 @@ public class RSObject extends MethodProvider {
 	public int hashCode() {
 		return obj.hashCode();
 	}
-
 }

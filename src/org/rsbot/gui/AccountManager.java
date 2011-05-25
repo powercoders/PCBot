@@ -2,7 +2,7 @@ package org.rsbot.gui;
 
 import org.rsbot.Configuration;
 import org.rsbot.script.AccountStore;
-import org.rsbot.script.provider.ScriptDeliveryNetwork;
+import org.rsbot.service.DRM;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -26,6 +26,7 @@ import java.util.logging.Logger;
  * @author Jacmob
  * @author Aion
  * @author Timer
+ * @author Paris
  */
 public class AccountManager extends JDialog implements ActionListener {
 	private static final long serialVersionUID = 2834954922670757338L;
@@ -47,7 +48,7 @@ public class AccountManager extends JDialog implements ActionListener {
 	private static final AccountStore accountStore = new AccountStore(new File(FILE_ACCOUNT_STORAGE));
 
 	static {
-		accountStore.setPassword(ScriptDeliveryNetwork.getInstance().getKey());
+		accountStore.setPassword(DRM.getServiceKey());
 		try {
 			accountStore.load();
 		} catch (final IOException ignored) {

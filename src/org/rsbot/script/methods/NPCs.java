@@ -46,11 +46,10 @@ public class NPCs extends MethodProvider {
 		final int[] indices = methods.client.getRSNPCIndexArray();
 		final Set<RSNPC> npcs = new HashSet<RSNPC>();
 		for (final int index : indices) {
-			final Node node = methods.nodes
-					.lookup(methods.client.getRSNPCNC(), index);
+			final Node node = methods.nodes.lookup(methods.client.getRSNPCNC(), index);
 			if (node instanceof RSNPCNode) {
 				final RSNPC npc = new RSNPC(methods, ((RSNPCNode) node).getRSNPC());
-				if (filter.accept(npc)) {
+				if (npc != null && filter.accept(npc)) {
 					npcs.add(npc);
 				}
 			}
@@ -59,7 +58,50 @@ public class NPCs extends MethodProvider {
 	}
 
 	/**
-	 * Returns the RSNPC that is nearest out of all of loaded RSPNCs accepted by
+	 * Returns an array of all loaded RSNPCs with the provided ID(s).
+	 *
+	 * @param ids Allowed NPC IDs.
+	 * @return An array of the loaded RSNPCs matching the provided ID(s).
+	 */
+	public RSNPC[] getAll(final int... ids) {
+		return getAll(new Filter<RSNPC>() {
+			public boolean accept(final RSNPC npc) {
+				if (npc != null) {
+					for (final int id : ids) {
+						if (npc.getID() == id) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		});
+	}
+
+	/**
+	 * Returns an array of all loaded RSNPCs with the provided name(s).
+	 *
+	 * @param names Allowed NPC names.
+	 * @return An array of the loaded RSNPCs matching the provided name(s).
+	 */
+	public RSNPC[] getAll(final String... names) {
+		return getAll(new Filter<RSNPC>() {
+			public boolean accept(final RSNPC npc) {
+				final String name = npc != null ? npc.getName() : null;
+				if (name != null) {
+					for (final String n : names) {
+						if (n != null && n.equalsIgnoreCase(name)) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		});
+	}
+
+	/**
+	 * Returns the RSNPC that is nearest out of all of loaded RSNPCs accepted by
 	 * the provided Filter.
 	 *
 	 * @param filter Filters out unwanted matches.
@@ -73,11 +115,10 @@ public class NPCs extends MethodProvider {
 		final int[] indices = methods.client.getRSNPCIndexArray();
 
 		for (final int index : indices) {
-			final Node node = methods.nodes
-					.lookup(methods.client.getRSNPCNC(), index);
+			final Node node = methods.nodes.lookup(methods.client.getRSNPCNC(), index);
 			if (node instanceof RSNPCNode) {
 				final RSNPC npc = new RSNPC(methods, ((RSNPCNode) node).getRSNPC());
-				if (filter.accept(npc)) {
+				if (npc != null && filter.accept(npc)) {
 					final int distance = methods.calc.distanceTo(npc);
 					if (distance < min) {
 						min = distance;
@@ -90,7 +131,7 @@ public class NPCs extends MethodProvider {
 	}
 
 	/**
-	 * Returns the RSNPC that is nearest out of all of the RSPNCs with the
+	 * Returns the RSNPC that is nearest out of all of the RSNPCs with the
 	 * provided ID(s). Can return null.
 	 *
 	 * @param ids Allowed NPC IDs.
@@ -101,9 +142,11 @@ public class NPCs extends MethodProvider {
 	public RSNPC getNearest(final int... ids) {
 		return getNearest(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
-				for (final int id : ids) {
-					if (npc.getID() == id) {
-						return true;
+				if (npc != null) {
+					for (final int id : ids) {
+						if (npc.getID() == id) {
+							return true;
+						}
 					}
 				}
 				return false;
@@ -112,7 +155,7 @@ public class NPCs extends MethodProvider {
 	}
 
 	/**
-	 * Returns the RSNPC that is nearest out of all of the RSPNCs with the
+	 * Returns the RSNPC that is nearest out of all of the RSNPCs with the
 	 * provided name(s). Can return null.
 	 *
 	 * @param names Allowed NPC names.
@@ -123,13 +166,17 @@ public class NPCs extends MethodProvider {
 	public RSNPC getNearest(final String... names) {
 		return getNearest(new Filter<RSNPC>() {
 			public boolean accept(final RSNPC npc) {
-				for (final String name : names) {
-					if (npc.getName().equals(name)) {
-						return true;
+				final String name = npc != null ? npc.getName() : null;
+				if (name != null) {
+					for (final String n : names) {
+						if (n != null && n.equalsIgnoreCase(name)) {
+							return true;
+						}
 					}
 				}
 				return false;
 			}
 		});
 	}
+
 }

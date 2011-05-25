@@ -4,7 +4,6 @@ package org.rsbot.script.wrappers;
  * A tile at an absolute location in the game world.
  */
 public class RSTile {
-
 	private final int x;
 	private final int y;
 	private final int z;
@@ -62,7 +61,7 @@ public class RSTile {
 			d *= maxYDeviation;
 			y += (int) d;
 		}
-		return new RSTile(x, y);
+		return new RSTile(x, y, getZ());
 	}
 
 	@Override
@@ -86,5 +85,4 @@ public class RSTile {
 	public String toString() {
 		return "(X: " + x + ", Y:" + y + ", Z:" + z + ")";
 	}
-
 }

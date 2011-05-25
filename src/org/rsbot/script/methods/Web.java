@@ -1,10 +1,10 @@
 package org.rsbot.script.methods;
 
 import org.rsbot.script.internal.wrappers.TileData;
+import org.rsbot.script.web.PlaneHandler;
+import org.rsbot.script.web.PlaneTraverse;
 import org.rsbot.script.web.Route;
 import org.rsbot.script.web.RouteStep;
-import org.rsbot.script.web.Teleport;
-import org.rsbot.script.web.TransportationHandler;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.script.wrappers.RSWeb;
 
@@ -61,7 +61,7 @@ public class Web extends MethodProvider {
 	 * @param end   The ending tile.
 	 * @return The path.
 	 */
-	public RSTile[] generateNodePath(final RSTile start, final RSTile end) {
+	public RSTile[] generateTilePath(final RSTile start, final RSTile end) {
 		if (start.getZ() != end.getZ()) {
 			return null;
 		}
@@ -103,30 +103,59 @@ public class Web extends MethodProvider {
 	}
 
 	/**
-	 * Generates a route between two tiles.
+	 * Generates routes between two tiles.
 	 *
 	 * @param start The start tile.
 	 * @param end   The ending tile.
 	 * @return The generated route.
 	 */
-	public Route generateRoute(RSTile start, final RSTile end) {
-		TransportationHandler transportationHandler = new TransportationHandler(methods);
-		List<RouteStep> routeSteps = new ArrayList<RouteStep>();
-		if (transportationHandler.canTeleport(end)) {
-			Teleport teleport = transportationHandler.getTeleport(end);
-			if (teleport.teleportationLocation().getZ() == end.getZ()) {
-				RouteStep teleportStep = new RouteStep(methods, transportationHandler.getTeleport(end));
-				start = teleport.teleportationLocation();
-				routeSteps.add(teleportStep);
+	private Route[] generateRoutes(final RSTile start, final RSTile end, final Route lastRoute) {
+		if (start.getZ() == end.getZ()) {
+			Route route = planeRoute(start, end, null);
+			if (route == null) {
+				return null;
+			} else {
+				route.parent = lastRoute;
+			}
+			if (route.parent == null) {
+				return new Route[]{route};
+			}
+			LinkedList<Route> finalRouting = new LinkedList<Route>();
+			while (route.parent != null) {
+				finalRouting.addLast(route);
+				route = route.parent;
+			}
+			return finalRouting.toArray(new Route[finalRouting.size()]);
+		}
+		PlaneHandler planeHandler = new PlaneHandler(methods);
+		PlaneTraverse[] traverses = planeHandler.get(methods.game.getPlane());
+		for (PlaneTraverse traverse : traverses) {
+			if (traverse.destPlane() == end.getZ()) {//TODO more complex method--prevent infinite loops once made.
+				final Route route = planeRoute(start, end, traverse);
+				route.parent = lastRoute;
+				return generateRoutes(traverse.dest(), end, route);
 			}
 		}
-		RSTile[] nodePath = generateNodePath(start, end);
-		if (nodePath != null) {
-			RouteStep walkingStep = new RouteStep(methods, nodePath);
-			routeSteps.add(walkingStep);
-			return new Route(routeSteps.toArray(new RouteStep[routeSteps.size()]));
+		return null;//No applicable plane transfers.
+	}
+
+	public Route planeRoute(final RSTile start, final RSTile end, final PlaneTraverse transfer) {
+		if (transfer != null) {
+			final Route walkRoute = planeRoute(start, transfer.walkTo(), null);
+			if (walkRoute == null) {
+				return null;
+			}
+			//TODO START
+			/* code interaction with plane transfer to add to web route */
+			return walkRoute;
+			//TODO END
 		}
-		return null;
+		//TODO Path generation.
+		RSTile[] path = generateTilePath(start, end);    //TODO add teleports object etc
+		if (path == null) {
+			return null;
+		}
+		return new Route(new RouteStep[]{new RouteStep(methods, path)});
 	}
 
 	/**
@@ -137,8 +166,8 @@ public class Web extends MethodProvider {
 	 * @return The web constructed.  <code>null</code> if it cannot be done.
 	 */
 	public RSWeb getWeb(RSTile start, final RSTile end) {
-		Route onlyRoute = generateRoute(start, end);
-		return new RSWeb(new Route[]{onlyRoute});
+		Route[] routes = generateRoutes(start, end, null);
+		return new RSWeb(routes, start, end);
 	}
 
 	/**

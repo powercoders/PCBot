@@ -26,5 +26,4 @@ public class RSObjectDef {
 	public String getName() {
 		return od.getName();
 	}
-
 }

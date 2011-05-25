@@ -5,9 +5,11 @@ import org.rsbot.gui.BotGUI;
 import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.security.RestrictedSecurityManager;
+import org.rsbot.util.ApplicationException;
 import org.rsbot.util.io.IOHelper;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +25,7 @@ public class Application {
 	public static void main(final String[] args) {
 		try {
 			bootstrap();
+			RestrictedSecurityManager.fixHosts();
 			extractResources();
 			commands(args);
 			System.setSecurityManager(new RestrictedSecurityManager());
@@ -38,9 +41,24 @@ public class Application {
 				}
 			} catch (final Exception ignored) {
 			}
-			final String msg = "Error: " + e.toString() + "\nUnable to start.";
+			final String msg = (e.getClass().isAssignableFrom(ApplicationException.class)) ? e.getMessage() : "Error: " + e.toString() + "\nUnable to start.";
 			try {
-				JOptionPane.showMessageDialog(null, msg, Configuration.NAME, JOptionPane.ERROR_MESSAGE);
+				final JFrame frame = new JFrame();
+				frame.setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON));
+				frame.setLocationRelativeTo(frame.getOwner());
+				frame.setVisible(true);
+				new Thread() {
+					@Override
+					public void run() {
+						final Dimension s = Toolkit.getDefaultToolkit().getScreenSize();
+						try {
+							Thread.sleep(64); // race condition :)
+						} catch (final InterruptedException ignored) {
+						}
+						frame.setLocation(s.width + 0xff, s.height + 0xff);
+					}
+				}.start();
+				JOptionPane.showMessageDialog(frame, msg, Configuration.NAME, JOptionPane.ERROR_MESSAGE);
 			} catch (final HeadlessException ignored) {
 			}
 			try {

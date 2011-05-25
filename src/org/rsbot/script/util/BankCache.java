@@ -13,7 +13,7 @@ import java.util.HashMap;
  * @author Timer
  */
 public class BankCache {
-	private final static File cacheFile = new File(Configuration.Paths.getBankCache());
+	private final static File cacheFile = new File(Configuration.Paths.getCacheDirectory(), "bank.dat");
 	private final static HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
 	private static final Object lock = new Object();
 
@@ -74,11 +74,8 @@ public class BankCache {
 					return;
 				}
 			}
-			final FileReader fr = new FileReader(cacheFile);
-			final BufferedReader br = new BufferedReader(fr);
 			data.clear();
-			data.putAll(IniParser.deserialise(br));
-			br.close();
+			data.putAll(IniParser.deserialise(cacheFile));
 		}
 	}
 

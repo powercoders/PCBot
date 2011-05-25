@@ -8,7 +8,6 @@ import java.lang.ref.SoftReference;
  * Represents a non-player character.
  */
 public class RSNPC extends RSCharacter {
-
 	private final SoftReference<org.rsbot.client.RSNPC> npc;
 
 	public RSNPC(final MethodContext ctx, final org.rsbot.client.RSNPC npc) {
@@ -65,8 +64,7 @@ public class RSNPC extends RSCharacter {
 	 */
 	@Override
 	public boolean isDead() {
-		return !isValid() || (getHPPercent() == 0 && getAnimation() != -1
-				&& getInteracting() == null);
+		return !isValid() || (getHPPercent() == 0 && getAnimation() != -1 && getInteracting() == null);
 	}
 
 	/**
@@ -102,5 +100,4 @@ public class RSNPC extends RSCharacter {
 			return c.getRSNPCDef();
 		}
 	}
-
 }

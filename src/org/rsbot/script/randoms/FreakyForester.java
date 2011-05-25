@@ -203,8 +203,8 @@ public class FreakyForester extends Random implements MessageListener {
 		}
 		 */
 		if (unequip && inventory.getCount(false) != 28) {
-			if (game.getCurrentTab() != Game.TAB_EQUIPMENT) {
-				game.openTab(Game.TAB_EQUIPMENT);
+			if (game.getTab() != Game.Tab.EQUIPMENT) {
+				game.openTab(Game.Tab.EQUIPMENT);
 				sleep(random(1000, 1500));
 				interfaces.get(Equipment.INTERFACE_EQUIPMENT).getComponent(17).doClick();
 				return random(1000, 1500);

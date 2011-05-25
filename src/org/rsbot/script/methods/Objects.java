@@ -3,7 +3,6 @@ package org.rsbot.script.methods;
 import org.rsbot.client.RSAnimableNode;
 import org.rsbot.script.util.Filter;
 import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSObjectDef;
 import org.rsbot.script.wrappers.RSTile;
 
 import java.util.LinkedHashSet;
@@ -23,7 +22,7 @@ public class Objects extends MethodProvider {
 	 * A filter that accepts all matches.
 	 */
 	public static final Filter<RSObject> ALL_FILTER = new Filter<RSObject>() {
-		public boolean accept(final RSObject npc) {
+		public boolean accept(final RSObject obj) {
 			return true;
 		}
 	};
@@ -54,7 +53,7 @@ public class Objects extends MethodProvider {
 		for (int x = 0; x < 104; x++) {
 			for (int y = 0; y < 104; y++) {
 				for (final RSObject o : getAtLocal(x, y, -1)) {
-					if (filter.accept(o)) {
+					if (o != null && filter.accept(o)) {
 						objects.add(o);
 					}
 				}
@@ -64,51 +63,14 @@ public class Objects extends MethodProvider {
 	}
 
 	/**
-	 * Returns the <tt>RSObject</tt> that is nearest out of all objects that are
-	 * accepted by the provided Filter.
+	 * Returns all the <tt>RSObject</tt>s in the local region with the provided
+	 * ID(s).
 	 *
-	 * @param filter Filters out unwanted objects.
-	 * @return An <tt>RSObject</tt> representing the nearest object that was
-	 *         accepted by the filter; or null if there are no matching objects
-	 *         in the current region.
+	 * @param ids Allowed object IDs.
+	 * @return An array of the region's RSObjects matching the provided ID(s).
 	 */
-	public RSObject getNearest(final Filter<RSObject> filter) {
-		RSObject cur = null;
-		double dist = -1;
-		for (int x = 0; x < 104; x++) {
-			for (int y = 0; y < 104; y++) {
-				final Set<RSObject> objs = getAtLocal(x, y, -1);
-				for (final RSObject o : objs) {
-					if (filter.accept(o)) {
-						final double distTmp = methods.calc.distanceBetween(
-								methods.players.getMyPlayer().getLocation(),
-								o.getLocation());
-						if (cur == null) {
-							dist = distTmp;
-							cur = o;
-						} else if (distTmp < dist) {
-							cur = o;
-							dist = distTmp;
-						}
-						break;
-					}
-				}
-			}
-		}
-		return cur;
-	}
-
-	/**
-	 * Returns the <tt>RSObject</tt> that is nearest, out of all of the
-	 * RSObjects with the provided ID(s).
-	 *
-	 * @param ids The ID(s) of the RSObject that you are searching.
-	 * @return An <tt>RSObject</tt> representing the nearest object with one of
-	 *         the provided IDs; or null if there are no matching objects in the
-	 *         current region.
-	 */
-	public RSObject getNearest(final int... ids) {
-		return getNearest(new Filter<RSObject>() {
+	public RSObject[] getAll(final int... ids) {
+		return getAll(new Filter<RSObject>() {
 			public boolean accept(final RSObject o) {
 				for (final int id : ids) {
 					if (o.getID() == id) {
@@ -121,21 +83,19 @@ public class Objects extends MethodProvider {
 	}
 
 	/**
-	 * Returns the <tt>RSObject</tt> that is nearest, out of all of the
-	 * RSObjects with the provided name(s).
+	 * Returns all the <tt>RSObject</tt>s in the local region with the provided
+	 * name(s).
 	 *
-	 * @param names The name(s) of the RSObject that you are searching.
-	 * @return An <tt>RSObject</tt> representing the nearest object with one of
-	 *         the provided names; or null if there are no matching objects in
-	 *         the current region.
+	 * @param names Allowed object names.
+	 * @return An array of the region's RSObjects matching the provided name(s).
 	 */
-	public RSObject getNearest(final String... names) {
-		return getNearest(new Filter<RSObject>() {
+	public RSObject[] getAll(final String... names) {
+		return getAll(new Filter<RSObject>() {
 			public boolean accept(final RSObject o) {
-				final RSObjectDef def = o.getDef();
-				if (def != null) {
-					for (final String name : names) {
-						if (name.equals(def.getName())) {
+				final String name = o.getName();
+				if (!name.isEmpty()) {
+					for (final String n : names) {
+						if (n != null && n.equalsIgnoreCase(name)) {
 							return true;
 						}
 					}
@@ -146,27 +106,13 @@ public class Objects extends MethodProvider {
 	}
 
 	/**
-	 * Returns the top <tt>RSObject</tt> on the specified tile.
+	 * Returns the <tt>RSObject</tt>s which are on the specified <tt>RSTile</tt>.
 	 *
 	 * @param t The tile on which to search.
-	 * @return The top RSObject on the provided tile; or null if none found.
+	 * @return An RSObject[] of the objects on the specified tile.
 	 */
-	public RSObject getTopAt(final RSTile t) {
-		return getTopAt(t, -1);
-	}
-
-	/**
-	 * Returns the top <tt>RSObject</tt> on the specified tile matching types
-	 * specified by the flags in the provided mask.
-	 *
-	 * @param t    The tile on which to search.
-	 * @param mask The type flags.
-	 * @return The top RSObject on the provided tile matching the specified
-	 *         flags; or null if none found.
-	 */
-	public RSObject getTopAt(final RSTile t, final int mask) {
-		final RSObject[] objects = getAt(t, mask);
-		return objects.length > 0 ? objects[0] : null;
+	public RSObject[] getAllAt(final RSTile t) {
+		return getAt(t, -1);
 	}
 
 	/**
@@ -184,20 +130,6 @@ public class Objects extends MethodProvider {
 		return objects.toArray(new RSObject[objects.size()]);
 	}
 
-	/**
-	 * Returns the <tt>RSObject</tt>s which are on the specified <tt>RSTile</tt>
-	 * .
-	 *
-	 * @param t The tile on which to search.
-	 * @return An RSObject[] of the objects on the specified tile.
-	 */
-	public RSObject[] getAllAt(final RSTile t) {
-		final Set<RSObject> objects = getAtLocal(
-				t.getX() - methods.client.getBaseX(),
-				t.getY() - methods.client.getBaseY(), -1);
-		return objects.toArray(new RSObject[objects.size()]);
-	}
-
 	private Set<RSObject> getAtLocal(int x, int y, final int mask) {
 		final org.rsbot.client.Client client = methods.client;
 		final Set<RSObject> objects = new LinkedHashSet<RSObject>();
@@ -212,9 +144,6 @@ public class Objects extends MethodProvider {
 			if (rsGround != null) {
 				org.rsbot.client.RSObject rsObj;
 				org.rsbot.client.RSInteractable obj;
-
-				x += methods.client.getBaseX();
-				y += methods.client.getBaseY();
 
 				// Interactable (e.g. Trees)
 				if ((mask & TYPE_INTERACTABLE) != 0) {
@@ -289,6 +218,112 @@ public class Objects extends MethodProvider {
 		} catch (final Exception ignored) {
 		}
 		return objects;
+	}
+
+	/**
+	 * Returns the <tt>RSObject</tt> that is nearest out of all objects that are
+	 * accepted by the provided Filter.
+	 *
+	 * @param filter Filters out unwanted objects.
+	 * @return An <tt>RSObject</tt> representing the nearest object that was
+	 *         accepted by the filter; or null if there are no matching objects
+	 *         in the current region.
+	 */
+	public RSObject getNearest(final Filter<RSObject> filter) {
+		RSObject cur = null;
+		double dist = -1;
+		for (int x = 0; x < 104; x++) {
+			for (int y = 0; y < 104; y++) {
+				final Set<RSObject> objs = getAtLocal(x, y, -1);
+				for (final RSObject o : objs) {
+					if (o != null && filter.accept(o)) {
+						final double distTmp = methods.calc.distanceBetween(
+								methods.players.getMyPlayer().getLocation(),
+								o.getLocation());
+						if (cur == null) {
+							dist = distTmp;
+							cur = o;
+						} else if (distTmp < dist) {
+							cur = o;
+							dist = distTmp;
+						}
+						break;
+					}
+				}
+			}
+		}
+		return cur;
+	}
+
+	/**
+	 * Returns the <tt>RSObject</tt> that is nearest, out of all of the
+	 * RSObjects with the provided ID(s).
+	 *
+	 * @param ids The ID(s) of the RSObject that you are searching.
+	 * @return An <tt>RSObject</tt> representing the nearest object with one of
+	 *         the provided IDs; or null if there are no matching objects in the
+	 *         current region.
+	 */
+	public RSObject getNearest(final int... ids) {
+		return getNearest(new Filter<RSObject>() {
+			public boolean accept(final RSObject o) {
+				for (final int id : ids) {
+					if (o.getID() == id) {
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+	}
+
+	/**
+	 * Returns the <tt>RSObject</tt> that is nearest, out of all of the
+	 * RSObjects with the provided name(s).
+	 *
+	 * @param names The name(s) of the RSObject that you are searching.
+	 * @return An <tt>RSObject</tt> representing the nearest object with one of
+	 *         the provided names; or null if there are no matching objects in
+	 *         the current region.
+	 */
+	public RSObject getNearest(final String... names) {
+		return getNearest(new Filter<RSObject>() {
+			public boolean accept(final RSObject o) {
+				final String name = o.getName();
+				if (!name.isEmpty()) {
+					for (final String n : names) {
+						if (n != null && n.equalsIgnoreCase(name)) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		});
+	}
+
+	/**
+	 * Returns the top <tt>RSObject</tt> on the specified tile.
+	 *
+	 * @param t The tile on which to search.
+	 * @return The top RSObject on the provided tile; or null if none found.
+	 */
+	public RSObject getTopAt(final RSTile t) {
+		return getTopAt(t, -1);
+	}
+
+	/**
+	 * Returns the top <tt>RSObject</tt> on the specified tile matching types
+	 * specified by the flags in the provided mask.
+	 *
+	 * @param t    The tile on which to search.
+	 * @param mask The type flags.
+	 * @return The top RSObject on the provided tile matching the specified
+	 *         flags; or null if none found.
+	 */
+	public RSObject getTopAt(final RSTile t, final int mask) {
+		final RSObject[] objects = getAt(t, mask);
+		return objects.length > 0 ? objects[0] : null;
 	}
 
 }

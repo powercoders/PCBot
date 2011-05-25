@@ -9,6 +9,7 @@ import java.util.Collection;
 
 /**
  * @author Jacmob
+ * @author Paris
  */
 public class BotHome {
 	private static final Font FONT = new Font("Helvetica", 1, 13);

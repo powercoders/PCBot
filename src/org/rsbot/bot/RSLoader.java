@@ -102,21 +102,22 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	}
 
 	public void load() {
+		final File ms = new File(Configuration.Paths.getCacheDirectory(), "ms.dat");
 		try {
 			final ClientLoader cl = new ClientLoader();
-			cl.init(new URL(Configuration.Paths.URLs.UPDATE), new File(Configuration.Paths.getModScriptCache()));
-			cl.load(new File(Configuration.Paths.getClientCache()), new File(Configuration.Paths.getVersionCache()));
+			cl.init(new URL(Configuration.Paths.URLs.UPDATE), ms);
+			final File client = new File(Configuration.Paths.getCacheDirectory(), "client.dat");
+			cl.load(client, new File(Configuration.Paths.getVersionCache()));
 			targetName = cl.getTargetName();
 			classLoader = new RSClassLoader(cl.getClasses(), new URL("http://" + targetName + ".com/"));
 		} catch (final IOException ex) {
 			log.severe("Unable to load client: " + ex.getMessage());
 		} catch (final ParseException ex) {
 			log.info("Unable to load client: " + ex.toString());
-			final File ms = new File(Configuration.Paths.getModScriptCache());
 			if (ms.exists()) {
 				ms.delete();
 			}
-			log.severe("Restart RSBot to solve this issue!");
+			log.severe("Cached objects deleted, please try restarting the application");
 		}
 	}
 

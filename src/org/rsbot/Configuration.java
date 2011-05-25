@@ -7,7 +7,6 @@ import org.rsbot.log.TextAreaLogHandler;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -30,6 +29,7 @@ public class Configuration {
 			public static final String ICON_APPADD = ROOT_IMG + "/application_add.png";
 			public static final String ICON_APPDELETE = ROOT_IMG + "/application_delete.png";
 			public static final String ICON_ARROWIN = ROOT_IMG + "/arrow_in.png";
+			public static final String ICON_REFRESH = ROOT_IMG + "/arrow_refresh.png";
 			public static final String ICON_DELETE = ROOT_IMG + "/delete.png";
 			public static final String ICON_GITHUB = ROOT_IMG + "/github.png";
 			public static final String ICON_PLAY = ROOT_IMG + "/control_play_blue.png";
@@ -61,15 +61,19 @@ public class Configuration {
 		}
 
 		public static class URLs {
-			private static final String BASE = "http://links.powerbot.org/";
+			public static final String HOST = "powerbot.org";
+			private static final String BASE = "http://links." + HOST + "/";
 			public static final String DOWNLOAD = BASE + "download";
 			public static final String UPDATE = BASE + "modscript";
 			public static final String VERSION = BASE + "version.txt";
+			public static final String VERSION_KILL = BASE + "version-kill";
 			public static final String PROJECT = BASE + "git-project";
 			public static final String SITE = BASE + "site";
 			public static final String SDN_CONTROL = BASE + "sdn-control";
 			public static final String AD_INFO = BASE + "botad-info";
 			public static final String MONITORING_CONTROL = BASE + "monitoring";
+			public static final String WEBCOMPILER = BASE + "webcompile";
+			public static final String SERVICELOGIN = BASE + "servicelogin";
 		}
 
 		public static final String ROOT = new File(".").getAbsolutePath();
@@ -106,16 +110,8 @@ public class Configuration {
 			return Paths.getHomeDirectory() + File.separator + "Logs";
 		}
 
-		public static String getMenuCache() {
-			return Paths.getSettingsDirectory() + File.separator + "Menu.txt";
-		}
-
 		public static String getPathCache() {
 			return Paths.getSettingsDirectory() + File.separator + "path.txt";
-		}
-
-		public static String getBootCache() {
-			return Paths.getSettingsDirectory() + File.separator + "boot.txt";
 		}
 
 		public static String getUIDsFile() {
@@ -154,24 +150,12 @@ public class Configuration {
 			return Paths.getCacheDirectory() + File.separator + "info.dat";
 		}
 
-		public static String getModScriptCache() {
-			return Paths.getCacheDirectory() + File.separator + "ms.dat";
-		}
-
-		public static String getClientCache() {
-			return Paths.getCacheDirectory() + File.separator + "client.dat";
-		}
-
-		public static String getEventsLog() {
-			return Paths.getCacheDirectory() + File.separator + "events.log";
-		}
-
 		public static String getWebDatabase() {
 			return Paths.getSettingsDirectory() + File.separator + "Web.store";
 		}
 
-		public static String getBankCache() {
-			return Paths.getCacheDirectory() + File.separator + "bank.dat";
+		public static String getServiceKey() {
+			return Paths.getSettingsDirectory() + File.separator + "service.key";
 		}
 
 		public static String getSettingsDirectory() {
@@ -243,11 +227,9 @@ public class Configuration {
 		dirs.add(Paths.getLogsDirectory());
 		dirs.add(Paths.getCacheDirectory());
 		dirs.add(Paths.getSettingsDirectory());
-		if (Configuration.RUNNING_FROM_JAR) {
-			dirs.add(Paths.getScriptsDirectory());
-			dirs.add(Paths.getScriptsSourcesDirectory());
-			dirs.add(Paths.getScriptsPrecompiledDirectory());
-		}
+		dirs.add(Paths.getScriptsDirectory());
+		dirs.add(Paths.getScriptsSourcesDirectory());
+		dirs.add(Paths.getScriptsPrecompiledDirectory());
 		for (final String name : dirs) {
 			final File dir = new File(name);
 			if (!dir.exists()) {
@@ -313,37 +295,6 @@ public class Configuration {
 
 	public static OperatingSystem getCurrentOperatingSystem() {
 		return Configuration.CURRENT_OS;
-	}
-
-	static String httpUserAgent = null;
-
-	public static String getHttpUserAgent() {
-		if (httpUserAgent != null) {
-			return httpUserAgent;
-		}
-		String os = "Windows NT 6.1";
-		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.MAC) {
-			os = "Macintosh; Intel Mac OS X 10_6_6";
-		} else if (Configuration.getCurrentOperatingSystem() != Configuration.OperatingSystem.WINDOWS) {
-			os = "X11; Linux x86_64";
-		}
-		final StringBuilder buf = new StringBuilder(125);
-		buf.append("Mozilla/5.0 (").append(os).append(")");
-		buf.append(" AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.60 Safari/534.24");
-		httpUserAgent = buf.toString();
-		return httpUserAgent;
-	}
-
-	public static HttpURLConnection getHttpConnection(final URL url) throws IOException {
-		final HttpURLConnection con = (HttpURLConnection) url.openConnection();
-		con.addRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-		con.addRequestProperty("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-		con.addRequestProperty("Accept-Encoding", "gzip,deflate");
-		con.addRequestProperty("Accept-Language", "en-us,en;q=0.5");
-		con.addRequestProperty("Host", url.getHost());
-		con.addRequestProperty("User-Agent", getHttpUserAgent());
-		con.setConnectTimeout(10000);
-		return con;
 	}
 
 	public static int getVersion() {

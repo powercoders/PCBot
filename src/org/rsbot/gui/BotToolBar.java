@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * @author Paris
+ */
 public class BotToolBar extends JToolBar {
 
 	private static final long serialVersionUID = -1861866523519184211L;

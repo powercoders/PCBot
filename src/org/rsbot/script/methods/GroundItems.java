@@ -57,8 +57,7 @@ public class GroundItems extends MethodProvider {
 	/**
 	 * Returns all matching ground items within the provided range.
 	 *
-	 * @param range  The range (max distance in all directions) in which to check
-	 *               items for.
+	 * @param range  The range (max distance in all directions) in which to check items for.
 	 * @param filter Filters out unwanted matches.
 	 * @return <tt>RSGroundItem</tt> array containing all of the items in range.
 	 */
@@ -72,7 +71,7 @@ public class GroundItems extends MethodProvider {
 			for (int y = minY; y < maxY; y++) {
 				final RSGroundItem[] items = getAllAt(x, y);
 				for (final RSGroundItem item : items) {
-					if (filter.accept(item)) {
+					if (item != null && filter.accept(item)) {
 						temp.add(item);
 					}
 				}
@@ -85,8 +84,7 @@ public class GroundItems extends MethodProvider {
 	 * Returns the nearest ground item that is accepted by the provided Filter.
 	 *
 	 * @param filter Filters out unwanted matches.
-	 * @return The nearest item that is accepted by the provided Filter; or
-	 *         null.
+	 * @return The nearest item that is accepted by the provided Filter; or null.
 	 */
 	public RSGroundItem getNearest(final Filter<RSGroundItem> filter) {
 		int dist = 9999999;
@@ -99,8 +97,7 @@ public class GroundItems extends MethodProvider {
 			for (int y = minY; y <= maxY; y++) {
 				final RSGroundItem[] items = getAllAt(x, y);
 				for (final RSGroundItem item : items) {
-					if (filter.accept(item)
-							&& methods.calc.distanceTo(item.getLocation()) < dist) {
+					if (item != null && filter.accept(item) && methods.calc.distanceTo(item.getLocation()) < dist) {
 						dist = methods.calc.distanceTo(item.getLocation());
 						itm = item;
 					}
@@ -115,17 +112,41 @@ public class GroundItems extends MethodProvider {
 	 * IDs provided.
 	 *
 	 * @param ids The IDs to look for.
-	 * @return RSItemTile of the nearest item with the an ID that matches any in
-	 *         the array of IDs provided; or null if no matching ground items
-	 *         were found.
+	 * @return The nearest RSGroundItem with an ID that matches any in the array of
+	 *         IDs provided; or null if no matching ground items were found.
 	 */
 	public RSGroundItem getNearest(final int... ids) {
 		return getNearest(new Filter<RSGroundItem>() {
 			public boolean accept(final RSGroundItem item) {
-				final int iid = item.getItem().getID();
-				for (final int id : ids) {
-					if (id == iid) {
-						return true;
+				if (item != null) {
+					final int iid = item.getItem().getID();
+					for (final int id : ids) {
+						if (id == iid) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		});
+	}
+
+	/**
+	 * Returns the nearest item on the ground with one of the provided names.
+	 *
+	 * @param names The names to look for.
+	 * @return The nearest RSGroundItem with a name that matches any in the array provided; or null if
+	 *         no matching ground items were found.
+	 */
+	public RSGroundItem getNearest(final String... names) {
+		return getNearest(new Filter<RSGroundItem>() {
+			public boolean accept(final RSGroundItem item) {
+				final String name = item != null ? item.getItem().getName() : null;
+				if (name != null) {
+					for (final String n : names) {
+						if (n.equalsIgnoreCase(name)) {
+							return true;
+						}
 					}
 				}
 				return false;
@@ -149,19 +170,15 @@ public class GroundItems extends MethodProvider {
 		final HashTable itemNC = methods.client.getRSItemHashTable();
 		final int id = x | y << 14 | methods.client.getPlane() << 28;
 
-		final org.rsbot.client.NodeListCache itemNLC = (org.rsbot.client.NodeListCache) methods.nodes
-				.lookup(itemNC, id);
+		final org.rsbot.client.NodeListCache itemNLC = (org.rsbot.client.NodeListCache) methods.nodes.lookup(itemNC, id);
 
 		if (itemNLC == null) {
 			return new RSGroundItem[0];
 		}
 
-		final Deque<org.rsbot.client.RSItem> itemNL = new Deque<org.rsbot.client.RSItem>(
-				itemNLC.getNodeList());
-		for (org.rsbot.client.RSItem item = itemNL.getHead(); item != null; item = itemNL
-				.getNext()) {
-			list.add(new RSGroundItem(methods, new RSTile(x, y), new RSItem(
-					methods, item)));
+		final Deque<org.rsbot.client.RSItem> itemNL = new Deque<org.rsbot.client.RSItem>(itemNLC.getNodeList());
+		for (org.rsbot.client.RSItem item = itemNL.getHead(); item != null; item = itemNL.getNext()) {
+			list.add(new RSGroundItem(methods, new RSTile(x, y), new RSItem(methods, item)));
 		}
 
 		return list.toArray(new RSGroundItem[list.size()]);
@@ -176,5 +193,4 @@ public class GroundItems extends MethodProvider {
 	public RSGroundItem[] getAllAt(final RSTile t) {
 		return getAllAt(t.getX(), t.getY());
 	}
-
 }

@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author Paris
  */
 public class Monitoring {
+	private final static File logFile = new File(Configuration.Paths.getCacheDirectory(), "events.log");
 	private static ConcurrentLinkedQueue<Event> events = null;
 	private static boolean enabled = false;
 	private static String uri;
@@ -39,10 +40,8 @@ public class Monitoring {
 			final URL source = new URL(Configuration.Paths.URLs.MONITORING_CONTROL);
 			final File cache = new File(Configuration.Paths.getCacheDirectory(), "monitoring-control.txt");
 			HttpClient.download(source, cache);
-			final BufferedReader reader = new BufferedReader(new FileReader(cache));
-			keys = IniParser.deserialise(reader).get(IniParser.emptySection);
-			reader.close();
-		} catch (final Exception e) {
+			keys = IniParser.deserialise(cache).get(IniParser.emptySection);
+		} catch (final IOException ignored) {
 			return;
 		}
 
@@ -117,7 +116,7 @@ public class Monitoring {
 		}
 		final String log = s.toString();
 
-		final FileWriter out = new FileWriter(Configuration.Paths.getEventsLog());
+		final FileWriter out = new FileWriter(logFile);
 		out.write(log);
 		out.close();
 
@@ -141,7 +140,7 @@ public class Monitoring {
 	}
 
 	private static void uploadHttp(final URL url, final String data) throws IOException {
-		final HttpURLConnection con = Configuration.getHttpConnection(url);
+		final HttpURLConnection con = HttpClient.getHttpConnection(url);
 		con.setDoOutput(true);
 		OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
 		out.write(data);

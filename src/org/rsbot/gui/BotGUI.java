@@ -9,13 +9,13 @@ import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
 import org.rsbot.script.methods.Environment;
-import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.script.provider.ScriptDownloader;
 import org.rsbot.script.util.WindowUtil;
 import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
+import org.rsbot.util.ApplicationException;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.ScreenshotUtil;
 
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
+ * @author Paris
  * @author Jacmob
  */
 public class BotGUI extends JFrame implements ActionListener, ScriptListener {
@@ -51,12 +52,21 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private java.util.Timer shutdown = null;
 	private java.util.Timer clean = null;
 
-	public BotGUI() {
+	public BotGUI() throws ApplicationException {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (final Exception ignored) {
+		}
+		if (UpdateChecker.isError()) {
+			throw new ApplicationException("Unable to obtain latest version information.\nPlease check your internet connection and try again.");
+		} else if (Configuration.RUNNING_FROM_JAR && UpdateChecker.isDeprecatedVersion()) {
+			throw new ApplicationException("This version has been deprecated, please update at " + Configuration.Paths.URLs.DOWNLOAD);
+		}
 		init();
 		pack();
 		setTitle(null);
 		setLocationRelativeTo(getOwner());
-		setMinimumSize(getSize());
+		setMinimumSize(new Dimension((int) (getSize().width * .8), (int) (getSize().height * .8)));
 		setResizable(true);
 		settings = new SettingsManager(this, new File(Configuration.Paths.getSettingsDirectory(), "preferences.ini"));
 		prefs = settings.getPreferences();
@@ -72,15 +82,10 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (Configuration.Twitter.ENABLED) {
 					TwitterUpdates.loadTweets(Configuration.Twitter.MESSAGES);
 				}
-				new Thread() {
-					@Override
-					public void run() {
-						ScriptDeliveryNetwork.getInstance().start();
-					}
-				}.start();
 				Monitoring.start();
 				addBot();
 				updateScriptControls();
+				setShutdownTimer(prefs.shutdown);
 				System.gc();
 			}
 		});
@@ -131,7 +136,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				}
 			} else if (option.equals(Messages.ADDSCRIPT)) {
 				final String pretext = "";
-				final String key = (String) JOptionPane.showInputDialog(this, "Enter the script URL (e.g. pastebin link):",
+				final String key = (String) JOptionPane.showInputDialog(this, "Enter the script URL e.g. pastebin link or direct compiled file:",
 						option, JOptionPane.QUESTION_MESSAGE, null, null, pretext);
 				if (!(key == null || key.trim().isEmpty())) {
 					ScriptDownloader.save(key);
@@ -141,8 +146,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (current != null) {
 					showScriptSelector(current);
 				}
-			} else if (option.equals(Messages.SERVICEKEY)) {
-				serviceKeyQuery(option);
 			} else if (option.equals(Messages.STOPSCRIPT)) {
 				final Bot current = getCurrentBot();
 				if (current != null) {
@@ -241,7 +244,11 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 	}
 
-	private void updateScriptControls() {
+	public void updateScriptControls() {
+		updateScriptControls(false);
+	}
+
+	public void updateScriptControls(final boolean block) {
 		boolean idle = true, paused = false;
 		final Bot bot = getCurrentBot();
 
@@ -253,6 +260,10 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			} else {
 				idle = true;
 			}
+		}
+
+		if (block) {
+			idle = false;
 		}
 
 		menuBar.getMenuItem(Messages.RUNSCRIPT).setVisible(idle);
@@ -275,18 +286,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 
 		toolBar.updateInputButton();
-	}
-
-	private void serviceKeyQuery(final String option) {
-		final String currentKey = ScriptDeliveryNetwork.getInstance().getKey();
-		final String key = (String) JOptionPane.showInputDialog(this, null, option, JOptionPane.QUESTION_MESSAGE, null, null, currentKey);
-		if (key == null || key.length() == 0) {
-			log.info("Services have been disabled");
-		} else if (key.length() != 40) {
-			log.warning("Invalid service key");
-		} else {
-			log.info("Services have been linked to {0}");
-		}
 	}
 
 	private void lessCpu(boolean on) {
@@ -427,10 +426,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		});
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON));
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (final Exception ignored) {
-		}
 		WindowUtil.setFrame(this);
 		home = new BotHome();
 		panel = new BotPanel(home);

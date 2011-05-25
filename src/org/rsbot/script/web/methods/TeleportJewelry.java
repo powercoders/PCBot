@@ -35,11 +35,7 @@ public class TeleportJewelry extends TeleportItem {
 				}
 			}
 		}
-		if (item != null) {
-			if (methods.game.getCurrentTab() != (equip ? Game.TAB_EQUIPMENT : Game.TAB_INVENTORY)) {
-				methods.game.openTab(equip ? Game.TAB_EQUIPMENT : Game.TAB_INVENTORY);
-				sleep(500);
-			}
+		if (item != null && methods.game.openTab(equip ? Game.Tab.EQUIPMENT : Game.Tab.INVENTORY)) {
 			for (String s : action) {
 				if (item.doAction(s)) {
 					final long tO = System.currentTimeMillis();
