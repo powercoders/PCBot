@@ -10,7 +10,7 @@ import java.awt.*;
  */
 public class Bank extends MethodProvider {
 	public static final Filter<RSObject> OBJECT_BANKS = new Filter<RSObject>() {
-		private final String[] bankNames = {"Bank Booth", "Bank Chest"};
+		private final String[] bankNames = {"Bank Booth", "Bank Chest", "Counter"};
 
 		public boolean accept(final RSObject rsObject) {
 			final String name = rsObject != null ? rsObject.getName() : null;
