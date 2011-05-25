@@ -88,8 +88,7 @@ public class Calculations extends MethodProvider {
 	 * @see #distanceBetween(Point, Point)
 	 */
 	public double distanceBetween(final RSTile curr, final RSTile dest) {
-		return Math.sqrt((curr.getX() - dest.getX()) * (curr.getX() - dest.getX()) + (curr.getY() - dest.getY()) *
-				(curr.getY() - dest.getY()));
+		return Math.sqrt((curr.getX() - dest.getX()) * (curr.getX() - dest.getX()) + (curr.getY() - dest.getY()) * (curr.getY() - dest.getY()));
 	}
 
 	/**
@@ -158,8 +157,7 @@ public class Calculations extends MethodProvider {
 	 * @return <code>Point</code> based on screen; otherwise <code>new Point(-1, -1)</code>.
 	 */
 	public Point groundToScreen(final int x, final int y, final int height) {
-		if (methods.client.getGroundByteArray() == null || methods.client.getTileData() == null || x < 512 ||
-				y < 512 || x > 52224 || y > 52224) {
+		if (methods.client.getGroundByteArray() == null || methods.client.getTileData() == null || x < 512 || y < 512 || x > 52224 || y > 52224) {
 			return new Point(-1, -1);
 		}
 		final int z = tileHeight(x, y) + height;
@@ -325,7 +323,7 @@ public class Calculations extends MethodProvider {
 	public Point tileToScreen(final RSTile tile) {
 		return tileToScreen(tile, 0);
 	}
-	
+
 	/**
 	 * Updates the rendering data. For internal use only.
 	 *
@@ -398,15 +396,7 @@ public class Calculations extends MethodProvider {
 				final int calcCenterY = cc * calculatedY - cs * calculatedX >> 15;
 				final int screenx = calcCenterX + mm2.getAbsoluteX() + mm2.getWidth() / 2;
 				final int screeny = -calcCenterY + mm2.getAbsoluteY() + mm2.getHeight() / 2;
-
-				// Check whether point is within the circle of the minimap
-				// rather than the rectangle.
-				// if ((Math.max(calcCenterY, -calcCenterY) <= mm2.getWidth() /
-				// 2.0 * .8) && (Math.max(calcCenterX, -calcCenterX) <=
-				// mm2.getHeight() / 2 * .8))
 				return new Point(screenx, screeny);
-				// else
-				// return new Point(-1, -1);
 			}
 		} catch (final NullPointerException ignored) {
 		}
