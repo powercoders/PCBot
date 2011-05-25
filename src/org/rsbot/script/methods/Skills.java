@@ -481,8 +481,7 @@ public class Skills extends MethodProvider {
 	public boolean doHover(final int component) {
 		methods.game.openTab(Game.Tab.STATS);
 		sleep(random(10, 100));
-		return methods.interfaces.getComponent(INTERFACE_TAB_STATS, component)
-				.doHover();
+		return methods.interfaces.getComponent(INTERFACE_TAB_STATS, component)	.doHover();
 	}
 
 	/**
@@ -490,7 +489,6 @@ public class Skills extends MethodProvider {
 	 *
 	 * @param index The index of the skill.
 	 * @return <tt>true</tt> if one the given skills is boosted.
-	 * @author Dunnkers
 	 */
 	public boolean isSkillBoosted(final int... index) {
 		if (!isSkill(index)) {

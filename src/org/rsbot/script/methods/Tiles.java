@@ -8,7 +8,6 @@ import java.awt.*;
  * Tile related operations.
  */
 public class Tiles extends MethodProvider {
-
 	Tiles(final MethodContext ctx) {
 		super(ctx);
 	}
@@ -137,5 +136,4 @@ public class Tiles extends MethodProvider {
 	public boolean isCloser(final RSTile t, final RSTile tt) {
 		return methods.calc.distanceTo(t) < methods.calc.distanceTo(tt);
 	}
-
 }

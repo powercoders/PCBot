@@ -9,16 +9,46 @@ import java.awt.*;
  * Bank related operations.
  */
 public class Bank extends MethodProvider {
+	public static final Filter<RSObject> OBJECT_BANKS = new Filter<RSObject>() {
+		private final String[] bankNames = {"Bank Booth", "Bank Chest"};
 
-	public static final int[] BANKERS = {44, 45, 494, 495, 499, 553, 958, 1036, 2271, 2354, 2355, 2759, 3824, 5488,
-			5901, 5912, 5913, 6362, 6532, 6533, 6534, 6535, 7605, 8948, 9710, 14367};
-	public static final int[] BANK_BOOTHS = {782, 2213, 6084, 11402, 11758, 12759, 14367, 19230, 24914, 25808, 26972,
-			29085, 34752, 35647, 36786};
-	public static final int[] BANK_CHESTS = {4483, 12308, 20607, 21301, 27663, 42192};
-	public static final int[] BANK_DEPOSIT_BOX = {9398, 20228, 26969, 36788};
-	public static final int[] DO_NOT_DEPOSIT = new int[]{1265, 1267, 1269, 1273, 1271, 1275, 1351, 590, 303};
-	public static final RSTile[] UNREACHABLE_BANKERS = {
-			new RSTile(3191, 3445), new RSTile(3180, 3433) // VARROCK EAST
+		public boolean accept(final RSObject rsObject) {
+			final String name = rsObject != null ? rsObject.getName() : null;
+			for (String bankName : bankNames) {
+				if (name.equalsIgnoreCase(bankName)) {
+					return true;
+				}
+			}
+			return false;
+		}
+	};
+
+	public static final Filter<RSObject> OBJECT_DEPOSIT_BOX = new Filter<RSObject>() {
+		private final String[] depositBoxNames = {"Deposit Box"};
+
+		public boolean accept(final RSObject rsObject) {
+			final String name = rsObject != null ? rsObject.getName() : null;
+			for (String bankName : depositBoxNames) {
+				if (name.equalsIgnoreCase(bankName)) {
+					return true;
+				}
+			}
+			return false;
+		}
+	};
+
+	public static final Filter<RSNPC> NPC_BANKERS = new Filter<RSNPC>() {
+		private final String[] bankerNames = {"Banker"};
+
+		public boolean accept(final RSNPC rsNPC) {
+			final String name = rsNPC != null ? rsNPC.getName() : null;
+			for (String bankName : bankerNames) {
+				if (name.equalsIgnoreCase(bankName)) {
+					return true;
+				}
+			}
+			return false;
+		}
 	};
 
 	public static final int INTERFACE_BANK = 762;
@@ -361,24 +391,6 @@ public class Bank extends MethodProvider {
 		return methods.interfaces.get(INTERFACE_DEPOSIT_BOX).isValid();
 	}
 
-	private static class ReachableBankerFilter implements Filter<RSNPC> {
-		public boolean accept(final RSNPC npc) {
-			final int id = npc.getID();
-			final RSTile location = npc.getLocation();
-			for (final int banker : BANKERS) {
-				if (banker == id) {
-					for (final RSTile unreachableBanker : UNREACHABLE_BANKERS) {
-						if (unreachableBanker.equals(location)) {
-							return false;
-						}
-					}
-					return true;
-				}
-			}
-			return false;
-		}
-	}
-
 	/**
 	 * Opens one of the supported banker NPCs, booths, or chests nearby. If they
 	 * are not nearby, and they are not null, it will automatically walk to the
@@ -395,9 +407,8 @@ public class Bank extends MethodProvider {
 				methods.mouse.moveSlightly();
 				sleep(random(20, 30));
 			}
-			RSObject bankBooth = methods.objects.getNearest(BANK_BOOTHS);
-			RSNPC banker = methods.npcs.getNearest(new ReachableBankerFilter());
-			final RSObject bankChest = methods.objects.getNearest(BANK_CHESTS);
+			RSObject bankBooth = methods.objects.getNearest(OBJECT_BANKS);
+			RSNPC banker = methods.npcs.getNearest(NPC_BANKERS);
 			/* Find closest one, others are set to null. Remember distance and tile. */
 			int lowestDist = Integer.MAX_VALUE;
 			RSTile tile = null;
@@ -410,21 +421,13 @@ public class Bank extends MethodProvider {
 				lowestDist = methods.calc.distanceTo(tile);
 				bankBooth = null;
 			}
-			if (bankChest != null && methods.calc.distanceTo(bankChest) < lowestDist) {
-				tile = bankChest.getLocation();
-				lowestDist = methods.calc.distanceTo(tile);
-				bankBooth = null;
-				banker = null;
-			}
 			/* Open closest one, if any found */
 			if (lowestDist < 5 && methods.calc.tileOnMap(tile) && methods.calc.canReach(tile, true)) {
 				boolean didAction = false;
 				if (bankBooth != null) {
-					didAction = bankBooth.doAction("Use-Quickly");
+					didAction = bankBooth.doAction("Use-quickly");
 				} else if (banker != null) {
 					didAction = banker.doAction("Bank", "Banker");
-				} else if (bankChest != null) {
-					didAction = bankChest.doAction("Bank") || methods.menu.doAction("Use");
 				}
 				if (didAction) {
 					int count = 0;
@@ -461,7 +464,7 @@ public class Bank extends MethodProvider {
 					methods.mouse.moveSlightly();
 					sleep(random(20, 30));
 				}
-				final RSObject depositBox = methods.objects.getNearest(BANK_DEPOSIT_BOX);
+				final RSObject depositBox = methods.objects.getNearest(OBJECT_DEPOSIT_BOX);
 				if (depositBox != null && methods.calc.distanceTo(depositBox) < 8 && methods.calc.tileOnMap(depositBox.getLocation()) && methods.calc.canReach(depositBox.getLocation(), true)) {
 					if (depositBox.doAction("Deposit")) {
 						int count = 0;
@@ -789,5 +792,4 @@ public class Bank extends MethodProvider {
 		}
 		return -1;
 	}
-
 }

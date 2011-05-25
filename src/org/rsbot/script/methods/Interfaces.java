@@ -11,7 +11,6 @@ import java.util.List;
  * Provides access to interfaces.
  */
 public class Interfaces extends MethodProvider {
-
 	Interfaces(final MethodContext ctx) {
 		super(ctx);
 	}
@@ -134,9 +133,7 @@ public class Interfaces extends MethodProvider {
 				final int len = iface.getChildCount();
 				for (int i = 0; i < len; i++) {
 					final RSComponent child = iface.getComponent(i);
-					if (child.containsText("Click here to continue")
-							&& child.isValid() && child.getAbsoluteX() > 10
-							&& child.getAbsoluteY() > 300) {
+					if (child.containsText("Click here to continue") && child.isValid() && child.getAbsoluteX() > 10 && child.getAbsoluteY() > 300) {
 						return child;
 					}
 				}
@@ -166,9 +163,7 @@ public class Interfaces extends MethodProvider {
 		final Rectangle actual = new Rectangle(minX, minY, width, height);
 		// Check if the menu already contains the action otherwise reposition
 		// before clicking
-		if (actual.contains(methods.mouse.getLocation())
-				&& methods.menu.contains(action)
-				&& methods.menu.doAction(action)) {
+		if (actual.contains(methods.mouse.getLocation()) && methods.menu.contains(action) && methods.menu.doAction(action)) {
 			return true;
 		}
 		methods.mouse.move(random(minX, minX + width),
@@ -271,9 +266,7 @@ public class Interfaces extends MethodProvider {
 		final RSComponent scrollBarArea = scrollBar.getComponent(0);
 		final int contentHeight = scrollableArea.getScrollableContentHeight();
 
-		int pos = (int) ((float) scrollBarArea.getRealHeight() / contentHeight * (component
-				.getRelativeY() + random(-areaHeight / 2, areaHeight / 2
-				- component.getRealHeight())));
+		int pos = (int) ((float) scrollBarArea.getRealHeight() / contentHeight * (component.getRelativeY() + random(-areaHeight / 2, areaHeight / 2 - component.getRealHeight())));
 		if (pos < 0) // inner
 		{
 			pos = 0;
@@ -282,18 +275,13 @@ public class Interfaces extends MethodProvider {
 		}
 
 		// Click on the scrollbar
-		methods.mouse.click(
-				scrollBarArea.getAbsoluteX()
-						+ random(0, scrollBarArea.getRealWidth()),
-				scrollBarArea.getAbsoluteY() + pos, true);
+		methods.mouse.click(scrollBarArea.getAbsoluteX() + random(0, scrollBarArea.getRealWidth()), scrollBarArea.getAbsoluteY() + pos, true);
 
 		// Wait a bit
 		sleep(random(200, 400));
 
 		// Scroll to it if we missed it
-		while (component.getAbsoluteY() < areaY
-				|| component.getAbsoluteY() > areaY + areaHeight - component
-				.getRealHeight()) {
+		while (component.getAbsoluteY() < areaY || component.getAbsoluteY() > areaY + areaHeight - component.getRealHeight()) {
 			final boolean scrollUp = component.getAbsoluteY() < areaY;
 			scrollBar.getComponent(scrollUp ? 4 : 5).doAction("");
 
@@ -301,17 +289,14 @@ public class Interfaces extends MethodProvider {
 		}
 
 		// Return whether or not the component is visible now.
-		return component.getAbsoluteY() >= areaY
-				&& component.getAbsoluteY() <= areaY + areaHeight
-				- component.getRealHeight();
+		return component.getAbsoluteY() >= areaY && component.getAbsoluteY() <= areaY + areaHeight - component.getRealHeight();
 	}
 
 	/**
 	 * Enlarges the cache if there are more interfaces than the cache size.
 	 */
 	private synchronized void enlargeCache() {
-		final org.rsbot.client.RSInterface[][] inters = methods.client
-				.getRSInterfaceCache();
+		final org.rsbot.client.RSInterface[][] inters = methods.client.getRSInterfaceCache();
 		if (inters != null && mainCache.length < inters.length) { // enlarge
 			// cache
 			mainCache = Arrays.copyOf(mainCache, inters.length);
