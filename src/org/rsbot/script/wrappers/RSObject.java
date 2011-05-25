@@ -214,6 +214,20 @@ public class RSObject extends MethodProvider {
 		}
 	}
 
+	/**
+	 * Determines whether the object is reachable by the player.
+	 *
+	 * @return <tt>true</tt> if a path can be made to the specified object;
+	 * otherwise <tt>false</tt>.
+	 */
+	public boolean isReachable() {
+		for (RSTile t : getArea().getTileArray()) {
+			if (methods.calc.canReach(t, true))
+				return true;
+		}
+		return false;
+	}
+
 	@Override
 	public boolean equals(final Object o) {
 		return o instanceof RSObject && ((RSObject) o).obj == obj;
