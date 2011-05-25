@@ -37,33 +37,11 @@ public class AccountStore {
 		}
 
 		public String getPassword() {
-			boolean safe = true;
-			final StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-			for (final StackTraceElement stackTraceElement : stackTraceElements) {
-				safe = safe && (stackTraceElement.getClassName().contains("org.rsbot.") || stackTraceElement
-						.getClassName().contains("java.lang.T") || stackTraceElement
-						.getClassName().contains("java.awt.") || stackTraceElement
-						.getClassName().contains("javax.swing.") || stackTraceElement
-						.getClassName().contains("java.security.") || stackTraceElement
-						.getClassName().contains("sun.awt."));
-			}
-			return safe ? password : null;
+			return password;
 		}
 
 		public String getAttribute(final String key) {
-			boolean safe = true;
-			final StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-			if (key.equalsIgnoreCase("pin")) {
-				for (final StackTraceElement stackTraceElement : stackTraceElements) {
-					safe = safe && (stackTraceElement.getClassName().contains("org.rsbot.") || stackTraceElement
-							.getClassName().contains("java.lang.T") || stackTraceElement
-							.getClassName().contains("java.awt.") || stackTraceElement
-							.getClassName().contains("javax.swing.") || stackTraceElement
-							.getClassName().contains("java.security.") || stackTraceElement
-							.getClassName().contains("sun.awt."));
-				}
-			}
-			return safe ? attributes.get(key) : null;
+			return attributes.get(key);
 		}
 
 		public void setAttribute(final String key, final String value) {
