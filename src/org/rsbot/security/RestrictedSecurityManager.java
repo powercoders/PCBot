@@ -297,8 +297,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkWrite(final String file) {
-		if (file.contains("hosts"))
-		System.out.println(getCallingClass());
 		checkFilePath(file, false);
 		super.checkWrite(file);
 	}
