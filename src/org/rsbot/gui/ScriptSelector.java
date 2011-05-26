@@ -11,6 +11,7 @@ import org.rsbot.script.provider.ScriptDefinition;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.script.provider.ScriptSource;
 import org.rsbot.service.ServiceException;
+import org.rsbot.util.StringUtil;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -473,9 +474,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					}
 					return ICON_SCRIPT_NET;
 				case 1:
-					return def.name;
+					return StringUtil.stripHtml(def.name);
 				case 2:
-					return def.description;
+					return StringUtil.stripHtml(def.description);
 				}
 			}
 			return null;
