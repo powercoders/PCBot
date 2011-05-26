@@ -2,6 +2,7 @@ package org.rsbot.gui;
 
 import org.rsbot.Configuration;
 import org.rsbot.bot.Bot;
+import org.rsbot.gui.component.JComboCheckBox;
 import org.rsbot.script.Script;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
@@ -40,6 +41,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private JTable table;
 	private JTextField search;
 	private JComboBox accounts;
+	private final JComboCheckBox categories = new JComboCheckBox("Categories");
 	private final ScriptTableModel model;
 	private final List<ScriptDefinition> scripts;
 	private JButton submit;
@@ -86,6 +88,23 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		scripts.addAll(SRC_PRECOMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
 		Collections.sort(scripts);
+
+		final ArrayList<String> keywords = new ArrayList<String>(scripts.size());
+		for (final ScriptDefinition def : scripts) {
+			if (def.keywords == null || def.keywords.length == 0) {
+				continue;
+			}
+			for (String keyword : def.keywords) {
+				keyword = keyword.toLowerCase().trim();
+				if (keyword.length() > 0 && !keywords.contains(keyword)) {
+					keywords.add(keyword);
+				}
+			}
+		}
+		Collections.sort(keywords);
+		keywords.add(0, "All");
+		categories.populate(keywords, false);
+
 		model.search((search == null || search.getText().contains("\0")) ? "" : search.getText());
 		table.revalidate();
 	}
@@ -297,8 +316,11 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			connect.addActionListener(listenConnect);
 		}
 		accounts = new JComboBox(AccountManager.getAccountNames());
-		accounts.setPreferredSize(new Dimension(200, 20));
+		accounts.setPreferredSize(new Dimension(125, 20));
+		categories.setPreferredSize(new Dimension(150, 20));
 		toolBar.add(search);
+		toolBar.add(Box.createHorizontalStrut(5));
+		toolBar.add(categories);
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(accounts);
 		toolBar.add(Box.createHorizontalStrut(5));
