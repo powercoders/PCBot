@@ -43,7 +43,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private JTable table;
 	private JTextField search;
 	private JComboBox accounts;
-	private final JComboCheckBox categories = new JComboCheckBox("Categories");
+	private final JComboCheckBox categories = new JComboCheckBox();
 	private final ScriptTableModel model;
 	private final List<ScriptDefinition> scripts;
 	private JButton submit;
@@ -104,10 +104,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			}
 		}
 		Collections.sort(keywords);
-		keywords.add(0, "All");
 		categories.populate(keywords, false);
 
-		model.search((search == null || search.getText().contains("\0")) ? "" : search.getText());
+		filter();
 		table.revalidate();
 	}
 
@@ -263,7 +262,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		search.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(final KeyEvent e) {
-				model.search(search.getText());
+				filter();
 				table.revalidate();
 			}
 
@@ -320,6 +319,33 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		accounts = new JComboBox(AccountManager.getAccountNames());
 		accounts.setPreferredSize(new Dimension(125, 20));
 		categories.setPreferredSize(new Dimension(150, 20));
+		categories.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent arg0) {
+				final String[] selected = categories.getSelectedItems();
+				final StringBuilder s = new StringBuilder(16);
+				switch (selected.length) {
+				case 0:
+					s.append("Showing all");
+					break;
+				case 1:
+					s.append(selected[0]);
+					break;
+				case 2:
+					s.append(selected[0]);
+					s.append(" & ");
+					s.append(selected[1]);
+					break;
+				default:
+					s.append("Showing ");
+					s.append(selected.length);
+					s.append(" types");
+					break;
+				}
+				categories.setText(s.toString());
+				filter();
+			}
+		});
 		toolBar.add(search);
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(categories);
@@ -342,6 +368,10 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		setMinimumSize(getSize());
 		setLocationRelativeTo(getParent());
 		search.requestFocus();
+	}
+
+	private void filter() {
+		model.search((search == null || search.getText().contains("\0")) ? "" : search.getText(), categories.getSelectedItems());
 	}
 
 	private void setColumnWidths(final JTable table, final int... widths) {
@@ -394,24 +424,25 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			matches = new ArrayList<ScriptDefinition>();
 		}
 
-		public void search(String substr) {
+		public void search(final String find, final String[] keys) {
 			matches.clear();
-			substr = substr.trim();
-			if (substr.isEmpty()) {
-				matches.addAll(scripts);
-			} else {
-				substr = substr.toLowerCase();
-				for (final ScriptDefinition def : scripts) {
-					if (def.name.toLowerCase().contains(substr)) {
-						matches.add(def);
-					} else {
-						for (final String keyword : def.keywords) {
-							if (keyword.toLowerCase().contains(substr)) {
-								matches.add(def);
-								break;
-							}
-						}
+			for (final ScriptDefinition def : scripts) {
+				if (find.length() != 0 && !def.name.toLowerCase().contains(find)) {
+					continue;
+				}
+				final ArrayList<String> list = new ArrayList<String>(def.keywords.length);
+				for (final String key : def.keywords) {
+					list.add(key.toLowerCase());
+				}
+				boolean hit = true;
+				for (final String key : keys) {
+					if (!list.contains(key)) {
+						hit = false;
+						break;
 					}
+				}
+				if (hit) {
+					matches.add(def);
 				}
 			}
 			fireTableDataChanged();

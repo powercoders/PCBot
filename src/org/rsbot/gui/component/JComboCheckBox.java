@@ -3,6 +3,7 @@ package org.rsbot.gui.component;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -15,17 +16,45 @@ import javax.swing.ListCellRenderer;
  */
 public class JComboCheckBox extends JComboBox implements ActionListener {
 	private static final long serialVersionUID = -3388586151789454096L;
+	private ComboCheckRenderer renderer;
 
-	public JComboCheckBox(final String defaultText) {
-		addActionListener(this);
-		setRenderer(new ComboCheckRenderer(defaultText));
+	public JComboCheckBox() {
+		super.addActionListener(this);
+		setRenderer(renderer = new ComboCheckRenderer());
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		JComboBox cb = (JComboBox) e.getSource();
-		StatefulItem store = (StatefulItem) cb.getSelectedItem();
-		ComboCheckRenderer ccr = (ComboCheckRenderer) cb.getRenderer();
+	@Override
+	public void addActionListener(final ActionListener l) {
+		super.removeActionListener(this);
+		super.addActionListener(l);
+		super.addActionListener(this);
+	}
+
+	public void actionPerformed(final ActionEvent e) {
+		if (e.getModifiers() == 0) {
+			return;
+		}
+		final JComboBox cb = (JComboBox) e.getSource();
+		final StatefulItem store = (StatefulItem) cb.getSelectedItem();
+		final ComboCheckRenderer ccr = (ComboCheckRenderer) cb.getRenderer();
 		ccr.checkBox.setSelected(store.state = !store.state);
+	}
+
+	public void setText(final String label) {
+		renderer.setText(label);
+	}
+
+	public String[] getSelectedItems() {
+		final ArrayList<String> items = new ArrayList<String>();
+		for (int i = 0; i < getItemCount(); i++) {
+			final StatefulItem item = (StatefulItem) getItemAt(i);
+			if (item.state) {
+				items.add(item.id);
+			}
+		}
+		final String[] list = new String[items.size()];
+		items.toArray(list);
+		return list;
 	}
 
 	public void populate(final Iterable<String> list, final boolean state) {
@@ -39,9 +68,13 @@ public class JComboCheckBox extends JComboBox implements ActionListener {
 		final JLabel none;
 		final JCheckBox checkBox;
 
-		public ComboCheckRenderer(final String defaultText) {
-			none = new JLabel(defaultText);
+		public ComboCheckRenderer() {
+			none = new JLabel();
 			checkBox = new JCheckBox();
+		}
+
+		public void setText(final String label) {
+			none.setText(label);
 		}
 
 		public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean cellHasFocus) {
