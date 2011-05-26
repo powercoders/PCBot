@@ -16,9 +16,9 @@ public class TUserInputAllowed implements TextPaintListener {
 
 	@Override
 	public int drawLine(final Graphics render, int idx) {
-		StringUtil.drawLine(render, idx++, "User Input: " +
-				(bot.inputFlags == 0 && !bot.overrideInput ?
-						"[red]Disabled (" + bot.inputFlags + ")" : "[green]Enabled"));
+		final String i = bot.overrideInput || bot.inputFlags == 3 ? "[green]Enabled" :
+				"[red]Disabled (" + bot.inputFlags + ")";
+		StringUtil.drawLine(render, idx++, "User Input: " + i);
 		return idx;
 	}
 }

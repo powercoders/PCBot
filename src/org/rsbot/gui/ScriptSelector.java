@@ -78,7 +78,10 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private void load() {
 		scripts.clear();
 		if (connected) {
-			scripts.addAll(SRC_DRM.list());
+			try {
+				scripts.addAll(SRC_DRM.list());
+			} catch (NullPointerException npe) {
+			}
 		}
 		scripts.addAll(SRC_PRECOMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
@@ -103,11 +106,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		final JButton refresh = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
 		refresh.setToolTipText("Refresh");
 		refresh.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				refresh.setEnabled(false);
 				SwingUtilities.invokeLater(new Runnable() {
-					@Override
 					public void run() {
 						new Thread() {
 							@Override
@@ -244,6 +245,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				model.search(search.getText());
 				table.revalidate();
 			}
+
 			@Override
 			public void keyReleased(final KeyEvent e) {
 				keyTyped(e);

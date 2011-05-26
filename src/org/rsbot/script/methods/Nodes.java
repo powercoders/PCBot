@@ -9,7 +9,6 @@ import org.rsbot.client.Node;
  * structures.
  */
 public class Nodes extends MethodProvider {
-
 	Nodes(final MethodContext ctx) {
 		super(ctx);
 	}
@@ -26,8 +25,7 @@ public class Nodes extends MethodProvider {
 			}
 
 			final Node n = nc.getBuckets()[(int) (id & nc.getBuckets().length - 1)];
-			for (Node node = n.getPrevious(); node != n; node = node
-					.getPrevious()) {
+			for (Node node = n.getPrevious(); node != n; node = node.getPrevious()) {
 				if (node.getID() == id) {
 					return node;
 				}
@@ -48,5 +46,4 @@ public class Nodes extends MethodProvider {
 		}
 		return lookup(loader.getCache().getTable(), id);
 	}
-
 }

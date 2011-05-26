@@ -70,7 +70,7 @@ public class Lobby extends MethodProvider {
 			return -1;
 		}
 		for (int i = 0; i < TABS.length; i++) {
-			if (methods.interfaces.getComponent(TAB_PLAYER_INFO, TABS_TEXTURE[i]).getBackgroundColor() == SELECTED_TEXTURE) {
+			if (methods.interfaces.getComponent(PLAYER_INFO_INTERFACE, TABS_TEXTURE[i]).getBackgroundColor() == SELECTED_TEXTURE) {
 				return i;
 			}
 		}

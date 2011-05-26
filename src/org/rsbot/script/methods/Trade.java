@@ -1,8 +1,12 @@
 package org.rsbot.script.methods;
 
+import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
+import org.rsbot.script.wrappers.RSItem;
 import org.rsbot.script.wrappers.RSPlayer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -11,7 +15,6 @@ import java.util.logging.Logger;
  * @author Timer
  * @author kyleshay
  */
-@SuppressWarnings("unused")
 public class Trade extends MethodProvider {
 	private static final Logger log = Logger.getLogger(Trade.class.getName());
 
@@ -131,8 +134,7 @@ public class Trade extends MethodProvider {
 	 */
 	public boolean acceptTrade() {
 		if (inTradeMain()) {
-			return methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_ACCEPT).doAction(
-					"Accept");
+			return methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_ACCEPT).doAction("Accept");
 		} else {
 			return inTradeSecond() && methods.interfaces.get(INTERFACE_TRADE_SECOND).getComponent(INTERFACE_TRADE_SECOND_ACCEPT).doAction("Accept");
 		}
@@ -145,8 +147,7 @@ public class Trade extends MethodProvider {
 	 */
 	public boolean declineTrade() {
 		if (inTradeMain()) {
-			return methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_DECLINE).doAction(
-					"Decline");
+			return methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_DECLINE).doAction("Decline");
 		} else {
 			return inTradeSecond() && methods.interfaces.get(INTERFACE_TRADE_SECOND).getComponent(INTERFACE_TRADE_SECOND_DECLINE).doAction("Decline");
 		}
@@ -189,7 +190,7 @@ public class Trade extends MethodProvider {
 	 *
 	 * @return The person's name you're trading with.
 	 */
-	private String getTradingWith() {
+	public String getTradingWith() {
 		if (inTradeMain()) {
 			final String name = methods.interfaces.getComponent(INTERFACE_TRADE_MAIN, INTERFACE_TRADE_MAIN_NAME).getText();
 			return name.substring(name.indexOf(": ") + 2);
@@ -205,7 +206,7 @@ public class Trade extends MethodProvider {
 	 * @param name The person's name.
 	 * @return <tt>true</tt> if true; otherwise <tt>false</tt>.
 	 */
-	private boolean isTradingWith(final String name) {
+	public boolean isTradingWith(final String name) {
 		return getTradingWith().equals(name);
 	}
 
@@ -214,11 +215,10 @@ public class Trade extends MethodProvider {
 	 *
 	 * @return The number of items offered.
 	 */
-	private int getNumberOfItemsOffered() {
+	public int getNumberOfItemsOffered() {
 		int number = 0;
 		for (int i = 0; i < 28; i++) {
-			if (methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(
-					INTERFACE_TRADE_MAIN_OUR).getComponent(i).getComponentStackSize() != 0) {
+			if (methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_THEIR).getComponent(i).getComponentStackSize() != 0) {
 				++number;
 			}
 		}
@@ -226,14 +226,29 @@ public class Trade extends MethodProvider {
 	}
 
 	/**
+	 * Returns the items offered by another player
+	 *
+	 * @return The items offered.
+	 */
+	public RSItem[] getItemsOffered() {
+		List<RSItem> items = new ArrayList<RSItem>();
+		for (int i = 0; i < 28; i++) {
+			RSComponent component = methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_THEIR).getComponent(i);
+			if (component != null && component.getComponentStackSize() != 0) {
+				items.add(new RSItem(methods, component));
+			}
+		}
+		return items.toArray(new RSItem[items.size()]);
+	}
+
+	/**
 	 * Returns the total number of free slots the other player has
 	 *
 	 * @return The number of free slots.
 	 */
-	private int getFreeSlots() {
+	public int getFreeSlots() {
 		if (inTradeMain()) {
-			String text = methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(
-					INTERFACE_TRADE_MAIN_INV_SLOTS).getText().substring(4, 6);
+			String text = methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_INV_SLOTS).getText().substring(4, 6);
 			text = text.trim();
 			try {
 				return Integer.parseInt(text);
@@ -242,5 +257,4 @@ public class Trade extends MethodProvider {
 		}
 		return 0;
 	}
-
 }

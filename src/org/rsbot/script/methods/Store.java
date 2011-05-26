@@ -10,7 +10,6 @@ import java.util.ArrayList;
  * Store related operations.
  */
 public class Store extends MethodProvider {
-
 	public static final int INTERFACE_STORE = 620;
 	public static final int INTERFACE_STORE_BUTTON_CLOSE = 18;
 	public static final int INTERFACE_STORE_ITEMS = 25;
@@ -88,9 +87,7 @@ public class Store extends MethodProvider {
 		if (!isOpen()) {
 			return true;
 		}
-
-		if (methods.interfaces.getComponent(INTERFACE_STORE,
-				INTERFACE_STORE_BUTTON_CLOSE).doClick()) {
+		if (methods.interfaces.getComponent(INTERFACE_STORE,INTERFACE_STORE_BUTTON_CLOSE).doClick()) {
 			sleep(random(500, 600));
 			return !isOpen();
 		} else {
@@ -154,17 +151,14 @@ public class Store extends MethodProvider {
 	 *         in the stores <tt>RSInterface</tt>.
 	 */
 	public RSItem[] getItems() {
-		if (getInterface() == null
-				|| getInterface().getComponent(INTERFACE_STORE_ITEMS) == null) {
+		if (getInterface() == null	|| getInterface().getComponent(INTERFACE_STORE_ITEMS) == null) {
 			return null;
 		}
 
 		final ArrayList<RSItem> items = new ArrayList<RSItem>();
-		final RSComponent[] components = getInterface().getComponent(
-				INTERFACE_STORE_ITEMS).getComponents();
+		final RSComponent[] components = getInterface().getComponent(INTERFACE_STORE_ITEMS).getComponents();
 
 		for (final RSComponent component : components) {
-
 			if (component != null && component.getComponentID() != -1) {
 				items.add(new RSItem(methods, component));
 			}

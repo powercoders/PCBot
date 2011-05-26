@@ -2,15 +2,10 @@ package org.rsbot.script.methods;
 
 import org.rsbot.gui.AccountManager;
 
-import java.util.logging.Logger;
-
 /**
  * Selected account information.
  */
 public class Account extends MethodProvider {
-
-	Logger log = Logger.getLogger(getClass().getName());
-
 	public Account(final MethodContext ctx) {
 		super(ctx);
 	}
@@ -50,5 +45,4 @@ public class Account extends MethodProvider {
 	public String getReward() {
 		return AccountManager.getReward(getName());
 	}
-
 }

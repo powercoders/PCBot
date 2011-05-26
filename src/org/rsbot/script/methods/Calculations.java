@@ -44,6 +44,218 @@ public class Calculations extends MethodProvider {
 	}
 
 	/**
+	 * Returns the angle to a given tile in degrees anti-clockwise from the
+	 * positive x axis (where the x-axis is from west to east).
+	 *
+	 * @param t The target tile
+	 * @return The angle in degrees
+	 */
+	public int angleToTile(final RSTile t) {
+		final RSTile me = methods.players.getMyPlayer().getLocation();
+		final int angle = (int) Math.toDegrees(Math.atan2(t.getY() - me.getY(), t.getX() - me.getX()));
+		return angle >= 0 ? angle : 360 + angle;
+	}
+
+	/**
+	 * Determines whether or not a given RSTile is reachable by the player.
+	 *
+	 * @param dest     The <code>RSTile</code> to check.
+	 * @param isObject True if an instance of <code>RSObject</code>.
+	 * @return <tt>true</tt> if a path can be made to the specified tile; otherwise <tt>false</tt>.
+	 */
+	public boolean canReach(final RSTile dest, final boolean isObject) {
+		return pathLengthTo(dest, isObject) != -1;
+	}
+
+	/**
+	 * Calculates the distance between two points.
+	 *
+	 * @param curr The first point.
+	 * @param dest The second point.
+	 * @return The distance between the two points, using the distance formula.
+	 * @see #distanceBetween(RSTile, RSTile)
+	 */
+	public double distanceBetween(final Point curr, final Point dest) {
+		return Math.sqrt((curr.x - dest.x) * (curr.x - dest.x) + (curr.y - dest.y) * (curr.y - dest.y));
+	}
+
+	/**
+	 * Returns the diagonal distance (hypot) between two RSTiles.
+	 *
+	 * @param curr The starting tile.
+	 * @param dest The destination tile.
+	 * @return The diagonal distance between the two <code>RSTile</code>s.
+	 * @see #distanceBetween(Point, Point)
+	 */
+	public double distanceBetween(final RSTile curr, final RSTile dest) {
+		return Math.sqrt((curr.getX() - dest.getX()) * (curr.getX() - dest.getX()) + (curr.getY() - dest.getY()) * (curr.getY() - dest.getY()));
+	}
+
+	/**
+	 * Returns the diagonal distance to a given RSCharacter.
+	 *
+	 * @param c The destination character.
+	 * @return Distance to <code>RSCharacter</code>.
+	 * @see #distanceTo(RSTile)
+	 */
+	public int distanceTo(final RSCharacter c) {
+		return c == null ? -1 : distanceTo(c.getLocation());
+	}
+
+	/**
+	 * Returns the diagonal distance to a given RSObject.
+	 *
+	 * @param o The destination object.
+	 * @return Distance to <code>RSObject</code>.
+	 * @see #distanceTo(RSTile)
+	 */
+	public int distanceTo(final RSObject o) {
+		return o == null ? -1 : distanceTo(o.getLocation());
+	}
+
+	/**
+	 * Returns the diagonal distance to a given RSTile.
+	 *
+	 * @param t The destination tile.
+	 * @return Distance to <code>RSTile</code>.
+	 */
+	public int distanceTo(final RSTile t) {
+		return t == null ? -1 : (int) distanceBetween(methods.players.getMyPlayer().getLocation(), t);
+	}
+
+	/**
+	 * Will return the closest tile that is on screen to the given tile.
+	 *
+	 * @param tile Tile you want to get to.
+	 * @return <code>RSTile</code> that is onScreen.
+	 */
+	public RSTile getTileOnScreen(final RSTile tile) {
+		try {
+			if (tileOnScreen(tile)) {
+				return tile;
+			} else {
+				final RSTile loc = methods.players.getMyPlayer().getLocation();
+				final RSTile halfWayTile = new RSTile((tile.getX() + loc.getX()) / 2, (tile.getY() + loc.getY()) / 2);
+				if (tileOnScreen(halfWayTile)) {
+					return halfWayTile;
+				} else {
+					return getTileOnScreen(halfWayTile);
+				}
+			}
+		} catch (final StackOverflowError soe) {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns the screen location of a given point on the ground. This accounts
+	 * for the height of the ground at the given location.
+	 *
+	 * @param x      x value based on the game plane.
+	 * @param y      y value based on the game plane.
+	 * @param height height offset (normal to the ground).
+	 * @return <code>Point</code> based on screen; otherwise <code>new Point(-1, -1)</code>.
+	 */
+	public Point groundToScreen(final int x, final int y, final int height) {
+		if (methods.client.getGroundByteArray() == null || methods.client.getTileData() == null || x < 512 || y < 512 || x > 52224 || y > 52224) {
+			return new Point(-1, -1);
+		}
+		final int z = tileHeight(x, y) + height;
+		return worldToScreen(x, y, z);
+	}
+
+	/**
+	 * Returns the length of the path generated to a given RSTile.
+	 *
+	 * @param dest     The destination tile.
+	 * @param isObject <tt>true</tt> if reaching any tile adjacent to the destination should be accepted.
+	 * @return <tt>true</tt> if reaching any tile adjacent to the destination should be accepted.
+	 */
+	public int pathLengthTo(final RSTile dest, final boolean isObject) {
+		final RSTile curPos = methods.players.getMyPlayer().getLocation();
+		return pathLengthBetween(curPos, dest, isObject);
+	}
+
+	/**
+	 * Returns the length of the path generates between two RSTiles.
+	 *
+	 * @param start    The starting tile.
+	 * @param dest     The destination tile.
+	 * @param isObject <tt>true</tt> if reaching any tile adjacent to the destination should be accepted.
+	 * @return <tt>true</tt> if reaching any tile adjacent to the destination should be accepted.
+	 */
+	public int pathLengthBetween(final RSTile start, final RSTile dest, final boolean isObject) {
+		return dijkstraDist(start.getX() - methods.client.getBaseX(), // startX
+				start.getY() - methods.client.getBaseY(), // startY
+				dest.getX() - methods.client.getBaseX(), // destX
+				dest.getY() - methods.client.getBaseY(), // destY
+				isObject); // if it's an object, accept any adjacent tile
+	}
+
+	/**
+	 * Checks whether a point is within the rectangle that determines the bounds
+	 * of game screen. This will work fine when in fixed mode. In resizable mode
+	 * it will exclude any points that are less than 253 pixels from the right
+	 * of the screen or less than 169 pixels from the bottom of the screen,
+	 * giving a rough area.
+	 *
+	 * @param check The point to check.
+	 * @return <tt>true</tt> if the point is within the rectangle; otherwise
+	 *         <tt>false</tt>.
+	 */
+	public boolean pointOnScreen(final Point check) {
+		final int x = check.x, y = check.y;
+		if (methods.game.isFixed()) {
+			return x > 4 && x < methods.game.getWidth() - 253 && y > 4 && y < methods.game.getHeight() - 169;
+		} else {
+			return x > 0 && x < methods.game.getWidth() - 260 && y > 0 && y < methods.game.getHeight() - 149;
+		}
+	}
+
+	/**
+	 * Returns a random double in a specified range
+	 *
+	 * @param min Minimum value (inclusive).
+	 * @param max Maximum value (exclusive).
+	 * @return The random <code>double</code> generated.
+	 */
+	@Override
+	public double random(final double min, final double max) {
+		return Math.min(min, max) + methods.random.nextDouble() * Math.abs(max - min);
+	}
+
+	/**
+	 * Returns the height of the ground at the given location in the game world.
+	 *
+	 * @param x x value based on the game plane.
+	 * @param y y value based on the game plane.
+	 * @return The ground height at the given location; otherwise <code>0</code>.
+	 */
+	public int tileHeight(final int x, final int y) {
+		int p = methods.client.getPlane();
+		final int x1 = x >> 9;
+		final int y1 = y >> 9;
+		final byte[][][] settings = methods.client.getGroundByteArray();
+		if (settings != null && x1 >= 0 && x1 < 104 && y1 >= 0 && y1 < 104) {
+			if (p <= 3 && (settings[1][x1][y1] & 2) != 0) {
+				++p;
+			}
+			final TileData[] planes = methods.client.getTileData();
+			if (planes != null && p < planes.length && planes[p] != null) {
+				final int[][] heights = planes[p].getHeights();
+				if (heights != null) {
+					final int x2 = x & 512 - 1;
+					final int y2 = y & 512 - 1;
+					final int start_h = heights[x1][y1] * (512 - x2) + heights[x1 + 1][y1] * x2 >> 9;
+					final int end_h = heights[x1][1 + y1] * (512 - x2) + heights[x1 + 1][y1 + 1] * x2 >> 9;
+					return start_h * (512 - y2) + end_h * y2 >> 9;
+				}
+			}
+		}
+		return 0;
+	}
+
+	/**
 	 * Checks whether or not a given tile is on the minimap.
 	 *
 	 * @param t The RSTile to check.
@@ -72,88 +284,6 @@ public class Calculations extends MethodProvider {
 	 */
 	public Point tileToMinimap(final RSTile t) {
 		return worldToMinimap(t.getX(), t.getY());
-	}
-
-	/**
-	 * Checks whether a point is within the rectangle that determines the bounds
-	 * of game screen. This will work fine when in fixed mode. In resizable mode
-	 * it will exclude any points that are less than 253 pixels from the right
-	 * of the screen or less than 169 pixels from the bottom of the screen,
-	 * giving a rough area.
-	 *
-	 * @param check The point to check.
-	 * @return <tt>true</tt> if the point is within the rectangle; otherwise
-	 *         <tt>false</tt>.
-	 */
-	public boolean pointOnScreen(final Point check) {
-		final int x = check.x, y = check.y;
-		if (methods.game.isFixed()) {
-			return x > 4 && x < methods.game.getWidth() - 253 && y > 4 && y < methods.game.getHeight() - 169;
-		} else {
-			return x > 0 && x < methods.game.getWidth() - 260 && y > 0 && y < methods.game.getHeight() - 149;
-		}
-	}
-
-	/**
-	 * Calculates the distance between two points.
-	 *
-	 * @param curr The first point.
-	 * @param dest The second point.
-	 * @return The distance between the two points, using the distance formula.
-	 * @see #distanceBetween(RSTile, RSTile)
-	 */
-	public double distanceBetween(final Point curr, final Point dest) {
-		return Math.sqrt((curr.x - dest.x) * (curr.x - dest.x) + (curr.y - dest.y) * (curr.y - dest.y));
-	}
-
-	/**
-	 * Returns a random double in a specified range
-	 *
-	 * @param min Minimum value (inclusive).
-	 * @param max Maximum value (exclusive).
-	 * @return The random <code>double</code> generated.
-	 */
-	@Override
-	public double random(final double min, final double max) {
-		return Math.min(min, max) + methods.random.nextDouble()
-				* Math.abs(max - min);
-	}
-
-	/**
-	 * Will return the closest tile that is on screen to the given tile.
-	 *
-	 * @param tile Tile you want to get to.
-	 * @return <code>RSTile</code> that is onScreen.
-	 */
-	public RSTile getTileOnScreen(final RSTile tile) {
-		try {
-			if (tileOnScreen(tile)) {
-				return tile;
-			} else {
-				final RSTile loc = methods.players.getMyPlayer().getLocation();
-				final RSTile halfWayTile = new RSTile((tile.getX() + loc.getX()) / 2, (tile.getY() + loc.getY()) / 2);
-				if (tileOnScreen(halfWayTile)) {
-					return halfWayTile;
-				} else {
-					return getTileOnScreen(halfWayTile);
-				}
-			}
-		} catch (final StackOverflowError soe) {
-			return null;
-		}
-	}
-
-	/**
-	 * Returns the angle to a given tile in degrees anti-clockwise from the
-	 * positive x axis (where the x-axis is from west to east).
-	 *
-	 * @param t The target tile
-	 * @return The angle in degrees
-	 */
-	public int angleToTile(final RSTile t) {
-		final RSTile me = methods.players.getMyPlayer().getLocation();
-		final int angle = (int) Math.toDegrees(Math.atan2(t.getY() - me.getY(), t.getX() - me.getX()));
-		return angle >= 0 ? angle : 360 + angle;
 	}
 
 	/**
@@ -195,87 +325,35 @@ public class Calculations extends MethodProvider {
 	}
 
 	/**
-	 * Returns the diagonal distance to a given RSCharacter.
+	 * Updates the rendering data. For internal use only.
 	 *
-	 * @param c The destination character.
-	 * @return Distance to <code>RSCharacter</code>.
-	 * @see #distanceTo(RSTile)
+	 * @param r  The client graphics toolkit.
+	 * @param rd The client viewport.
 	 */
-	public int distanceTo(final RSCharacter c) {
-		return c == null ? -1 : distanceTo(c.getLocation());
-	}
-
-	/**
-	 * Returns the diagonal distance to a given RSObject.
-	 *
-	 * @param o The destination object.
-	 * @return Distance to <code>RSObject</code>.
-	 * @see #distanceTo(RSTile)
-	 */
-	public int distanceTo(final RSObject o) {
-		return o == null ? -1 : distanceTo(o.getLocation());
-	}
-
-	/**
-	 * Returns the diagonal distance to a given RSTile.
-	 *
-	 * @param t The destination tile.
-	 * @return Distance to <code>RSTile</code>.
-	 */
-	public int distanceTo(final RSTile t) {
-		return t == null ? -1 : (int) distanceBetween(methods.players.getMyPlayer().getLocation(), t);
-	}
-
-	/**
-	 * Returns the diagonal distance (hypot) between two RSTiles.
-	 *
-	 * @param curr The starting tile.
-	 * @param dest The destination tile.
-	 * @return The diagonal distance between the two <code>RSTile</code>s.
-	 * @see #distanceBetween(Point, Point)
-	 */
-	public double distanceBetween(final RSTile curr, final RSTile dest) {
-		return Math.sqrt((curr.getX() - dest.getX()) * (curr.getX() - dest.getX()) + (curr.getY() - dest.getY()) *
-				(curr.getY() - dest.getY()));
-	}
-
-	/**
-	 * Returns the length of the path generated to a given RSTile.
-	 *
-	 * @param dest     The destination tile.
-	 * @param isObject <tt>true</tt> if reaching any tile adjacent to the destination should be accepted.
-	 * @return <tt>true</tt> if reaching any tile adjacent to the destination should be accepted.
-	 */
-	public int pathLengthTo(final RSTile dest, final boolean isObject) {
-		final RSTile curPos = methods.players.getMyPlayer().getLocation();
-		return pathLengthBetween(curPos, dest, isObject);
-	}
-
-	/**
-	 * Returns the length of the path generates between two RSTiles.
-	 *
-	 * @param start    The starting tile.
-	 * @param dest     The destination tile.
-	 * @param isObject <tt>true</tt> if reaching any tile adjacent to the destination should be accepted.
-	 * @return <tt>true</tt> if reaching any tile adjacent to the destination should be accepted.
-	 */
-	public int pathLengthBetween(final RSTile start, final RSTile dest, final boolean isObject) {
-		return dijkstraDist(start.getX() - methods.client.getBaseX(), // startX
-				start.getY() - methods.client.getBaseY(), // startY
-				dest.getX() - methods.client.getBaseX(), // destX
-				dest.getY() - methods.client.getBaseY(), // destY
-				isObject); // if it's an object, accept any adjacent tile
-	}
-
-	/**
-	 * checks whether or not a given RSTile is reachable.
-	 *
-	 * @param dest     The <code>RSTile</code> to check.
-	 * @param isObject True if an instance of <code>RSObject</code>.
-	 * @return <tt>true</tt> if player can reach specified Object; otherwise <tt>false</tt>.
-	 */
-	public boolean canReach(final RSTile dest, final boolean isObject) {
-		return pathLengthTo(dest, isObject) != -1;
+	public void updateRenderInfo(final org.rsbot.client.Render r, final org.rsbot.client.RenderData rd) {
+		if (r == null || rd == null) {
+			return;
+		}
+		render.absoluteX1 = r.getAbsoluteX1();
+		render.absoluteX2 = r.getAbsoluteX2();
+		render.absoluteY1 = r.getAbsoluteY1();
+		render.absoluteY2 = r.getAbsoluteY2();
+		render.xMultiplier = r.getXMultiplier();
+		render.yMultiplier = r.getYMultiplier();
+		render.zNear = r.getZNear();
+		render.zFar = r.getZFar();
+		renderData.xOff = rd.getXOff();
+		renderData.xX = rd.getXX();
+		renderData.xY = rd.getXY();
+		renderData.xZ = rd.getXZ();
+		renderData.yOff = rd.getYOff();
+		renderData.yX = rd.getYX();
+		renderData.yY = rd.getYY();
+		renderData.yZ = rd.getYZ();
+		renderData.zOff = rd.getZOff();
+		renderData.zX = rd.getZX();
+		renderData.zY = rd.getZY();
+		renderData.zZ = rd.getZZ();
 	}
 
 	/**
@@ -318,69 +396,12 @@ public class Calculations extends MethodProvider {
 				final int calcCenterY = cc * calculatedY - cs * calculatedX >> 15;
 				final int screenx = calcCenterX + mm2.getAbsoluteX() + mm2.getWidth() / 2;
 				final int screeny = -calcCenterY + mm2.getAbsoluteY() + mm2.getHeight() / 2;
-
-				// Check whether point is within the circle of the minimap
-				// rather than the rectangle.
-				// if ((Math.max(calcCenterY, -calcCenterY) <= mm2.getWidth() /
-				// 2.0 * .8) && (Math.max(calcCenterX, -calcCenterX) <=
-				// mm2.getHeight() / 2 * .8))
 				return new Point(screenx, screeny);
-				// else
-				// return new Point(-1, -1);
 			}
 		} catch (final NullPointerException ignored) {
 		}
 
 		return new Point(-1, -1);
-	}
-
-	/**
-	 * Returns the screen location of a given point on the ground. This accounts
-	 * for the height of the ground at the given location.
-	 *
-	 * @param x      x value based on the game plane.
-	 * @param y      y value based on the game plane.
-	 * @param height height offset (normal to the ground).
-	 * @return <code>Point</code> based on screen; otherwise <code>new Point(-1, -1)</code>.
-	 */
-	public Point groundToScreen(final int x, final int y, final int height) {
-		if (methods.client.getGroundByteArray() == null || methods.client.getTileData() == null || x < 512 ||
-				y < 512 || x > 52224 || y > 52224) {
-			return new Point(-1, -1);
-		}
-		final int z = tileHeight(x, y) + height;
-		return worldToScreen(x, y, z);
-	}
-
-	/**
-	 * Returns the height of the ground at the given location in the game world.
-	 *
-	 * @param x x value based on the game plane.
-	 * @param y y value based on the game plane.
-	 * @return The ground height at the given location; otherwise <code>0</code>.
-	 */
-	public int tileHeight(final int x, final int y) {
-		int p = methods.client.getPlane();
-		final int x1 = x >> 9;
-		final int y1 = y >> 9;
-		final byte[][][] settings = methods.client.getGroundByteArray();
-		if (settings != null && x1 >= 0 && x1 < 104 && y1 >= 0 && y1 < 104) {
-			if (p <= 3 && (settings[1][x1][y1] & 2) != 0) {
-				++p;
-			}
-			final TileData[] planes = methods.client.getTileData();
-			if (planes != null && p < planes.length && planes[p] != null) {
-				final int[][] heights = planes[p].getHeights();
-				if (heights != null) {
-					final int x2 = x & 512 - 1;
-					final int y2 = y & 512 - 1;
-					final int start_h = heights[x1][y1] * (512 - x2) + heights[x1 + 1][y1] * x2 >> 9;
-					final int end_h = heights[x1][1 + y1] * (512 - x2) + heights[x1 + 1][y1 + 1] * x2 >> 9;
-					return start_h * (512 - y2) + end_h * y2 >> 9;
-				}
-			}
-		}
-		return 0;
 	}
 
 	/**
@@ -413,40 +434,6 @@ public class Calculations extends MethodProvider {
 			}
 		}
 		return new Point(-1, -1);
-	}
-
-	// ---- Internal ----
-
-	/**
-	 * Updates the rendering data. For internal use only.
-	 *
-	 * @param r  The client graphics toolkit.
-	 * @param rd The client viewport.
-	 */
-	public void updateRenderInfo(final org.rsbot.client.Render r, final org.rsbot.client.RenderData rd) {
-		if (r == null || rd == null) {
-			return;
-		}
-		render.absoluteX1 = r.getAbsoluteX1();
-		render.absoluteX2 = r.getAbsoluteX2();
-		render.absoluteY1 = r.getAbsoluteY1();
-		render.absoluteY2 = r.getAbsoluteY2();
-		render.xMultiplier = r.getXMultiplier();
-		render.yMultiplier = r.getYMultiplier();
-		render.zNear = r.getZNear();
-		render.zFar = r.getZFar();
-		renderData.xOff = rd.getXOff();
-		renderData.xX = rd.getXX();
-		renderData.xY = rd.getXY();
-		renderData.xZ = rd.getXZ();
-		renderData.yOff = rd.getYOff();
-		renderData.yX = rd.getYX();
-		renderData.yY = rd.getYY();
-		renderData.yZ = rd.getYZ();
-		renderData.zOff = rd.getZOff();
-		renderData.zX = rd.getZX();
-		renderData.zY = rd.getZY();
-		renderData.zZ = rd.getZZ();
 	}
 
 	/**
