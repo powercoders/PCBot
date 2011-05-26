@@ -34,7 +34,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	private static final ScriptSource SRC_SOURCES;
 	private static final ScriptSource SRC_PRECOMPILED;
-	private static final ScriptSource SRC_DRM;
+	private static final ScriptSource SRC_NETWORK;
 	private final BotGUI frame;
 	private final Bot bot;
 	private JTable table;
@@ -48,7 +48,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	static {
 		SRC_SOURCES = new FileScriptSource(new File(Configuration.Paths.getScriptsSourcesDirectory()));
 		SRC_PRECOMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
-		SRC_DRM = ScriptDeliveryNetwork.getInstance();
+		SRC_NETWORK = ScriptDeliveryNetwork.getInstance();
 	}
 
 	public ScriptSelector(final BotGUI frame, final Bot bot) {
@@ -78,9 +78,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private void load() {
 		scripts.clear();
 		if (connected) {
-			final List<ScriptDefinition> drm = SRC_DRM.list();
-			if (drm != null) {
-				scripts.addAll(drm);
+			final List<ScriptDefinition> net = SRC_NETWORK.list();
+			if (net != null) {
+				scripts.addAll(net);
 			}
 		}
 		scripts.addAll(SRC_PRECOMPILED.list());
@@ -283,7 +283,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				}.start();
 			}
 		});
-		connect.setEnabled(Configuration.SCRIPT_DRM ? true : false);
 		if (connect.isEnabled()) {
 			final ActionListener listenConnect = new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
@@ -360,7 +359,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_EDIT));
 		public static final ImageIcon ICON_SCRIPT_PRE = new ImageIcon(
 				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_GEAR));
-		public static final ImageIcon ICON_SCRIPT_DRM = new ImageIcon(
+		public static final ImageIcon ICON_SCRIPT_NET = new ImageIcon(
 				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_LIVE));
 		private final List<ScriptDefinition> scripts;
 		private final List<ScriptDefinition> matches;
@@ -415,7 +414,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					if (def.source == SRC_PRECOMPILED) {
 						return ICON_SCRIPT_PRE;
 					}
-					return ICON_SCRIPT_DRM;
+					return ICON_SCRIPT_NET;
 				}
 				if (columnIndex == 1) {
 					return def.name;

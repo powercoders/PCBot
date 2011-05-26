@@ -197,8 +197,6 @@ public class Configuration {
 	public static final String NAME_LOWERCASE = NAME.toLowerCase();
 	private static final OperatingSystem CURRENT_OS;
 	public static boolean RUNNING_FROM_JAR = false;
-	public static final boolean SCRIPT_DRM = true;
-
 
 	public static class Twitter {
 		public static final boolean ENABLED = true;
