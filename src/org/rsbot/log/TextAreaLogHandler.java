@@ -1,6 +1,6 @@
 package org.rsbot.log;
 
-import org.rsbot.gui.LogTextArea;
+import org.rsbot.gui.component.LogTextArea;
 
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;

@@ -2,6 +2,7 @@ package org.rsbot.gui;
 
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
+import org.rsbot.gui.component.Messages;
 import org.rsbot.service.Monitoring;
 import org.rsbot.service.DRM;
 import org.rsbot.util.StringUtil;

@@ -3,6 +3,7 @@ package org.rsbot.gui;
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.bot.Bot;
+import org.rsbot.gui.component.Messages;
 import org.rsbot.log.TextAreaLogHandler;
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;

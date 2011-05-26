@@ -1,4 +1,4 @@
-package org.rsbot.gui;
+package org.rsbot.gui.component;
 
 /**
  * @author Paris
