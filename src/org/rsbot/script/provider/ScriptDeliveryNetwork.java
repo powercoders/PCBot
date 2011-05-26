@@ -51,7 +51,7 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 			def.version = Double.parseDouble(values.get("version"));
 			def.description = values.get("description");
 			def.authors = values.get("authors").split(ScriptList.DELIMITER);
-			def.authors = values.get("authors").split(ScriptList.DELIMITER);
+			def.keywords = values.get("keywords").split(ScriptList.DELIMITER);
 			def.website = values.get("website");
 			defs.add(def);
 		}
