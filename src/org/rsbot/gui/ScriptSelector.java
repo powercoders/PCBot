@@ -16,6 +16,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -31,7 +33,7 @@ import java.util.logging.Logger;
 public class ScriptSelector extends JDialog implements ScriptListener {
 	private static final long serialVersionUID = 5475451138208522511L;
 	private static final Logger log = Logger.getLogger(ScriptSelector.class.getName());
-	private static final String[] COLUMN_NAMES = new String[]{"", "Name", "Version", "Author", "Description"};
+	private static final String[] COLUMN_NAMES = new String[]{"", "Name", "Description"};
 
 	private static final ScriptSource SRC_SOURCES;
 	private static final ScriptSource SRC_PRECOMPILED;
@@ -231,7 +233,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		table.setShowGrid(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(new TableSelectionListener());
-		setColumnWidths(table, 30, 175, 55, 95);
+		setColumnWidths(table, 30, 200);
 		final JToolBar toolBar = new JToolBar();
 		toolBar.setMargin(new Insets(1, 1, 1, 1));
 		toolBar.setFloatable(false);
@@ -344,9 +346,10 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	private void setColumnWidths(final JTable table, final int... widths) {
 		for (int i = 0; i < widths.length; ++i) {
-			table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
-			table.getColumnModel().getColumn(i).setMinWidth(widths[i]);
-			table.getColumnModel().getColumn(i).setMaxWidth(widths[i]);
+			final TableColumn col = table.getColumnModel().getColumn(i);
+			col.setPreferredWidth(widths[i]);
+			col.setMinWidth(widths[i]);
+			col.setMaxWidth(widths[i]);
 		}
 	}
 
@@ -429,7 +432,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		public Object getValueAt(final int rowIndex, final int columnIndex) {
 			if (rowIndex >= 0 && rowIndex < matches.size()) {
 				final ScriptDefinition def = matches.get(rowIndex);
-				if (columnIndex == 0) {
+				switch (columnIndex) {
+				case 0:
 					if (def.source == SRC_SOURCES) {
 						return ICON_SCRIPT_SRC;
 					}
@@ -437,21 +441,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						return ICON_SCRIPT_PRE;
 					}
 					return ICON_SCRIPT_NET;
-				}
-				if (columnIndex == 1) {
+				case 1:
 					return def.name;
-				}
-				if (columnIndex == 2) {
-					return def.version;
-				}
-				if (columnIndex == 3) {
-					final StringBuilder b = new StringBuilder();
-					for (final String author : def.authors) {
-						b.append(author).append(", ");
-					}
-					return b.replace(b.length() - 2, b.length(), "");
-				}
-				if (columnIndex == 4) {
+				case 2:
 					return def.description;
 				}
 			}
