@@ -78,9 +78,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private void load() {
 		scripts.clear();
 		if (connected) {
-			try {
-				scripts.addAll(SRC_DRM.list());
-			} catch (NullPointerException npe) {
+			final List<ScriptDefinition> drm = SRC_DRM.list();
+			if (drm != null) {
+				scripts.addAll(drm);
 			}
 		}
 		scripts.addAll(SRC_PRECOMPILED.list());
