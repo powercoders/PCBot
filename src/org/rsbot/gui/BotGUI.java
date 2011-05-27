@@ -18,6 +18,7 @@ import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
 import org.rsbot.util.ApplicationException;
 import org.rsbot.util.UpdateChecker;
+import org.rsbot.util.io.IOHelper;
 import org.rsbot.util.io.ScreenshotUtil;
 
 import javax.swing.*;
@@ -226,6 +227,14 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			}
 		} else if (menu.equals(Messages.TOOLS)) {
 			if (option.equals(Messages.CLEARCACHE)) {
+				final int result = JOptionPane.showConfirmDialog(this,
+						"Delete all preferences and settings?\nNote: only use if the application is having errors.", option,
+						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (result == JOptionPane.YES_OPTION) {
+					IOHelper.recursiveDelete(new File(Configuration.Paths.getCacheDirectory()), false);
+					IOHelper.recursiveDelete(new File(Configuration.Paths.getSettingsDirectory()), false);
+					log.info("Cache cleared and preferences reset to defaults");
+				}
 			} else if (option.equals(Messages.OPTIONS)) {
 				settings.display();
 			}
