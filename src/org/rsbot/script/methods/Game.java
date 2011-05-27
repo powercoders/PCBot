@@ -718,18 +718,21 @@ public class Game extends MethodProvider {
 	}
 
         /**
-	* Gets current world
-        * @return The selected or curent world.
-	*/
-	public int getCurrentWorld() {
+	 * Gets Current World
+	 *
+	 * @returns current or selected world
+	 */
+	public	int getCurrentWorld() {
+	int world = 0;
 		if (methods.game.isLoggedIn()) {
 			if(methods.game.getCurrentTab() != 9) {
 				methods.game.openTab(9);
 			}
-			return integer.parsteStr(interfaces.getComponent(550, 18).getText().replaceAll("Friends List<br>RuneScape ", ""));
+			world = Integer.parseInt(methods.interfaces.getComponent(550, 18).getText().replaceAll("Friends List<br>RuneScape ", ""));
 		} else if (methods.game.getClientState() == Game.INDEX_LOBBY_SCREEN) {
-			return methods.lobby.getSelectedWorld();
+			world = methods.lobby.getSelectedWorld();
 		}
+	return world;
 	}
 
 	/**
