@@ -22,11 +22,14 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.security.Permission;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  * @author Paris
  */
 public class RestrictedSecurityManager extends SecurityManager {
+	private static Logger log = Logger.getLogger("Security");
+
 	private String getCallingClass() {
 		final String prefix = Application.class.getPackage().getName() + ".";
 		for (final Class<?> c : getClassContext()) {
@@ -100,6 +103,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 		// ports other than HTTP (80), HTTPS (443) and unknown (-1) are automatically denied
 		if (!(port == -1 || port == 80 || port == 443)) {
+			log.warning("Connection denied on port: " + port);
 			throw new SecurityException();
 		}
 
@@ -124,6 +128,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 			}
 
 			if (!allowed) {
+				log.warning("Connection denied: " + host);
 				throw new SecurityException();
 			}
 		}
@@ -348,6 +353,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 					}
 				}
 				if (fail) {
+					log.warning((readOnly ? "Read" : "Write") + " access denied: " + path);
 					throw new SecurityException();
 				}
 			}
