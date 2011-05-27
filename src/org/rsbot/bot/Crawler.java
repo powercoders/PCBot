@@ -2,8 +2,7 @@ package org.rsbot.bot;
 
 import org.rsbot.util.io.HttpClient;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -54,18 +53,11 @@ class Crawler {
 			if (referer != null && !referer.isEmpty()) {
 				con.addRequestProperty("Referer", referer);
 			}
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			final StringBuilder buf = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null) {
-				buf.append(line);
-			}
-			reader.close();
-			return buf.toString();
-		} catch (final Exception e) {
+			return HttpClient.downloadAsString(con);
+		} catch (final IOException e) {
 			e.printStackTrace();
+			return "";
 		}
-		return null;
 	}
 
 	private String firstMatch(final String regex, final String str) {
