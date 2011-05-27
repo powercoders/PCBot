@@ -73,7 +73,7 @@ public class BotMenuBar extends JMenuBar {
 						Messages.MENUSEPERATOR,
 						Messages.TOGGLEFALSE + Messages.DISABLEANTIRANDOMS,
 						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN},
-				constructDebugs(), {Messages.OPTIONS}, {Messages.SITE, Messages.PROJECT, Messages.ABOUT}};
+				constructDebugs(), {Messages.CLEARCACHE, Messages.OPTIONS}, {Messages.SITE, Messages.PROJECT, Messages.ABOUT}};
 	}
 
 	private static String[] constructDebugs() {
@@ -123,6 +123,7 @@ public class BotMenuBar extends JMenuBar {
 		map.put(Messages.HIDEBOT, Configuration.Paths.Resources.ICON_ARROWIN);
 		map.put(Messages.EXIT, Configuration.Paths.Resources.ICON_CLOSE);
 		map.put(Messages.ACCOUNTS, Configuration.Paths.Resources.ICON_REPORTKEY);
+		map.put(Messages.CLEARCACHE, Configuration.Paths.Resources.DATABASE_ERROR);
 		map.put(Messages.OPTIONS, Configuration.Paths.Resources.ICON_WRENCH);
 		map.put(Messages.SITE, Configuration.Paths.Resources.ICON_WEBLINK);
 		map.put(Messages.PROJECT, Configuration.Paths.Resources.ICON_GITHUB);

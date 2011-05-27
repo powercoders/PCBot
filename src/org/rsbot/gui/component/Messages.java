@@ -38,6 +38,7 @@ public interface Messages {
 	public static final String HIDELOGPANE = "Hide Log Pane";
 	public static final String ALLDEBUGGING = "All Debugging";
 
+	public static final String CLEARCACHE = "Clear Cache";
 	public static final String OPTIONS = "Options";
 
 	public static final String SITE = "Site";
