@@ -306,7 +306,7 @@ public class Web extends MethodProvider {
 			tiles.add(new Node(x - 1, y, here.getZ()));
 		}
 		if (!Flag(here, TileData.Key.W_N) &&
-				!Flag(here.getX(), here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER)) {
+				!Flag(here.getX(), here.getY() + 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER)) {
 			tiles.add(new Node(x, y + 1, here.getZ()));
 		}
 		if (!Flag(here, TileData.Key.W_E) &&
@@ -331,7 +331,7 @@ public class Web extends MethodProvider {
 				!Flag(here.getX() + 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_S)) {
 			tiles.add(new Node(x + 1, y - 1, here.getZ()));
 		}
-		if (!Flag(here.getX(), here.getY(), here.getZ(), TileData.Key.W_NE | TileData.Key.W_N | TileData.Key.W_E) &&
+		if (!Flag(here, TileData.Key.W_NE | TileData.Key.W_N | TileData.Key.W_E) &&
 				!Flag(here.getX() + 1, here.getY() + 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER) &&
 				!Flag(here.getX(), here.getY() + 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_E) &&
 				!Flag(here.getX() + 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_N)) {
