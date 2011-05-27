@@ -6,7 +6,7 @@ import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
 import org.rsbot.script.wrappers.RSTile;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
@@ -23,7 +23,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * The chat filter buttons
-	 * 
+	 *
 	 * @author kiko
 	 */
 	public enum ChatButton {
@@ -75,7 +75,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * The game tabs
-	 * 
+	 *
 	 * @author kiko
 	 */
 	public enum Tab {
@@ -205,7 +205,7 @@ public class Game extends MethodProvider {
 	public static final int[] INTERFACE_OPTIONS = {230, 228};
 
 	@Deprecated
-	public static final String[] TAB_NAMES = new String[] {"Combat Styles", "Task System", "Stats",
+	public static final String[] TAB_NAMES = new String[]{"Combat Styles", "Task System", "Stats",
 			"Quest Journals", "Inventory", "Worn Equipment", "Prayer List", "Magic Spellbook", "",
 			"Friends List", "Friends Chat", "Clan Chat", "Options", "Emotes", "Music Player",
 			"Notes", "Exit"};
@@ -230,7 +230,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Turns accept aid off if it isn't already.
-	 * 
+	 *
 	 * @return <tt>true</tt> if the setting was clicked; otherwise <tt>false</tt>.
 	 */
 	public boolean disableAid() {
@@ -243,7 +243,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Gets the x coordinate of the loaded map area (far west).
-	 * 
+	 *
 	 * @return The region base x.
 	 */
 	public int getBaseX() {
@@ -252,7 +252,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Gets the y coordinate of the loaded map area (far south).
-	 * 
+	 *
 	 * @return The region base y.
 	 */
 	public int getBaseY() {
@@ -261,7 +261,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Gets the game state.
-	 * 
+	 *
 	 * @return The game state.
 	 */
 	public int getClientState() {
@@ -270,7 +270,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Gets a color corresponding to x and y coordinates from the current game screen.
-	 * 
+	 *
 	 * @param x The x coordinate at which to get the color.
 	 * @param y The y coordinate at which to get the color.
 	 * @return Color
@@ -283,7 +283,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Gets the currently open tab.
-	 * 
+	 *
 	 * @return The currently open tab or the logout tab by default.
 	 */
 	@Deprecated
@@ -293,7 +293,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Access the last message spoken by a player.
-	 * 
+	 *
 	 * @return The last message spoken by a player or "" if none.
 	 */
 	public String getLastMessage() {
@@ -310,7 +310,7 @@ public class Game extends MethodProvider {
 	/**
 	 * Gets the (x, y) coordinate pair of the south-western tile at the base of
 	 * the loaded map area.
-	 * 
+	 *
 	 * @return The region base tile.
 	 */
 	public RSTile getMapBase() {
@@ -321,7 +321,7 @@ public class Game extends MethodProvider {
 	 * Gets the plane we are currently on. Typically 0 (ground level), but will
 	 * increase when going up ladders. You cannot be on a negative plane. Most
 	 * dungeons/basements are on plane 0 elsewhere on the world map.
-	 * 
+	 *
 	 * @return The current plane.
 	 */
 	public int getPlane() {
@@ -330,7 +330,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Gets a random selectable game tab (excludes Logout).
-	 * 
+	 *
 	 * @return Returns a random selectable game tab.
 	 */
 	public Tab getRandomTab() {
@@ -340,7 +340,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Gets the currently open tab.
-	 * 
+	 *
 	 * @return The currently open tab.
 	 */
 	public Tab getTab() {
@@ -356,7 +356,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Returns the valid chat component.
-	 * 
+	 *
 	 * @return <tt>RSComponent</tt> of the current valid talk interface; otherwise null.
 	 * @see #INTERFACE_TALKS
 	 */
@@ -372,7 +372,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Gets the canvas height.
-	 * 
+	 *
 	 * @return The canvas' width.
 	 */
 	public int getWidth() {
@@ -381,7 +381,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Gets the canvas height.
-	 * 
+	 *
 	 * @return The canvas' height.
 	 */
 	public int getHeight() {
@@ -390,7 +390,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Excludes Loginbot, BankPin, TeleotherCloser, CloseAllInterface, ImprovedRewardsBox
-	 * 
+	 *
 	 * @return True if player is in a random
 	 */
 	public Boolean inRandom() {
@@ -417,7 +417,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Determines whether or not the client is currently in the fixed display mode.
-	 * 
+	 *
 	 * @return <tt>true</tt> if in fixed mode; otherwise <tt>false</tt>.
 	 */
 	public boolean isFixed() {
@@ -426,7 +426,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Determines whether or not the client is currently logged in to an account.
-	 * 
+	 *
 	 * @return <tt>true</tt> if logged in; otherwise <tt>false</tt>.
 	 */
 	public boolean isLoggedIn() {
@@ -440,7 +440,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Determines whether or not the client is showing the login screen.
-	 * 
+	 *
 	 * @return <tt>true</tt> if the client is showing the login screen;
 	 *         otherwise <tt>false</tt>.
 	 */
@@ -450,7 +450,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Checks whether or not the logout tab is selected.
-	 * 
+	 *
 	 * @return <tt>true</tt> if on the logout tab.
 	 */
 	@Deprecated
@@ -460,7 +460,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Determines whether or not the welcome screen is open.
-	 * 
+	 *
 	 * @return <tt>true</tt> if the client is showing the welcome screen;
 	 *         otherwise <tt>false</tt>.
 	 */
@@ -471,7 +471,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Runs the LoginBot random.
-	 * 
+	 *
 	 * @return <tt>true</tt> if random was run; otherwise <tt>false</tt>.
 	 */
 	public boolean login() {
@@ -480,7 +480,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Closes the bank if it is open and logs out.
-	 * 
+	 *
 	 * @param lobby <tt>true</tt> if player should be logged out to the lobby
 	 * @return <tt>true</tt> if the player was logged out.
 	 */
@@ -520,7 +520,7 @@ public class Game extends MethodProvider {
 				sleep(random(50, 100));
 			}
 		}
-		RSComponent exitToComponent = methods.interfaces.getComponent(INTERFACE_LOGOUT, lobby ? 5 : 10);
+		RSComponent exitToComponent = methods.interfaces.getComponent(INTERFACE_LOGOUT, lobby ? 2 : 13);
 		if (exitToComponent != null && exitToComponent.doClick()) {
 			sleep(random(1500, 2000));
 		}
@@ -529,9 +529,9 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Click chat button.
-	 * 
+	 *
 	 * @param button Which button? One of CHAT_OPTION
-	 * @param left Left or right button? Left = true. Right = false.
+	 * @param left   Left or right button? Left = true. Right = false.
 	 * @return <tt>true</tt> if it was clicked.
 	 */
 	@Deprecated
@@ -541,9 +541,9 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Click the specified chat button.
-	 * 
+	 *
 	 * @param button One of ChatButton
-	 * @param left true to left click, false for right click.
+	 * @param left   true to left click, false for right click.
 	 * @return <tt>true</tt> if the button was successfully clicked.
 	 */
 	public boolean mouseChatButton(final ChatButton button, final boolean left) {
@@ -556,8 +556,8 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Opens the specified tab at the specified index.
-	 * 
-	 * @param tab The tab to open, functionKey if wanting to use function keys to switch.
+	 *
+	 * @param tab         The tab to open, functionKey if wanting to use function keys to switch.
 	 * @param functionKey Use a function key (if available) for fast switching.
 	 * @return <tt>true</tt> if tab successfully selected; otherwise <tt>false</tt>.
 	 * @see #openTab(Tab tab, boolean functionKey)
@@ -569,7 +569,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Opens the specified tab at the specified index.
-	 * 
+	 *
 	 * @param tab The tab to open.
 	 * @return <tt>true</tt> if tab successfully selected; otherwise <tt>false</tt>.
 	 * @see #openTab(Tab tab, boolean functionKey)
@@ -581,7 +581,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Opens the specified game tab.
-	 * 
+	 *
 	 * @param tab The tab to open.
 	 * @return <tt>true</tt> if tab successfully selected; otherwise <tt>false</tt>.
 	 * @see #openTab(Tab tab, boolean functionKey)
@@ -592,7 +592,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Opens the specified tab at the specified index.
-	 * 
+	 *
 	 * @param tab The tab to open, functionKey if wanting to use function keys to switch.
 	 * @return <tt>true</tt> if tab successfully selected; otherwise <tt>false</tt>.
 	 * @see #openTab(Tab tab, boolean functionKey)
@@ -604,7 +604,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Opens the specified game tab.
-	 * 
+	 *
 	 * @param tab The tab to open, functionKey if wanting to use function keys to switch.
 	 * @return <tt>true</tt> if tab successfully selected; otherwise <tt>false</tt>.
 	 */
@@ -646,9 +646,9 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Sets the specified chat mode
-	 * 
+	 *
 	 * @param button one of ChatButton
-	 * @param mode one of ChatMode
+	 * @param mode   one of ChatMode
 	 * @return <tt>true</tt> if item was clicked correctly; otherwise <tt>false</tt>.
 	 */
 	@Deprecated
@@ -658,9 +658,9 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Sets the specified chat mode
-	 * 
+	 *
 	 * @param option one of ChatButton
-	 * @param mode one of ChatMode
+	 * @param mode   one of ChatMode
 	 * @return <tt>true</tt> if item was clicked correctly; otherwise <tt>false</tt>.
 	 */
 	public boolean setChatOption(final ChatButton option, final ChatMode mode) {
@@ -684,7 +684,7 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Switches to a given world.
-	 * 
+	 *
 	 * @param world the world to switch to, must be valid.
 	 */
 	public boolean switchWorld(final int world) {

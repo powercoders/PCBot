@@ -14,7 +14,6 @@ import org.rsbot.script.wrappers.*;
  */
 @ScriptManifest(authors = {"Pwnaz0r", "Taha", "zqqou", "Zach"}, name = "FreakyForester", version = 2.6)
 public class FreakyForester extends Random implements MessageListener {
-
 	private RSNPC forester;
 	private static final int FORESTER_ID = 2458;
 	private static final int SEARCH_INTERFACE_ID = 242;
@@ -325,7 +324,5 @@ public class FreakyForester extends Random implements MessageListener {
 		if (serverString.contains("no ammo left")) {
 			unequip = true;
 		}
-
 	}
-
 }

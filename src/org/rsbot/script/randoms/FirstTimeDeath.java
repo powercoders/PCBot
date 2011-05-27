@@ -14,8 +14,7 @@ public class FirstTimeDeath extends Random {
 
 	@Override
 	public boolean activateCondition() {
-		return (reaper = npcs.getNearest(8869)) != null
-				|| (reaper = npcs.getNearest(8870)) != null;
+		return (reaper = npcs.getNearest(8869)) != null || (reaper = npcs.getNearest(8870)) != null;
 	}
 
 	@Override
@@ -73,5 +72,4 @@ public class FirstTimeDeath extends Random {
 		exit = false;
 		reaper = null;
 	}
-
 }
