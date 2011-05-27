@@ -49,7 +49,7 @@ public class WebData extends BackgroundScript {
 					final int x = t.x, y = t.y;
 					final int f_x = x - off_x, f_y = y - off_y;
 					final int here = flags[f_x][f_y];
-					final Short[] theArray = {(short) start.getX(), (short) start.getX(), (short) start.getZ()};
+					final Short[] theArray = {(short) start.getX(), (short) start.getY(), (short) start.getZ()};
 					synchronized (lock) {
 						if (!Web.rs_map.containsKey(theArray) && (!TileData.Walkable(here) || TileData.Questionable(here))) {
 							rs_map.put(theArray, here);
