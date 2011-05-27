@@ -3,18 +3,16 @@ package org.rsbot.gui;
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.gui.component.Messages;
-import org.rsbot.service.DRM;
 import org.rsbot.service.Monitoring;
+import org.rsbot.service.DRM;
 import org.rsbot.util.StringUtil;
 import org.rsbot.util.io.IniParser;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -43,7 +41,6 @@ public class SettingsManager extends JDialog {
 		public String webBind = "localhost:9500";
 		public boolean webPassRequire = false;
 		public String webPass = "";
-		public boolean extendedOptions = false;
 
 		public Preferences(final File store) {
 			this.store = store;
@@ -93,9 +90,6 @@ public class SettingsManager extends JDialog {
 			if (keys.containsKey("webPass")) {
 				webPass = keys.get("webPass");
 			}
-			if (keys.containsKey("extendOptions")) {
-				extendedOptions = IniParser.parseBool(keys.get("extendOptions"));
-			}
 		}
 
 		public void save() {
@@ -110,7 +104,6 @@ public class SettingsManager extends JDialog {
 			keys.put("webBind", webBind);
 			keys.put("webPassRequire", Boolean.toString(webPassRequire));
 			keys.put("webPass", webPass);
-			keys.put("extendOptions", Boolean.toString(extendedOptions));
 			final HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>(1);
 			data.put(IniParser.emptySection, keys);
 			try {
@@ -168,10 +161,6 @@ public class SettingsManager extends JDialog {
 		final JCheckBox checkConf = new JCheckBox(Messages.DISABLECONFIRMATIONS);
 		checkConf.setToolTipText("Supress confirmation messages");
 		checkConf.setSelected(prefs.confirmations);
-
-		final JCheckBox extendOptions = new JCheckBox(Messages.EXTENDEDOPTIONS);
-		extendOptions.setToolTipText("Extend menu options");
-		extendOptions.setSelected(prefs.extendedOptions);
 
 		final JCheckBox checkMonitor = new JCheckBox(Messages.DISABLEMONITORING);
 		checkMonitor.setToolTipText("Monitor system information to improve development");
@@ -236,7 +225,6 @@ public class SettingsManager extends JDialog {
 
 		panelOptions.add(checkAds);
 		panelOptions.add(checkConf);
-		panelOptions.add(extendOptions);
 		panelInternal.add(checkMonitor);
 		panelInternal.add(panelShutdown);
 		panelWeb.add(panelWebOptions[0]);
@@ -261,14 +249,12 @@ public class SettingsManager extends JDialog {
 				prefs.shutdownTime = modelShutdown.getNumber().intValue();
 				prefs.web = checkWeb.isSelected();
 				prefs.webBind = textWebBind.getText();
-				prefs.extendedOptions = extendOptions.isSelected();
 				final String webUser = textLoginUser.getText(), webPass = new String(textWebPass.getPassword());
 				if (!webUser.equals(prefs.user) || !webPass.equals(DEFAULTPASSWORD)) {
 					prefs.webPass = StringUtil.sha1sum(webPass);
 				}
 				prefs.user = webUser;
 				prefs.webPassRequire = checkWebPass.isSelected() && checkWebPass.isEnabled();
-
 				prefs.commit();
 				final String loginPass = new String(textLoginPass.getPassword());
 				if (!loginPass.equals(DEFAULTPASSWORD)) {
@@ -288,7 +274,6 @@ public class SettingsManager extends JDialog {
 				setVisible(false);
 				checkAds.setSelected(prefs.ads);
 				checkConf.setSelected(prefs.confirmations);
-				extendOptions.setSelected(prefs.extendedOptions);
 				checkMonitor.setSelected(prefs.monitoring);
 				checkShutdown.setSelected(prefs.shutdown);
 				modelShutdown.setValue(prefs.shutdownTime);
