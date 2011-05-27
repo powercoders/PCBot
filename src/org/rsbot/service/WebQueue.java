@@ -33,34 +33,36 @@ public class WebQueue {
 	 *
 	 * @param gameTiles The data.
 	 */
-	public static void Add(final HashMap<RSTile, Integer> gameTiles) {
+	public static void Add(final HashMap<Short[], Integer> gameTiles) {
 		Web.rs_map.putAll(gameTiles);
 		final int count = gameTiles.size();
 		new Thread() {
 			@Override
 			public void run() {
 				try {
-					final HashMap<RSTile, Integer> mapData = new HashMap<RSTile, Integer>();
+					final HashMap<Short[], Integer> mapData = new HashMap<Short[], Integer>();
 					mapData.putAll(gameTiles);
-					final Map<RSTile, Integer> safeMapData = Collections.unmodifiableMap(mapData);
+					final Map<Short[], Integer> safeMapData = Collections.unmodifiableMap(mapData);
 					bufferingCount = bufferingCount + count;
-					final Iterator<Map.Entry<RSTile, Integer>> safeIterator = safeMapData.entrySet().iterator();
+					final Iterator<Map.Entry<Short[], Integer>> safeIterator = safeMapData.entrySet().iterator();
 					while (safeIterator.hasNext()) {
-						final Map.Entry<RSTile, Integer> tileData = safeIterator.next();
-						final RSTile tile = tileData.getKey();
-						final int key = tileData.getValue();
-						if (tileData != null) {
-							synchronized (queueLock) {
-								queue.add(tile.getX() + "," + tile.getY() + "," + tile.getZ() + "k" + key);
-							}
-							synchronized (bufferLock) {
-								bufferingCount--;
-								try {
-									weAreBuffering = true;
-									if (!speedBuffer) {
-										Thread.sleep(1);
+						final Map.Entry<Short[], Integer> tileData = safeIterator.next();
+						if (tileData.getKey().length == 3) {
+							final Short[] tile = tileData.getKey();
+							final int key = tileData.getValue();
+							if (tileData != null) {
+								synchronized (queueLock) {
+									queue.add(tile[0] + "," + tile[1] + "," + tile[2] + "k" + key);
+								}
+								synchronized (bufferLock) {
+									bufferingCount--;
+									try {
+										weAreBuffering = true;
+										if (!speedBuffer) {
+											Thread.sleep(1);
+										}
+									} catch (final InterruptedException ignored) {
 									}
-								} catch (final InterruptedException ignored) {
 								}
 							}
 						}

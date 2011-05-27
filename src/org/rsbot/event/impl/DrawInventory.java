@@ -9,14 +9,12 @@ import org.rsbot.script.wrappers.RSItem;
 import java.awt.*;
 
 public class DrawInventory implements PaintListener {
-
 	private final MethodContext ctx;
 
 	public DrawInventory(final Bot bot) {
 		ctx = bot.getMethodContext();
 	}
 
-	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;

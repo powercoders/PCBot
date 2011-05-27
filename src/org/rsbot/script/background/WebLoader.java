@@ -4,7 +4,6 @@ import org.rsbot.Configuration;
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Web;
-import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.service.WebQueue;
 
 import java.io.BufferedReader;
@@ -36,14 +35,14 @@ public class WebLoader extends BackgroundScript {
 					}
 					final BufferedReader bufferedReader = new BufferedReader(new FileReader(Configuration.Paths.getWebDatabase()));
 					String dataLine;
-					final HashMap<RSTile, Integer> mapData = new HashMap<RSTile, Integer>();
+					final HashMap<Short[], Integer> mapData = new HashMap<Short[], Integer>();
 					while ((dataLine = bufferedReader.readLine()) != null) {
 						final String[] storeData = dataLine.split("k");
 						if (storeData.length == 2) {
 							final String[] tileData = storeData[0].split(",");
 							if (tileData.length == 3) {
 								try {
-									final RSTile tile = new RSTile(Integer.parseInt(tileData[0]), Integer.parseInt(tileData[1]), Integer.parseInt(tileData[2]));
+									final Short[] tile = {Short.parseShort(tileData[0]), Short.parseShort(tileData[1]), Short.parseShort(tileData[2])};
 									final int tileFlag = Integer.parseInt(storeData[1]);
 									if (mapData.containsKey(tile)) {
 										WebQueue.Remove(dataLine);//Line is double, remove from file--bad collection!

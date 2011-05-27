@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class WebData extends BackgroundScript {
 	private RSTile lb = null;
 	private int lp = -1;
-	public final HashMap<RSTile, Integer> rs_map = new HashMap<RSTile, Integer>();
+	public final HashMap<Short[], Integer> rs_map = new HashMap<Short[], Integer>();
 	private static final Object lock = new Object();
 
 	@Override
@@ -49,9 +49,10 @@ public class WebData extends BackgroundScript {
 					final int x = t.x, y = t.y;
 					final int f_x = x - off_x, f_y = y - off_y;
 					final int here = flags[f_x][f_y];
+					final Short[] theArray = {(short) start.getX(), (short) start.getX(), (short) start.getZ()};
 					synchronized (lock) {
-						if (!Web.rs_map.containsKey(start) && (!TileData.Walkable(here) || TileData.Questionable(here))) {
-							rs_map.put(start, here);
+						if (!Web.rs_map.containsKey(theArray) && (!TileData.Walkable(here) || TileData.Questionable(here))) {
+							rs_map.put(theArray, here);
 						} else {
 							if (Web.rs_map.containsKey(start) && (Web.rs_map.get(start) != here || here == 0)) {
 								WebQueue.Remove(start);

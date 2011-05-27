@@ -16,7 +16,7 @@ import java.util.*;
  * @author Timer
  */
 public class Web extends MethodProvider {
-	public static final HashMap<RSTile, Integer> rs_map = new HashMap<RSTile, Integer>();
+	public static final HashMap<Short[], Integer> rs_map = new HashMap<Short[], Integer>();
 	public static boolean loaded = false;
 
 	Web(final MethodContext ctx) {
@@ -298,44 +298,44 @@ public class Web extends MethodProvider {
 		final int x = t.x, y = t.y;
 		final RSTile here = t.toRSTile();
 		if (!Flag(here, TileData.Key.W_S) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), TileData.Key.BLOCKED | TileData.Key.WATER)) {
-			tiles.add(new Node(x, y - 1, t.toRSTile().getZ()));
+				!Flag(here.getX(), here.getY() - 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER)) {
+			tiles.add(new Node(x, y - 1, here.getZ()));
 		}
 		if (!Flag(here, TileData.Key.W_W) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), TileData.Key.BLOCKED | TileData.Key.WATER)) {
-			tiles.add(new Node(x - 1, y, t.toRSTile().getZ()));
+				!Flag(here.getX() - 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER)) {
+			tiles.add(new Node(x - 1, y, here.getZ()));
 		}
 		if (!Flag(here, TileData.Key.W_N) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), TileData.Key.BLOCKED | TileData.Key.WATER)) {
-			tiles.add(new Node(x, y + 1, t.toRSTile().getZ()));
+				!Flag(here.getX(), here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER)) {
+			tiles.add(new Node(x, y + 1, here.getZ()));
 		}
 		if (!Flag(here, TileData.Key.W_E) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), TileData.Key.BLOCKED | TileData.Key.WATER)) {
-			tiles.add(new Node(x + 1, y, t.toRSTile().getZ()));
+				!Flag(here.getX() + 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER)) {
+			tiles.add(new Node(x + 1, y, here.getZ()));
 		}
 		if (!Flag(here, TileData.Key.W_SW | TileData.Key.W_S | TileData.Key.W_W) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY() - 1), TileData.Key.BLOCKED | TileData.Key.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_W) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_S)) {
-			tiles.add(new Node(x - 1, y - 1, t.toRSTile().getZ()));
+				!Flag(here.getX() - 1, here.getY() - 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER) &&
+				!Flag(here.getX(), here.getY() - 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_W) &&
+				!Flag(here.getX() - 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_S)) {
+			tiles.add(new Node(x - 1, y - 1, here.getZ()));
 		}
 		if (!Flag(here, TileData.Key.W_NW | TileData.Key.W_N | TileData.Key.W_W) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY() + 1), TileData.Key.BLOCKED | TileData.Key.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_W) &&
-				!Flag(new RSTile(here.getX() - 1, here.getY()), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_N)) {
-			tiles.add(new Node(x - 1, y + 1, t.toRSTile().getZ()));
+				!Flag(here.getX() - 1, here.getY() + 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER) &&
+				!Flag(here.getX(), here.getY() + 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_W) &&
+				!Flag(here.getX() - 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_N)) {
+			tiles.add(new Node(x - 1, y + 1, here.getZ()));
 		}
 		if (!Flag(here, TileData.Key.W_SE | TileData.Key.W_S | TileData.Key.W_E) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY() - 1), TileData.Key.BLOCKED | TileData.Key.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() - 1), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_E) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_S)) {
-			tiles.add(new Node(x + 1, y - 1, t.toRSTile().getZ()));
+				!Flag(here.getX() + 1, here.getY() - 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER) &&
+				!Flag(here.getX(), here.getY() - 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_E) &&
+				!Flag(here.getX() + 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_S)) {
+			tiles.add(new Node(x + 1, y - 1, here.getZ()));
 		}
-		if (!Flag(here, TileData.Key.W_NE | TileData.Key.W_N | TileData.Key.W_E) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY() + 1), TileData.Key.BLOCKED | TileData.Key.WATER) &&
-				!Flag(new RSTile(here.getX(), here.getY() + 1), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_E) &&
-				!Flag(new RSTile(here.getX() + 1, here.getY()), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_N)) {
-			tiles.add(new Node(x + 1, y + 1, t.toRSTile().getZ()));
+		if (!Flag(here.getX(), here.getY(), here.getZ(), TileData.Key.W_NE | TileData.Key.W_N | TileData.Key.W_E) &&
+				!Flag(here.getX() + 1, here.getY() + 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER) &&
+				!Flag(here.getX(), here.getY() + 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_E) &&
+				!Flag(here.getX() + 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_N)) {
+			tiles.add(new Node(x + 1, y + 1, here.getZ()));
 		}
 		return tiles;
 	}
@@ -358,8 +358,60 @@ public class Web extends MethodProvider {
 	 * @return <tt>true</tt> if the tile contains flags.
 	 */
 	public static boolean Flag(final RSTile tile, final int key) {
-		if (Web.rs_map.containsKey(tile)) {
-			final int theTile = Web.rs_map.get(tile);
+		final Short[] tileData = {(short) tile.getX(), (short) tile.getY(), (short) tile.getZ()};
+		if (Web.rs_map.containsKey(tileData)) {
+			final int theTile = Web.rs_map.get(tileData);
+			return (theTile & key) != 0;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks the flags of a tile.
+	 *
+	 * @param tileData The tile to check.
+	 * @param key      Keys to look for.
+	 * @return <tt>true</tt> if the tile contains flags.
+	 */
+	public static boolean Flag(final Short[] tileData, final int key) {
+		if (Web.rs_map.containsKey(tileData)) {
+			final int theTile = Web.rs_map.get(tileData);
+			return (theTile & key) != 0;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks the flags of a tile.
+	 *
+	 * @param x   The tile to check (x).
+	 * @param y   The tile to check (y).
+	 * @param z   The tile to check (z).
+	 * @param key Keys to look for.
+	 * @return <tt>true</tt> if the tile contains flags.
+	 */
+	public static boolean Flag(final short x, final short y, final short z, final int key) {
+		final Short[] tileData = {x, y, z};
+		if (Web.rs_map.containsKey(tileData)) {
+			final int theTile = Web.rs_map.get(tileData);
+			return (theTile & key) != 0;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks the flags of a tile.
+	 *
+	 * @param x   The tile to check (x).
+	 * @param y   The tile to check (y).
+	 * @param z   The tile to check (z).
+	 * @param key Keys to look for.
+	 * @return <tt>true</tt> if the tile contains flags.
+	 */
+	public static boolean Flag(final int x, final int y, final int z, final int key) {
+		final Short[] tileData = {(short) x, (short) y, (short) z};
+		if (Web.rs_map.containsKey(tileData)) {
+			final int theTile = Web.rs_map.get(tileData);
 			return (theTile & key) != 0;
 		}
 		return false;

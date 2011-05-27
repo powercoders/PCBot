@@ -2,9 +2,9 @@ package org.rsbot.event.impl;
 
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
+import org.rsbot.script.internal.wrappers.TileData;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Web;
-import org.rsbot.script.internal.wrappers.TileData;
 import org.rsbot.script.wrappers.RSPlayer;
 import org.rsbot.script.wrappers.RSTile;
 
@@ -18,7 +18,6 @@ import java.util.Map;
  * @author Timer
  */
 public class DrawWeb implements PaintListener {
-
 	private final MethodContext ctx;
 
 	/**
@@ -49,10 +48,11 @@ public class DrawWeb implements PaintListener {
 		}
 		final RSTile oT = player.getLocation();
 		final int plane = ctx.game.getPlane();
-		final Iterator<Map.Entry<RSTile, Integer>> rs = Web.rs_map.entrySet().iterator();
+		final Iterator<Map.Entry<Short[], Integer>> rs = Web.rs_map.entrySet().iterator();
 		while (rs.hasNext()) {
-			Map.Entry<RSTile, Integer> e = rs.next();
-			final RSTile t = e.getKey();
+			final Map.Entry<Short[], Integer> e = rs.next();
+			final Short[] tile = e.getKey();
+			final RSTile t = new RSTile(tile[0], tile[1], tile[2]);
 			final int key = e.getValue();
 			if (t.getZ() == plane && ctx.calc.distanceBetween(t, oT) < 105) {
 				render.setColor(TileData.Questionable(key) ? Color.yellow : TileData.Special(key) ? Color.cyan : Color.red);
