@@ -129,6 +129,10 @@ public class BotToolBar extends JToolBar {
 		addTabButton.setVisible(visible);
 	}
 
+	public void setInputButtonVisible(final boolean visible) {
+		userInputButton.setVisible(visible);
+	}
+
 	public void addTab() {
 		final int idx = getComponentCount() - BUTTONCOUNT - TABINDEX + 1;
 		add(new BotButton(Messages.TABDEFAULTTEXT, ICON_BOT), idx);
