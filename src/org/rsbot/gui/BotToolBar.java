@@ -18,7 +18,6 @@ import java.net.URL;
  * @author Paris
  */
 public class BotToolBar extends JToolBar {
-
 	private static final long serialVersionUID = -1861866523519184211L;
 
 	public static final int RUN_SCRIPT = 0;
@@ -60,8 +59,7 @@ public class BotToolBar extends JToolBar {
 
 		this.listener = listener;
 
-		screenshotButton = new JButton("Screenshot", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_PHOTO)));
+		screenshotButton = new JButton("Screenshot", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PHOTO)));
 		screenshotButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				menu.doClick(Messages.SAVESCREENSHOT);
@@ -71,8 +69,7 @@ public class BotToolBar extends JToolBar {
 		screenshotButton.setToolTipText(screenshotButton.getText());
 		screenshotButton.setText("");
 
-		stopScriptButton = new JButton("Stop", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_DELETE)));
+		stopScriptButton = new JButton("Stop", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_DELETE)));
 		stopScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				menu.doClick(Messages.STOPSCRIPT);
@@ -92,8 +89,7 @@ public class BotToolBar extends JToolBar {
 		userInputButton.setToolTipText(userInputButton.getText());
 		userInputButton.setText("");
 
-		runScriptButton = new JButton("Run", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
+		runScriptButton = new JButton("Run", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
 		runScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switch (getScriptButton()) {

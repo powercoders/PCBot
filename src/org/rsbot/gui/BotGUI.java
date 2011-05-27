@@ -40,8 +40,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public static final int MAX_BOTS = 6;
 	private static final long serialVersionUID = -5411033752001988794L;
 	private static final Logger log = Logger.getLogger(BotGUI.class.getName());
-	private SettingsManager settings;
-	private SettingsManager.Preferences prefs;
+	private static SettingsManager settings;
+	public static SettingsManager.Preferences prefs;
 	private BotPanel panel;
 	private JScrollPane scrollableBotPanel;
 	private BotToolBar toolBar;

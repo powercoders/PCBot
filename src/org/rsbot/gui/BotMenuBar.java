@@ -8,6 +8,8 @@ import org.rsbot.event.listeners.TextPaintListener;
 import org.rsbot.gui.component.Messages;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.*;
@@ -145,11 +147,12 @@ public class BotMenuBar extends JMenuBar {
 		}
 		constructItemIcons();
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
-		if (Configuration.RUNNING_FROM_JAR) {
-			for (String disableFeature : DEVELOPER_CHECK_FEATURES) {
-				if (commandCheckMap.containsKey(disableFeature)) {
-					commandCheckMap.get(disableFeature).setVisible(false);
-				}
+	}
+
+	public void setDeveloperCheckFeatures(final boolean on) {
+		for (String disableFeature : DEVELOPER_CHECK_FEATURES) {
+			if (commandCheckMap.containsKey(disableFeature)) {
+				commandCheckMap.get(disableFeature).setVisible(!on);
 			}
 		}
 	}
@@ -267,6 +270,19 @@ public class BotMenuBar extends JMenuBar {
 				jmi.setActionCommand(title + "." + e);
 				menu.add(jmi);
 			}
+		}
+		if (title.equals(Messages.VIEW)) {
+			menu.addMenuListener(new MenuListener() {
+				public void menuSelected(MenuEvent e) {
+					setDeveloperCheckFeatures(!BotGUI.prefs.extendedOptions);
+				}
+
+				public void menuDeselected(MenuEvent e) {
+				}
+
+				public void menuCanceled(MenuEvent e) {
+				}
+			});
 		}
 		return menu;
 	}
