@@ -718,7 +718,8 @@ public class Game extends MethodProvider {
 	}
 
         /**
-	* Returns current or selected world
+	* Gets current world
+        * @return The selected or curent world.
 	*/
 	public int getCurrentWorld() {
 		if (methods.game.isLoggedIn()) {
