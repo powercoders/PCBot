@@ -11,7 +11,6 @@ import org.rsbot.script.provider.ScriptDefinition;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.script.provider.ScriptSource;
 import org.rsbot.service.ServiceException;
-import org.rsbot.util.StringUtil;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -150,21 +149,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			public String getToolTipText(MouseEvent e) {
 				int row = rowAtPoint(e.getPoint());
 				ScriptDefinition def = model.getDefinition(row);
-				if (def != null) {
-					StringBuilder b = new StringBuilder();
-					b.append(def.name);
-					b.append(" v");
-					b.append(def.version);
-					b.append(" by ");
-					for (int i = 0; i < def.authors.length; i++) {
-						if (i > 0) {
-							b.append(i == def.authors.length - 1 ? " and " : ", ");
-						}
-						b.append(def.authors[i]);
-					}
-					return b.toString();
-				}
-				return super.getToolTipText(e);
+				return def.toString();
 			}
 		};
 		table.addMouseListener(new MouseAdapter() {
@@ -474,9 +459,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					}
 					return ICON_SCRIPT_NET;
 				case 1:
-					return StringUtil.stripHtml(def.name);
+					return def.getName();
 				case 2:
-					return StringUtil.stripHtml(def.description);
+					return def.getDescription();
 				}
 			}
 			return null;
