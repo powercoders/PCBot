@@ -717,6 +717,20 @@ public class Game extends MethodProvider {
 		return false;
 	}
 
+        /**
+	* Returns current or selected world
+	*/
+	public int getCurrentWorld() {
+		if (methods.game.isLoggedIn()) {
+			if(methods.game.getCurrentTab() != 9) {
+				methods.game.openTab(9);
+			}
+			return integer.parsteStr(interfaces.getComponent(550, 18).getText().replaceAll("Friends List<br>RuneScape ", ""));
+		} else if (methods.game.getClientState() == Game.INDEX_LOBBY_SCREEN) {
+			return methods.lobby.getSelectedWorld();
+		}
+	}
+
 	/**
 	 * Fetch the chat button at the provided index for deprecated methods.
 	 * For internal use only.
