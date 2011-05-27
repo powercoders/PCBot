@@ -24,7 +24,8 @@ public class BotMenuBar extends JMenuBar {
 	public static final String[] TITLES;
 	public static final String[][] ELEMENTS;
 
-	private static final String[] DEVELOPER_CHECK_FEATURES = {"Game State", "Current Tab", "Camera", "Floor Height",
+	private static final boolean EXTD_VIEW_INITIAL = !Configuration.RUNNING_FROM_JAR;
+	private static final String[] EXTD_VIEW_ITEMS = {"Game State", "Current Tab", "Camera", "Floor Height",
 			"Mouse Position", "User Input Allowed", "Menu", "Menu Actions", "Cache", "Models", "Calc Test", "Settings"};
 
 	static {
@@ -68,6 +69,7 @@ public class BotMenuBar extends JMenuBar {
 				{Messages.ACCOUNTS, Messages.MENUSEPERATOR,
 						Messages.TOGGLEFALSE + Messages.FORCEINPUT,
 						Messages.TOGGLEFALSE + Messages.LESSCPU,
+						(EXTD_VIEW_INITIAL ? Messages.TOGGLETRUE : Messages.TOGGLEFALSE) + Messages.EXTDVIEWS,
 						Messages.MENUSEPERATOR,
 						Messages.TOGGLEFALSE + Messages.DISABLEANTIRANDOMS,
 						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN},
@@ -145,11 +147,13 @@ public class BotMenuBar extends JMenuBar {
 		}
 		constructItemIcons();
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
-		if (Configuration.RUNNING_FROM_JAR) {
-			for (String disableFeature : DEVELOPER_CHECK_FEATURES) {
-				if (commandCheckMap.containsKey(disableFeature)) {
-					commandCheckMap.get(disableFeature).setVisible(false);
-				}
+		setExtendedView(EXTD_VIEW_INITIAL);
+	}
+
+	public void setExtendedView(final boolean show) {
+		for (String disableFeature : EXTD_VIEW_ITEMS) {
+			if (commandCheckMap.containsKey(disableFeature)) {
+				commandCheckMap.get(disableFeature).setVisible(show);
 			}
 		}
 	}

@@ -179,6 +179,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 						updateScriptControls();
 					} else if (option.equals(Messages.LESSCPU)) {
 						lessCpu(((JCheckBoxMenuItem) evt.getSource()).isSelected());
+					} else if (option.equals(Messages.EXTDVIEWS)) {
+						menuBar.setExtendedView(((JCheckBoxMenuItem) evt.getSource()).isSelected());
 					} else if (option.equals(Messages.DISABLEANTIRANDOMS)) {
 						current.disableRandoms = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals(Messages.DISABLEAUTOLOGIN)) {
