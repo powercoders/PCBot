@@ -17,9 +17,13 @@ public class HttpClient {
 	static String httpUserAgent = null;
 
 	public static String getHttpUserAgent() {
-		if (httpUserAgent != null) {
-			return httpUserAgent;
+		if (httpUserAgent == null) {
+			httpUserAgent = getDefaultHttpUserAgent();
 		}
+		return httpUserAgent;
+	}
+
+	private static String getDefaultHttpUserAgent() {
 		final boolean x64 = System.getProperty("sun.arch.data.model").equals("64");
 		final String os;
 		switch (Configuration.getCurrentOperatingSystem()) {
@@ -36,8 +40,7 @@ public class HttpClient {
 		final StringBuilder buf = new StringBuilder(125);
 		buf.append("Mozilla/5.0 (").append(os).append(")");
 		buf.append(" AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.68 Safari/534.24");
-		httpUserAgent = buf.toString();
-		return httpUserAgent;
+		return buf.toString();
 	}
 
 	public static HttpURLConnection getHttpConnection(final URL url) throws IOException {
