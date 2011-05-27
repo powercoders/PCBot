@@ -11,7 +11,6 @@ import org.rsbot.script.wrappers.RSNPC;
  */
 @ScriptManifest(authors = {"Nightmares18", "joku.rules", "Taha", "Fred"}, name = "FrogCave", version = 2.3)
 public class FrogCave extends Random {
-
 	private RSNPC frog;
 	private boolean talkedToHerald, talkedToFrog;
 	private int tries;
@@ -20,18 +19,15 @@ public class FrogCave extends Random {
 	public boolean activateCondition() {
 		if (!game.isLoggedIn()) {
 			return false;
-		} else if (npcs.getNearest("Frog Herald") != null
-				&& objects.getNearest(5917) != null) {
+		} else if (npcs.getNearest("Frog Herald") != null && objects.getNearest(5917) != null) {
 			sleep(random(2000, 3000));
-			return npcs.getNearest("Frog Herald") != null
-					&& objects.getNearest(5917) != null;
+			return npcs.getNearest("Frog Herald") != null && objects.getNearest(5917) != null;
 		}
 		return false;
 	}
 
 	private RSNPC findFrog() {
 		return npcs.getNearest(new Filter<RSNPC>() {
-			@Override
 			public boolean accept(final RSNPC npc) {
 				return !npc.isMoving() && npc.getHeight() == -278;
 			}
@@ -39,8 +35,7 @@ public class FrogCave extends Random {
 	}
 
 	private boolean canContinue() {
-		return interfaces.canContinue()
-				|| interfaces.getComponent(65, 6).isValid();
+		return interfaces.canContinue() || interfaces.getComponent(65, 6).isValid();
 	}
 
 	@Override
@@ -59,11 +54,8 @@ public class FrogCave extends Random {
 			if (canContinue()) {
 				// log("can continue...");
 				if (!talkedToHerald) {
-					final RSComponent heraldTalkComp = interfaces.getComponent(
-							242, 4);
-					talkedToHerald = heraldTalkComp.isValid()
-							&& (heraldTalkComp.containsText("crown") || heraldTalkComp
-							.containsText("is still waiting"));
+					final RSComponent heraldTalkComp = interfaces.getComponent(242, 4);
+					talkedToHerald = heraldTalkComp.isValid() && (heraldTalkComp.containsText("crown") || heraldTalkComp.containsText("is still waiting"));
 				}
 				if (!interfaces.clickContinue()) {
 					interfaces.getComponent(65, 6).doClick();
@@ -92,8 +84,7 @@ public class FrogCave extends Random {
 					log("Princess found! ID: " + frog.getID());
 				}
 			}
-			if (frog != null && frog.getLocation() != null
-					&& (!talkedToFrog || !canContinue())) {
+			if (frog != null && frog.getLocation() != null && (!talkedToFrog || !canContinue())) {
 				if (calc.distanceTo(frog) < 5) {
 					if (!calc.tileOnScreen(frog.getLocation())) {
 						camera.turnTo(frog);

@@ -10,22 +10,23 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 /**
- * @author Iscream, Aut0r, Doout, Pervy
+ * @author Iscream
+ * @author Pervy
+ * @author Timer
  */
-@ScriptManifest(authors = {"Iscream", "Pervy Shuya", "Aut0r"}, name = "Login", version = 2.1)
+@ScriptManifest(authors = {"Iscream", "Pervy Shuya", "Timer"}, name = "Login", version = 2.1)
 public class LoginBot extends Random {
-
 	private static final int INTERFACE_MAIN = 905;
 	private static final int INTERFACE_MAIN_CHILD = 59;
 	private static final int INTERFACE_MAIN_CHILD_COMPONENT_ID = 4;
 	private static final int INTERFACE_LOGIN_SCREEN = 596;
-	private static final int INTERFACE_USERNAME = 65;
-	private static final int INTERFACE_USERNAME_WINDOW = 37;
-	private static final int INTERFACE_PASSWORD = 71;
-	private static final int INTERFACE_PASSWORD_WINDOW = 39;
-	private static final int INTERFACE_BUTTON_LOGIN = 42;
-	private static final int INTERFACE_TEXT_RETURN = 11;
-	private static final int INTERFACE_BUTTON_BACK = 60;
+	private static final int INTERFACE_USERNAME = 73;
+	private static final int INTERFACE_USERNAME_WINDOW = 40;
+	private static final int INTERFACE_PASSWORD = 79;
+	private static final int INTERFACE_PASSWORD_WINDOW = 42;
+	private static final int INTERFACE_BUTTON_LOGIN = 45;
+	private static final int INTERFACE_TEXT_RETURN = 14;
+	private static final int INTERFACE_BUTTON_BACK = 68;
 	private static final int INTERFACE_WELCOME_SCREEN = 906;
 	private static final int INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_1 = 160;
 	private static final int INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_2 = 171;
@@ -42,7 +43,6 @@ public class LoginBot extends Random {
 	private static final int INDEX_LOGGED_OUT = 3;
 	private static final int INDEX_LOBBY = 7;
 	private int invalidCount, worldFullCount;
-	public Random Rand;
 
 	@Override
 	public boolean activateCondition() {
