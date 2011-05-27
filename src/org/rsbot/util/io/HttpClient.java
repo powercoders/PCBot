@@ -55,9 +55,17 @@ public class HttpClient {
 		return con;
 	}
 
-	public static HttpURLConnection download(final URL url, final File file) throws IOException {
-		final HttpURLConnection con = getConnection(url);
+	private static HttpURLConnection getConnection(final URL url) throws IOException {
+		final HttpURLConnection con = getHttpConnection(url);
+		con.setUseCaches(true);
+		return con;
+	}
 
+	public static HttpURLConnection download(final URL url, final File file) throws IOException {
+		return download(getConnection(url), file);
+	}
+
+	public static HttpURLConnection download(final HttpURLConnection con, final File file) throws IOException {
 		if (file.exists()) {
 			con.setIfModifiedSince(file.lastModified());
 			con.connect();
@@ -93,15 +101,12 @@ public class HttpClient {
 	}
 
 	public static String downloadAsString(final URL url) throws IOException {
-		final HttpURLConnection con = getConnection(url);
-		final byte[] buffer = downloadBinary(con);
-		return new String(buffer);
+		return downloadAsString(getConnection(url));
 	}
 
-	private static HttpURLConnection getConnection(final URL url) throws IOException {
-		final HttpURLConnection con = getHttpConnection(url);
-		con.setUseCaches(true);
-		return con;
+	public static String downloadAsString(final HttpURLConnection con) throws IOException {
+		final byte[] buffer = downloadBinary(con);
+		return new String(buffer);
 	}
 
 	private static byte[] downloadBinary(final URLConnection con) throws IOException {
