@@ -728,7 +728,7 @@ public class Game extends MethodProvider {
 			if(methods.game.getCurrentTab() != 9) {
 				methods.game.openTab(9);
 			}
-			world = Integer.parseInt(methods.interfaces.getComponent(550, 18).getText().replaceAll("Friends List<br>RuneScape ", ""));
+			world = Integer.parseInt(methods.interfaces.getComponent(550, 19).getText().replaceAll("Friends List<br>RuneScape ", ""));
 		} else if (methods.game.getClientState() == Game.INDEX_LOBBY_SCREEN) {
 			world = methods.lobby.getSelectedWorld();
 		}
