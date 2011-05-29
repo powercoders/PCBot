@@ -1,23 +1,28 @@
 package org.rsbot.script.background;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.HashMap;
+
 import org.rsbot.Configuration;
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Web;
 import org.rsbot.service.WebQueue;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.HashMap;
-
-@ScriptManifest(name = "Web Data Loader", authors = {"Timer"})
+@ScriptManifest(name = "Web Data Loader", authors = { "Timer" })
 public class WebLoader extends BackgroundScript {
 	private static final Object lock = new Object();
 
 	@Override
 	public boolean activateCondition() {
 		return !Web.loaded;
+	}
+
+	@Override
+	public int iterationSleep() {
+		return 5000;
 	}
 
 	@Override
@@ -42,20 +47,30 @@ public class WebLoader extends BackgroundScript {
 							final String[] tileData = storeData[0].split(",");
 							if (tileData.length == 3) {
 								try {
-									final Short[] tile = {Short.parseShort(tileData[0]), Short.parseShort(tileData[1]), Short.parseShort(tileData[2])};
+									final Short[] tile = {
+											Short.parseShort(tileData[0]),
+											Short.parseShort(tileData[1]),
+											Short.parseShort(tileData[2]) };
 									final int tileFlag = Integer.parseInt(storeData[1]);
 									if (mapData.containsKey(tile)) {
-										WebQueue.Remove(dataLine);//Line is double, remove from file--bad collection!
+										WebQueue.Remove(dataLine);// Line is
+																	// double,
+																	// remove
+																	// from
+																	// file--bad
+																	// collection!
 									} else {
 										mapData.put(tile, tileFlag);
 									}
 								} catch (final Exception e) {
 								}
 							} else {
-								WebQueue.Remove(dataLine);//Line is bad, remove from file.
+								WebQueue.Remove(dataLine);// Line is bad, remove
+															// from file.
 							}
 						} else {
-							WebQueue.Remove(dataLine);//Line is bad, remove from file.
+							WebQueue.Remove(dataLine);// Line is bad, remove
+														// from file.
 						}
 					}
 					Web.rs_map.putAll(mapData);
@@ -69,10 +84,5 @@ public class WebLoader extends BackgroundScript {
 			}
 		}
 		return -1;
-	}
-
-	@Override
-	public int iterationSleep() {
-		return 5000;
 	}
 }

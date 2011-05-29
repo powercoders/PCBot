@@ -1,20 +1,20 @@
 package org.rsbot.script.randoms;
 
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+
 import org.rsbot.gui.AccountManager;
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-
 /**
  * @author Iscream
  * @author Pervy
  * @author Timer
  */
-@ScriptManifest(authors = {"Iscream", "Pervy Shuya", "Timer"}, name = "Login", version = 2.1)
+@ScriptManifest(authors = { "Iscream", "Pervy Shuya", "Timer" }, name = "Login", version = 2.1)
 public class LoginBot extends Random {
 	private static final int INTERFACE_MAIN = 905;
 	private static final int INTERFACE_MAIN_CHILD = 59;
@@ -31,7 +31,7 @@ public class LoginBot extends Random {
 	private static final int INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_1 = 160;
 	private static final int INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_2 = 171;
 	private static final int INTERFACE_WELCOME_SCREEN_BUTTON_TEXT = 173;
-	//private static final int INTERFACE_WELCOME_SCREEN_BUTTON_LOGOUT = 193;
+	// private static final int INTERFACE_WELCOME_SCREEN_BUTTON_LOGOUT = 193;
 	private static final int INTERFACE_WELCOME_SCREEN_TEXT_RETURN = 221;
 	private static final int INTERFACE_WELCOME_SCREEN_BUTTON_BACK = 218;
 	private static final int INTERFACE_WELCOME_SCREEN_HIGH_RISK_WORLD_TEXT = 86;
@@ -49,6 +49,42 @@ public class LoginBot extends Random {
 		final int idx = game.getClientState();
 		return (idx == INDEX_LOGGED_OUT || idx == INDEX_LOBBY)
 				&& !switchingWorlds() && account.getName() != null;
+	}
+
+	// Clicks past all of the letters
+	private boolean atLoginInterface(final RSComponent i) {
+		if (!i.isValid()) {
+			return false;
+		}
+		final Rectangle pos = i.getArea();
+		if (pos.x == -1 || pos.y == -1 || pos.width == -1 || pos.height == -1) {
+			return false;
+		}
+		final int dy = (int) (pos.getHeight() - 4) / 2;
+		final int maxRandomX = (int) (pos.getMaxX() - pos.getCenterX());
+		final int midx = (int) pos.getCenterX();
+		final int midy = (int) (pos.getMinY() + pos.getHeight() / 2);
+		if (i.getIndex() == INTERFACE_PASSWORD_WINDOW) {
+			mouse.click(minX(i), midy + random(-dy, dy), true);
+		} else {
+			mouse.click(midx + random(1, maxRandomX), midy + random(-dy, dy), true);
+		}
+		return true;
+	}
+
+	private boolean atLoginScreen() {
+		return interfaces.get(596).isValid();
+	}
+
+	private boolean isPasswordFilled() {
+		final String passWord = AccountManager.getPassword(account.getName());
+		return interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_PASSWORD).getText().toLowerCase().length() == (passWord == null ? 0
+				: passWord.length());
+	}
+
+	private boolean isUsernameFilled() {
+		final String username = account.getName().toLowerCase().trim();
+		return interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_USERNAME).getText().toLowerCase().equalsIgnoreCase(username);
 	}
 
 	@Override
@@ -71,12 +107,9 @@ public class LoginBot extends Random {
 					final RSComponent welcome_screen_button_play_1 = welcome_screen.getComponent(INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_1);
 					final RSComponent welcome_screen_button_play_2 = welcome_screen.getComponent(INTERFACE_WELCOME_SCREEN_BUTTON_PLAY_2);
 
-					mouse.click(welcome_screen_button_play_1.getAbsoluteX(),
-							welcome_screen_button_play_1.getAbsoluteY(),
-							welcome_screen_button_play_2.getAbsoluteX()
-									+ welcome_screen_button_play_2.getWidth()
-									- welcome_screen_button_play_1.getAbsoluteX(),
-							welcome_screen_button_play_1.getHeight(), true);
+					mouse.click(welcome_screen_button_play_1.getAbsoluteX(), welcome_screen_button_play_1.getAbsoluteY(), welcome_screen_button_play_2.getAbsoluteX()
+							+ welcome_screen_button_play_2.getWidth()
+							- welcome_screen_button_play_1.getAbsoluteX(), welcome_screen_button_play_1.getHeight(), true);
 
 					for (int i = 0; i < 4 && game.getClientState() == 6; i++) {
 						sleep(500);
@@ -88,14 +121,12 @@ public class LoginBot extends Random {
 				if (returnText.contains("total skill level of")
 						&& !AccountManager.isMember(account.getName())) {
 					log("Log back in when you total level of 1000+");
-					interfaces.getComponent(INTERFACE_WELCOME_SCREEN,
-							INTERFACE_WELCOME_SCREEN_BUTTON_BACK).doClick();
+					interfaces.getComponent(INTERFACE_WELCOME_SCREEN, INTERFACE_WELCOME_SCREEN_BUTTON_BACK).doClick();
 					stopScript(false);
 				} else if (returnText.contains("total skill level of")
 						&& AccountManager.isMember(account.getName())) {
 					log("Log back in when you total level of 1500+");
-					interfaces.getComponent(INTERFACE_WELCOME_SCREEN,
-							INTERFACE_WELCOME_SCREEN_BUTTON_BACK).doClick();
+					interfaces.getComponent(INTERFACE_WELCOME_SCREEN, INTERFACE_WELCOME_SCREEN_BUTTON_BACK).doClick();
 					stopScript(false);
 				}
 				if (interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_BUTTON_BACK).isValid()) {
@@ -109,8 +140,7 @@ public class LoginBot extends Random {
 				}
 
 				if (returnText.contains("your account has not logged out")) {
-					interfaces.getComponent(INTERFACE_WELCOME_SCREEN,
-							INTERFACE_WELCOME_SCREEN_BUTTON_BACK).doClick();
+					interfaces.getComponent(INTERFACE_WELCOME_SCREEN, INTERFACE_WELCOME_SCREEN_BUTTON_BACK).doClick();
 					if (invalidCount > 10) {
 						log.warning("Unable to login after 10 attempts. Stopping script.");
 						log.severe("It seems you are actually already logged in?");
@@ -123,25 +153,17 @@ public class LoginBot extends Random {
 
 				if (returnText.contains("member")) {
 					log("Unable to login to a members world. Stopping script.");
-					final RSComponent back_button1 = interfaces.get(
-							INTERFACE_WELCOME_SCREEN).getComponent(228);
-					final RSComponent back_button2 = interfaces.get(
-							INTERFACE_WELCOME_SCREEN).getComponent(231);
-					mouse.click(
-							back_button1.getAbsoluteX(),
-							back_button1.getAbsoluteY(),
-							back_button2.getAbsoluteX()
-									+ back_button2.getWidth()
-									- back_button1.getAbsoluteX(),
-							back_button1.getHeight(), true);
+					final RSComponent back_button1 = interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(228);
+					final RSComponent back_button2 = interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(231);
+					mouse.click(back_button1.getAbsoluteX(), back_button1.getAbsoluteY(), back_button2.getAbsoluteX()
+							+ back_button2.getWidth()
+							- back_button1.getAbsoluteX(), back_button1.getHeight(), true);
 					interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(203).doClick();
 					stopScript(false);
 				}
 
-				if (interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(
-						INTERFACE_WELCOME_SCREEN_HIGH_RISK_WORLD_TEXT).getText().toLowerCase().trim().contains("high-risk wilderness world")) {
-					interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(
-							INTERFACE_WELCOME_SCREEN_HIGH_RISK_WORLD_LOGIN_BUTTON).doClick();
+				if (interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_HIGH_RISK_WORLD_TEXT).getText().toLowerCase().trim().contains("high-risk wilderness world")) {
+					interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_HIGH_RISK_WORLD_LOGIN_BUTTON).doClick();
 				}
 			}
 			return -1;
@@ -222,10 +244,8 @@ public class LoginBot extends Random {
 			}
 		}
 		if (game.getClientState() == INDEX_LOGGED_OUT) {
-			if (interfaces.getComponent(INTERFACE_GRAPHICS_NOTICE,
-					INTERFACE_GRAPHICS_LEAVE_ALONE).isValid()) {
-				interfaces.getComponent(INTERFACE_GRAPHICS_NOTICE,
-						INTERFACE_GRAPHICS_LEAVE_ALONE).doClick();
+			if (interfaces.getComponent(INTERFACE_GRAPHICS_NOTICE, INTERFACE_GRAPHICS_LEAVE_ALONE).isValid()) {
+				interfaces.getComponent(INTERFACE_GRAPHICS_NOTICE, INTERFACE_GRAPHICS_LEAVE_ALONE).doClick();
 				if (interfaces.getComponent(INTERFACE_BUTTON_BACK).isValid()) {
 					interfaces.getComponent(INTERFACE_BUTTON_BACK).doClick();
 				}
@@ -274,33 +294,6 @@ public class LoginBot extends Random {
 		return random(500, 2000);
 	}
 
-	private boolean switchingWorlds() {
-		return interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_TEXT_RETURN).isValid()
-				&& interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_TEXT_RETURN).containsText("just left another world");
-	}
-
-	// Clicks past all of the letters
-	private boolean atLoginInterface(final RSComponent i) {
-		if (!i.isValid()) {
-			return false;
-		}
-		final Rectangle pos = i.getArea();
-		if (pos.x == -1 || pos.y == -1 || pos.width == -1 || pos.height == -1) {
-			return false;
-		}
-		final int dy = (int) (pos.getHeight() - 4) / 2;
-		final int maxRandomX = (int) (pos.getMaxX() - pos.getCenterX());
-		final int midx = (int) pos.getCenterX();
-		final int midy = (int) (pos.getMinY() + pos.getHeight() / 2);
-		if (i.getIndex() == INTERFACE_PASSWORD_WINDOW) {
-			mouse.click(minX(i), midy + random(-dy, dy), true);
-		} else {
-			mouse.click(midx + random(1, maxRandomX), midy + random(-dy, dy),
-					true);
-		}
-		return true;
-	}
-
 	/*
 	 * Returns x int based on the letters in a Child Only the password text is
 	 * needed as the username text cannot reach past the middle of the interface
@@ -323,17 +316,8 @@ public class LoginBot extends Random {
 		}
 	}
 
-	private boolean atLoginScreen() {
-		return interfaces.get(596).isValid();
-	}
-
-	private boolean isUsernameFilled() {
-		final String username = account.getName().toLowerCase().trim();
-		return interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_USERNAME).getText().toLowerCase().equalsIgnoreCase(username);
-	}
-
-	private boolean isPasswordFilled() {
-		final String passWord = AccountManager.getPassword(account.getName());
-		return interfaces.get(INTERFACE_LOGIN_SCREEN).getComponent(INTERFACE_PASSWORD).getText().toLowerCase().length() == (passWord == null ? 0 : passWord.length());
+	private boolean switchingWorlds() {
+		return interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_TEXT_RETURN).isValid()
+				&& interfaces.get(INTERFACE_WELCOME_SCREEN).getComponent(INTERFACE_WELCOME_SCREEN_TEXT_RETURN).containsText("just left another world");
 	}
 }

@@ -1,7 +1,12 @@
 package org.rsbot.bot;
 
-import java.awt.*;
-import java.io.*;
+import java.awt.AWTPermission;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FilePermission;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.SocketPermission;
 import java.net.URL;
 import java.security.CodeSigner;
@@ -26,12 +31,12 @@ public final class RSClassLoader extends ClassLoader {
 			domain = new ProtectionDomain(codeSource, getPermissions());
 			this.classes = classes;
 
-			//Get path of org/rsbot/client/RandomAccessFile
+			// Get path of org/rsbot/client/RandomAccessFile
 			String s = getClass().getResource("RSClassLoader.class").toString();
 			s = s.replace("bot/RSClassLoader.class", "client/RandomAccessFile.class");
 			final URL url = new URL(s);
 
-			//Read org/rsbot/client/RandomAccessFile
+			// Read org/rsbot/client/RandomAccessFile
 			InputStream is = null;
 			try {
 				final ByteArrayOutputStream bos = new ByteArrayOutputStream(5000);
@@ -45,7 +50,7 @@ public final class RSClassLoader extends ClassLoader {
 
 				final byte[] data = bos.toByteArray();
 
-				//Store it so we can load it
+				// Store it so we can load it
 				this.classes.put("org.rsbot.client.RandomAccessFile", data);
 			} catch (final IOException e) {
 				e.printStackTrace();
@@ -74,8 +79,9 @@ public final class RSClassLoader extends ClassLoader {
 		} else {
 			uDir = "~/";
 		}
-		final String[] dirs = {"c:/rscache/", "/rscache/", "c:/windows/", "c:/winnt/", "c:/", uDir, "/tmp/", "."};
-		final String[] rsDirs = {".jagex_cache_32", ".file_store_32"};
+		final String[] dirs = { "c:/rscache/", "/rscache/", "c:/windows/",
+				"c:/winnt/", "c:/", uDir, "/tmp/", "." };
+		final String[] rsDirs = { ".jagex_cache_32", ".file_store_32" };
 		for (String dir : dirs) {
 			final File f = new File(dir);
 			ps.add(new FilePermission(dir, "read"));
@@ -84,19 +90,23 @@ public final class RSClassLoader extends ClassLoader {
 			}
 			dir = f.getPath();
 			for (final String rsDir : rsDirs) {
-				ps.add(new FilePermission(dir + File.separator + rsDir + File.separator + "-", "read"));
-				ps.add(new FilePermission(dir + File.separator + rsDir + File.separator + "-", "write"));
+				ps.add(new FilePermission(dir + File.separator + rsDir
+						+ File.separator + "-", "read"));
+				ps.add(new FilePermission(dir + File.separator + rsDir
+						+ File.separator + "-", "write"));
 			}
 		}
 		Calendar.getInstance();
-		//TimeZone.getDefault();//Now the default is set they don't need permission
-		//ps.add(new FilePermission())
+		// TimeZone.getDefault();//Now the default is set they don't need
+		// permission
+		// ps.add(new FilePermission())
 		ps.setReadOnly();
 		return ps;
 	}
 
 	@Override
-	public final Class<?> loadClass(final String name) throws ClassNotFoundException {
+	public final Class<?> loadClass(final String name)
+			throws ClassNotFoundException {
 		if (classes.containsKey(name)) {
 			final byte buffer[] = classes.remove(name);
 			return defineClass(name, buffer, 0, buffer.length, domain);

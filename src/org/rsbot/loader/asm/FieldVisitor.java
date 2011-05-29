@@ -7,18 +7,20 @@ package org.rsbot.loader.asm;
 
 /**
  * A visitor to visit a Java field. The methods of this interface must be called
- * in the following order: ( <tt>visitAnnotation</tt> |
- * <tt>visitAttribute</tt> )* <tt>visitEnd</tt>.
- *
+ * in the following order: ( <tt>visitAnnotation</tt> | <tt>visitAttribute</tt>
+ * )* <tt>visitEnd</tt>.
+ * 
  * @author Eric Bruneton
  */
 public interface FieldVisitor {
 
 	/**
 	 * Visits an annotation of the field.
-	 *
-	 * @param desc    the class descriptor of the annotation class.
-	 * @param visible <tt>true</tt> if the annotation is visible at runtime.
+	 * 
+	 * @param desc
+	 *            the class descriptor of the annotation class.
+	 * @param visible
+	 *            <tt>true</tt> if the annotation is visible at runtime.
 	 * @return a visitor to visit the annotation values, or <tt>null</tt> if
 	 *         this visitor is not interested in visiting this annotation.
 	 */
@@ -26,8 +28,9 @@ public interface FieldVisitor {
 
 	/**
 	 * Visits a non standard attribute of the field.
-	 *
-	 * @param attr an attribute.
+	 * 
+	 * @param attr
+	 *            an attribute.
 	 */
 	void visitAttribute(Attribute attr);
 

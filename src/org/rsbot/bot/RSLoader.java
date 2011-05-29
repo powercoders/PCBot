@@ -1,18 +1,22 @@
 package org.rsbot.bot;
 
-import org.rsbot.Application;
-import org.rsbot.Configuration;
-import org.rsbot.client.Loader;
-import org.rsbot.loader.ClientLoader;
-import org.rsbot.loader.script.ParseException;
-
 import java.applet.Applet;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.rsbot.Application;
+import org.rsbot.Configuration;
+import org.rsbot.client.Loader;
+import org.rsbot.loader.ClientLoader;
+import org.rsbot.loader.script.ParseException;
 
 /**
  * @author Qauters
@@ -45,15 +49,54 @@ public class RSLoader extends Applet implements Runnable, Loader {
 		}
 	}
 
+	public RSClassLoader getClassLoader() {
+		return classLoader;
+	}
+
 	@Override
-	public boolean isShowing() {
-		return true;
+	public Applet getClient() {
+		return client;
+	}
+
+	@Override
+	public final Dimension getSize() {
+		return size;
+	}
+
+	public String getTargetName() {
+		return targetName;
 	}
 
 	@Override
 	public final synchronized void init() {
 		if (client != null) {
 			client.init();
+		}
+	}
+
+	@Override
+	public boolean isShowing() {
+		return true;
+	}
+
+	public void load() {
+		final File ms = new File(Configuration.Paths.getCacheDirectory(), "ms.dat");
+		try {
+			final ClientLoader cl = new ClientLoader();
+			cl.init(new URL(Configuration.Paths.URLs.UPDATE), ms);
+			final File client = new File(Configuration.Paths.getCacheDirectory(), "client.dat");
+			cl.load(client, new File(Configuration.Paths.getVersionCache()));
+			targetName = cl.getTargetName();
+			classLoader = new RSClassLoader(cl.getClasses(), new URL("http://"
+					+ targetName + ".com/"));
+		} catch (final IOException ex) {
+			log.severe("Unable to load client: " + ex.getMessage());
+		} catch (final ParseException ex) {
+			log.info("Unable to load client: " + ex.toString());
+			if (ms.exists()) {
+				ms.delete();
+			}
+			log.severe("Cached objects deleted, please try restarting the application");
 		}
 	}
 
@@ -78,12 +121,13 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	/**
 	 * The run void of the loader
 	 */
+	@Override
 	public void run() {
 		try {
 			final Class<?> c = classLoader.loadClass("client");
 			client = (Applet) c.newInstance();
 			loadedCallback.run();
-			c.getMethod("provideLoaderApplet", new Class[]{java.applet.Applet.class}).invoke(null, this);
+			c.getMethod("provideLoaderApplet", new Class[] { java.applet.Applet.class }).invoke(null, this);
 			client.init();
 			client.start();
 		} catch (final Throwable e) {
@@ -97,36 +141,14 @@ public class RSLoader extends Applet implements Runnable, Loader {
 		}
 	}
 
-	public Applet getClient() {
-		return client;
-	}
-
-	public void load() {
-		final File ms = new File(Configuration.Paths.getCacheDirectory(), "ms.dat");
-		try {
-			final ClientLoader cl = new ClientLoader();
-			cl.init(new URL(Configuration.Paths.URLs.UPDATE), ms);
-			final File client = new File(Configuration.Paths.getCacheDirectory(), "client.dat");
-			cl.load(client, new File(Configuration.Paths.getVersionCache()));
-			targetName = cl.getTargetName();
-			classLoader = new RSClassLoader(cl.getClasses(), new URL("http://" + targetName + ".com/"));
-		} catch (final IOException ex) {
-			log.severe("Unable to load client: " + ex.getMessage());
-		} catch (final ParseException ex) {
-			log.info("Unable to load client: " + ex.toString());
-			if (ms.exists()) {
-				ms.delete();
-			}
-			log.severe("Cached objects deleted, please try restarting the application");
-		}
-	}
-
 	public void setCallback(final Runnable r) {
 		loadedCallback = r;
 	}
 
-	public String getTargetName() {
-		return targetName;
+	@Override
+	public final void setSize(final int width, final int height) {
+		super.setSize(width, height);
+		size = new Dimension(width, height);
 	}
 
 	/**
@@ -159,20 +181,5 @@ public class RSLoader extends Applet implements Runnable, Loader {
 		} else {
 			paint(graphics);
 		}
-	}
-
-	@Override
-	public final void setSize(final int width, final int height) {
-		super.setSize(width, height);
-		size = new Dimension(width, height);
-	}
-
-	@Override
-	public final Dimension getSize() {
-		return size;
-	}
-
-	public RSClassLoader getClassLoader() {
-		return classLoader;
 	}
 }

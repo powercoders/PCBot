@@ -1,12 +1,18 @@
 package org.rsbot;
 
-import org.rsbot.log.LogFormatter;
-import org.rsbot.log.SystemConsoleHandler;
-import org.rsbot.log.TextAreaLogHandler;
-
-import javax.swing.filechooser.FileSystemView;
-import java.awt.*;
-import java.io.*;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -14,6 +20,12 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
+
+import javax.swing.filechooser.FileSystemView;
+
+import org.rsbot.log.LogFormatter;
+import org.rsbot.log.SystemConsoleHandler;
+import org.rsbot.log.TextAreaLogHandler;
 
 public class Configuration {
 	public enum OperatingSystem {
@@ -26,15 +38,22 @@ public class Configuration {
 			public static final String SCRIPTS = Paths.SCRIPTS_NAME_SRC + "/";
 			public static final String ROOT_IMG = ROOT + "/images";
 			public static final String ICON = ROOT_IMG + "/icon.png";
-			public static final String ICON_APPADD = ROOT_IMG + "/application_add.png";
-			public static final String ICON_APPDELETE = ROOT_IMG + "/application_delete.png";
-			public static final String ICON_ARROWIN = ROOT_IMG + "/arrow_in.png";
-			public static final String ICON_REFRESH = ROOT_IMG + "/arrow_refresh.png";
+			public static final String ICON_APPADD = ROOT_IMG
+					+ "/application_add.png";
+			public static final String ICON_APPDELETE = ROOT_IMG
+					+ "/application_delete.png";
+			public static final String ICON_ARROWIN = ROOT_IMG
+					+ "/arrow_in.png";
+			public static final String ICON_REFRESH = ROOT_IMG
+					+ "/arrow_refresh.png";
 			public static final String ICON_DELETE = ROOT_IMG + "/delete.png";
 			public static final String ICON_GITHUB = ROOT_IMG + "/github.png";
-			public static final String ICON_PLAY = ROOT_IMG + "/control_play_blue.png";
-			public static final String ICON_PAUSE = ROOT_IMG + "/control_pause.png";
-			public static final String DATABASE_ERROR = ROOT_IMG + "/database_error.png";
+			public static final String ICON_PLAY = ROOT_IMG
+					+ "/control_play_blue.png";
+			public static final String ICON_PAUSE = ROOT_IMG
+					+ "/control_pause.png";
+			public static final String DATABASE_ERROR = ROOT_IMG
+					+ "/database_error.png";
 			public static final String ICON_ADD = ROOT_IMG + "/add.png";
 			public static final String ICON_HOME = ROOT_IMG + "/home.png";
 			public static final String ICON_BOT = ROOT_IMG + "/bot.png";
@@ -42,20 +61,31 @@ public class Configuration {
 			public static final String ICON_TICK = ROOT_IMG + "/tick.png";
 			public static final String ICON_MOUSE = ROOT_IMG + "/mouse.png";
 			public static final String ICON_PHOTO = ROOT_IMG + "/photo.png";
-			public static final String ICON_REPORTKEY = ROOT_IMG + "/report_key.png";
-			public static final String ICON_REPORT_DISK = ROOT_IMG + "/report_disk.png";
-			public static final String ICON_INFO = ROOT_IMG + "/information.png";
+			public static final String ICON_REPORTKEY = ROOT_IMG
+					+ "/report_key.png";
+			public static final String ICON_REPORT_DISK = ROOT_IMG
+					+ "/report_disk.png";
+			public static final String ICON_INFO = ROOT_IMG
+					+ "/information.png";
 			public static final String ICON_KEY = ROOT_IMG + "/key.png";
-			public static final String ICON_KEYBOARD = ROOT_IMG + "/keyboard.png";
+			public static final String ICON_KEYBOARD = ROOT_IMG
+					+ "/keyboard.png";
 			public static final String ICON_CONNECT = ROOT_IMG + "/connect.png";
-			public static final String ICON_DISCONNECT = ROOT_IMG + "/disconnect.png";
-			public static final String ICON_START = ROOT_IMG + "/control_play.png";
+			public static final String ICON_DISCONNECT = ROOT_IMG
+					+ "/disconnect.png";
+			public static final String ICON_START = ROOT_IMG
+					+ "/control_play.png";
 			public static final String ICON_SCRIPT = ROOT_IMG + "/script.png";
-			public static final String ICON_SCRIPT_ADD = ROOT_IMG + "/script_add.png";
-			public static final String ICON_SCRIPT_LIVE = ROOT_IMG + "/script_lightning.png";
-			public static final String ICON_SCRIPT_GEAR = ROOT_IMG + "/script_gear.png";
-			public static final String ICON_SCRIPT_EDIT = ROOT_IMG + "/script_edit.png";
-			public static final String ICON_WEBLINK = ROOT_IMG + "/world_link.png";
+			public static final String ICON_SCRIPT_ADD = ROOT_IMG
+					+ "/script_add.png";
+			public static final String ICON_SCRIPT_LIVE = ROOT_IMG
+					+ "/script_lightning.png";
+			public static final String ICON_SCRIPT_GEAR = ROOT_IMG
+					+ "/script_gear.png";
+			public static final String ICON_SCRIPT_EDIT = ROOT_IMG
+					+ "/script_edit.png";
+			public static final String ICON_WEBLINK = ROOT_IMG
+					+ "/world_link.png";
 			public static final String ICON_WRENCH = ROOT_IMG + "/wrench.png";
 
 			public static final String VERSION = ROOT + "/version.txt";
@@ -89,78 +119,17 @@ public class Configuration {
 		public static String getAccountsFile() {
 			final String path;
 			if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
-				path = System.getenv("APPDATA") + File.separator + Configuration.NAME + "_Accounts.ini";
+				path = System.getenv("APPDATA") + File.separator
+						+ Configuration.NAME + "_Accounts.ini";
 			} else {
-				path = Paths.getUnixHome() + File.separator + "." + Configuration.NAME_LOWERCASE + "acct";
+				path = Paths.getUnixHome() + File.separator + "."
+						+ Configuration.NAME_LOWERCASE + "acct";
 			}
 			return path;
 		}
 
-		public static String getHomeDirectory() {
-			final String env = System.getenv(Configuration.NAME.toUpperCase() + "_HOME");
-			if (env == null || env.isEmpty()) {
-				return (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS ?
-						FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath() :
-						Paths.getUnixHome()) + File.separator + Configuration.NAME;
-			} else {
-				return env;
-			}
-		}
-
-		public static String getLogsDirectory() {
-			return Paths.getHomeDirectory() + File.separator + "Logs";
-		}
-
-		public static String getPathCache() {
-			return Paths.getSettingsDirectory() + File.separator + "path.txt";
-		}
-
-		public static String getUIDsFile() {
-			return Paths.getSettingsDirectory() + File.separator + "uid.txt";
-		}
-
-		public static String getScreenshotsDirectory() {
-			return Paths.getHomeDirectory() + File.separator + "Screenshots";
-		}
-
-		public static String getScriptsDirectory() {
-			return Paths.getHomeDirectory() + File.separator + Paths.SCRIPTS_NAME_OUT;
-		}
-
-		public static String getScriptsSourcesDirectory() {
-			return Paths.getScriptsDirectory() + File.separator + "Sources";
-		}
-
-		public static String getScriptsPrecompiledDirectory() {
-			return Paths.getScriptsDirectory() + File.separator + "Precompiled";
-		}
-
-		public static String getScriptsNetworkDirectory() {
-			return Paths.getScriptsDirectory() + File.separator + "Network";
-		}
-
 		public static String getCacheDirectory() {
 			return Paths.getHomeDirectory() + File.separator + "Cache";
-		}
-
-		public static String getScriptCacheDirectory() {
-			return getCacheDirectory() + File.separator + "Scripts";
-		}
-
-		public static String getVersionCache() {
-			return Paths.getCacheDirectory() + File.separator + "info.dat";
-		}
-
-		public static String getWebDatabase() {
-			return Paths.getSettingsDirectory() + File.separator + "Web.store";
-		}
-
-		public static String getServiceKey() {
-			return Paths.getSettingsDirectory() + File.separator + "service.key";
-		}
-
-		public static String getSettingsDirectory() {
-			return Paths.getHomeDirectory() + File.separator + "Settings";
 		}
 
 		public static String getGarbageDirectory() {
@@ -176,6 +145,26 @@ public class Configuration {
 			return path;
 		}
 
+		public static String getHomeDirectory() {
+			final String env = System.getenv(Configuration.NAME.toUpperCase()
+					+ "_HOME");
+			if (env == null || env.isEmpty()) {
+				return (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS ? FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath()
+						: Paths.getUnixHome())
+						+ File.separator + Configuration.NAME;
+			} else {
+				return env;
+			}
+		}
+
+		public static String getLogsDirectory() {
+			return Paths.getHomeDirectory() + File.separator + "Logs";
+		}
+
+		public static String getPathCache() {
+			return Paths.getSettingsDirectory() + File.separator + "path.txt";
+		}
+
 		public static String getRunningJarPath() {
 			if (!RUNNING_FROM_JAR) {
 				return null;
@@ -183,21 +172,62 @@ public class Configuration {
 			String path = new File(Configuration.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
 			try {
 				path = URLDecoder.decode(path, "UTF-8");
-			} catch (UnsupportedEncodingException ignored) {
+			} catch (final UnsupportedEncodingException ignored) {
 			}
 			return path;
+		}
+
+		public static String getScreenshotsDirectory() {
+			return Paths.getHomeDirectory() + File.separator + "Screenshots";
+		}
+
+		public static String getScriptCacheDirectory() {
+			return getCacheDirectory() + File.separator + "Scripts";
+		}
+
+		public static String getScriptsDirectory() {
+			return Paths.getHomeDirectory() + File.separator
+					+ Paths.SCRIPTS_NAME_OUT;
+		}
+
+		public static String getScriptsNetworkDirectory() {
+			return Paths.getScriptsDirectory() + File.separator + "Network";
+		}
+
+		public static String getScriptsPrecompiledDirectory() {
+			return Paths.getScriptsDirectory() + File.separator + "Precompiled";
+		}
+
+		public static String getScriptsSourcesDirectory() {
+			return Paths.getScriptsDirectory() + File.separator + "Sources";
+		}
+
+		public static String getServiceKey() {
+			return Paths.getSettingsDirectory() + File.separator
+					+ "service.key";
+		}
+
+		public static String getSettingsDirectory() {
+			return Paths.getHomeDirectory() + File.separator + "Settings";
+		}
+
+		public static String getUIDsFile() {
+			return Paths.getSettingsDirectory() + File.separator + "uid.txt";
 		}
 
 		public static String getUnixHome() {
 			final String home = System.getProperty("user.home");
 			return home == null ? "~" : home;
 		}
-	}
 
-	public static final String NAME = "RSBot";
-	public static final String NAME_LOWERCASE = NAME.toLowerCase();
-	private static final OperatingSystem CURRENT_OS;
-	public static boolean RUNNING_FROM_JAR = false;
+		public static String getVersionCache() {
+			return Paths.getCacheDirectory() + File.separator + "info.dat";
+		}
+
+		public static String getWebDatabase() {
+			return Paths.getSettingsDirectory() + File.separator + "Web.store";
+		}
+	}
 
 	public static class Twitter {
 		public static final boolean ENABLED = true;
@@ -205,6 +235,12 @@ public class Configuration {
 		public static final String HASHTAG = "#" + NAME_LOWERCASE;
 		public static final int MESSAGES = 3;
 	}
+
+	public static final String NAME = "RSBot";
+	public static final String NAME_LOWERCASE = NAME.toLowerCase();
+	private static final OperatingSystem CURRENT_OS;
+
+	public static boolean RUNNING_FROM_JAR = false;
 
 	static {
 		final URL resource = Configuration.class.getClassLoader().getResource(Paths.Resources.VERSION);
@@ -238,12 +274,16 @@ public class Configuration {
 		final Properties logging = new Properties();
 		final String logFormatter = LogFormatter.class.getCanonicalName();
 		final String fileHandler = FileHandler.class.getCanonicalName();
-		logging.setProperty("handlers", TextAreaLogHandler.class.getCanonicalName() + "," + fileHandler);
+		logging.setProperty("handlers", TextAreaLogHandler.class.getCanonicalName()
+				+ "," + fileHandler);
 		logging.setProperty(".level", "INFO");
-		logging.setProperty(SystemConsoleHandler.class.getCanonicalName() + ".formatter", logFormatter);
+		logging.setProperty(SystemConsoleHandler.class.getCanonicalName()
+				+ ".formatter", logFormatter);
 		logging.setProperty(fileHandler + ".formatter", logFormatter);
-		logging.setProperty(TextAreaLogHandler.class.getCanonicalName() + ".formatter", logFormatter);
-		logging.setProperty(fileHandler + ".pattern", Paths.getLogsDirectory() + File.separator + "%u.%g.log");
+		logging.setProperty(TextAreaLogHandler.class.getCanonicalName()
+				+ ".formatter", logFormatter);
+		logging.setProperty(fileHandler + ".pattern", Paths.getLogsDirectory()
+				+ File.separator + "%u.%g.log");
 		logging.setProperty(fileHandler + ".count", "10");
 		final ByteArrayOutputStream logout = new ByteArrayOutputStream();
 		try {
@@ -280,8 +320,8 @@ public class Configuration {
 		}
 	}
 
-	public static URL getResourceURL(final String path) throws MalformedURLException {
-		return RUNNING_FROM_JAR ? Configuration.class.getResource("/" + path) : new File(path).toURI().toURL();
+	public static OperatingSystem getCurrentOperatingSystem() {
+		return Configuration.CURRENT_OS;
 	}
 
 	public static Image getImage(final String resource) {
@@ -292,17 +332,18 @@ public class Configuration {
 		return null;
 	}
 
-	public static OperatingSystem getCurrentOperatingSystem() {
-		return Configuration.CURRENT_OS;
+	public static URL getResourceURL(final String path)
+			throws MalformedURLException {
+		return RUNNING_FROM_JAR ? Configuration.class.getResource("/" + path)
+				: new File(path).toURI().toURL();
 	}
 
 	public static int getVersion() {
 		InputStreamReader is = null;
 		BufferedReader reader = null;
 		try {
-			is = new InputStreamReader(RUNNING_FROM_JAR ?
-					Configuration.class.getClassLoader().getResourceAsStream(
-							Paths.Resources.VERSION) : new FileInputStream(Paths.Resources.VERSION));
+			is = new InputStreamReader(RUNNING_FROM_JAR ? Configuration.class.getClassLoader().getResourceAsStream(Paths.Resources.VERSION)
+					: new FileInputStream(Paths.Resources.VERSION));
 			reader = new BufferedReader(is);
 			final String s = reader.readLine().trim();
 			return Integer.parseInt(s);

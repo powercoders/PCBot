@@ -1,13 +1,18 @@
 package org.rsbot.script.randoms;
 
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Bank;
-import org.rsbot.script.wrappers.*;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Iterator;
+import org.rsbot.script.wrappers.RSCharacter;
+import org.rsbot.script.wrappers.RSComponent;
+import org.rsbot.script.wrappers.RSInterface;
+import org.rsbot.script.wrappers.RSNPC;
+import org.rsbot.script.wrappers.RSObject;
 
 /**
  * <p>
@@ -20,10 +25,10 @@ import java.util.Iterator;
  * </p>
  * <p/>
  * Last Update: 1.6 09/05/10 Jacmob.
- *
+ * 
  * @author Qauters
  */
-@ScriptManifest(authors = {"Qauters"}, name = "GraveDigger", version = 1.6)
+@ScriptManifest(authors = { "Qauters" }, name = "GraveDigger", version = 1.6)
 public class GraveDigger extends Random {
 
 	class Group {
@@ -60,47 +65,42 @@ public class GraveDigger extends Random {
 		}
 	}
 
-	private static final int[] coffinIDs = {7587, 7588, 7589, 7590, 7591};
-	private static final int[] graveStoneIDs = {12716, 12717, 12718, 12719,
-			12720};
-	private static final int[] filledGraveIDs = {12721, 12722, 12723, 12724,
-			12725};
-	private static final int[] emptyGraveIDs = {12726, 12727, 12728, 12729,
-			12730};
+	private static final int[] coffinIDs = { 7587, 7588, 7589, 7590, 7591 };
+	private static final int[] graveStoneIDs = { 12716, 12717, 12718, 12719,
+			12720 };
+	private static final int[] filledGraveIDs = { 12721, 12722, 12723, 12724,
+			12725 };
+	private static final int[] emptyGraveIDs = { 12726, 12727, 12728, 12729,
+			12730 };
 
 	private static final int INTERFACE_READ_GRAVESTONE = 143;
 	private static final int INTERFACE_READ_GRAVESTONE_MODEL = 2;
 	private static final int INTERFACE_READ_GRAVESTONE_CLOSE = 3;
 	private static final int INTERFACE_CHECK_COFFIN = 141;
 	private static final int INTERFACE_CHECK_COFFIN_CLOSE = 12;
-	private static final int[] INTERFACE_CHECK_COFFIN_ITEMS = {3, 4, 5, 6, 7,
-			8, 9, 10, 11};
+	private static final int[] INTERFACE_CHECK_COFFIN_ITEMS = { 3, 4, 5, 6, 7,
+			8, 9, 10, 11 };
 
 	@SuppressWarnings("unused")
-	private static final int[] NOT_TO_DEPOSIT = {1351, 1349, 1353, 1361, 1355,
+	private static final int[] NOT_TO_DEPOSIT = { 1351, 1349, 1353, 1361, 1355,
 			1357, 1359, 4031, 6739, 13470, 14108, 1265, 1267, 1269, 1296, 1273,
 			1271, 1275, 15259, 303, 305, 307, 309, 311, 10129, 301, 13431, 313,
 			314, 2347, 995, 10006, 10031, 10008, 10012, 11260, 10150, 10010,
 			556, 558, 555, 557, 554, 559, 562, 560, 565, 8013, 4251, 8011,
-			8010, 8009, 8008, 8007};
+			8010, 8009, 8008, 8007 };
 
 	private final ArrayList<Group> groups = new ArrayList<Group>();
 
 	private int tmpID = -1, tmpStatus = -1; // used to store some data across
+
 	// loops
 
-	@Override
-	public void onFinish() {
-		tmpID = -1;
-		tmpStatus = -1;
-	}
-
 	public GraveDigger() {
-		groups.add(new Group(7614, new int[]{7603, 7605, 7612}));
-		groups.add(new Group(7615, new int[]{7600, 7601, 7604}));
-		groups.add(new Group(7616, new int[]{7597, 7606, 7607}));
-		groups.add(new Group(7617, new int[]{7602, 7609, 7610}));
-		groups.add(new Group(7618, new int[]{7599, 7608, 7613}));
+		groups.add(new Group(7614, new int[] { 7603, 7605, 7612 }));
+		groups.add(new Group(7615, new int[] { 7600, 7601, 7604 }));
+		groups.add(new Group(7616, new int[] { 7597, 7606, 7607 }));
+		groups.add(new Group(7617, new int[] { 7602, 7609, 7610 }));
+		groups.add(new Group(7618, new int[] { 7599, 7608, 7613 }));
 	}
 
 	@Override
@@ -109,6 +109,23 @@ public class GraveDigger extends Random {
 			return true;
 		}
 		return false;
+	}
+
+	public boolean atCloseInterface(final int parent, final int child) {
+		final RSComponent i = interfaces.getComponent(parent, child);
+		if (!i.isValid()) {
+			return false;
+		}
+		final Rectangle pos = i.getArea();
+		if (pos.x == -1 || pos.y == -1 || pos.width == -1 || pos.height == -1) {
+			return false;
+		}
+		final int dx = (int) (pos.getWidth() - 4) / 2;
+		final int dy = (int) (pos.getHeight() - 4) / 2;
+		final int midx = (int) (pos.getMinX() + pos.getWidth() / 2);
+		final int midy = (int) (pos.getMinY() + pos.getHeight() / 2);
+		mouse.click(midx + random(-dx, dx) - 5, midy + random(-dy, dy), true);
+		return true;
 	}
 
 	@Override
@@ -176,7 +193,8 @@ public class GraveDigger extends Random {
 				for (int i = 0; i < GraveDigger.INTERFACE_CHECK_COFFIN_ITEMS.length; i++) {
 					items[i] = inters.getComponent(GraveDigger.INTERFACE_CHECK_COFFIN_ITEMS[i]).getComponentID();
 				}
-				for (final Iterator<Group> it = groups.iterator(); it.hasNext() && tmpID >= 0;) {
+				for (final Iterator<Group> it = groups.iterator(); it.hasNext()
+						&& tmpID >= 0;) {
 					final Group g = it.next();
 					if (g.isGroup(items)) {
 						g.coffinID = tmpID;
@@ -221,7 +239,8 @@ public class GraveDigger extends Random {
 				}
 			}
 			tmpID = -1;
-		} else if (tmpStatus == -1 && objects.getNearest(GraveDigger.filledGraveIDs) != null) {
+		} else if (tmpStatus == -1
+				&& objects.getNearest(GraveDigger.filledGraveIDs) != null) {
 			final RSObject obj = objects.getNearest(GraveDigger.filledGraveIDs);
 			if (obj == null || !setObjectInScreen(obj)) {
 				log.severe("Couldn't find grave, shutting down.");
@@ -229,7 +248,8 @@ public class GraveDigger extends Random {
 				return -1;
 			}
 			obj.doAction("Take-coffin");
-		} else if (tmpStatus == 0 && objects.getNearest(GraveDigger.emptyGraveIDs) != null) {
+		} else if (tmpStatus == 0
+				&& objects.getNearest(GraveDigger.emptyGraveIDs) != null) {
 			final RSObject obj = objects.getNearest(GraveDigger.emptyGraveIDs);
 			final int id = obj.getID();
 			for (int i = 0; i < GraveDigger.emptyGraveIDs.length; i++) {
@@ -277,7 +297,7 @@ public class GraveDigger extends Random {
 				game.logout(false);
 				return -1;
 			}
-			//Teleport Ani - 8939
+			// Teleport Ani - 8939
 			if (getMyPlayer().getAnimation() == -1) {
 				leo.doAction("Talk-to");
 			}
@@ -285,21 +305,10 @@ public class GraveDigger extends Random {
 		return random(1400, 1800);
 	}
 
-	public boolean atCloseInterface(final int parent, final int child) {
-		final RSComponent i = interfaces.getComponent(parent, child);
-		if (!i.isValid()) {
-			return false;
-		}
-		final Rectangle pos = i.getArea();
-		if (pos.x == -1 || pos.y == -1 || pos.width == -1 || pos.height == -1) {
-			return false;
-		}
-		final int dx = (int) (pos.getWidth() - 4) / 2;
-		final int dy = (int) (pos.getHeight() - 4) / 2;
-		final int midx = (int) (pos.getMinX() + pos.getWidth() / 2);
-		final int midy = (int) (pos.getMinY() + pos.getHeight() / 2);
-		mouse.click(midx + random(-dx, dx) - 5, midy + random(-dy, dy), true);
-		return true;
+	@Override
+	public void onFinish() {
+		tmpID = -1;
+		tmpStatus = -1;
 	}
 
 	public boolean setCharacterInScreen(final RSCharacter ch) {
@@ -308,19 +317,19 @@ public class GraveDigger extends Random {
 			final Point screenLocation = ch.getScreenLocation();
 			if (!calc.pointOnScreen(screenLocation)) {
 				switch (i) {
-					case 0:
-						camera.turnTo(ch);
+				case 0:
+					camera.turnTo(ch);
+					sleep(random(200, 500));
+					break;
+				case 1:
+					walking.walkTileMM(walking.getClosestTileOnMap(ch.getLocation().randomize(2, 2)));
+					sleep(random(1800, 2000));
+					while (getMyPlayer().isMoving()) {
 						sleep(random(200, 500));
-						break;
-					case 1:
-						walking.walkTileMM(walking.getClosestTileOnMap(ch.getLocation().randomize(2, 2)));
-						sleep(random(1800, 2000));
-						while (getMyPlayer().isMoving()) {
-							sleep(random(200, 500));
-						}
-						break;
-					default:
-						return false;
+					}
+					break;
+				default:
+					return false;
 				}
 			}
 		}
@@ -333,19 +342,19 @@ public class GraveDigger extends Random {
 			final Point screenLocation = calc.tileToScreen(obj.getLocation());
 			if (!calc.pointOnScreen(screenLocation)) {
 				switch (i) {
-					case 0:
-						camera.turnTo(obj);
+				case 0:
+					camera.turnTo(obj);
+					sleep(random(200, 500));
+					break;
+				case 1:
+					walking.walkTileMM(walking.getClosestTileOnMap(obj.getLocation().randomize(2, 2)));
+					sleep(random(1800, 2000));
+					while (getMyPlayer().isMoving()) {
 						sleep(random(200, 500));
-						break;
-					case 1:
-						walking.walkTileMM(walking.getClosestTileOnMap(obj.getLocation().randomize(2, 2)));
-						sleep(random(1800, 2000));
-						while (getMyPlayer().isMoving()) {
-							sleep(random(200, 500));
-						}
-						break;
-					default:
-						return false;
+					}
+					break;
+				default:
+					return false;
 				}
 			}
 		}

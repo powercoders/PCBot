@@ -1,12 +1,9 @@
 package org.rsbot.script.provider;
 
-import org.rsbot.Configuration;
-import org.rsbot.util.StringUtil;
-import org.rsbot.util.io.HttpClient;
-import org.rsbot.util.io.IOHelper;
-import org.rsbot.util.io.JavaCompiler;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -15,11 +12,95 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.rsbot.Configuration;
+import org.rsbot.util.StringUtil;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IOHelper;
+import org.rsbot.util.io.JavaCompiler;
+
 /**
  * author @Paris
  */
 public class ScriptDownloader {
 	private static final Logger log = Logger.getLogger(ScriptDownloader.class.getName());
+
+	private static String classFileName(final File path) {
+		final int magic = 0xCAFEBABE;
+		if (!path.exists()) {
+			return null;
+		}
+		FileReader reader = null;
+		int header;
+		try {
+			reader = new FileReader(path);
+			header = reader.read();
+			if (header != magic) {
+				return null;
+			}
+			for (int i = 1; i < 16; i++) {
+				reader.read();
+			}
+			final StringBuilder name = new StringBuilder(32);
+			int r;
+			while ((r = reader.read()) != -1) {
+				if (r == 0x7) {
+					return name.length() == 0 ? null : name.toString();
+				}
+				if (name.append((char) r).length() > 0x10000) { // obviously in
+																// after over
+																// 9000
+					return null;
+				}
+			}
+		} catch (final IOException ignored) {
+			return null;
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (final IOException ignored) {
+				}
+			}
+		}
+		return null;
+	}
+
+	private static String gistRaw(final String gistURL) {
+		Matcher m = Pattern.compile("gist\\.github\\.com/(\\d+)", Pattern.CASE_INSENSITIVE).matcher(gistURL);
+		if (!m.find()) {
+			return gistURL;
+		}
+		final String id = m.group(1);
+		String meta;
+		try {
+			meta = HttpClient.downloadAsString(new URL("http://gist.github.com/api/v1/json/"
+					+ id));
+		} catch (final Exception ignored) {
+			return gistURL;
+		}
+		m = Pattern.compile("\"files\":\\s*\\[\\s*\"([^\"]+)\"", Pattern.CASE_INSENSITIVE).matcher(meta);
+		if (!m.find()) {
+			return gistURL;
+		}
+		final String file = m.group(1);
+		return "http://gist.github.com/raw/" + id + "/" + file;
+	}
+
+	private static String normalisePastebin(String sourceURL) {
+		if (sourceURL.contains("gist.github.com")) {
+			return gistRaw(sourceURL);
+		}
+		final HashMap<String, String> map = new HashMap<String, String>(8);
+		map.put("pastebin\\.com/(\\w+)", "pastebin.com/raw.php?i=$1");
+		map.put("pastie\\.org/(?:pastes/)?(\\d+)", "pastie.org/pastes/$1/text");
+		map.put("pastebin\\.ca/(\\d+)", "pastebin.ca/raw/$1");
+		map.put("sprunge\\.us/(\\w+)(?:\\?.*)?", "sprunge.us/$1");
+		map.put("codepad\\.org/(\\w+)", "codepad.org/$1/raw.txt");
+		for (final Entry<String, String> entry : map.entrySet()) {
+			sourceURL = sourceURL.replaceAll(entry.getKey(), entry.getValue());
+		}
+		return sourceURL;
+	}
 
 	public static void save(String sourceURL) {
 		// check the source URL is valid
@@ -35,11 +116,12 @@ public class ScriptDownloader {
 
 		// download the file
 		log.fine("Downloading: " + sourceURL);
-		final File temporaryFile = new File(Configuration.Paths.getGarbageDirectory(), Integer.toString(sourceURL.hashCode()) + ".script.bin");
+		final File temporaryFile = new File(Configuration.Paths.getGarbageDirectory(), Integer.toString(sourceURL.hashCode())
+				+ ".script.bin");
 		HttpURLConnection httpURLConnection = null;
 		try {
 			httpURLConnection = HttpClient.download(new URL(sourceURL), temporaryFile);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			temporaryFile.delete();
 			log.warning("Could not download script");
 			return;
@@ -100,7 +182,7 @@ public class ScriptDownloader {
 			final FileWriter fileWriterOut = new FileWriter(classFile);
 			fileWriterOut.write(source);
 			fileWriterOut.close();
-		} catch (IOException ignored) {
+		} catch (final IOException ignored) {
 			log.severe("Could not save script " + className);
 			return;
 		}
@@ -112,11 +194,13 @@ public class ScriptDownloader {
 			if (Configuration.RUNNING_FROM_JAR) {
 				compileClassPath = Configuration.Paths.getRunningJarPath();
 			} else {
-				compileClassPath = new File(Configuration.Paths.ROOT + File.separator + "bin").getAbsolutePath();
+				compileClassPath = new File(Configuration.Paths.ROOT
+						+ File.separator + "bin").getAbsolutePath();
 			}
 			result = JavaCompiler.run(classFile, compileClassPath);
 		} else {
-			final File compiledJar = new File(Configuration.Paths.getScriptsPrecompiledDirectory(), className + ".jar");
+			final File compiledJar = new File(Configuration.Paths.getScriptsPrecompiledDirectory(), className
+					+ ".jar");
 			if (compiledJar.exists()) {
 				compiledJar.delete();
 			}
@@ -129,80 +213,5 @@ public class ScriptDownloader {
 		} else {
 			log.warning("Could not compile script " + className);
 		}
-	}
-
-	private static String classFileName(final File path) {
-		final int magic = 0xCAFEBABE;
-		if (!path.exists()) {
-			return null;
-		}
-		FileReader reader = null;
-		int header;
-		try {
-			reader = new FileReader(path);
-			header = reader.read();
-			if (header != magic) {
-				return null;
-			}
-			for (int i = 1; i < 16; i++) {
-				reader.read();
-			}
-			StringBuilder name = new StringBuilder(32);
-			int r;
-			while ((r = reader.read()) != -1) {
-				if (r == 0x7) {
-					return name.length() == 0 ? null : name.toString();
-				}
-				if (name.append((char) r).length() > 0x10000) { // obviously in after over 9000
-					return null;
-				}
-			}
-		} catch (IOException ignored) {
-			return null;
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException ignored) {
-				}
-			}
-		}
-		return null;
-	}
-
-	private static String normalisePastebin(String sourceURL) {
-		if (sourceURL.contains("gist.github.com")) {
-			return gistRaw(sourceURL);
-		}
-		final HashMap<String, String> map = new HashMap<String, String>(8);
-		map.put("pastebin\\.com/(\\w+)", "pastebin.com/raw.php?i=$1");
-		map.put("pastie\\.org/(?:pastes/)?(\\d+)", "pastie.org/pastes/$1/text");
-		map.put("pastebin\\.ca/(\\d+)", "pastebin.ca/raw/$1");
-		map.put("sprunge\\.us/(\\w+)(?:\\?.*)?", "sprunge.us/$1");
-		map.put("codepad\\.org/(\\w+)", "codepad.org/$1/raw.txt");
-		for (final Entry<String, String> entry : map.entrySet()) {
-			sourceURL = sourceURL.replaceAll(entry.getKey(), entry.getValue());
-		}
-		return sourceURL;
-	}
-
-	private static String gistRaw(final String gistURL) {
-		Matcher m = Pattern.compile("gist\\.github\\.com/(\\d+)", Pattern.CASE_INSENSITIVE).matcher(gistURL);
-		if (!m.find()) {
-			return gistURL;
-		}
-		final String id = m.group(1);
-		String meta;
-		try {
-			meta = HttpClient.downloadAsString(new URL("http://gist.github.com/api/v1/json/" + id));
-		} catch (final Exception ignored) {
-			return gistURL;
-		}
-		m = Pattern.compile("\"files\":\\s*\\[\\s*\"([^\"]+)\"", Pattern.CASE_INSENSITIVE).matcher(meta);
-		if (!m.find()) {
-			return gistURL;
-		}
-		final String file = m.group(1);
-		return "http://gist.github.com/raw/" + id + "/" + file;
 	}
 }

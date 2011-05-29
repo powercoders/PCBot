@@ -1,16 +1,9 @@
 package org.rsbot.gui;
 
-import org.rsbot.Configuration;
-import org.rsbot.script.AccountStore;
-import org.rsbot.service.DRM;
-
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumnModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -21,6 +14,29 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.swing.Box;
+import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumnModel;
+
+import org.rsbot.Configuration;
+import org.rsbot.script.AccountStore;
+import org.rsbot.service.DRM;
+
 /**
  * @author Tekk
  * @author Jacmob
@@ -29,37 +45,104 @@ import java.util.logging.Logger;
  * @author Paris
  */
 public class AccountManager extends JDialog implements ActionListener {
-	private static final long serialVersionUID = 2834954922670757338L;
+	private class AccountTableModel extends AbstractTableModel {
+		private static final long serialVersionUID = 3233063410900758383L;
 
-	private static final String FILE_ACCOUNT_STORAGE = Configuration.Paths.getAccountsFile();
-
-	private static final String[] RANDOM_REWARDS = {"Cash", "Runes", "Coal", "Essence", "Ore", "Bars", "Gems", "Herbs",
-			"Seeds", "Charms", "Surprise", "Emote", "Costume", "Attack",
-			"Defence", "Strength", "Constitution", "Range", "Prayer", "Magic",
-			"Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking",
-			"Crafting", "Smithing", "Mining", "Herblore", "Agility", "Thieving",
-			"Slayer", "Farming", "Runecrafting", "Hunter", "Construction",
-			"Summoning", "Dungeoneering"};
-
-	private static final String[] VALID_KEYS = {"pin", "reward", "member", "take_breaks"};
-
-	private static final Logger log = Logger.getLogger(AccountManager.class.getName());
-
-	private static final AccountStore accountStore = new AccountStore(new File(FILE_ACCOUNT_STORAGE));
-
-	static {
-		accountStore.setPassword(DRM.getServiceKey());
-		try {
-			accountStore.load();
-		} catch (final IOException ignored) {
+		@Override
+		public Class<?> getColumnClass(final int column) {
+			if (getColumnName(column).equals("Member")) {
+				return Boolean.class;
+			}
+			if (getColumnName(column).equals("Take Breaks")) {
+				return Boolean.class;
+			}
+			return Object.class;
 		}
-	}
 
-	private static class RandomRewardEditor extends DefaultCellEditor {
-		private static final long serialVersionUID = 6519185448833736787L;
+		@Override
+		public int getColumnCount() {
+			return VALID_KEYS.length + 2;
+		}
 
-		public RandomRewardEditor() {
-			super(new JComboBox(RANDOM_REWARDS));
+		@Override
+		public String getColumnName(final int column) {
+			if (column == 0) {
+				return "Username";
+			} else if (column == 1) {
+				return "Password";
+			}
+			final String str = VALID_KEYS[column - 2];
+			final StringBuilder b = new StringBuilder();
+			boolean space = true;
+			for (char c : str.toCharArray()) {
+				if (c == '_') {
+					c = ' ';
+				}
+				b.append(space ? Character.toUpperCase(c) : c);
+				space = c == ' ';
+			}
+			return b.toString();
+		}
+
+		@Override
+		public int getRowCount() {
+			return accountStore.list().size();
+		}
+
+		@Override
+		public Object getValueAt(final int row, final int column) {
+			if (column == 0) {
+				return userForRow(row);
+			} else if (column == 1) {
+				return accountStore.get(userForRow(row)).getPassword();
+			} else {
+				final AccountStore.Account acc = accountStore.get(userForRow(row));
+				if (acc != null) {
+					final String str = acc.getAttribute(VALID_KEYS[column - 2]);
+					if (str == null || str.isEmpty()) {
+						return null;
+					}
+					if (getColumnClass(column) == Boolean.class) {
+						return Boolean.parseBoolean(str);
+					} else if (getColumnClass(column) == Integer.class) {
+						return Integer.parseInt(str);
+					} else {
+						return str;
+					}
+				}
+			}
+			return null;
+		}
+
+		@Override
+		public boolean isCellEditable(final int row, final int column) {
+			return column > 0;
+		}
+
+		@Override
+		public void setValueAt(final Object value, final int row,
+				final int column) {
+			final AccountStore.Account acc = accountStore.get(userForRow(row));
+			if (acc == null) {
+				return;
+			}
+			if (column == 1) {
+				acc.setPassword(String.valueOf(value));
+			} else {
+				acc.setAttribute(getColumnName(column).toLowerCase().replace(' ', '_'), String.valueOf(value));
+			}
+			fireTableCellUpdated(row, column);
+		}
+
+		public String userForRow(final int row) {
+			final Iterator<AccountStore.Account> it = accountStore.list().iterator();
+			for (int k = 0; it.hasNext() && k < row; k++) {
+				it.next();
+			}
+			if (it.hasNext()) {
+				return it.next().getUsername();
+			}
+			return null;
 		}
 	}
 
@@ -89,7 +172,16 @@ public class AccountManager extends JDialog implements ActionListener {
 		}
 	}
 
+	private static class RandomRewardEditor extends DefaultCellEditor {
+		private static final long serialVersionUID = 6519185448833736787L;
+
+		public RandomRewardEditor() {
+			super(new JComboBox(RANDOM_REWARDS));
+		}
+	}
+
 	private class TableSelectionListener implements ListSelectionListener {
+		@Override
 		public void valueChanged(final ListSelectionEvent evt) {
 			final int row = table.getSelectedRow();
 			if (!evt.getValueIsAdjusting()) {
@@ -98,104 +190,172 @@ public class AccountManager extends JDialog implements ActionListener {
 		}
 	}
 
-	private class AccountTableModel extends AbstractTableModel {
-		private static final long serialVersionUID = 3233063410900758383L;
+	private static final long serialVersionUID = 2834954922670757338L;
 
-		public int getRowCount() {
-			return accountStore.list().size();
-		}
+	private static final String FILE_ACCOUNT_STORAGE = Configuration.Paths.getAccountsFile();
 
-		public int getColumnCount() {
-			return VALID_KEYS.length + 2;
-		}
+	private static final String[] RANDOM_REWARDS = { "Cash", "Runes", "Coal",
+			"Essence", "Ore", "Bars", "Gems", "Herbs", "Seeds", "Charms",
+			"Surprise", "Emote", "Costume", "Attack", "Defence", "Strength",
+			"Constitution", "Range", "Prayer", "Magic", "Cooking",
+			"Woodcutting", "Fletching", "Fishing", "Firemaking", "Crafting",
+			"Smithing", "Mining", "Herblore", "Agility", "Thieving", "Slayer",
+			"Farming", "Runecrafting", "Hunter", "Construction", "Summoning",
+			"Dungeoneering" };
 
-		public Object getValueAt(final int row, final int column) {
-			if (column == 0) {
-				return userForRow(row);
-			} else if (column == 1) {
-				return accountStore.get(userForRow(row)).getPassword();
-			} else {
-				final AccountStore.Account acc = accountStore.get(userForRow(row));
-				if (acc != null) {
-					final String str = acc.getAttribute(VALID_KEYS[column - 2]);
-					if (str == null || str.isEmpty()) {
-						return null;
-					}
-					if (getColumnClass(column) == Boolean.class) {
-						return Boolean.parseBoolean(str);
-					} else if (getColumnClass(column) == Integer.class) {
-						return Integer.parseInt(str);
-					} else {
-						return str;
-					}
-				}
-			}
-			return null;
-		}
+	private static final String[] VALID_KEYS = { "pin", "reward", "member",
+			"take_breaks" };
 
-		@Override
-		public String getColumnName(final int column) {
-			if (column == 0) {
-				return "Username";
-			} else if (column == 1) {
-				return "Password";
-			}
-			final String str = VALID_KEYS[column - 2];
-			final StringBuilder b = new StringBuilder();
-			boolean space = true;
-			for (char c : str.toCharArray()) {
-				if (c == '_') {
-					c = ' ';
-				}
-				b.append(space ? Character.toUpperCase(c) : c);
-				space = c == ' ';
-			}
-			return b.toString();
-		}
+	private static final Logger log = Logger.getLogger(AccountManager.class.getName());
 
-		@Override
-		public Class<?> getColumnClass(final int column) {
-			if (getColumnName(column).equals("Member")) {
-				return Boolean.class;
-			}
-			if (getColumnName(column).equals("Take Breaks")) {
-				return Boolean.class;
-			}
-			return Object.class;
-		}
+	private static final AccountStore accountStore = new AccountStore(new File(FILE_ACCOUNT_STORAGE));
 
-		@Override
-		public boolean isCellEditable(final int row, final int column) {
-			return column > 0;
-		}
-
-		@Override
-		public void setValueAt(final Object value, final int row, final int column) {
-			final AccountStore.Account acc = accountStore.get(userForRow(row));
-			if (acc == null) {
-				return;
-			}
-			if (column == 1) {
-				acc.setPassword(String.valueOf(value));
-			} else {
-				acc.setAttribute(getColumnName(column).toLowerCase().replace(' ', '_'), String.valueOf(value));
-			}
-			fireTableCellUpdated(row, column);
-		}
-
-		public String userForRow(final int row) {
-			final Iterator<AccountStore.Account> it = accountStore.list().iterator();
-			for (int k = 0; it.hasNext() && k < row; k++) {
-				it.next();
-			}
-			if (it.hasNext()) {
-				return it.next().getUsername();
-			}
-			return null;
+	static {
+		accountStore.setPassword(DRM.getServiceKey());
+		try {
+			accountStore.load();
+		} catch (final IOException ignored) {
 		}
 	}
 
+	/**
+	 * Access the list of names for loaded accounts
+	 * 
+	 * @return Array of the names.
+	 */
+	public static String[] getAccountNames() {
+		try {
+			final List<String> theList = new ArrayList<String>();
+			final Collection<AccountStore.Account> accountCollection = AccountManager.accountStore.list();
+			for (final AccountStore.Account anAccountCollection : accountCollection) {
+				final AccountStore.Account account = anAccountCollection;
+				theList.add(account.getUsername());
+			}
+			return theList.toArray(new String[theList.size()]);
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static AccountManager getInstance() {
+		return new AccountManager();
+	}
+
+	/**
+	 * Access the account password of the given string
+	 * 
+	 * @param name
+	 *            The name of the account
+	 * @return Password or an empty string
+	 */
+	public static String getPassword(final String name) {
+		final AccountStore.Account values = AccountManager.accountStore.get(name);
+		String pass = values.getPassword();
+		if (pass == null) {
+			pass = "";
+		}
+		return pass;
+	}
+
+	/**
+	 * Access the account pin of the given string
+	 * 
+	 * @param name
+	 *            The name of the account
+	 * @return Pin or an empty string
+	 */
+	public static String getPin(final String name) {
+		final AccountStore.Account values = AccountManager.accountStore.get(name);
+		String pin = values.getAttribute("pin");
+		if (pin == null) {
+			pin = "-1";
+		}
+		return pin;
+	}
+
+	/**
+	 * Access the account desired reward of the given string
+	 * 
+	 * @param name
+	 *            The name of the account
+	 * @return The desired reward
+	 */
+	public static String getReward(final String name) {
+		final AccountStore.Account values = AccountManager.accountStore.get(name);
+		final String reward = values.getAttribute("reward");
+		if (reward == null) {
+			return "Cash";
+		}
+		return reward;
+	}
+
+	/**
+	 * Access the account state of the given string
+	 * 
+	 * @param name
+	 *            Name of the account
+	 * @return true if the account is member, false if it isn't
+	 */
+	public static boolean isMember(final String name) {
+		final AccountStore.Account values = AccountManager.accountStore.get(name);
+		final String member = values.getAttribute("member");
+		return member != null && member.equalsIgnoreCase("true");
+	}
+
+	/**
+	 * Access the account state of the given string
+	 * 
+	 * @param name
+	 *            Name of the account
+	 * @return true if the account is member, false if it isn't
+	 */
+	public static boolean isTakingBreaks(final String name) {
+		final AccountStore.Account values = AccountManager.accountStore.get(name);
+		final String member = values.getAttribute("take_breaks");
+		return member != null && member.equalsIgnoreCase("true");
+	}
+
+	/**
+	 * Check if the string is a valid key
+	 * 
+	 * @param key
+	 *            The key
+	 * @return true if the object is supported, false if it isn't
+	 */
+	@SuppressWarnings("unused")
+	private static boolean isValidKey(final String key) {
+		for (final String check : VALID_KEYS) {
+			if (key.equalsIgnoreCase(check)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if the given string is a valid pin
+	 * 
+	 * @param pin
+	 *            The pin
+	 * @return true if the pin is valid, false if it isn't
+	 */
+	@SuppressWarnings("unused")
+	private static boolean isValidPin(final String pin) {
+		if (pin.length() == 4) {
+			for (int i = 0; i < pin.length(); i++) {
+				final char charAt = pin.charAt(i);
+				if (charAt < '0' || charAt > '9') {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
 	private JTable table;
+
 	private JButton removeButton;
 
 	private AccountManager() {
@@ -203,6 +363,7 @@ public class AccountManager extends JDialog implements ActionListener {
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_REPORTKEY));
 	}
 
+	@Override
 	public void actionPerformed(final ActionEvent e) {
 		if (e.getSource() instanceof JButton) {
 			final JButton button = (JButton) e.getSource();
@@ -235,7 +396,8 @@ public class AccountManager extends JDialog implements ActionListener {
 	}
 
 	/**
-	 * Creates and displays the main GUI This GUI has the list and the main	 * buttons
+	 * Creates and displays the main GUI This GUI has the list and the main *
+	 * buttons
 	 */
 	public void showGUI() {
 		final JScrollPane scrollPane = new JScrollPane();
@@ -243,12 +405,9 @@ public class AccountManager extends JDialog implements ActionListener {
 		final JToolBar bar = new JToolBar();
 		bar.setMargin(new Insets(1, 1, 1, 1));
 		bar.setFloatable(false);
-		removeButton = new JButton("Remove", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE)));
-		final JButton newButton = new JButton("Add", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_ADD)));
-		final JButton doneButton = new JButton("Save", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_REPORT_DISK)));
+		removeButton = new JButton("Remove", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE)));
+		final JButton newButton = new JButton("Add", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_ADD)));
+		final JButton doneButton = new JButton("Save", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REPORT_DISK)));
 		setTitle("Account Manager");
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(new TableSelectionListener());
@@ -285,135 +444,6 @@ public class AccountManager extends JDialog implements ActionListener {
 		setLocationRelativeTo(getOwner());
 		setResizable(false);
 		setVisible(true);
-	}
-
-	/**
-	 * Access the list of names for loaded accounts
-	 *
-	 * @return Array of the names.
-	 */
-	public static String[] getAccountNames() {
-		try {
-			final List<String> theList = new ArrayList<String>();
-			final Collection<AccountStore.Account> accountCollection = AccountManager.accountStore.list();
-			for (final AccountStore.Account anAccountCollection : accountCollection) {
-				final AccountStore.Account account = anAccountCollection;
-				theList.add(account.getUsername());
-			}
-			return theList.toArray(new String[theList.size()]);
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static AccountManager getInstance() {
-		return new AccountManager();
-	}
-
-	/**
-	 * Access the account password of the given string
-	 *
-	 * @param name The name of the account
-	 * @return Password or an empty string
-	 */
-	public static String getPassword(final String name) {
-		final AccountStore.Account values = AccountManager.accountStore.get(name);
-		String pass = values.getPassword();
-		if (pass == null) {
-			pass = "";
-		}
-		return pass;
-	}
-
-	/**
-	 * Access the account pin of the given string
-	 *
-	 * @param name The name of the account
-	 * @return Pin or an empty string
-	 */
-	public static String getPin(final String name) {
-		final AccountStore.Account values = AccountManager.accountStore.get(name);
-		String pin = values.getAttribute("pin");
-		if (pin == null) {
-			pin = "-1";
-		}
-		return pin;
-	}
-
-	/**
-	 * Access the account desired reward of the given string
-	 *
-	 * @param name The name of the account
-	 * @return The desired reward
-	 */
-	public static String getReward(final String name) {
-		final AccountStore.Account values = AccountManager.accountStore.get(name);
-		final String reward = values.getAttribute("reward");
-		if (reward == null) {
-			return "Cash";
-		}
-		return reward;
-	}
-
-	/**
-	 * Access the account state of the given string
-	 *
-	 * @param name Name of the account
-	 * @return true if the account is member, false if it isn't
-	 */
-	public static boolean isMember(final String name) {
-		final AccountStore.Account values = AccountManager.accountStore.get(name);
-		final String member = values.getAttribute("member");
-		return member != null && member.equalsIgnoreCase("true");
-	}
-
-	/**
-	 * Access the account state of the given string
-	 *
-	 * @param name Name of the account
-	 * @return true if the account is member, false if it isn't
-	 */
-	public static boolean isTakingBreaks(final String name) {
-		final AccountStore.Account values = AccountManager.accountStore.get(name);
-		final String member = values.getAttribute("take_breaks");
-		return member != null && member.equalsIgnoreCase("true");
-	}
-
-	/**
-	 * Check if the string is a valid key
-	 *
-	 * @param key The key
-	 * @return true if the object is supported, false if it isn't
-	 */
-	@SuppressWarnings("unused")
-	private static boolean isValidKey(final String key) {
-		for (final String check : VALID_KEYS) {
-			if (key.equalsIgnoreCase(check)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Checks if the given string is a valid pin
-	 *
-	 * @param pin The pin
-	 * @return true if the pin is valid, false if it isn't
-	 */
-	@SuppressWarnings("unused")
-	private static boolean isValidPin(final String pin) {
-		if (pin.length() == 4) {
-			for (int i = 0; i < pin.length(); i++) {
-				final char charAt = pin.charAt(i);
-				if (charAt < '0' || charAt > '9') {
-					return false;
-				}
-			}
-			return true;
-		}
-		return false;
 	}
 
 }

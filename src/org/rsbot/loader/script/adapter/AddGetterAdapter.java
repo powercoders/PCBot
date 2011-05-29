@@ -24,19 +24,39 @@ public class AddGetterAdapter extends ClassAdapter implements Opcodes {
 
 	private String owner;
 
-	public AddGetterAdapter(final ClassVisitor delegate, final boolean virtual, final Field[] fields) {
+	public AddGetterAdapter(final ClassVisitor delegate, final boolean virtual,
+			final Field[] fields) {
 		super(delegate);
 		this.virtual = virtual;
 		this.fields = fields;
 	}
 
+	private int getReturnOpcode(String desc) {
+		desc = desc.substring(desc.indexOf(")") + 1);
+		if (desc.length() > 1) {
+			return ARETURN;
+		}
+		final char c = desc.charAt(0);
+		switch (c) {
+		case 'I':
+		case 'Z':
+		case 'B':
+		case 'S':
+		case 'C':
+			return IRETURN;
+		case 'J':
+			return LRETURN;
+		case 'F':
+			return FRETURN;
+		case 'D':
+			return DRETURN;
+		}
+		throw new RuntimeException("eek");
+	}
+
 	@Override
-	public void visit(
-			final int version,
-			final int access,
-			final String name,
-			final String signature,
-			final String superName,
+	public void visit(final int version, final int access, final String name,
+			final String signature, final String superName,
 			final String[] interfaces) {
 		owner = name;
 		cv.visit(version, access, name, signature, superName, interfaces);
@@ -56,59 +76,30 @@ public class AddGetterAdapter extends ClassAdapter implements Opcodes {
 		cv.visitEnd();
 	}
 
-	private void visitGetter(
-			final int getter_access,
-			final String getter_name,
-			final String getter_desc,
-			final String name,
-			final String desc) {
+	private void visitGetter(final int getter_access, final String getter_name,
+			final String getter_desc, final String name, final String desc) {
 		final MethodVisitor mv = cv.visitMethod(getter_access, getter_name, getter_desc, null, null);
 		mv.visitCode();
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitFieldInsn(GETFIELD, owner, name, desc);
 		final int op = getReturnOpcode(desc);
 		mv.visitInsn(op);
-		mv.visitMaxs(op == LRETURN || op == DRETURN ? 2 : 1, (getter_access & ACC_STATIC) == 0 ? 1 : 0);
+		mv.visitMaxs(op == LRETURN || op == DRETURN ? 2 : 1, (getter_access & ACC_STATIC) == 0 ? 1
+				: 0);
 		mv.visitEnd();
 	}
 
-	private void visitGetter(
-			final int getter_access,
-			final String getter_name,
-			final String getter_desc,
-			final String owner,
-			final String name,
+	private void visitGetter(final int getter_access, final String getter_name,
+			final String getter_desc, final String owner, final String name,
 			final String desc) {
 		final MethodVisitor mv = cv.visitMethod(getter_access, getter_name, getter_desc, null, null);
 		mv.visitCode();
 		mv.visitFieldInsn(GETSTATIC, owner, name, desc);
 		final int op = getReturnOpcode(desc);
 		mv.visitInsn(op);
-		mv.visitMaxs(op == LRETURN || op == DRETURN ? 2 : 1, (getter_access & ACC_STATIC) == 0 ? 1 : 0);
+		mv.visitMaxs(op == LRETURN || op == DRETURN ? 2 : 1, (getter_access & ACC_STATIC) == 0 ? 1
+				: 0);
 		mv.visitEnd();
-	}
-
-	private int getReturnOpcode(String desc) {
-		desc = desc.substring(desc.indexOf(")") + 1);
-		if (desc.length() > 1) {
-			return ARETURN;
-		}
-		final char c = desc.charAt(0);
-		switch (c) {
-			case 'I':
-			case 'Z':
-			case 'B':
-			case 'S':
-			case 'C':
-				return IRETURN;
-			case 'J':
-				return LRETURN;
-			case 'F':
-				return FRETURN;
-			case 'D':
-				return DRETURN;
-		}
-		throw new RuntimeException("eek");
 	}
 
 }

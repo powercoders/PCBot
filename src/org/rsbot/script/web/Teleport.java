@@ -6,10 +6,11 @@ import org.rsbot.script.wrappers.RSTile;
 
 /**
  * Teleportation base information.
- *
+ * 
  * @author Timer
  */
-public abstract class Teleport extends MethodProvider implements Prerequisites, Transportation {
+public abstract class Teleport extends MethodProvider implements Prerequisites,
+		Transportation {
 	public final RSTile teleportationLocation;
 
 	public Teleport(final MethodContext ctx, final RSTile teleportationLocation) {

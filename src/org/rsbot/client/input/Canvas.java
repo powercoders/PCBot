@@ -1,13 +1,22 @@
 package org.rsbot.client.input;
 
+import java.awt.AWTEvent;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GraphicsConfiguration;
+import java.awt.Image;
+import java.awt.event.FocusEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.awt.image.DirectColorModel;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
+import java.util.Hashtable;
+
+import javax.swing.SwingUtilities;
+
 import org.rsbot.Application;
 import org.rsbot.bot.Bot;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.image.*;
-import java.util.Hashtable;
 
 public class Canvas extends java.awt.Canvas {
 	public static final int GRAPHICS_DELAY = 6;
@@ -30,70 +39,6 @@ public class Canvas extends java.awt.Canvas {
 		init();
 	}
 
-	@Override
-	public final Graphics getGraphics() {
-		if (bot == null) {
-			if (toshi) {
-				return super.getGraphics();
-			} else {
-				bot = Application.getBot(this);
-				toshi = true;
-			}
-		}
-		try {
-			Thread.sleep(bot.disableRendering ? SLOW_GRAPHICS_DELAY : GRAPHICS_DELAY);
-		} catch (final InterruptedException ignored) {
-		}
-		return bot.getBufferGraphics();
-	}
-
-	@Override
-	public final boolean hasFocus() {
-		return focused;
-	}
-
-	@Override
-	public final boolean isValid() {
-		return visible;
-	}
-
-	@Override
-	public final boolean isVisible() {
-		return visible;
-	}
-
-	@Override
-	public final boolean isDisplayable() {
-		return true;
-	}
-
-	@Override
-	public final Dimension getSize() {
-		if (bot != null) {
-			return bot.getLoader().getSize();
-		}
-		return Application.getPanelSize();
-	}
-
-	@Override
-	public final void setVisible(final boolean visible) {
-		super.setVisible(visible);
-		this.visible = visible;
-	}
-
-	public final void setFocused(final boolean focused) {
-		if (focused && !this.focused) {
-			// null opposite; permanent gain, as expected when entire Applet
-			// regains focus
-			super.processEvent(new FocusEvent(this, FocusEvent.FOCUS_GAINED, false, null));
-		} else if (this.focused) {
-			// null opposite; temporary loss, as expected when entire Applet
-			// loses focus
-			super.processEvent(new FocusEvent(this, FocusEvent.FOCUS_LOST, true, null));
-		}
-		this.focused = focused;
-	}
-
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Image createImage(final int width, final int height) {
@@ -109,10 +54,34 @@ public class Canvas extends java.awt.Canvas {
 	}
 
 	@Override
-	protected final void processEvent(final AWTEvent e) {
-		if (!(e instanceof FocusEvent)) {
-			super.processEvent(e);
+	public final Graphics getGraphics() {
+		if (bot == null) {
+			if (toshi) {
+				return super.getGraphics();
+			} else {
+				bot = Application.getBot(this);
+				toshi = true;
+			}
 		}
+		try {
+			Thread.sleep(bot.disableRendering ? SLOW_GRAPHICS_DELAY
+					: GRAPHICS_DELAY);
+		} catch (final InterruptedException ignored) {
+		}
+		return bot.getBufferGraphics();
+	}
+
+	@Override
+	public final Dimension getSize() {
+		if (bot != null) {
+			return bot.getLoader().getSize();
+		}
+		return Application.getPanelSize();
+	}
+
+	@Override
+	public final boolean hasFocus() {
+		return focused;
 	}
 
 	private void init() {
@@ -122,5 +91,46 @@ public class Canvas extends java.awt.Canvas {
 				setFocused(true);
 			}
 		});
+	}
+
+	@Override
+	public final boolean isDisplayable() {
+		return true;
+	}
+
+	@Override
+	public final boolean isValid() {
+		return visible;
+	}
+
+	@Override
+	public final boolean isVisible() {
+		return visible;
+	}
+
+	@Override
+	protected final void processEvent(final AWTEvent e) {
+		if (!(e instanceof FocusEvent)) {
+			super.processEvent(e);
+		}
+	}
+
+	public final void setFocused(final boolean focused) {
+		if (focused && !this.focused) {
+			// null opposite; permanent gain, as expected when entire Applet
+			// regains focus
+			super.processEvent(new FocusEvent(this, FocusEvent.FOCUS_GAINED, false, null));
+		} else if (this.focused) {
+			// null opposite; temporary loss, as expected when entire Applet
+			// loses focus
+			super.processEvent(new FocusEvent(this, FocusEvent.FOCUS_LOST, true, null));
+		}
+		this.focused = focused;
+	}
+
+	@Override
+	public final void setVisible(final boolean visible) {
+		super.setVisible(visible);
+		this.visible = visible;
 	}
 }

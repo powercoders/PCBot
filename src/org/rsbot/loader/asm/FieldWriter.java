@@ -7,7 +7,7 @@ package org.rsbot.loader.asm;
 
 /**
  * An {@link FieldVisitor} that generates Java fields in bytecode form.
- *
+ * 
  * @author Eric Bruneton
  */
 final class FieldWriter implements FieldVisitor {
@@ -72,21 +72,22 @@ final class FieldWriter implements FieldVisitor {
 
 	/**
 	 * Constructs a new {@link FieldWriter}.
-	 *
-	 * @param cw        the class writer to which this field must be added.
-	 * @param access    the field's access flags (see {@link Opcodes}).
-	 * @param name      the field's name.
-	 * @param desc      the field's descriptor (see {@link Type}).
-	 * @param signature the field's signature. May be <tt>null</tt>.
-	 * @param value     the field's constant value. May be <tt>null</tt>.
+	 * 
+	 * @param cw
+	 *            the class writer to which this field must be added.
+	 * @param access
+	 *            the field's access flags (see {@link Opcodes}).
+	 * @param name
+	 *            the field's name.
+	 * @param desc
+	 *            the field's descriptor (see {@link Type}).
+	 * @param signature
+	 *            the field's signature. May be <tt>null</tt>.
+	 * @param value
+	 *            the field's constant value. May be <tt>null</tt>.
 	 */
-	FieldWriter(
-			final ClassWriter cw,
-			final int access,
-			final String name,
-			final String desc,
-			final String signature,
-			final Object value) {
+	FieldWriter(final ClassWriter cw, final int access, final String name,
+			final String desc, final String signature, final Object value) {
 		if (cw.firstField == null) {
 			cw.firstField = this;
 		} else {
@@ -109,41 +110,9 @@ final class FieldWriter implements FieldVisitor {
 	// Implementation of the FieldVisitor interface
 	// ------------------------------------------------------------------------
 
-	public AnnotationVisitor visitAnnotation(
-			final String desc,
-			final boolean visible) {
-		if (!ClassReader.ANNOTATIONS) {
-			return null;
-		}
-		final ByteVector bv = new ByteVector();
-		// write type, and reserve space for values count
-		bv.putShort(cw.newUTF8(desc)).putShort(0);
-		final AnnotationWriter aw = new AnnotationWriter(cw, true, bv, bv, 2);
-		if (visible) {
-			aw.next = anns;
-			anns = aw;
-		} else {
-			aw.next = ianns;
-			ianns = aw;
-		}
-		return aw;
-	}
-
-	public void visitAttribute(final Attribute attr) {
-		attr.next = attrs;
-		attrs = attr;
-	}
-
-	public void visitEnd() {
-	}
-
-	// ------------------------------------------------------------------------
-	// Utility methods
-	// ------------------------------------------------------------------------
-
 	/**
 	 * Returns the size of this field.
-	 *
+	 * 
 	 * @return the size of this field.
 	 */
 	int getSize() {
@@ -181,13 +150,15 @@ final class FieldWriter implements FieldVisitor {
 
 	/**
 	 * Puts the content of this field into the given byte vector.
-	 *
-	 * @param out where the content of this field must be put.
+	 * 
+	 * @param out
+	 *            where the content of this field must be put.
 	 */
 	void put(final ByteVector out) {
 		final int mask = Opcodes.ACC_DEPRECATED
 				| ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
-				| (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) / (ClassWriter.ACC_SYNTHETIC_ATTRIBUTE / Opcodes.ACC_SYNTHETIC);
+				| (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE)
+				/ (ClassWriter.ACC_SYNTHETIC_ATTRIBUTE / Opcodes.ACC_SYNTHETIC);
 		out.putShort(access & ~mask).putShort(name).putShort(desc);
 		int attributeCount = 0;
 		if (value != 0) {
@@ -239,5 +210,39 @@ final class FieldWriter implements FieldVisitor {
 		if (attrs != null) {
 			attrs.put(cw, null, 0, -1, -1, out);
 		}
+	}
+
+	@Override
+	public AnnotationVisitor visitAnnotation(final String desc,
+			final boolean visible) {
+		if (!ClassReader.ANNOTATIONS) {
+			return null;
+		}
+		final ByteVector bv = new ByteVector();
+		// write type, and reserve space for values count
+		bv.putShort(cw.newUTF8(desc)).putShort(0);
+		final AnnotationWriter aw = new AnnotationWriter(cw, true, bv, bv, 2);
+		if (visible) {
+			aw.next = anns;
+			anns = aw;
+		} else {
+			aw.next = ianns;
+			ianns = aw;
+		}
+		return aw;
+	}
+
+	// ------------------------------------------------------------------------
+	// Utility methods
+	// ------------------------------------------------------------------------
+
+	@Override
+	public void visitAttribute(final Attribute attr) {
+		attr.next = attrs;
+		attrs = attr;
+	}
+
+	@Override
+	public void visitEnd() {
 	}
 }

@@ -8,20 +8,23 @@ import org.rsbot.script.wrappers.RSNPC;
 import org.rsbot.script.wrappers.RSObject;
 
 /**
- * Jacmob was here to verify that Qauters' spelling mistake will be maintained in his memory.
- *
+ * Jacmob was here to verify that Qauters' spelling mistake will be maintained
+ * in his memory.
+ * 
  * @author Qauters
  */
-@ScriptManifest(authors = {"Qauters", "Drizzt1112", "TwistedMind"}, name = "SandwichLady", version = 2.3)
+@ScriptManifest(authors = { "Qauters", "Drizzt1112", "TwistedMind" }, name = "SandwichLady", version = 2.3)
 public class SandwhichLady extends Random {
 
 	final static int ID_InterfaceSandwhichWindow = 297;
 	final static int ID_InterfaceSandwhichWindowText = 48;
 	final static int ID_InterfaceTalk = 243;
 	final static int ID_InterfaceTalkText = 7;
-	final static int[] ID_Items = {10728, 10732, 10727, 10730, 10726, 45666, 10731};
+	final static int[] ID_Items = { 10728, 10732, 10727, 10730, 10726, 45666,
+			10731 };
 	final static int ID_SandwhichLady = 8630;
-	final static String[] Name_Items = {"chocolate", "triangle", "roll", "pie", "baguette", "doughnut", "square"};
+	final static String[] Name_Items = { "chocolate", "triangle", "roll",
+			"pie", "baguette", "doughnut", "square" };
 	final boolean DEBUG = false; // Set to true for more info!
 
 	@Override
@@ -43,8 +46,8 @@ public class SandwhichLady extends Random {
 		if (getMyPlayer().getAnimation() != -1) {
 			return random(500, 1000);
 		}
-		//Leaves random
-		final int[] portalID = {12731, 11373};
+		// Leaves random
+		final int[] portalID = { 12731, 11373 };
 		if (interfaces.get(242).getComponent(4).containsText("The exit portal's")) {
 			final RSObject portal = objects.getNearest(portalID);
 			if (portal != null) {
@@ -71,7 +74,8 @@ public class SandwhichLady extends Random {
 				if (txt.contains(SandwhichLady.Name_Items[off])) {
 					offset = off;
 					if (DEBUG) {
-						log.info("Found: " + SandwhichLady.Name_Items[off] + " - ID: " + SandwhichLady.ID_Items[off]);
+						log.info("Found: " + SandwhichLady.Name_Items[off]
+								+ " - ID: " + SandwhichLady.ID_Items[off]);
 					}
 				}
 			}
@@ -79,13 +83,16 @@ public class SandwhichLady extends Random {
 				final RSComponent inf = window.getComponent(i);
 
 				if (DEBUG) {
-					log.info("child[" + i + "] ID: " + inf.getModelID() + " == " + SandwhichLady.ID_Items[offset]);
+					log.info("child[" + i + "] ID: " + inf.getModelID()
+							+ " == " + SandwhichLady.ID_Items[offset]);
 				}
 				if (inf.getModelID() == SandwhichLady.ID_Items[offset]) {
 					inf.doClick();
-					sleep(random(900, 1200)); // Yea, use a sleep here! (Waits are allowed in randoms.)
+					sleep(random(900, 1200)); // Yea, use a sleep here! (Waits
+												// are allowed in randoms.)
 					if (!interfaces.get(SandwhichLady.ID_InterfaceSandwhichWindow).isValid()) {
-						log.info("Solved the Sandwich Lady, by eating a " + SandwhichLady.Name_Items[offset]);
+						log.info("Solved the Sandwich Lady, by eating a "
+								+ SandwhichLady.Name_Items[offset]);
 						sleep(6000);
 						return random(900, 1500);
 					}

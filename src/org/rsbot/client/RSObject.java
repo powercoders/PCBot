@@ -4,12 +4,12 @@ public interface RSObject {
 
 	int getID();
 
+	Model getModel();
+
 	int getType();
 
 	int getX();
 
 	int getY();
-
-	Model getModel();
 
 }

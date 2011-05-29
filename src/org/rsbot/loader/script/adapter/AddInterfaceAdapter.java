@@ -16,12 +16,8 @@ public class AddInterfaceAdapter extends ClassAdapter {
 	}
 
 	@Override
-	public void visit(
-			final int version,
-			final int access,
-			final String name,
-			final String signature,
-			final String superName,
+	public void visit(final int version, final int access, final String name,
+			final String signature, final String superName,
 			final String[] interfaces) {
 		final String[] inters = new String[interfaces.length + 1];
 		System.arraycopy(interfaces, 0, inters, 0, interfaces.length);

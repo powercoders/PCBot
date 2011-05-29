@@ -1,12 +1,12 @@
 package org.rsbot.script.wrappers;
 
+import java.awt.Point;
+
 import org.rsbot.client.Model;
 import org.rsbot.client.Node;
 import org.rsbot.client.RSNPCNode;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
-
-import java.awt.*;
 
 public abstract class RSCharacter extends MethodProvider {
 	public RSCharacter(final MethodContext ctx) {
@@ -14,18 +14,10 @@ public abstract class RSCharacter extends MethodProvider {
 	}
 
 	/**
-	 * Retrieves a reference to the client accessor. For internal use. The
-	 * reference should be stored in a SoftReference by subclasses to allow for
-	 * garbage collection when appropriate.
-	 *
-	 * @return The client accessor.
-	 */
-	protected abstract org.rsbot.client.RSCharacter getAccessor();
-
-	/**
 	 * Performs an action on a humanoid character (tall and skinny).
-	 *
-	 * @param action The action of the menu entry to be clicked (if available).
+	 * 
+	 * @param action
+	 *            The action of the menu entry to be clicked (if available).
 	 * @return <tt>true</tt> if the option was found; otherwise <tt>false</tt>.
 	 */
 	public boolean doAction(final String action) {
@@ -34,9 +26,11 @@ public abstract class RSCharacter extends MethodProvider {
 
 	/**
 	 * Performs an action on a humanoid character (tall and skinny).
-	 *
-	 * @param action The action of the menu entry to be clicked (if available).
-	 * @param option The option of the menu entry to be clicked (if available).
+	 * 
+	 * @param action
+	 *            The action of the menu entry to be clicked (if available).
+	 * @param option
+	 *            The option of the menu entry to be clicked (if available).
 	 * @return <tt>true</tt> if the option was found; otherwise <tt>false</tt>.
 	 */
 	public boolean doAction(final String action, final String option) {
@@ -52,8 +46,8 @@ public abstract class RSCharacter extends MethodProvider {
 					if (!isValid() || !methods.calc.pointOnScreen(screenLoc)) {
 						break;
 					}
-					if (!methods.mouse.getLocation().equals(screenLoc) &&
-							methods.menu.doAction(action, option)) {
+					if (!methods.mouse.getLocation().equals(screenLoc)
+							&& methods.menu.doAction(action, option)) {
 						return true;
 					}
 					methods.mouse.move(screenLoc);
@@ -64,6 +58,24 @@ public abstract class RSCharacter extends MethodProvider {
 		}
 		return false;
 	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof RSCharacter) {
+			final RSCharacter cha = (org.rsbot.script.wrappers.RSCharacter) obj;
+			return cha.getAccessor() == getAccessor();
+		}
+		return false;
+	}
+
+	/**
+	 * Retrieves a reference to the client accessor. For internal use. The
+	 * reference should be stored in a SoftReference by subclasses to allow for
+	 * garbage collection when appropriate.
+	 * 
+	 * @return The client accessor.
+	 */
+	protected abstract org.rsbot.client.RSCharacter getAccessor();
 
 	public int getAnimation() {
 		return getAccessor().getAnimation();
@@ -90,8 +102,7 @@ public abstract class RSCharacter extends MethodProvider {
 			return null;
 		}
 		if (interact < 32768) {
-			final Node node = methods.nodes.lookup(methods.client.getRSNPCNC(),
-					interact);
+			final Node node = methods.nodes.lookup(methods.client.getRSNPCNC(), interact);
 			if (node == null || !(node instanceof RSNPCNode)) {
 				return null;
 			}
@@ -101,14 +112,13 @@ public abstract class RSCharacter extends MethodProvider {
 			if (index == methods.client.getSelfInteracting()) {
 				index = 2047;
 			}
-			return new RSPlayer(methods,
-					methods.client.getRSPlayerArray()[index]);
+			return new RSPlayer(methods, methods.client.getRSPlayerArray()[index]);
 		}
 	}
 
 	public int getLevel() {
-    	return -1; // should be overridden too
-    }
+		return -1; // should be overridden too
+	}
 
 	public RSTile getLocation() {
 		final org.rsbot.client.RSCharacter c = getAccessor();
@@ -127,7 +137,7 @@ public abstract class RSCharacter extends MethodProvider {
 	/**
 	 * Gets the minimap location, of the character. Note: This does work when
 	 * it's walking!
-	 *
+	 * 
 	 * @return The location of the character on the minimap.
 	 */
 	public Point getMinimapLocation() {
@@ -138,15 +148,15 @@ public abstract class RSCharacter extends MethodProvider {
 	}
 
 	public RSModel getModel() {
-    	final org.rsbot.client.RSCharacter c = getAccessor();
-    	if (c != null) {
-    		final Model model = c.getModel();
-    		if (model != null) {
-    			return new RSCharacterModel(methods, model, c);
-    		}
-    	}
-    	return null;
-    }
+		final org.rsbot.client.RSCharacter c = getAccessor();
+		if (c != null) {
+			final Model model = c.getModel();
+			if (model != null) {
+				return new RSCharacterModel(methods, model, c);
+			}
+		}
+		return null;
+	}
 
 	public String getName() {
 		return ""; // should be overridden, obviously
@@ -160,11 +170,15 @@ public abstract class RSCharacter extends MethodProvider {
 		final org.rsbot.client.RSCharacter c = getAccessor();
 		final RSModel model = getModel();
 		if (model == null) {
-			return methods.calc.groundToScreen(c.getX(), c.getY(),
-					c.getHeight() / 2);
+			return methods.calc.groundToScreen(c.getX(), c.getY(), c.getHeight() / 2);
 		} else {
 			return model.getPoint();
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return System.identityHashCode(getAccessor());
 	}
 
 	/**
@@ -174,15 +188,9 @@ public abstract class RSCharacter extends MethodProvider {
 		getModel().hover();
 	}
 
-	public boolean isInCombat() {
-    	return methods.game.isLoggedIn()
-    			&& methods.client.getLoopCycle() < getAccessor()
-    			.getLoopCycleStatus();
-    }
-
 	/**
 	 * Determines whether the character is dead or dying
-	 *
+	 * 
 	 * @return <tt>true</tt> if the character is dead/dying; otherwise
 	 *         <tt>false</tt>.
 	 */
@@ -190,9 +198,13 @@ public abstract class RSCharacter extends MethodProvider {
 		return !isValid() || getAnimation() == 836;
 	}
 
+	public boolean isInCombat() {
+		return methods.game.isLoggedIn()
+				&& methods.client.getLoopCycle() < getAccessor().getLoopCycleStatus();
+	}
+
 	public boolean isInteractingWithLocalPlayer() {
-		return getAccessor().getInteracting() - 32768 == methods.client
-				.getSelfInteracting();
+		return getAccessor().getInteracting() - 32768 == methods.client.getSelfInteracting();
 	}
 
 	public boolean isMoving() {
@@ -213,26 +225,14 @@ public abstract class RSCharacter extends MethodProvider {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
-		if (obj instanceof RSCharacter) {
-			final RSCharacter cha = (org.rsbot.script.wrappers.RSCharacter) obj;
-			return cha.getAccessor() == getAccessor();
-		}
-		return false;
-	}
-
-	@Override
-    public int hashCode() {
-    	return System.identityHashCode(getAccessor());
-    }
-
-	@Override
 	public String toString() {
 		final RSCharacter inter = getInteracting();
 		final String msg = getMessage();
-		return "[anim=" + getAnimation()
-				+ (msg != null ?",msg=" + getMessage() : "")
-				+ ",interact=" + (inter == null ? "null" :
-					inter.isValid() ? inter.getName() : "Invalid") + "]";
+		return "[anim="
+				+ getAnimation()
+				+ (msg != null ? ",msg=" + getMessage() : "")
+				+ ",interact="
+				+ (inter == null ? "null" : inter.isValid() ? inter.getName()
+						: "Invalid") + "]";
 	}
 }

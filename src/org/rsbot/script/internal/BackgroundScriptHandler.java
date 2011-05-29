@@ -1,13 +1,13 @@
 package org.rsbot.script.internal;
 
-import org.rsbot.bot.Bot;
-import org.rsbot.script.BackgroundScript;
-import org.rsbot.script.ScriptManifest;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import org.rsbot.bot.Bot;
+import org.rsbot.script.BackgroundScript;
+import org.rsbot.script.ScriptManifest;
 
 public class BackgroundScriptHandler {
 	private final HashMap<Integer, BackgroundScript> scripts = new HashMap<Integer, BackgroundScript>();
@@ -39,15 +39,6 @@ public class BackgroundScriptHandler {
 
 	public Map<Integer, BackgroundScript> getRunningScripts() {
 		return Collections.unmodifiableMap(scripts);
-	}
-
-	public void stopScript(final int id) {
-		final BackgroundScript script = scripts.get(id);
-		if (script != null) {
-			script.deactivate(id);
-			scripts.remove(id);
-			scriptThreads.remove(id);
-		}
 	}
 
 	public void runScript(final BackgroundScript script) {
@@ -85,6 +76,15 @@ public class BackgroundScriptHandler {
 		}
 		if (curThread == null) {
 			throw new ThreadDeath();
+		}
+	}
+
+	public void stopScript(final int id) {
+		final BackgroundScript script = scripts.get(id);
+		if (script != null) {
+			script.deactivate(id);
+			scripts.remove(id);
+			scriptThreads.remove(id);
 		}
 	}
 }

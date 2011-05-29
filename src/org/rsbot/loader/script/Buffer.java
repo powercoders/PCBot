@@ -24,13 +24,20 @@ class Buffer {
 
 	public int g4() {
 		pos += 4;
-		return ((data[pos - 4] & 0xff) << 24) + ((data[pos - 3] & 0xff) << 16) + ((data[pos - 2] & 0xff) << 8) + (data[pos - 1] & 0xff);
+		return ((data[pos - 4] & 0xff) << 24) + ((data[pos - 3] & 0xff) << 16)
+				+ ((data[pos - 2] & 0xff) << 8) + (data[pos - 1] & 0xff);
 	}
 
 	public long g8() {
 		final long l = g4() & 0xffffffffL;
 		final long r = g4() & 0xffffffffL;
 		return (l << 32) + r;
+	}
+
+	public void gdata(final byte[] data, final int len, final int off) {
+		for (int i = off; i < off + len; i++) {
+			data[i] = this.data[pos++];
+		}
 	}
 
 	public String gstr() {
@@ -47,12 +54,6 @@ class Buffer {
 		final byte str[] = new byte[pos - i - 1];
 		System.arraycopy(data, i, str, i - i, pos - 1 - i);
 		return str;
-	}
-
-	public void gdata(final byte[] data, final int len, final int off) {
-		for (int i = off; i < off + len; i++) {
-			data[i] = this.data[pos++];
-		}
 	}
 
 }

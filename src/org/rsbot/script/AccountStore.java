@@ -1,20 +1,26 @@
 package org.rsbot.script;
 
-import org.rsbot.gui.AccountManager;
-import org.rsbot.security.RestrictedSecurityManager;
-import org.rsbot.util.Base64;
-import org.rsbot.util.StringUtil;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.rsbot.gui.AccountManager;
+import org.rsbot.security.RestrictedSecurityManager;
+import org.rsbot.util.Base64;
+import org.rsbot.util.StringUtil;
 
 /**
  * @author Jacmob
@@ -32,16 +38,16 @@ public class AccountStore {
 			this.username = username;
 		}
 
-		public String getUsername() {
-			return username;
+		public String getAttribute(final String key) {
+			return attributes.get(key);
 		}
 
 		public String getPassword() {
 			return password;
 		}
 
-		public String getAttribute(final String key) {
-			return attributes.get(key);
+		public String getUsername() {
+			return username;
 		}
 
 		public void setAttribute(final String key, final String value) {
@@ -63,9 +69,30 @@ public class AccountStore {
 	public static final String CIPHER_TRANSFORMATION = "DESede/CBC/PKCS5Padding";
 	public static final int FORMAT_VERSION = 2;
 
+	/**
+	 * Capitalizes the first character and replaces spaces with underscores.
+	 * Purely aesthetic.
+	 * 
+	 * @param name
+	 *            The name of the account
+	 * @return Fixed name
+	 */
+	public static String fixName(String name) {
+		if (name.contains("@")) {
+			name = name.toLowerCase().trim();
+		} else {
+			if (name.charAt(0) > 91) {
+				name = (char) (name.charAt(0) - 32) + name.substring(1);
+			}
+			name = name.replaceAll("\\s", "_");
+		}
+		return name;
+	}
+
 	private final File file;
 	private byte[] digest;
-	private final String[] protectedAttributes = {"pin"};
+
+	private final String[] protectedAttributes = { "pin" };
 
 	private final Map<String, Account> accounts = new TreeMap<String, Account>();
 
@@ -74,25 +101,58 @@ public class AccountStore {
 			throw new SecurityException();
 		}
 		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
-		if (s.length < 3 ||
-				!s[0].getClassName().equals(Thread.class.getName()) ||
-				!s[1].getClassName().equals(AccountStore.class.getName()) ||
-				!s[2].getClassName().equals(AccountManager.class.getName())) {
+		if (s.length < 3 || !s[0].getClassName().equals(Thread.class.getName())
+				|| !s[1].getClassName().equals(AccountStore.class.getName())
+				|| !s[2].getClassName().equals(AccountManager.class.getName())) {
 			throw new SecurityException();
 		}
 		this.file = file;
 	}
 
-	public Account get(final String username) {
-		return accounts.get(username);
-	}
-
-	public void remove(final String username) {
-		accounts.remove(username);
-	}
-
 	public void add(final Account account) {
 		accounts.put(account.username, account);
+	}
+
+	private String decrypt(final String data) throws IOException {
+		if (digest == null) {
+			final byte[] enc = Base64.decodeBase64(StringUtil.getBytesUtf8(data));
+			return StringUtil.newStringUtf8(enc);
+		}
+		final SecretKey key = new SecretKeySpec(digest, KEY_ALGORITHM);
+		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
+
+		byte[] dec;
+		try {
+			final Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
+			cipher.init(Cipher.DECRYPT_MODE, key, iv);
+			dec = cipher.doFinal(Base64.decodeBase64(data));
+		} catch (final Exception e) {
+			throw new IOException("Unable to decrypt data!");
+		}
+		return StringUtil.newStringUtf8(dec);
+	}
+
+	private String encrypt(final String data) {
+		if (digest == null) {
+			final byte[] enc = Base64.encodeBase64(StringUtil.getBytesUtf8(data));
+			return StringUtil.newStringUtf8(enc);
+		}
+		final SecretKey key = new SecretKeySpec(digest, KEY_ALGORITHM);
+		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
+
+		byte[] enc;
+		try {
+			final Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
+			cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+			enc = cipher.doFinal(StringUtil.getBytesUtf8(data));
+		} catch (final Exception e) {
+			throw new RuntimeException("Unable to encrypt data!");
+		}
+		return StringUtil.newStringUtf8(Base64.encodeBase64(enc));
+	}
+
+	public Account get(final String username) {
+		return accounts.get(username);
 	}
 
 	public Collection<Account> list() {
@@ -118,7 +178,7 @@ public class AccountStore {
 		}
 		accounts.clear();
 		Account current = null;
-		for (; ;) {
+		for (;;) {
 			final String line = br.readLine();
 			if (line == null) {
 				break;
@@ -147,6 +207,10 @@ public class AccountStore {
 			accounts.put(current.username, current);
 		}
 		br.close();
+	}
+
+	public void remove(final String username) {
+		accounts.remove(username);
 	}
 
 	public void save() throws IOException {
@@ -193,62 +257,4 @@ public class AccountStore {
 		}
 	}
 
-	private String encrypt(final String data) {
-		if (digest == null) {
-			final byte[] enc = Base64.encodeBase64(StringUtil.getBytesUtf8(data));
-			return StringUtil.newStringUtf8(enc);
-		}
-		final SecretKey key = new SecretKeySpec(digest, KEY_ALGORITHM);
-		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
-
-		byte[] enc;
-		try {
-			final Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
-			cipher.init(Cipher.ENCRYPT_MODE, key, iv);
-			enc = cipher.doFinal(StringUtil.getBytesUtf8(data));
-		} catch (final Exception e) {
-			throw new RuntimeException("Unable to encrypt data!");
-		}
-		return StringUtil.newStringUtf8(Base64.encodeBase64(enc));
-	}
-
-	private String decrypt(final String data) throws IOException {
-		if (digest == null) {
-			final byte[] enc = Base64.decodeBase64(StringUtil.getBytesUtf8(data));
-			return StringUtil.newStringUtf8(enc);
-		}
-		final SecretKey key = new SecretKeySpec(digest, KEY_ALGORITHM);
-		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
-
-		byte[] dec;
-		try {
-			final Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
-			cipher.init(Cipher.DECRYPT_MODE, key, iv);
-			dec = cipher.doFinal(Base64.decodeBase64(data));
-		} catch (final Exception e) {
-			throw new IOException("Unable to decrypt data!");
-		}
-		return StringUtil.newStringUtf8(dec);
-	}
-
-	/**
-	 * Capitalizes the first character and replaces spaces with underscores.
-	 * Purely aesthetic.
-	 *
-	 * @param name The name of the account
-	 * @return Fixed name
-	 */
-	public static String fixName(String name) {
-		if (name.contains("@")) {
-			name = name.toLowerCase().trim();
-		} else {
-			if (name.charAt(0) > 91) {
-				name = (char) (name.charAt(0) - 32) + name.substring(1);
-			}
-			name = name.replaceAll("\\s", "_");
-		}
-		return name;
-	}
-
 }
-

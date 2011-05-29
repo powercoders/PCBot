@@ -9,19 +9,29 @@ public class PlaneTraverse extends MethodProvider {
 	private RSTile start = null;
 	private final RSTile walkTo, dest;
 
-	public PlaneTraverse(final int plane, final RSTile walkTo, final RSTile dest, final MethodContext ctx) {
+	public PlaneTraverse(final int plane, final RSTile walkTo,
+			final RSTile dest, final MethodContext ctx) {
 		super(ctx);
 		this.plane = plane;
 		this.walkTo = walkTo;
 		this.dest = dest;
 	}
 
-	public int plane() {
-		return plane;
+	public boolean applicable() {
+		return start != null
+				&& methods.web.planeRoute(start, dest, null) != null;
+	}
+
+	public RSTile dest() {
+		return dest;
 	}
 
 	public int destPlane() {
 		return dest.getZ();
+	}
+
+	public int plane() {
+		return plane;
 	}
 
 	public void set(final RSTile tile) {
@@ -30,13 +40,5 @@ public class PlaneTraverse extends MethodProvider {
 
 	public RSTile walkTo() {
 		return walkTo;
-	}
-
-	public RSTile dest() {
-		return dest;
-	}
-
-	public boolean applicable() {
-		return start != null && methods.web.planeRoute(start, dest, null) != null;
 	}
 }
