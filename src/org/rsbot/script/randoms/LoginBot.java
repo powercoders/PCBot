@@ -293,7 +293,11 @@ public class LoginBot extends Random {
 		final int midx = (int) pos.getCenterX();
 		final int midy = (int) (pos.getMinY() + pos.getHeight() / 2);
 		if (i.getIndex() == INTERFACE_PASSWORD_WINDOW) {
-			mouse.click(minX(i), midy + random(-dy, dy), true);
+			if(menu.isOpen()) {
+				keyboard.sendKey((char)KeyEvent.VK_TAB);
+			} else {
+				mouse.click(minX(i), midy + random(-dy, dy), true);
+			}
 		} else {
 			mouse.click(midx + random(1, maxRandomX), midy + random(-dy, dy),
 					true);
