@@ -1,13 +1,11 @@
 package org.rsbot.event.impl;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.wrappers.RSTile;
+
+import java.awt.*;
 
 public class DrawBoundaries implements PaintListener {
 
@@ -60,18 +58,14 @@ public class DrawBoundaries implements PaintListener {
 				if ((curBlock & 0x1280100) != 0) {
 					render.setColor(Color.black);
 					if (tl != null && br != null && tr != null && bl != null) {
-						render.fillPolygon(new int[] { bl.x, br.x, tr.x, tl.x }, new int[] {
-								bl.y, br.y, tr.y, tl.y }, 4);
+						render.fillPolygon(new int[]{bl.x, br.x, tr.x, tl.x}, new int[]{bl.y, br.y, tr.y, tl.y}, 4);
 					}
-					if (miniBL != null && miniBR != null && miniTR != null
-							&& miniTL != null) {
-						render.fillPolygon(new int[] { miniBL.x, miniBR.x,
-								miniTR.x, miniTL.x }, new int[] { miniBL.y,
-								miniBR.y, miniTR.y, miniTL.y }, 4);
+					if (miniBL != null && miniBR != null && miniTR != null && miniTL != null) {
+						render.fillPolygon(new int[]{miniBL.x, miniBR.x, miniTR.x, miniTL.x},
+								new int[]{miniBL.y, miniBR.y, miniTR.y, miniTL.y}, 4);
 					}
 				}
-				if ((blocks[i][j - 1] & 0x1280102) != 0
-						|| (curBlock & 0x1280120) != 0) {
+				if ((blocks[i][j - 1] & 0x1280102) != 0 || (curBlock & 0x1280120) != 0) {
 					render.setColor(Color.RED);
 					if (tl != null && bl != null) {
 						render.drawLine(bl.x, bl.y, tl.x, tl.y);
@@ -80,8 +74,7 @@ public class DrawBoundaries implements PaintListener {
 						render.drawLine(miniBL.x, miniBL.y, miniTL.x, miniTL.y);
 					}
 				}
-				if ((blocks[i - 1][j] & 0x1280108) != 0
-						|| (curBlock & 0x1280180) != 0) {
+				if ((blocks[i - 1][j] & 0x1280108) != 0 || (curBlock & 0x1280180) != 0) {
 					render.setColor(Color.RED);
 					if (br != null && bl != null) {
 						render.drawLine(bl.x, bl.y, br.x, br.y);

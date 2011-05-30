@@ -1,11 +1,5 @@
 package org.rsbot.event.impl;
 
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.util.HashMap;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.methods.MethodContext;
@@ -13,9 +7,16 @@ import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSPlayer;
 import org.rsbot.script.wrappers.RSTile;
 
+import java.awt.*;
+import java.util.HashMap;
+
 public class DrawObjects implements PaintListener {
 
 	private final MethodContext ctx;
+
+	public DrawObjects(final Bot bot) {
+		ctx = bot.getMethodContext();
+	}
 
 	private static final HashMap<RSObject.Type, Color> color_map = new HashMap<RSObject.Type, Color>();
 
@@ -24,10 +25,6 @@ public class DrawObjects implements PaintListener {
 		color_map.put(RSObject.Type.FLOOR_DECORATION, Color.YELLOW);
 		color_map.put(RSObject.Type.INTERACTABLE, Color.WHITE);
 		color_map.put(RSObject.Type.WALL_DECORATION, Color.GRAY);
-	}
-
-	public DrawObjects(final Bot bot) {
-		ctx = bot.getMethodContext();
 	}
 
 	@Override

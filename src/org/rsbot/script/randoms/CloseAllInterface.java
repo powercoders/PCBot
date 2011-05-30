@@ -1,16 +1,17 @@
 package org.rsbot.script.randoms;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSComponent;
 
+import java.util.LinkedList;
+import java.util.List;
+
+
 /**
  * Closes interfaces that scripts may open by mistake.
  */
-@ScriptManifest(authors = { "Jacmob", "HeyyamaN", "Pervy Shuya" }, name = "InterfaceCloser", version = 1.9)
+@ScriptManifest(authors = {"Jacmob", "HeyyamaN", "Pervy Shuya"}, name = "InterfaceCloser", version = 1.9)
 public class CloseAllInterface extends Random {
 
 	static class ComponentDef {
@@ -19,8 +20,7 @@ public class CloseAllInterface extends Random {
 		final int child;
 		final boolean text;
 
-		public ComponentDef(final int parent, final int child,
-				final boolean text) {
+		public ComponentDef(final int parent, final int child, final boolean text) {
 			this.parent = parent;
 			this.child = child;
 			this.text = text;
@@ -52,6 +52,14 @@ public class CloseAllInterface extends Random {
 		addChild(1107, 174); // Clan Vexillum
 	}
 
+	private void addChild(final int parent, final int idx) {
+		components.add(new ComponentDef(parent, idx, false));
+	}
+
+	private void addChild(final int parent, final int idx, final boolean text) {
+		components.add(new ComponentDef(parent, idx, text));
+	}
+
 	@Override
 	public boolean activateCondition() {
 		if (game.isLoggedIn()) {
@@ -62,8 +70,7 @@ public class CloseAllInterface extends Random {
 			}
 			for (final ComponentDef c : components) {
 				final RSComponent comp = interfaces.getComponent(c.parent, c.child);
-				if (comp.isValid()
-						&& !(c.text && (comp.getText() == null || comp.getText().isEmpty()))) {
+				if (comp.isValid() && !(c.text && (comp.getText() == null || comp.getText().isEmpty()))) {
 					return true;
 				}
 			}
@@ -71,19 +78,10 @@ public class CloseAllInterface extends Random {
 		return false;
 	}
 
-	private void addChild(final int parent, final int idx) {
-		components.add(new ComponentDef(parent, idx, false));
-	}
-
-	private void addChild(final int parent, final int idx, final boolean text) {
-		components.add(new ComponentDef(parent, idx, text));
-	}
-
 	@Override
 	public int loop() {
 		sleep(random(500, 900));
-		if (interfaces.get(755).isValid()
-				&& interfaces.getComponent(755, 0).getComponents().length > 0) {
+		if (interfaces.get(755).isValid() && interfaces.getComponent(755, 0).getComponents().length > 0) {
 			interfaces.getComponent(755, 44).doClick();
 			return random(500, 900);
 		}

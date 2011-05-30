@@ -1,49 +1,32 @@
 package org.rsbot.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.logging.Logger;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
-
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.gui.component.Messages;
-import org.rsbot.service.DRM;
 import org.rsbot.service.Monitoring;
+import org.rsbot.service.DRM;
 import org.rsbot.util.StringUtil;
 import org.rsbot.util.io.IniParser;
+
+import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * @author Paris
  */
 public class SettingsManager extends JDialog {
+	private static Logger log = Logger.getLogger(SettingsManager.class.getName());
+	private static final long serialVersionUID = 1657935322078534422L;
+	private static final String DEFAULTPASSWORD = "\0\0\0\0\0\0\0\0";
+	private Preferences prefs;
+
 	public class Preferences {
-		private final File store;
+		private File store;
 
 		/**
 		 * Whether or not to disable ads.
@@ -61,10 +44,6 @@ public class SettingsManager extends JDialog {
 
 		public Preferences(final File store) {
 			this.store = store;
-		}
-
-		public void commit() {
-			Monitoring.setEnabled(monitoring);
 		}
 
 		public void load() {
@@ -135,13 +114,15 @@ public class SettingsManager extends JDialog {
 				log.severe("Could not save preferences");
 			}
 		}
+
+		public void commit() {
+			Monitoring.setEnabled(monitoring);
+		}
 	}
 
-	private static Logger log = Logger.getLogger(SettingsManager.class.getName());
-	private static final long serialVersionUID = 1657935322078534422L;
-	private static final String DEFAULTPASSWORD = "\0\0\0\0\0\0\0\0";
-
-	private final Preferences prefs;
+	public Preferences getPreferences() {
+		return prefs;
+	}
 
 	public SettingsManager(final Frame owner, final File store) {
 		super(owner, Messages.OPTIONS, true);
@@ -165,12 +146,10 @@ public class SettingsManager extends JDialog {
 		}
 		panelLoginOptions[0].add(new JLabel("  Username:"));
 		final JTextField textLoginUser = new JTextField(prefs.user);
-		textLoginUser.setToolTipText(Configuration.Paths.URLs.HOST
-				+ " forum account username, leave blank to log out");
+		textLoginUser.setToolTipText(Configuration.Paths.URLs.HOST + " forum account username, leave blank to log out");
 		panelLoginOptions[0].add(textLoginUser);
 		panelLoginOptions[1].add(new JLabel("  Password:"));
-		final JPasswordField textLoginPass = new JPasswordField(prefs.user.length() == 0 ? ""
-				: DEFAULTPASSWORD);
+		final JPasswordField textLoginPass = new JPasswordField(prefs.user.length() == 0 ? "" : DEFAULTPASSWORD);
 		panelLoginOptions[1].add(textLoginPass);
 		panelLogin.add(panelLoginOptions[0]);
 		panelLogin.add(panelLoginOptions[1]);
@@ -196,14 +175,12 @@ public class SettingsManager extends JDialog {
 		final JSpinner valueShutdown = new JSpinner(modelShutdown);
 		panelShutdown.add(valueShutdown);
 		checkShutdown.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent arg0) {
 				valueShutdown.setEnabled(((JCheckBox) arg0.getSource()).isSelected());
 			}
 		});
 		checkShutdown.setEnabled(Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
-		valueShutdown.setEnabled(checkShutdown.isEnabled()
-				&& checkShutdown.isSelected());
+		valueShutdown.setEnabled(checkShutdown.isEnabled() && checkShutdown.isSelected());
 
 		final JPanel[] panelWebOptions = new JPanel[2];
 		for (int i = 0; i < panelWebOptions.length; i++) {
@@ -228,15 +205,12 @@ public class SettingsManager extends JDialog {
 		});
 		panelWebOptions[1].add(textWebPass);
 		checkWebPass.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				textWebPass.setEnabled(checkWebPass.isSelected()
-						&& checkWebPass.isEnabled());
+			public void actionPerformed(ActionEvent e) {
+				textWebPass.setEnabled(checkWebPass.isSelected() && checkWebPass.isEnabled());
 			}
 		});
 		checkWeb.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				final boolean enabled = checkWeb.isSelected();
 				textWebBind.setEnabled(enabled);
 				checkWebPass.setEnabled(enabled);
@@ -266,8 +240,7 @@ public class SettingsManager extends JDialog {
 		final JButton buttonOk = new JButton("OK");
 		buttonOk.setPreferredSize(new Dimension(85, 30));
 		buttonOk.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
 				prefs.ads = checkAds.isSelected();
 				prefs.confirmations = checkConf.isSelected();
@@ -277,13 +250,11 @@ public class SettingsManager extends JDialog {
 				prefs.web = checkWeb.isSelected();
 				prefs.webBind = textWebBind.getText();
 				final String webUser = textLoginUser.getText(), webPass = new String(textWebPass.getPassword());
-				if (!webUser.equals(prefs.user)
-						|| !webPass.equals(DEFAULTPASSWORD)) {
+				if (!webUser.equals(prefs.user) || !webPass.equals(DEFAULTPASSWORD)) {
 					prefs.webPass = StringUtil.sha1sum(webPass);
 				}
 				prefs.user = webUser;
-				prefs.webPassRequire = checkWebPass.isSelected()
-						&& checkWebPass.isEnabled();
+				prefs.webPassRequire = checkWebPass.isSelected() && checkWebPass.isEnabled();
 				prefs.commit();
 				final String loginPass = new String(textLoginPass.getPassword());
 				if (!loginPass.equals(DEFAULTPASSWORD)) {
@@ -299,8 +270,7 @@ public class SettingsManager extends JDialog {
 		});
 		final JButton buttonCancel = new JButton("Cancel");
 		buttonCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
 				checkAds.setSelected(prefs.ads);
 				checkConf.setSelected(prefs.confirmations);
@@ -321,8 +291,7 @@ public class SettingsManager extends JDialog {
 		panel.add(panelInternal);
 
 		if (!Configuration.RUNNING_FROM_JAR) {
-			panel.add(panelWeb); // hide web options from non-development builds
-									// for now
+			panel.add(panelWeb); // hide web options from non-development builds for now
 		}
 
 		add(panel);
@@ -336,42 +305,31 @@ public class SettingsManager extends JDialog {
 		setResizable(false);
 
 		addWindowListener(new WindowListener() {
-			@Override
-			public void windowActivated(final WindowEvent arg0) {
-			}
-
-			@Override
-			public void windowClosed(final WindowEvent arg0) {
-			}
-
-			@Override
-			public void windowClosing(final WindowEvent arg0) {
+			public void windowClosing(WindowEvent arg0) {
 				buttonCancel.doClick();
 			}
 
-			@Override
-			public void windowDeactivated(final WindowEvent arg0) {
+			public void windowActivated(WindowEvent arg0) {
 			}
 
-			@Override
-			public void windowDeiconified(final WindowEvent arg0) {
+			public void windowClosed(WindowEvent arg0) {
 			}
 
-			@Override
-			public void windowIconified(final WindowEvent arg0) {
+			public void windowDeactivated(WindowEvent arg0) {
 			}
 
-			@Override
-			public void windowOpened(final WindowEvent arg0) {
+			public void windowDeiconified(WindowEvent arg0) {
+			}
+
+			public void windowIconified(WindowEvent arg0) {
+			}
+
+			public void windowOpened(WindowEvent arg0) {
 			}
 		});
 	}
 
 	public void display() {
 		setVisible(true);
-	}
-
-	public Preferences getPreferences() {
-		return prefs;
 	}
 }

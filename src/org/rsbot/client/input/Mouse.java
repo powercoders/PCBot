@@ -1,11 +1,7 @@
 package org.rsbot.client.input;
 
-import java.awt.Component;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import java.awt.*;
+import java.awt.event.*;
 
 public abstract class Mouse extends Focus implements MouseListener,
 		MouseMotionListener, MouseWheelListener {
@@ -36,8 +32,12 @@ public abstract class Mouse extends Focus implements MouseListener,
 
 	public abstract Component getComponent();
 
-	public long getPressTime() {
-		return clientPressTime;
+	public int getX() {
+		return clientX;
+	}
+
+	public int getY() {
+		return clientY;
 	}
 
 	public int getPressX() {
@@ -48,23 +48,18 @@ public abstract class Mouse extends Focus implements MouseListener,
 		return clientPressY;
 	}
 
-	public int getX() {
-		return clientX;
-	}
-
-	public int getY() {
-		return clientY;
-	}
-
-	public boolean isPresent() {
-		return clientPresent;
+	public long getPressTime() {
+		return clientPressTime;
 	}
 
 	public boolean isPressed() {
 		return clientPressed;
 	}
 
-	@Override
+	public boolean isPresent() {
+		return clientPresent;
+	}
+
 	public final void mouseClicked(final MouseEvent e) {
 		clientX = e.getX();
 		clientY = e.getY();
@@ -72,7 +67,6 @@ public abstract class Mouse extends Focus implements MouseListener,
 		e.consume();
 	}
 
-	@Override
 	public final void mouseDragged(final MouseEvent e) {
 		clientX = e.getX();
 		clientY = e.getY();
@@ -80,7 +74,6 @@ public abstract class Mouse extends Focus implements MouseListener,
 		e.consume();
 	}
 
-	@Override
 	public final void mouseEntered(final MouseEvent e) {
 		clientPresent = true;
 		clientX = e.getX();
@@ -89,7 +82,6 @@ public abstract class Mouse extends Focus implements MouseListener,
 		e.consume();
 	}
 
-	@Override
 	public final void mouseExited(final MouseEvent e) {
 		clientPresent = false;
 		clientX = e.getX();
@@ -98,7 +90,6 @@ public abstract class Mouse extends Focus implements MouseListener,
 		e.consume();
 	}
 
-	@Override
 	public final void mouseMoved(final MouseEvent e) {
 		clientX = e.getX();
 		clientY = e.getY();
@@ -106,7 +97,6 @@ public abstract class Mouse extends Focus implements MouseListener,
 		e.consume();
 	}
 
-	@Override
 	public final void mousePressed(final MouseEvent e) {
 		clientPressed = true;
 		clientX = e.getX();
@@ -115,7 +105,6 @@ public abstract class Mouse extends Focus implements MouseListener,
 		e.consume();
 	}
 
-	@Override
 	public final void mouseReleased(final MouseEvent e) {
 		clientX = e.getX();
 		clientY = e.getY();
@@ -128,7 +117,6 @@ public abstract class Mouse extends Focus implements MouseListener,
 		e.consume();
 	}
 
-	@Override
 	public void mouseWheelMoved(final MouseWheelEvent e) {
 		try {
 			_mouseWheelMoved(e);

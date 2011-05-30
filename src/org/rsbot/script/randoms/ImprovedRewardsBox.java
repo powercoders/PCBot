@@ -1,14 +1,14 @@
 package org.rsbot.script.randoms;
 
-import java.awt.Rectangle;
-
 import org.rsbot.gui.AccountManager;
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSItem;
 
-@ScriptManifest(authors = { "Fred", "Arbiter" }, name = "Improved Rewards Box", version = 1.3)
+import java.awt.*;
+
+@ScriptManifest(authors = {"Fred", "Arbiter"}, name = "Improved Rewards Box", version = 1.3)
 public class ImprovedRewardsBox extends Random {
 
 	private static final int BOOK_KNOWLEDGE_ID = 11640;
@@ -59,9 +59,7 @@ public class ImprovedRewardsBox extends Random {
 
 	@Override
 	public boolean activateCondition() {
-		return game.isLoggedIn()
-				&& !getMyPlayer().isInCombat()
-				&& !bank.isOpen()
+		return game.isLoggedIn() && !getMyPlayer().isInCombat() && !bank.isOpen()
 				&& cachedInventoryContainedOneOf(BOX_ID, BOOK_KNOWLEDGE_ID, LAMP_ID, MYSTERY_BOX_ID);
 	}
 
@@ -78,7 +76,8 @@ public class ImprovedRewardsBox extends Random {
 
 	public int getActualY(final RSComponent Component) {
 		int boxYPos;
-		final RSComponent[] selection = interfaces.get(202).getComponent(15).getComponents();
+		final RSComponent[] selection = interfaces.get(202).getComponent(15)
+				.getComponents();
 		for (int end = 0; end < selection.length; end++) {
 			if (selection[end].containsText(":")) {
 				endofselection = end - 6;
@@ -92,20 +91,20 @@ public class ImprovedRewardsBox extends Random {
 		}
 		viewableScreenHeight = interfaces.get(202).getComponent(15).getHeight() - 11;
 		final int totalScreenHeight = selection[endofselection].getAbsoluteY()
-				+ selection[endofselection].getHeight()
-				- selection[0].getAbsoluteY();
+				+ selection[endofselection].getHeight() - selection[0]
+				.getAbsoluteY();
 		hiddenScreenHeight = totalScreenHeight - viewableScreenHeight;
 		if (hiddenScreenHeight > 0) {
-			final RSComponent[] scrollbar = interfaces.get(202).getComponent(24).getComponents();
-			scrollbarTopLength = scrollbar[1].getAbsoluteY()
-					- scrollbar[0].getAbsoluteY();
+			final RSComponent[] scrollbar = interfaces.get(202)
+					.getComponent(24).getComponents();
+			scrollbarTopLength = scrollbar[1].getAbsoluteY() - scrollbar[0]
+					.getAbsoluteY();
 			final int scrollbarBottomLength = scrollbar[5].getAbsoluteY()
-					- scrollbar[3].getAbsoluteY() + scrollbar[3].getHeight()
-					- 6;
+					- scrollbar[3].getAbsoluteY() + scrollbar[3].getHeight() - 6;
 			scrollbarTotalLength = scrollbarTopLength + scrollbarBottomLength;
 			final double difference = Double.parseDouble(Integer.toString(scrollbarTopLength))
-					/ Double.parseDouble(Integer.toString(scrollbarTotalLength))
-					* Double.parseDouble(Integer.toString(hiddenScreenHeight));
+					/ Double.parseDouble(Integer.toString(scrollbarTotalLength)) * Double
+					.parseDouble(Integer.toString(hiddenScreenHeight));
 			boxYPos = Component.getAbsoluteY() - (int) difference;
 		} else {
 			boxYPos = Component.getAbsoluteY();
@@ -114,7 +113,115 @@ public class ImprovedRewardsBox extends Random {
 	}
 
 	public Rectangle getBoxArea(final RSComponent Component) {
-		return new Rectangle(Component.getAbsoluteX(), getActualY(Component), Component.getWidth(), Component.getHeight());
+		return new Rectangle(Component.getAbsoluteX(), getActualY(Component),
+				Component.getWidth(), Component.getHeight());
+	}
+
+	@Override
+	public int loop() {
+		if (getMyPlayer().isInCombat()) {
+			return -1;
+		}
+		final String[] choices = getChoices();
+		if (interfaces.get(BOX_IF).isValid()) {
+			for (final RSComponent child : interfaces.get(137).getComponents()) {
+				if (choices[choices.length - 1].equals("Emote")) {
+					break;
+				}
+				if (child.containsText("You've already unlocked")
+						&& child.containsText("emotes")
+						&& !child.containsText("<col=0000ff>")) {
+					for (int i = 0; i < choices.length; i++) {
+						if (choices[i].contains("Emote")) {
+							System.arraycopy(choices, i + 1, choices, i, choices.length - 1 - i);
+							choices[choices.length - 1] = "Emote";
+							break;
+						}
+					}
+				}
+			}
+			RSComponent[] selection = interfaces.get(BOX_IF).getComponent(BOX_SELECTION_IF).getComponents();
+			int optionSelected = 999;
+			for (final String choice : choices) {
+				for (int i = 0; i < selection.length; i++) {
+					if (selection[i].getText().toLowerCase()
+							.contains(choice.toLowerCase())) {
+						optionSelected = i - 6;
+						break;
+					}
+				}
+				if (optionSelected != 999) {
+					break;
+				}
+			}
+			if (optionSelected == 999) {
+				optionSelected = 0;
+			}
+			final RSComponent[] scrollbar = interfaces.get(BOX_IF).getComponent(BOX_SCROLLBAR_IF).getComponents();
+			if (scrollbarTopLength > 0) {
+				mouse.move(scrollbar[1].getAbsoluteX() + random(1, 7),
+						scrollbar[1].getAbsoluteY() + random(0, 20));
+				mouse.drag((int) mouse.getLocation().getX(),
+						(int) mouse.getLocation().getY() - scrollbarTopLength);
+			}
+			if (getBoxArea(selection[optionSelected]).y > 278) {
+				mouse.move(scrollbar[1].getAbsoluteX() + random(1, 7),
+						scrollbar[1].getAbsoluteY() + random(20, 30));
+				int toDragtoY = (int) (mouse.getLocation().getY() + Double
+						.parseDouble(Integer
+								.toString((getBoxArea(selection[optionSelected]).y
+										+ getBoxArea(selection[optionSelected]).height
+										- selection[0].getAbsoluteY() - viewableScreenHeight)))
+						/ Double.parseDouble(Integer
+						.toString(hiddenScreenHeight)) * Double
+						.parseDouble(Integer.toString(scrollbarTotalLength)));
+				if (toDragtoY - (int) mouse.getLocation().getY() > scrollbar[5]
+						.getAbsoluteY()
+						- scrollbar[3].getAbsoluteY()
+						+ scrollbar[3].getHeight() - 6) {
+					toDragtoY = (int) mouse.getLocation().getY()
+							+ scrollbar[5].getAbsoluteY()
+							- scrollbar[3].getAbsoluteY()
+							+ scrollbar[3].getHeight() - 6;
+				}
+				mouse.drag((int) mouse.getLocation().getX(), toDragtoY);
+			}
+			sleep(random(3000, 4000));
+			selection = interfaces.get(BOX_IF).getComponent(BOX_SELECTION_IF).getComponents();
+			if (selection.length > optionSelected) {
+				final int boxX = getBoxArea(selection[optionSelected]).x + 15;
+				final int boxY = getBoxArea(selection[optionSelected]).y + 15;
+				final int boxWidth = getBoxArea(selection[optionSelected]).width - 30;
+				final int boxHeight = getBoxArea(selection[optionSelected]).height - 30;
+				mouse.move(random(boxX, boxX + boxWidth),
+						random(boxY, boxY + boxHeight));
+				mouse.click(true);
+				interfaces.get(BOX_IF).getComponent(BOX_CONFIRM_IF).doClick();
+			}
+			return random(3000, 4000);
+		}
+		if (interfaces.get(XP_IF).isValid()) {
+			interfaces.get(XP_IF).getComponent(XPSelection).doClick();
+			interfaces.get(XP_IF).getComponent(CONFIRM_ID).doClick();
+			return random(3000, 4000);
+		}
+		if (inventory.contains(BOX_ID)) {
+			inventory.getItem(BOX_ID).doAction("Open");
+			return random(3000, 4000);
+		}
+		if (inventory.contains(BOOK_KNOWLEDGE_ID)) {
+			inventory.getItem(BOOK_KNOWLEDGE_ID).doAction("Read");
+			return random(3000, 4000);
+		}
+		if (inventory.contains(LAMP_ID)) {
+			inventory.getItem(LAMP_ID).doAction("Rub");
+			return random(3000, 4000);
+		}
+		if (inventory.contains(MYSTERY_BOX_ID)) {
+			inventory.getItem(MYSTERY_BOX_ID).doAction("Open");
+			return random(3000, 4000);
+		}
+		return -1;
 	}
 
 	private String[] getChoices() {
@@ -122,8 +229,7 @@ public class ImprovedRewardsBox extends Random {
 		choices[0] = "XP Item";
 		choices[1] = "Cash";
 
-		final String a = account.getName() == null ? null
-				: AccountManager.getReward(account.getName());
+		final String a = account.getName() == null ? null : AccountManager.getReward(account.getName());
 		if (a.equals("Attack")) {
 			XPSelection = ATT_ID;
 		} else if (a.equals("Strength")) {
@@ -176,113 +282,9 @@ public class ImprovedRewardsBox extends Random {
 			XPSelection = DUNGEONEERING_ID;
 		} else {
 			XPSelection = WOODCUTTING_ID;
-			choices[0] = account.getName() == null ? null
-					: AccountManager.getReward(account.getName());
+			choices[0] = account.getName() == null ? null : AccountManager.getReward(account.getName());
 		}
 		return choices;
-	}
-
-	@Override
-	public int loop() {
-		if (getMyPlayer().isInCombat()) {
-			return -1;
-		}
-		final String[] choices = getChoices();
-		if (interfaces.get(BOX_IF).isValid()) {
-			for (final RSComponent child : interfaces.get(137).getComponents()) {
-				if (choices[choices.length - 1].equals("Emote")) {
-					break;
-				}
-				if (child.containsText("You've already unlocked")
-						&& child.containsText("emotes")
-						&& !child.containsText("<col=0000ff>")) {
-					for (int i = 0; i < choices.length; i++) {
-						if (choices[i].contains("Emote")) {
-							System.arraycopy(choices, i + 1, choices, i, choices.length
-									- 1 - i);
-							choices[choices.length - 1] = "Emote";
-							break;
-						}
-					}
-				}
-			}
-			RSComponent[] selection = interfaces.get(BOX_IF).getComponent(BOX_SELECTION_IF).getComponents();
-			int optionSelected = 999;
-			for (final String choice : choices) {
-				for (int i = 0; i < selection.length; i++) {
-					if (selection[i].getText().toLowerCase().contains(choice.toLowerCase())) {
-						optionSelected = i - 6;
-						break;
-					}
-				}
-				if (optionSelected != 999) {
-					break;
-				}
-			}
-			if (optionSelected == 999) {
-				optionSelected = 0;
-			}
-			final RSComponent[] scrollbar = interfaces.get(BOX_IF).getComponent(BOX_SCROLLBAR_IF).getComponents();
-			if (scrollbarTopLength > 0) {
-				mouse.move(scrollbar[1].getAbsoluteX() + random(1, 7), scrollbar[1].getAbsoluteY()
-						+ random(0, 20));
-				mouse.drag((int) mouse.getLocation().getX(), (int) mouse.getLocation().getY()
-						- scrollbarTopLength);
-			}
-			if (getBoxArea(selection[optionSelected]).y > 278) {
-				mouse.move(scrollbar[1].getAbsoluteX() + random(1, 7), scrollbar[1].getAbsoluteY()
-						+ random(20, 30));
-				int toDragtoY = (int) (mouse.getLocation().getY() + Double.parseDouble(Integer.toString((getBoxArea(selection[optionSelected]).y
-						+ getBoxArea(selection[optionSelected]).height
-						- selection[0].getAbsoluteY() - viewableScreenHeight)))
-						/ Double.parseDouble(Integer.toString(hiddenScreenHeight))
-						* Double.parseDouble(Integer.toString(scrollbarTotalLength)));
-				if (toDragtoY - (int) mouse.getLocation().getY() > scrollbar[5].getAbsoluteY()
-						- scrollbar[3].getAbsoluteY()
-						+ scrollbar[3].getHeight() - 6) {
-					toDragtoY = (int) mouse.getLocation().getY()
-							+ scrollbar[5].getAbsoluteY()
-							- scrollbar[3].getAbsoluteY()
-							+ scrollbar[3].getHeight() - 6;
-				}
-				mouse.drag((int) mouse.getLocation().getX(), toDragtoY);
-			}
-			sleep(random(3000, 4000));
-			selection = interfaces.get(BOX_IF).getComponent(BOX_SELECTION_IF).getComponents();
-			if (selection.length > optionSelected) {
-				final int boxX = getBoxArea(selection[optionSelected]).x + 15;
-				final int boxY = getBoxArea(selection[optionSelected]).y + 15;
-				final int boxWidth = getBoxArea(selection[optionSelected]).width - 30;
-				final int boxHeight = getBoxArea(selection[optionSelected]).height - 30;
-				mouse.move(random(boxX, boxX + boxWidth), random(boxY, boxY
-						+ boxHeight));
-				mouse.click(true);
-				interfaces.get(BOX_IF).getComponent(BOX_CONFIRM_IF).doClick();
-			}
-			return random(3000, 4000);
-		}
-		if (interfaces.get(XP_IF).isValid()) {
-			interfaces.get(XP_IF).getComponent(XPSelection).doClick();
-			interfaces.get(XP_IF).getComponent(CONFIRM_ID).doClick();
-			return random(3000, 4000);
-		}
-		if (inventory.contains(BOX_ID)) {
-			inventory.getItem(BOX_ID).doAction("Open");
-			return random(3000, 4000);
-		}
-		if (inventory.contains(BOOK_KNOWLEDGE_ID)) {
-			inventory.getItem(BOOK_KNOWLEDGE_ID).doAction("Read");
-			return random(3000, 4000);
-		}
-		if (inventory.contains(LAMP_ID)) {
-			inventory.getItem(LAMP_ID).doAction("Rub");
-			return random(3000, 4000);
-		}
-		if (inventory.contains(MYSTERY_BOX_ID)) {
-			inventory.getItem(MYSTERY_BOX_ID).doAction("Open");
-			return random(3000, 4000);
-		}
-		return -1;
 	}
 
 }

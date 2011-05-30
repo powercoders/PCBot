@@ -1,22 +1,13 @@
 package org.rsbot.client.input;
 
-import java.awt.AWTEvent;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
-import java.awt.Image;
-import java.awt.event.FocusEvent;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.awt.image.DirectColorModel;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
-import java.util.Hashtable;
-
-import javax.swing.SwingUtilities;
-
 import org.rsbot.Application;
 import org.rsbot.bot.Bot;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.image.*;
+import java.util.Hashtable;
 
 public class Canvas extends java.awt.Canvas {
 	public static final int GRAPHICS_DELAY = 6;
@@ -39,20 +30,6 @@ public class Canvas extends java.awt.Canvas {
 		init();
 	}
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	public Image createImage(final int width, final int height) {
-		// Prevents NullPointerException when opening world map.
-		// This is caused by the character loader, which creates
-		// character sprites using this method (which will return
-		// null as long as this canvas is not really displayed).
-		final int[] pixels = new int[height * width];
-		final DataBufferInt databufferint = new DataBufferInt(pixels, pixels.length);
-		final DirectColorModel directcolormodel = new DirectColorModel(32, 0xff0000, 0xff00, 255);
-		final WritableRaster writableraster = Raster.createWritableRaster(directcolormodel.createCompatibleSampleModel(width, height), databufferint, null);
-		return new BufferedImage(directcolormodel, writableraster, false, new Hashtable());
-	}
-
 	@Override
 	public final Graphics getGraphics() {
 		if (bot == null) {
@@ -64,38 +41,15 @@ public class Canvas extends java.awt.Canvas {
 			}
 		}
 		try {
-			Thread.sleep(bot.disableRendering ? SLOW_GRAPHICS_DELAY
-					: GRAPHICS_DELAY);
+			Thread.sleep(bot.disableRendering ? SLOW_GRAPHICS_DELAY : GRAPHICS_DELAY);
 		} catch (final InterruptedException ignored) {
 		}
 		return bot.getBufferGraphics();
 	}
 
 	@Override
-	public final Dimension getSize() {
-		if (bot != null) {
-			return bot.getLoader().getSize();
-		}
-		return Application.getPanelSize();
-	}
-
-	@Override
 	public final boolean hasFocus() {
 		return focused;
-	}
-
-	private void init() {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				setFocused(true);
-			}
-		});
-	}
-
-	@Override
-	public final boolean isDisplayable() {
-		return true;
 	}
 
 	@Override
@@ -109,10 +63,22 @@ public class Canvas extends java.awt.Canvas {
 	}
 
 	@Override
-	protected final void processEvent(final AWTEvent e) {
-		if (!(e instanceof FocusEvent)) {
-			super.processEvent(e);
+	public final boolean isDisplayable() {
+		return true;
+	}
+
+	@Override
+	public final Dimension getSize() {
+		if (bot != null) {
+			return bot.getLoader().getSize();
 		}
+		return Application.getPanelSize();
+	}
+
+	@Override
+	public final void setVisible(final boolean visible) {
+		super.setVisible(visible);
+		this.visible = visible;
 	}
 
 	public final void setFocused(final boolean focused) {
@@ -128,9 +94,33 @@ public class Canvas extends java.awt.Canvas {
 		this.focused = focused;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
-	public final void setVisible(final boolean visible) {
-		super.setVisible(visible);
-		this.visible = visible;
+	public Image createImage(final int width, final int height) {
+		// Prevents NullPointerException when opening world map.
+		// This is caused by the character loader, which creates
+		// character sprites using this method (which will return
+		// null as long as this canvas is not really displayed).
+		final int[] pixels = new int[height * width];
+		final DataBufferInt databufferint = new DataBufferInt(pixels, pixels.length);
+		final DirectColorModel directcolormodel = new DirectColorModel(32, 0xff0000, 0xff00, 255);
+		final WritableRaster writableraster = Raster.createWritableRaster(directcolormodel.createCompatibleSampleModel(width, height), databufferint, null);
+		return new BufferedImage(directcolormodel, writableraster, false, new Hashtable());
+	}
+
+	@Override
+	protected final void processEvent(final AWTEvent e) {
+		if (!(e instanceof FocusEvent)) {
+			super.processEvent(e);
+		}
+	}
+
+	private void init() {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				setFocused(true);
+			}
+		});
 	}
 }

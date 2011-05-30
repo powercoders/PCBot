@@ -28,10 +28,24 @@ public class Settings extends MethodProvider {
 	}
 
 	/**
+	 * Gets the settings array.
+	 *
+	 * @return An <tt>int</tt> array representing all of the settings values;
+	 *         otherwise <tt>new int[0]</tt>.
+	 */
+	public int[] getSettingArray() {
+		final org.rsbot.client.Settings settingArray = methods.client
+				.getSettingArray();
+		if (settingArray == null || settingArray.getData() == null) {
+			return new int[0];
+		}
+		return settingArray.getData().clone(); // NEVER return pointer
+	}
+
+	/**
 	 * Gets the setting at a given index.
-	 * 
-	 * @param setting
-	 *            The setting index to return the value of.
+	 *
+	 * @param setting The setting index to return the value of.
 	 * @return <tt>int</tt> representing the setting of the given setting id;
 	 *         otherwise <tt>-1</tt>.
 	 */
@@ -41,19 +55,5 @@ public class Settings extends MethodProvider {
 			return settings[setting];
 		}
 		return -1;
-	}
-
-	/**
-	 * Gets the settings array.
-	 * 
-	 * @return An <tt>int</tt> array representing all of the settings values;
-	 *         otherwise <tt>new int[0]</tt>.
-	 */
-	public int[] getSettingArray() {
-		final org.rsbot.client.Settings settingArray = methods.client.getSettingArray();
-		if (settingArray == null || settingArray.getData() == null) {
-			return new int[0];
-		}
-		return settingArray.getData().clone(); // NEVER return pointer
 	}
 }

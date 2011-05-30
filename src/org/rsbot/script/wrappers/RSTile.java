@@ -9,10 +9,8 @@ public class RSTile {
 	private final int z;
 
 	/**
-	 * @param x
-	 *            the x axel of the Tile
-	 * @param y
-	 *            the y axel of the Tile
+	 * @param x the x axel of the Tile
+	 * @param y the y axel of the Tile
 	 */
 	public RSTile(final int x, final int y) {
 		this.x = x;
@@ -21,29 +19,14 @@ public class RSTile {
 	}
 
 	/**
-	 * @param x
-	 *            the x axel of the Tile
-	 * @param y
-	 *            the y axel of the Tile
-	 * @param z
-	 *            the z axel of the Tile( the floor)
+	 * @param x the x axel of the Tile
+	 * @param y the y axel of the Tile
+	 * @param z the z axel of the Tile( the floor)
 	 */
 	public RSTile(final int x, final int y, final int z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == this) {
-			return true;
-		}
-		if (obj instanceof RSTile) {
-			final RSTile tile = (RSTile) obj;
-			return tile.x == x && tile.y == y && tile.z == z;
-		}
-		return false;
 	}
 
 	public int getX() {
@@ -58,18 +41,11 @@ public class RSTile {
 		return z;
 	}
 
-	@Override
-	public int hashCode() {
-		return x * 31 + y;
-	}
-
 	/**
 	 * Randomizes this tile.
-	 * 
-	 * @param maxXDeviation
-	 *            Max X distance from tile x.
-	 * @param maxYDeviation
-	 *            Max Y distance from tile y.
+	 *
+	 * @param maxXDeviation Max X distance from tile x.
+	 * @param maxYDeviation Max Y distance from tile y.
 	 * @return The randomized tile
 	 */
 	public RSTile randomize(final int maxXDeviation, final int maxYDeviation) {
@@ -86,6 +62,23 @@ public class RSTile {
 			y += (int) d;
 		}
 		return new RSTile(x, y, getZ());
+	}
+
+	@Override
+	public int hashCode() {
+		return x * 31 + y;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (obj instanceof RSTile) {
+			final RSTile tile = (RSTile) obj;
+			return tile.x == x && tile.y == y && tile.z == z;
+		}
+		return false;
 	}
 
 	@Override

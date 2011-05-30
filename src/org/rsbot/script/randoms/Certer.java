@@ -12,17 +12,23 @@ import org.rsbot.script.wrappers.RSTile;
  * Coding by joku.rules, Fixed by FuglyNerd
  * Interface data taken from Certer solver by Nightmares18
  */
-@ScriptManifest(authors = { "joku.rules" }, name = "Certer", version = 1.0)
+@ScriptManifest(authors = {"joku.rules"}, name = "Certer", version = 1.0)
 public class Certer extends Random {
 
-	private final int[] MODEL_IDS = { 2807, 8828, 8829, 8832, 8833, 8834, 8835,
-			8836, 8837 };
-	private final int[] bookPiles = { 42352, 42354 };
-	private final String[] ITEM_NAMES = { "bowl", "battleaxe", "fish",
-			"shield", "helmet", "ring", "shears", "sword", "spade" };
+	private final int[] MODEL_IDS = {2807, 8828, 8829, 8832, 8833, 8834, 8835,
+			8836, 8837};
+	private final int[] bookPiles = {42352, 42354};
+	private final String[] ITEM_NAMES = {"bowl", "battleaxe", "fish",
+			"shield", "helmet", "ring", "shears", "sword", "spade"};
 
 	private boolean readyToLeave = false;
 	private int failCount = 0;
+
+	@Override
+	public void onFinish() {
+		failCount = 0;
+		readyToLeave = false;
+	}
 
 	@Override
 	public boolean activateCondition() {
@@ -44,7 +50,8 @@ public class Certer extends Random {
 		}
 
 		if (interfaces.getComponent(241, 4).containsText("Correct.")
-				|| interfaces.getComponent(241, 4).containsText("You can go now.")) {
+				|| interfaces.getComponent(241, 4).containsText(
+				"You can go now.")) {
 			readyToLeave = true;
 		}
 
@@ -64,7 +71,8 @@ public class Certer extends Random {
 		}
 
 		if (interfaces.getComponent(184, 0).isValid()) {
-			final int modelID = interfaces.getComponent(184, 8).getComponents()[3].getModelID();
+			final int modelID = interfaces.getComponent(184, 8).getComponents()[3]
+					.getModelID();
 			String itemName = null;
 			for (int i = 0; i < MODEL_IDS.length; i++) {
 				if (MODEL_IDS[i] == modelID) {
@@ -83,7 +91,8 @@ public class Certer extends Random {
 			}
 
 			for (int j = 0; j < 3; j++) {
-				final RSComponent iface = interfaces.getComponent(184, 8).getComponents()[j];
+				final RSComponent iface = interfaces.getComponent(184, 8)
+						.getComponents()[j];
 				if (iface.containsText(itemName)) {
 					iface.doClick();
 					return random(1000, 1200);
@@ -114,11 +123,5 @@ public class Certer extends Random {
 			return -1;
 		}
 		return random(400, 600);
-	}
-
-	@Override
-	public void onFinish() {
-		failCount = 0;
-		readyToLeave = false;
 	}
 }

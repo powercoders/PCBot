@@ -7,10 +7,10 @@ import org.rsbot.script.util.Timer;
 /**
  * Advanced System Update script that will logout at a random time during a
  * system update.
- * 
+ *
  * @author Gnarly
  */
-@ScriptManifest(authors = { "Gnarly", "Pervy Shuya" }, name = "SystemUpdate", version = 1.5)
+@ScriptManifest(authors = {"Gnarly", "Pervy Shuya"}, name = "SystemUpdate", version = 1.5)
 public class SystemUpdate extends Random {
 
 	@SuppressWarnings("unused")
@@ -20,11 +20,17 @@ public class SystemUpdate extends Random {
 	@Override
 	public boolean activateCondition() {
 		if (game.isLoggedIn()
-				&& interfaces.getComponent(754, 5).getText().startsWith("<col=ffff00>System update in")
+				&& interfaces.getComponent(754, 5).getText()
+				.startsWith("<col=ffff00>System update in")
 				&& !getMyPlayer().isInCombat()) {
 			check();
 		}
 		return false;
+	}
+
+	@Override
+	public int loop() {
+		return -1;
 	}
 
 	private void check() {
@@ -49,17 +55,14 @@ public class SystemUpdate extends Random {
 	}
 
 	private int getMinutes() {
-		return Integer.parseInt(interfaces.getComponent(754, 5).getText().substring(29).trim().split(":")[0]);
+		return Integer.parseInt(interfaces.getComponent(754, 5).getText()
+				.substring(29).trim().split(":")[0]);
 	}
 
 	@SuppressWarnings("unused")
 	private int getSeconds() {
-		return Integer.parseInt(interfaces.getComponent(754, 5).getText().substring(29).trim().split(":")[1]);
-	}
-
-	@Override
-	public int loop() {
-		return -1;
+		return Integer.parseInt(interfaces.getComponent(754, 5).getText()
+				.substring(29).trim().split(":")[1]);
 	}
 
 }

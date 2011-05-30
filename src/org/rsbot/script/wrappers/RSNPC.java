@@ -1,8 +1,8 @@
 package org.rsbot.script.wrappers;
 
-import java.lang.ref.SoftReference;
-
 import org.rsbot.script.methods.MethodContext;
+
+import java.lang.ref.SoftReference;
 
 /**
  * Represents a non-player character.
@@ -28,21 +28,21 @@ public class RSNPC extends RSCharacter {
 		return new String[0];
 	}
 
-	org.rsbot.client.RSNPCDef getDefInternal() {
-		final org.rsbot.client.RSNPC c = npc.get();
-		if (c == null) {
-			return null;
-		} else {
-			return c.getRSNPCDef();
-		}
-	}
-
 	public int getID() {
 		final org.rsbot.client.RSNPCDef def = getDefInternal();
 		if (def != null) {
 			return def.getType();
 		}
 		return -1;
+	}
+
+	@Override
+	public String getName() {
+		final org.rsbot.client.RSNPCDef def = getDefInternal();
+		if (def != null) {
+			return def.getName();
+		}
+		return "";
 	}
 
 	@Override
@@ -55,24 +55,16 @@ public class RSNPC extends RSCharacter {
 		}
 	}
 
-	@Override
-	public String getName() {
-		final org.rsbot.client.RSNPCDef def = getDefInternal();
-		if (def != null) {
-			return def.getName();
-		}
-		return "";
-	}
 
 	/**
 	 * Determines whether the RSNPC is dead or dying
-	 * 
-	 * @return <tt>true</tt> if the npc is dead/dying; otherwise <tt>false</tt>.
+	 *
+	 * @return <tt>true</tt> if the npc is dead/dying; otherwise
+	 *         <tt>false</tt>.
 	 */
 	@Override
 	public boolean isDead() {
-		return !isValid() || getHPPercent() == 0 && getAnimation() != -1
-				&& getInteracting() == null;
+		return !isValid() || (getHPPercent() == 0 && getAnimation() != -1 && getInteracting() == null);
 	}
 
 	/**
@@ -82,8 +74,8 @@ public class RSNPC extends RSCharacter {
 	@Override
 	public boolean isInteractingWithLocalPlayer() {
 		final RSNPC npc = methods.npcs.getNearest(getID());
-		return npc.getInteracting() != null
-				&& npc.getInteracting().equals(methods.players.getMyPlayer());
+		return npc.getInteracting() != null && npc.getInteracting().equals(
+				methods.players.getMyPlayer());
 	}
 
 	@Override
@@ -98,5 +90,14 @@ public class RSNPC extends RSCharacter {
 		}
 		return "NPC[" + getName() + "],actions=[" + sb.toString() + "]"
 				+ super.toString();
+	}
+
+	org.rsbot.client.RSNPCDef getDefInternal() {
+		final org.rsbot.client.RSNPC c = npc.get();
+		if (c == null) {
+			return null;
+		} else {
+			return c.getRSNPCDef();
+		}
 	}
 }

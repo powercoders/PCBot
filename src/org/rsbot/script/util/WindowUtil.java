@@ -1,14 +1,11 @@
 package org.rsbot.script.util;
 
-import java.awt.Frame;
-import java.awt.Point;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Main application window and dialog utilities.
- * 
+ *
  * @author Enfilade
  */
 public class WindowUtil {
@@ -39,8 +36,7 @@ public class WindowUtil {
 	public final static int DIALOG_CLOSED = JOptionPane.CLOSED_OPTION;
 
 	/**
-	 * Use this for a confirm dialog with options "Yes", "No", and "Cancel" (in
-	 * that order)
+	 * Use this for a confirm dialog with options "Yes", "No", and "Cancel" (in that order)
 	 */
 	public final static int YES_NO_CANCEL = JOptionPane.YES_NO_CANCEL_OPTION;
 
@@ -50,59 +46,17 @@ public class WindowUtil {
 	public final static int YES_NO = JOptionPane.YES_NO_OPTION;
 
 	/**
-	 * Use this for a confirm dialog with options "Ok" and "Cancel" (in that
-	 * order)
+	 * Use this for a confirm dialog with options "Ok" and "Cancel" (in that order)
 	 */
 	public final static int OK_CANCEL = JOptionPane.OK_CANCEL_OPTION;
 
 	private static JFrame frame = null;
 
 	/**
-	 * Gets the window's point on screen.
-	 * 
-	 * @return a Point representing its point on screen.
-	 */
-	public static Point getWindowLocation() {
-		return frame.getLocationOnScreen();
-	}
-
-	/**
-	 * Maximizes the window.
-	 */
-	public static void maximizeWindow() {
-		frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
-	}
-
-	/**
-	 * Minimizes the window.
-	 */
-	public static void minimizeWindow() {
-		frame.setState(Frame.ICONIFIED);
-	}
-
-	/**
-	 * Centers a JFrame so that its position is in the center of the window.
-	 * 
-	 * @param f
-	 *            The JFrame to be positioned.
-	 */
-	public static void position(final JFrame f) {
-		f.setLocationRelativeTo(frame);
-	}
-
-	/**
-	 * Restores the window (if it is minimized).
-	 */
-	public static void restoreWindow() {
-		frame.setState(Frame.NORMAL);
-	}
-
-	/**
-	 * Sets the frame that WindowUtil will use. This method only sets it on the
-	 * first call, to prevent tampering.
-	 * 
-	 * @param f
-	 *            The JFrame that WindowUtil should use.
+	 * Sets the frame that WindowUtil will use. This method only sets it
+	 * on the first call, to prevent tampering.
+	 *
+	 * @param f The JFrame that WindowUtil should use.
 	 */
 	public static void setFrame(final JFrame f) {
 		if (frame == null) {
@@ -111,14 +65,41 @@ public class WindowUtil {
 	}
 
 	/**
+	 * Shows a dialog window that appears centered in front of the Bot window
+	 * that can be used to alert the user.
+	 * <p/>
+	 * This dialog will keep focus until the user closes it.
+	 *
+	 * @param message The message to be shown within the dialog.
+	 */
+	public static void showDialog(final String message) {
+		JOptionPane.showMessageDialog(frame, message);
+	}
+
+	/**
+	 * Shows an input dialog with the given message. Text entered into the
+	 * dialog box will be returned.
+	 * <p/>
+	 * This dialog will keep focus until the user hits OK or the user
+	 * closes it.
+	 *
+	 * @param message The message to be shown in the dialog.
+	 * @return A string containing input the user entered into the box, or null if the user
+	 *         hit "Cancel" or closed the dialog.
+	 */
+	public static String showInputDialog(final String message) {
+		return JOptionPane.showInputDialog(frame, message);
+	}
+
+	/**
 	 * Shows a confirm dialog with "Yes", "No", and "Cancel" buttons.
-	 * 
-	 * @param message
-	 *            The message to appear in the dialog.
+	 *
+	 * @param message The message to appear in the dialog.
 	 * @return an int representing the selected value. This value will be:
-	 *         JOptionPane. This can be any of the following: YES_OPTION - if
-	 *         the "Yes" option was pressed. NO_OPTION - if the "No" option was
-	 *         pressed. CANCEL_OPTION - if the "Cancel" option was pressed.
+	 *         JOptionPane. This can be any of the following:
+	 *         YES_OPTION - if the "Yes" option was pressed.
+	 *         NO_OPTION - if the "No" option was pressed.
+	 *         CANCEL_OPTION - if the "Cancel" option was pressed.
 	 *         DIALOG_CLOSED - if the user closed the dialog.
 	 */
 	public static int showConfirmDialog(final String message) {
@@ -129,60 +110,70 @@ public class WindowUtil {
 	 * Shows a confirm dialog with the specified buttons.
 	 * <p/>
 	 * This dialog will keep focus until the user closes it.
-	 * 
-	 * @param message
-	 *            The message to be displayed in the dialog.
-	 * @param type
-	 *            The type of window. This can be any of the following:
-	 *            YES_NO_CANCEL - for a dialog that has "Yes", "No", and
-	 *            "Cancel" options. YES_NO - for a dialog that has "Yes" and
-	 *            "No" options. OK_CANCEL - for a dialog that has "Ok" and
-	 *            "Cancel" options.
-	 * @return an int specifying what option was pressed. This can be any of the
-	 *         following: YES_OPTION - if the "Yes" option was pressed.
-	 *         NO_OPTION - if the "No" option was pressed. OK_OPTION - if the
-	 *         "Ok" option was pressed. CANCEL_OPTION - if the "Cancel" option
-	 *         was pressed. DIALOG_CLOSED - if the dialog was closed without an
-	 *         option being pressed.
+	 *
+	 * @param message The message to be displayed in the dialog.
+	 * @param type    The type of window. This can be any of the following:
+	 *                YES_NO_CANCEL - for a dialog that has "Yes", "No", and "Cancel" options.
+	 *                YES_NO - for a dialog that has "Yes" and "No" options.
+	 *                OK_CANCEL - for a dialog that has "Ok" and "Cancel" options.
+	 * @return an int specifying what option was pressed. This can be any of the following:
+	 *         YES_OPTION - if the "Yes" option was pressed.
+	 *         NO_OPTION - if the "No" option was pressed.
+	 *         OK_OPTION - if the "Ok" option was pressed.
+	 *         CANCEL_OPTION - if the "Cancel" option was pressed.
+	 *         DIALOG_CLOSED - if the dialog was closed without an option being pressed.
 	 */
 	public static int showConfirmDialog(final String message, final int type) {
 		return JOptionPane.showConfirmDialog(frame, message, "Confirm", type);
 	}
 
 	/**
-	 * Shows a dialog window that appears centered in front of the Bot window
-	 * that can be used to alert the user.
-	 * <p/>
-	 * This dialog will keep focus until the user closes it.
-	 * 
-	 * @param message
-	 *            The message to be shown within the dialog.
+	 * Centers a JFrame so that its position is in the center of
+	 * the window.
+	 *
+	 * @param f The JFrame to be positioned.
 	 */
-	public static void showDialog(final String message) {
-		JOptionPane.showMessageDialog(frame, message);
+	public static void position(final JFrame f) {
+		f.setLocationRelativeTo(frame);
 	}
 
 	/**
-	 * Shows an input dialog with the given message. Text entered into the
-	 * dialog box will be returned.
-	 * <p/>
-	 * This dialog will keep focus until the user hits OK or the user closes it.
-	 * 
-	 * @param message
-	 *            The message to be shown in the dialog.
-	 * @return A string containing input the user entered into the box, or null
-	 *         if the user hit "Cancel" or closed the dialog.
+	 * Gets the window's point on screen.
+	 *
+	 * @return a Point representing its point on screen.
 	 */
-	public static String showInputDialog(final String message) {
-		return JOptionPane.showInputDialog(frame, message);
+	public static Point getWindowLocation() {
+		return frame.getLocationOnScreen();
 	}
 
 	/**
-	 * "Unmaximizes" the window. This is the same thing as clicking the
-	 * "Restore Down" button on Windows when the window is maximized.
+	 * Minimizes the window.
+	 */
+	public static void minimizeWindow() {
+		frame.setState(Frame.ICONIFIED);
+	}
+
+	/**
+	 * Restores the window (if it is minimized).
+	 */
+	public static void restoreWindow() {
+		frame.setState(Frame.NORMAL);
+	}
+
+	/**
+	 * "Unmaximizes" the window. This is the same thing as clicking
+	 * the "Restore Down" button on Windows when the window is maximized.
 	 */
 	public static void unmaximizeWindow() {
 		frame.setExtendedState(Frame.NORMAL);
 	}
+
+	/**
+	 * Maximizes the window.
+	 */
+	public static void maximizeWindow() {
+		frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
+	}
+
 
 }

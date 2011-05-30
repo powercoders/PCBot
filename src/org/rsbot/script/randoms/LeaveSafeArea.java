@@ -8,12 +8,12 @@ public class LeaveSafeArea extends Random {
 
 	@Override
 	public boolean activateCondition() {
-		return interfaces.getComponent(212, 2).containsText("things can get more")
-				&& interfaces.getComponent(212, 2).getAbsoluteY() > 380
-				&& interfaces.getComponent(212, 2).getAbsoluteY() < 410
-				|| interfaces.getComponent(236, 1).containsText("the starting area")
-				&& interfaces.getComponent(236, 1).getAbsoluteY() > 390
-				&& interfaces.getComponent(236, 1).getAbsoluteY() < 415;
+		return interfaces.getComponent(212, 2).containsText("things can get more") &&
+				interfaces.getComponent(212, 2).getAbsoluteY() > 380 &&
+				interfaces.getComponent(212, 2).getAbsoluteY() < 410 ||
+				interfaces.getComponent(236, 1).containsText("the starting area") &&
+						interfaces.getComponent(236, 1).getAbsoluteY() > 390 &&
+						interfaces.getComponent(236, 1).getAbsoluteY() < 415;
 	}
 
 	@Override

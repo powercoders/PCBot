@@ -16,14 +16,14 @@ public interface RSCharacter extends RSAnimable {
 
 	int[] getLocationY();
 
+	int getOrientation();
+
 	int getLoopCycleStatus();
 
 	String getMessage();
 
-	Model getModel();
-
-	int getOrientation();
-
 	int isMoving();
+
+	Model getModel();
 
 }

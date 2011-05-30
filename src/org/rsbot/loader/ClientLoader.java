@@ -1,35 +1,20 @@
 package org.rsbot.loader;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
-import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
-
 import org.rsbot.Configuration;
 import org.rsbot.loader.asm.ClassReader;
 import org.rsbot.loader.script.ModScript;
 import org.rsbot.loader.script.ParseException;
 import org.rsbot.util.io.HttpClient;
+
+import javax.swing.*;
+import java.io.*;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
+import java.util.logging.Logger;
 
 /**
  * @author Jacmob
@@ -42,47 +27,7 @@ public class ClientLoader {
 	private Map<String, byte[]> classes;
 	private int world = nextWorld();
 
-	private int checkVersion(final InputStream in) throws IOException {
-		final ClassReader reader = new ClassReader(in);
-		final VersionVisitor vv = new VersionVisitor();
-		reader.accept(vv, ClassReader.SKIP_FRAMES);
-		if (vv.getVersion() != script.getVersion()) {
-			JOptionPane.showMessageDialog(null, "The bot is currently oudated, please wait patiently for a new version.", "Outdated", JOptionPane.INFORMATION_MESSAGE);
-			throw new IOException("ModScript #" + script.getVersion() + " != #"
-					+ vv.getVersion());
-		}
-		return vv.getVersion();
-	}
-
-	public Map<String, byte[]> getClasses() {
-		return classes;
-	}
-
-	private JarFile getJar(final String target, final boolean loader) {
-		while (true) {
-			try {
-				String s = "jar:http://world" + world + "." + target + ".com/";
-				if (loader) {
-					s += "loader.jar!/";
-				} else {
-					s += target + ".jar!/";
-				}
-				final URL url = new URL(s);
-				final JarURLConnection juc = (JarURLConnection) url.openConnection();
-				juc.setConnectTimeout(5000);
-				return juc.getJarFile();
-			} catch (final Exception ignored) {
-				world = nextWorld();
-			}
-		}
-	}
-
-	public String getTargetName() {
-		return script.getAttribute("target");
-	}
-
-	public void init(final URL script, final File cache) throws IOException,
-			ParseException {
+	public void init(final URL script, final File cache) throws IOException, ParseException {
 		byte[] data = null;
 		FileInputStream fis = null;
 
@@ -104,8 +49,7 @@ public class ClientLoader {
 		this.script = new ModScript(data);
 	}
 
-	public void load(final File cache, final File version_file)
-			throws IOException {
+	public void load(final File cache, final File version_file) throws IOException {
 		classes = new HashMap<String, byte[]>();
 		final int version = script.getVersion();
 		final String target = script.getAttribute("target");
@@ -192,6 +136,52 @@ public class ClientLoader {
 		}
 	}
 
+	public Map<String, byte[]> getClasses() {
+		return classes;
+	}
+
+	public String getTargetName() {
+		return script.getAttribute("target");
+	}
+
+	private int checkVersion(final InputStream in) throws IOException {
+		final ClassReader reader = new ClassReader(in);
+		final VersionVisitor vv = new VersionVisitor();
+		reader.accept(vv, ClassReader.SKIP_FRAMES);
+		if (vv.getVersion() != script.getVersion()) {
+			JOptionPane.showMessageDialog(
+					null,
+					"The bot is currently oudated, please wait patiently for a new version.",
+					"Outdated",
+					JOptionPane.INFORMATION_MESSAGE);
+			throw new IOException("ModScript #" + script.getVersion() + " != #" + vv.getVersion());
+		}
+		return vv.getVersion();
+	}
+
+	private JarFile getJar(final String target, final boolean loader) {
+		while (true) {
+			try {
+				String s = "jar:http://world" + world + "." + target + ".com/";
+				if (loader) {
+					s += "loader.jar!/";
+				} else {
+					s += target + ".jar!/";
+				}
+				final URL url = new URL(s);
+				final JarURLConnection juc = (JarURLConnection) url.openConnection();
+				juc.setConnectTimeout(5000);
+				return juc.getJarFile();
+			} catch (final Exception ignored) {
+				world = nextWorld();
+			}
+		}
+	}
+
+	private int nextWorld() {
+		return 1 + new Random().nextInt(169);
+	}
+
 	private byte[] load(final InputStream is) throws IOException {
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 		final byte[] buffer = new byte[4096];
@@ -200,9 +190,5 @@ public class ClientLoader {
 			os.write(buffer, 0, n);
 		}
 		return os.toByteArray();
-	}
-
-	private int nextWorld() {
-		return 1 + new Random().nextInt(169);
 	}
 }

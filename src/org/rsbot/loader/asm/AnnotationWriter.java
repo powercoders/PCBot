@@ -7,48 +7,11 @@ package org.rsbot.loader.asm;
 
 /**
  * An {@link AnnotationVisitor} that generates annotations in bytecode form.
- * 
+ *
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
 final class AnnotationWriter implements AnnotationVisitor {
-
-	/**
-	 * Puts the given annotation lists into the given byte vector.
-	 * 
-	 * @param panns
-	 *            an array of annotation writer lists.
-	 * @param off
-	 *            index of the first annotation to be written.
-	 * @param out
-	 *            where the annotations must be put.
-	 */
-	static void put(final AnnotationWriter[] panns, final int off,
-			final ByteVector out) {
-		int size = 1 + 2 * (panns.length - off);
-		for (int i = off; i < panns.length; ++i) {
-			size += panns[i] == null ? 0 : panns[i].getSize();
-		}
-		out.putInt(size).putByte(panns.length - off);
-		for (int i = off; i < panns.length; ++i) {
-			AnnotationWriter aw = panns[i];
-			AnnotationWriter last = null;
-			int n = 0;
-			while (aw != null) {
-				++n;
-				aw.visitEnd(); // in case user forgot to call visitEnd
-				aw.prev = last;
-				last = aw;
-				aw = aw.next;
-			}
-			out.putShort(n);
-			aw = last;
-			while (aw != null) {
-				out.putByteArray(aw.bv.data, 0, aw.bv.length);
-				aw = aw.prev;
-			}
-		}
-	}
 
 	/**
 	 * The class writer to which this annotation must be added.
@@ -91,36 +54,31 @@ final class AnnotationWriter implements AnnotationVisitor {
 	 */
 	AnnotationWriter next;
 
-	// ------------------------------------------------------------------------
-	// Constructor
-	// ------------------------------------------------------------------------
-
 	/**
 	 * Previous annotation writer. This field is used to store annotation lists.
 	 */
 	AnnotationWriter prev;
 
 	// ------------------------------------------------------------------------
-	// Implementation of the AnnotationVisitor interface
+	// Constructor
 	// ------------------------------------------------------------------------
 
 	/**
 	 * Constructs a new {@link AnnotationWriter}.
-	 * 
-	 * @param cw
-	 *            the class writer to which this annotation must be added.
-	 * @param named
-	 *            <tt>true<tt> if values are named, <tt>false</tt> otherwise.
-	 * @param bv
-	 *            where the annotation values must be stored.
-	 * @param parent
-	 *            where the number of annotation values must be stored.
-	 * @param offset
-	 *            where in <tt>parent</tt> the number of annotation values must
-	 *            be stored.
+	 *
+	 * @param cw     the class writer to which this annotation must be added.
+	 * @param named  <tt>true<tt> if values are named, <tt>false</tt> otherwise.
+	 * @param bv     where the annotation values must be stored.
+	 * @param parent where the number of annotation values must be stored.
+	 * @param offset where in <tt>parent</tt> the number of annotation values must
+	 *               be stored.
 	 */
-	AnnotationWriter(final ClassWriter cw, final boolean named,
-			final ByteVector bv, final ByteVector parent, final int offset) {
+	AnnotationWriter(
+			final ClassWriter cw,
+			final boolean named,
+			final ByteVector bv,
+			final ByteVector parent,
+			final int offset) {
 		this.cw = cw;
 		this.named = named;
 		this.bv = bv;
@@ -128,49 +86,9 @@ final class AnnotationWriter implements AnnotationVisitor {
 		this.offset = offset;
 	}
 
-	/**
-	 * Returns the size of this annotation writer list.
-	 * 
-	 * @return the size of this annotation writer list.
-	 */
-	int getSize() {
-		int size = 0;
-		AnnotationWriter aw = this;
-		while (aw != null) {
-			size += aw.bv.length;
-			aw = aw.next;
-		}
-		return size;
-	}
-
-	/**
-	 * Puts the annotations of this annotation writer list into the given byte
-	 * vector.
-	 * 
-	 * @param out
-	 *            where the annotations must be put.
-	 */
-	void put(final ByteVector out) {
-		int n = 0;
-		int size = 2;
-		AnnotationWriter aw = this;
-		AnnotationWriter last = null;
-		while (aw != null) {
-			++n;
-			size += aw.bv.length;
-			aw.visitEnd(); // in case user forgot to call visitEnd
-			aw.prev = last;
-			last = aw;
-			aw = aw.next;
-		}
-		out.putInt(size);
-		out.putShort(n);
-		aw = last;
-		while (aw != null) {
-			out.putByteArray(aw.bv.data, 0, aw.bv.length);
-			aw = aw.prev;
-		}
-	}
+	// ------------------------------------------------------------------------
+	// Implementation of the AnnotationVisitor interface
+	// ------------------------------------------------------------------------
 
 	@Override
 	public void visit(final String name, final Object value) {
@@ -246,7 +164,20 @@ final class AnnotationWriter implements AnnotationVisitor {
 	}
 
 	@Override
-	public AnnotationVisitor visitAnnotation(final String name,
+	public void visitEnum(
+			final String name,
+			final String desc,
+			final String value) {
+		++size;
+		if (named) {
+			bv.putShort(cw.newUTF8(name));
+		}
+		bv.put12('e', cw.newUTF8(desc)).putShort(cw.newUTF8(value));
+	}
+
+	@Override
+	public AnnotationVisitor visitAnnotation(
+			final String name,
 			final String desc) {
 		++size;
 		if (named) {
@@ -256,10 +187,6 @@ final class AnnotationWriter implements AnnotationVisitor {
 		bv.put12('@', cw.newUTF8(desc)).putShort(0);
 		return new AnnotationWriter(cw, true, bv, bv, bv.length - 2);
 	}
-
-	// ------------------------------------------------------------------------
-	// Utility methods
-	// ------------------------------------------------------------------------
 
 	@Override
 	public AnnotationVisitor visitArray(final String name) {
@@ -281,13 +208,86 @@ final class AnnotationWriter implements AnnotationVisitor {
 		}
 	}
 
-	@Override
-	public void visitEnum(final String name, final String desc,
-			final String value) {
-		++size;
-		if (named) {
-			bv.putShort(cw.newUTF8(name));
+	// ------------------------------------------------------------------------
+	// Utility methods
+	// ------------------------------------------------------------------------
+
+	/**
+	 * Returns the size of this annotation writer list.
+	 *
+	 * @return the size of this annotation writer list.
+	 */
+	int getSize() {
+		int size = 0;
+		AnnotationWriter aw = this;
+		while (aw != null) {
+			size += aw.bv.length;
+			aw = aw.next;
 		}
-		bv.put12('e', cw.newUTF8(desc)).putShort(cw.newUTF8(value));
+		return size;
+	}
+
+	/**
+	 * Puts the annotations of this annotation writer list into the given byte
+	 * vector.
+	 *
+	 * @param out where the annotations must be put.
+	 */
+	void put(final ByteVector out) {
+		int n = 0;
+		int size = 2;
+		AnnotationWriter aw = this;
+		AnnotationWriter last = null;
+		while (aw != null) {
+			++n;
+			size += aw.bv.length;
+			aw.visitEnd(); // in case user forgot to call visitEnd
+			aw.prev = last;
+			last = aw;
+			aw = aw.next;
+		}
+		out.putInt(size);
+		out.putShort(n);
+		aw = last;
+		while (aw != null) {
+			out.putByteArray(aw.bv.data, 0, aw.bv.length);
+			aw = aw.prev;
+		}
+	}
+
+	/**
+	 * Puts the given annotation lists into the given byte vector.
+	 *
+	 * @param panns an array of annotation writer lists.
+	 * @param off   index of the first annotation to be written.
+	 * @param out   where the annotations must be put.
+	 */
+	static void put(
+			final AnnotationWriter[] panns,
+			final int off,
+			final ByteVector out) {
+		int size = 1 + 2 * (panns.length - off);
+		for (int i = off; i < panns.length; ++i) {
+			size += panns[i] == null ? 0 : panns[i].getSize();
+		}
+		out.putInt(size).putByte(panns.length - off);
+		for (int i = off; i < panns.length; ++i) {
+			AnnotationWriter aw = panns[i];
+			AnnotationWriter last = null;
+			int n = 0;
+			while (aw != null) {
+				++n;
+				aw.visitEnd(); // in case user forgot to call visitEnd
+				aw.prev = last;
+				last = aw;
+				aw = aw.next;
+			}
+			out.putShort(n);
+			aw = last;
+			while (aw != null) {
+				out.putByteArray(aw.bv.data, 0, aw.bv.length);
+				aw = aw.prev;
+			}
+		}
 	}
 }

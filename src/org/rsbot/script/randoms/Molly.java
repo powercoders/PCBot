@@ -1,14 +1,10 @@
 package org.rsbot.script.randoms;
 
-import java.util.ArrayList;
-
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSInterface;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.*;
+
+import java.util.ArrayList;
 
 //Checked 3/7/10
 
@@ -16,10 +12,10 @@ import org.rsbot.script.wrappers.RSTile;
  * Updated by aman (Nov 14, 09) Updated by Equilibrium (Dec 13, 09) Updated by
  * Fred (Dec 25, 09) Updated by Iscream (Jan 31, 10) Updated by Iscream (Feb 20,
  * 10) Updated by Jacmob (Oct 24, 10) Updated by Arbiter (Nov 11, 10)
- * 
+ *
  * @author PwnZ
  */
-@ScriptManifest(authors = { "PwnZ" }, name = "Molly", version = 1.9)
+@ScriptManifest(authors = {"PwnZ"}, name = "Molly", version = 1.9)
 public class Molly extends Random {
 
 	static final int CLAW_ID = 14976;
@@ -45,21 +41,20 @@ public class Molly extends Random {
 	private long delayTime;
 
 	@Override
+	public void onFinish() {
+		mollyID = -1;
+		cameraSet = false;
+		talkedToMolly = false;
+		finished = false;
+		delayTime = -1;
+	}
+
+	@Override
 	public boolean activateCondition() {
 		molly = npcs.getNearest("Molly");
 		controlPanel = objects.getNearest(Molly.CONTROL_PANEL_ID);
 		return molly != null && molly.isInteractingWithLocalPlayer()
 				|| controlPanel != null;
-	}
-
-	private boolean hasClawMoved(final RSTile prevClawLoc) {
-		final RSObject claw = objects.getNearest(Molly.CLAW_ID);
-		if (claw == null) {
-			return false;
-		}
-		final RSTile currentClawLoc = claw.getLocation();
-		return currentClawLoc.getX() - prevClawLoc.getX() != 0
-				|| currentClawLoc.getY() - prevClawLoc.getY() != 0;
 	}
 
 	private boolean inControlInterface() {
@@ -100,14 +95,18 @@ public class Molly extends Random {
 			interfaces.clickContinue();
 			return random(500, 800);
 		}
-		final RSComponent skipInterface = interfaces.get(Molly.MOLLY_CHATBOX_INTERFACEGROUP).getComponent(Molly.MOLLY_CHATBOX_SKIP);
+		final RSComponent skipInterface = interfaces.get(
+				Molly.MOLLY_CHATBOX_INTERFACEGROUP).getComponent(
+				Molly.MOLLY_CHATBOX_SKIP);
 		if (skipInterface != null && skipInterface.isValid()
 				&& skipInterface.getAbsoluteY() > 5
 				&& skipInterface.containsText("Yes, I")) {
 			skipInterface.doClick();
 			return random(600, 1000);
 		}
-		final RSComponent noThanksInterface = interfaces.get(Molly.MOLLY_CHATBOX_INTERFACEGROUP).getComponent(Molly.MOLLY_CHATBOX_NOTHANKS);
+		final RSComponent noThanksInterface = interfaces.get(
+				Molly.MOLLY_CHATBOX_INTERFACEGROUP).getComponent(
+				Molly.MOLLY_CHATBOX_NOTHANKS);
 		if (noThanksInterface != null && noThanksInterface.isValid()
 				&& noThanksInterface.getAbsoluteY() > 5) {
 			setCamera();
@@ -138,8 +137,12 @@ public class Molly extends Random {
 		if (!inControlRoom()) {
 			if (talkedToMolly
 					&& !finished
-					&& (interfaces.get(Molly.MOLLY_CHATBOX_INTERFACEGROUP) == null || interfaces.get(Molly.MOLLY_CHATBOX_INTERFACEGROUP).getComponent(0).getAbsoluteY() < 2)
-					&& (interfaces.get(Molly.MOLLY_CHATBOX_NOTHANKS) == null || interfaces.get(Molly.MOLLY_CHATBOX_NOTHANKS).getComponent(0).getAbsoluteY() < 2)) {
+					&& (interfaces.get(Molly.MOLLY_CHATBOX_INTERFACEGROUP) == null || interfaces
+					.get(Molly.MOLLY_CHATBOX_INTERFACEGROUP)
+					.getComponent(0).getAbsoluteY() < 2)
+					&& (interfaces.get(Molly.MOLLY_CHATBOX_NOTHANKS) == null || interfaces
+					.get(Molly.MOLLY_CHATBOX_NOTHANKS).getComponent(0)
+					.getAbsoluteY() < 2)) {
 				openDoor();
 				sleep(random(800, 1200));
 			} else {
@@ -205,7 +208,8 @@ public class Molly extends Random {
 			}
 			final RSInterface i = interfaces.get(Molly.CONTROL_INTERFACEGROUP);
 			if (i != null && i.isValid()) {
-				i.getComponent(options.get(random(0, options.size()))).doClick();
+				i.getComponent(options.get(random(0, options.size())))
+						.doClick();
 			}
 			delayTime = System.currentTimeMillis();
 			while (!hasClawMoved(clawLoc)
@@ -215,13 +219,14 @@ public class Molly extends Random {
 		}
 	}
 
-	@Override
-	public void onFinish() {
-		mollyID = -1;
-		cameraSet = false;
-		talkedToMolly = false;
-		finished = false;
-		delayTime = -1;
+	private boolean hasClawMoved(final RSTile prevClawLoc) {
+		final RSObject claw = objects.getNearest(Molly.CLAW_ID);
+		if (claw == null) {
+			return false;
+		}
+		final RSTile currentClawLoc = claw.getLocation();
+		return currentClawLoc.getX() - prevClawLoc.getX() != 0
+				|| currentClawLoc.getY() - prevClawLoc.getY() != 0;
 	}
 
 	private boolean openDoor() {
