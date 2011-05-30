@@ -77,7 +77,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			public void run() {
 				JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 				ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
-				if (!prefs.ads) {
+				if (!prefs.hideAds) {
 					new SplashAd(BotGUI.this).display();
 				}
 				UpdateChecker.notify(BotGUI.this);
