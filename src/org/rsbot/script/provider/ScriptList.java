@@ -25,10 +25,12 @@ public class ScriptList {
 			printValue(out, "authors", item.authors);
 			printValue(out, "keywords", item.keywords);
 			printValue(out, "website", item.website);
+			printValue(out, "category", item.category.description());
 		}
 	}
 
-	private static void printValue(final PrintStream out, final String key, final String... texts) {
+	private static void printValue(final PrintStream out, final String key,
+			final String... texts) {
 		out.print(key);
 		out.print("=");
 		for (int i = 0; i < texts.length; i++) {
