@@ -189,8 +189,8 @@ public class Game extends MethodProvider {
 	public static final int INTERFACE_GAME_SCREEN = 548;
 	public static final int INTERFACE_LEVEL_UP = 740;
 	public static final int INTERFACE_LOGOUT = 182;
-	public static final int INTERFACE_LOGOUT_LOBBY = 2;
-	public static final int INTERFACE_LOGOUT_COMPLETE = 7;
+	public static final int INTERFACE_LOGOUT_LOBBY = 1;
+	public static final int INTERFACE_LOGOUT_COMPLETE = 6;
 	public static final int INTERFACE_LOGOUT_BUTTON_FIXED = 181;
 	public static final int INTERFACE_LOGOUT_BUTTON_RESIZED = 172;
 	public static final int INTERFACE_WELCOME_SCREEN = 907;
