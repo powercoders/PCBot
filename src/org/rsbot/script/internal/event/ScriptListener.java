@@ -8,7 +8,6 @@ import org.rsbot.script.internal.ScriptHandler;
  * @author Jacmob
  */
 public interface ScriptListener {
-
 	public void scriptStarted(ScriptHandler handler, Script script);
 
 	public void scriptStopped(ScriptHandler handler, Script script);
@@ -18,5 +17,4 @@ public interface ScriptListener {
 	public void scriptPaused(ScriptHandler handler, Script script);
 
 	public void inputChanged(Bot bot, int mask);
-
 }

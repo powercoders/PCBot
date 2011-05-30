@@ -344,10 +344,6 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 		ctx.bot.getEventManager().addListener(this);
 	}
 
-	public Bot getBot() {
-		return ctx.bot;
-	}
-
 	/**
 	 * Get an accessible and isolated directory for reading and writing files.
 	 *
@@ -360,5 +356,4 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 		}
 		return dir;
 	}
-
 }
