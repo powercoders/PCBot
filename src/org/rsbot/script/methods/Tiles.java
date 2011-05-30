@@ -26,11 +26,46 @@ public class Tiles extends MethodProvider {
 	 * @return <tt>true</tt> if no exceptions were thrown; otherwise
 	 *         <tt>false</tt>.
 	 */
-	public boolean doAction(final RSTile tile, final double xd, final double yd, final int h, final String action) {
-		return methods.tiles.doAction(tile, xd, yd, h, action, null);
+	public boolean interact(final RSTile tile, final double xd, final double yd, final int h, final String action) {
+		return methods.tiles.interact(tile, xd, yd, h, action, null);
 	}
 
-	public boolean doAction(final RSTile tile, final double xd, final double yd, final int h, final String action, final String option) {
+	/**
+	 * Clicks a tile if it is on screen with given offsets in 3D space.
+	 *
+	 * @param tile   The <code>RSTile</code> to do the action at.
+	 * @param xd     Distance from bottom left of the tile to bottom right. Ranges
+	 *               from 0-1.
+	 * @param yd     Distance from bottom left of the tile to top left. Ranges from
+	 *               0-1.
+	 * @param h      Height to click the <code>RSTile</code> at. Use 1 for tables,
+	 *               0 by default.
+	 * @param action The action to perform at the given <code>RSTile</code>.
+	 * @return <tt>true</tt> if no exceptions were thrown; otherwise
+	 *         <tt>false</tt>.
+	 * @see org.rsbot.script.methods.Tiles#interact(org.rsbot.script.wrappers.RSTile, double, double, int, String)
+	 */
+	@Deprecated
+	public boolean doAction(final RSTile tile, final double xd, final double yd, final int h, final String action) {
+		return interact(tile, xd, yd, h, action);
+	}
+
+	/**
+	 * Clicks a tile if it is on screen with given offsets in 3D space.
+	 *
+	 * @param tile   The <code>RSTile</code> to do the action at.
+	 * @param xd     Distance from bottom left of the tile to bottom right. Ranges
+	 *               from 0-1.
+	 * @param yd     Distance from bottom left of the tile to top left. Ranges from
+	 *               0-1.
+	 * @param h      Height to click the <code>RSTile</code> at. Use 1 for tables,
+	 *               0 by default.
+	 * @param action The action to perform at the given <code>RSTile</code>.
+	 * @param option The option to perform at the given <code>RSTile</code>.
+	 * @return <tt>true</tt> if no exceptions were thrown; otherwise
+	 *         <tt>false</tt>.
+	 */
+	public boolean interact(final RSTile tile, final double xd, final double yd, final int h, final String action, final String option) {
 		final Point location = methods.calc.tileToScreen(tile, xd, yd, h);
 		if (location.x != -1 && location.y != -1) {
 			methods.mouse.move(location, 3, 3);
@@ -38,6 +73,27 @@ public class Tiles extends MethodProvider {
 			return methods.menu.doAction(action, option);
 		}
 		return false;
+	}
+
+	/**
+	 * Clicks a tile if it is on screen with given offsets in 3D space.
+	 *
+	 * @param tile   The <code>RSTile</code> to do the action at.
+	 * @param xd     Distance from bottom left of the tile to bottom right. Ranges
+	 *               from 0-1.
+	 * @param yd     Distance from bottom left of the tile to top left. Ranges from
+	 *               0-1.
+	 * @param h      Height to click the <code>RSTile</code> at. Use 1 for tables,
+	 *               0 by default.
+	 * @param action The action to perform at the given <code>RSTile</code>.
+	 * @param option The option to perform at the given <code>RSTile</code>.
+	 * @return <tt>true</tt> if no exceptions were thrown; otherwise
+	 *         <tt>false</tt>.
+	 * @see org.rsbot.script.methods.Tiles#interact(org.rsbot.script.wrappers.RSTile, double, double, int, String, String)
+	 */
+	@Deprecated
+	public boolean doAction(final RSTile tile, final double xd, final double yd, final int h, final String action, final String option) {
+		return interact(tile, xd, yd, h, action, option);
 	}
 
 	/**
@@ -50,8 +106,24 @@ public class Tiles extends MethodProvider {
 	 * @return <tt>true</tt> if the tile was clicked; otherwise
 	 *         <tt>false</tt>.
 	 */
+	public boolean interact(final RSTile tile, final String action) {
+		return methods.tiles.interact(tile, action, null);
+	}
+
+	/**
+	 * Clicks a tile if it is on screen. It will left-click if the action is
+	 * available as the default option, otherwise it will right-click and check
+	 * for the action in the context methods.menu.
+	 *
+	 * @param tile   The RSTile that you want to click.
+	 * @param action Action command to use click
+	 * @return <tt>true</tt> if the tile was clicked; otherwise
+	 *         <tt>false</tt>.
+	 * @see org.rsbot.script.methods.Tiles#interact(org.rsbot.script.wrappers.RSTile, String)
+	 */
+	@Deprecated
 	public boolean doAction(final RSTile tile, final String action) {
-		return methods.tiles.doAction(tile, action, null);
+		return interact(tile, action);
 	}
 
 	/**
@@ -65,7 +137,7 @@ public class Tiles extends MethodProvider {
 	 * @return <tt>true</tt> if the tile was clicked; otherwise
 	 *         <tt>false</tt>.
 	 */
-	public boolean doAction(final RSTile tile, final String action, final String option) {
+	public boolean interact(final RSTile tile, final String action, final String option) {
 		try {
 			for (int i = 0; i++ < 5;) {
 				final Point location = methods.calc.tileToScreen(tile);
@@ -81,6 +153,23 @@ public class Tiles extends MethodProvider {
 		} catch (final Exception e) {
 			return false;
 		}
+	}
+
+	/**
+	 * Clicks a tile if it is on screen. It will left-click if the action is
+	 * available as the default menu action, otherwise it will right-click and check
+	 * for the action in the context methods.menu.
+	 *
+	 * @param tile   The RSTile that you want to click.
+	 * @param action Action of the menu entry to click
+	 * @param option Option of the menu entry to click
+	 * @return <tt>true</tt> if the tile was clicked; otherwise
+	 *         <tt>false</tt>.
+	 * @see org.rsbot.script.methods.Tiles#interact(org.rsbot.script.wrappers.RSTile, String, String)
+	 */
+	@Deprecated
+	public boolean doAction(final RSTile tile, final String action, final String option) {
+		return interact(tile, action, option);
 	}
 
 	/**

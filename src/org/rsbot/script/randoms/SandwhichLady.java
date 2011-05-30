@@ -51,7 +51,7 @@ public class SandwhichLady extends Random {
 				if (!calc.tileOnScreen(portal.getLocation())) {
 					walking.walkTileOnScreen(portal.getLocation());
 				} else {
-					portal.doAction("Enter");
+					portal.interact("Enter");
 					return random(2000, 3000);
 				}
 			}
@@ -105,7 +105,7 @@ public class SandwhichLady extends Random {
 			if (!calc.tileOnScreen(lady.getLocation())) {
 				walking.walkTileOnScreen(lady.getLocation());
 			} else {
-				lady.doAction("talk");
+				lady.interact("talk");
 				return random(1000, 1500);
 			}
 		}

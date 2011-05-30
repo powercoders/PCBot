@@ -26,7 +26,7 @@ public class TeleportNPC extends Teleport {
 	public boolean perform() {
 		RSNPC npc = methods.npcs.getNearest(npcID);
 		if (npc != null) {
-			if (npc.doAction(action)) {
+			if (npc.interact(action)) {
 				final long tO = System.currentTimeMillis();
 				while (System.currentTimeMillis() - tO < 10000) {
 					sleep(100);

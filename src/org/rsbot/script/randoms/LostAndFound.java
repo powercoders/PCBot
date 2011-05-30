@@ -113,7 +113,7 @@ public class LostAndFound extends Random {
 					sleep(100);
 				}
 			}
-			if (obj.doAction("Operate")) {
+			if (obj.interact("Operate")) {
 				sleep(random(1000, 1500));
 				while (getMyPlayer().isMoving()) {
 					sleep(100);

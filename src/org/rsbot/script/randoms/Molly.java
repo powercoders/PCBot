@@ -125,7 +125,7 @@ public class Molly extends Random {
 				walking.walkTileOnScreen(molly.getLocation());
 				return random(1000, 2000);
 			}
-			molly.doAction("Talk");
+			molly.interact("Talk");
 			return random(1000, 1200);
 		}
 		if (finished && inControlRoom()) {
@@ -146,7 +146,7 @@ public class Molly extends Random {
 				openDoor();
 				sleep(random(800, 1200));
 			} else {
-				molly.doAction("Talk");
+				molly.interact("Talk");
 				talkedToMolly = true;
 				return random(1000, 2000);
 			}
@@ -157,7 +157,7 @@ public class Molly extends Random {
 			} else {
 				if (!inControlInterface()) {
 					if (calc.tileOnScreen(controlPanel.getLocation())) {
-						controlPanel.doAction("Use");
+						controlPanel.interact("Use");
 						sleep(random(1200, 2000));
 					} else {
 						walking.walkTileOnScreen(controlPanel.getLocation());
@@ -239,7 +239,7 @@ public class Molly extends Random {
 			sleep(1000, 2000);
 			return false;
 		}
-		door.doAction("Open");
+		door.interact("Open");
 		return false;
 	}
 

@@ -174,7 +174,7 @@ public class Walking extends MethodProvider {
 	 * @return True if successful.
 	 */
 	public boolean walkTileOnScreen(final RSTile tileToWalk) {
-		return methods.tiles.doAction(methods.calc.getTileOnScreen(tileToWalk), "Walk ");
+		return methods.tiles.interact(methods.calc.getTileOnScreen(tileToWalk), "Walk ");
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class Walking extends MethodProvider {
 	public boolean rest(final int stopEnergy) {
 		int energy = getEnergy();
 		for (int d = 0; d < 5; d++) {
-			methods.interfaces.getComponent(INTERFACE_RUN_ORB, 1).doAction("Rest");
+			methods.interfaces.getComponent(INTERFACE_RUN_ORB, 1).interact("Rest");
 			methods.mouse.moveSlightly();
 			sleep(random(400, 600));
 			final int anim = methods.players.getMyPlayer().getAnimation();

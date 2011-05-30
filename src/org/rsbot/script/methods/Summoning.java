@@ -198,7 +198,7 @@ public class Summoning extends MethodProvider {
 	 */
 	public boolean doAction(final String act) {
 		return methods.interfaces.get(INTERFACE_TAB_SUMMONING).getComponent(INTERFACE_TAB_SUMMONING_CHILD).isValid() &&
-				methods.interfaces.get(INTERFACE_TAB_SUMMONING).getComponent(INTERFACE_TAB_SUMMONING_CHILD).doAction(act);
+				methods.interfaces.get(INTERFACE_TAB_SUMMONING).getComponent(INTERFACE_TAB_SUMMONING_CHILD).interact(act);
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class Summoning extends MethodProvider {
 	 * @return <tt>true</tt> if the action was performed.
 	 */
 	public boolean doAttack() {
-		return methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).doAction("Attack");
+		return methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).interact("Attack");
 	}
 
 	/**
@@ -217,7 +217,7 @@ public class Summoning extends MethodProvider {
 	 */
 	public boolean doCast() {
 		return isFamiliarSummoned() && methods.inventory.getItemID(getFamiliar().getScrollName()) != -1 &&
-				methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).doAction("Cast");
+				methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).interact("Cast");
 
 	}
 
@@ -227,7 +227,7 @@ public class Summoning extends MethodProvider {
 	 * @return <tt>true</tt> if the action was performed.
 	 */
 	public boolean doCancel() {
-		return methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).doAction("Cancel");
+		return methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).interact("Cancel");
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class Summoning extends MethodProvider {
 	 */
 	public boolean doRenewFamiliar() {
 		return isFamiliarSummoned() && methods.inventory.getItemID(getFamiliar().getName() + " pouch") != -1 &&
-				methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).doAction("Renew Familiar");
+				methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).interact("Renew Familiar");
 	}
 
 	/**
@@ -246,7 +246,7 @@ public class Summoning extends MethodProvider {
 	 * @return <tt>true</tt> if the action was performed.
 	 */
 	public boolean doTakeBob() {
-		return methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).doAction("Take BoB");
+		return methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).interact("Take BoB");
 	}
 
 	/**
@@ -261,7 +261,7 @@ public class Summoning extends MethodProvider {
 			return confirmInterface.doClick();
 		} else {
 			RSComponent dismissInterface = methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD);
-			if (dismissInterface != null && dismissInterface.doAction("Dismiss")) {
+			if (dismissInterface != null && dismissInterface.interact("Dismiss")) {
 				sleep(random(500, 750));
 			}
 		}
@@ -274,7 +274,7 @@ public class Summoning extends MethodProvider {
 	 * @return <tt>true</tt> if the action was performed.
 	 */
 	public boolean doCallFollower() {
-		return methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).doAction("Call Follower");
+		return methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).interact("Call Follower");
 	}
 
 	/**
@@ -283,7 +283,7 @@ public class Summoning extends MethodProvider {
 	 * @return <tt>true</tt> if the action was performed.
 	 */
 	public boolean doShowDetails() {
-		return methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).doAction("Follower Details");
+		return methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).interact("Follower Details");
 	}
 
 	/**
@@ -327,7 +327,7 @@ public class Summoning extends MethodProvider {
 	 * @return <tt>true</tt> if action is performed.
 	 */
 	public boolean setLeftClickOption(final int option) {
-		methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).doAction("Select left-click option");
+		methods.interfaces.getComponent(INTERFACE_TAB_SUMMONING, INTERFACE_TAB_SUMMONING_CHILD).interact("Select left-click option");
 		sleep(random(300, 400));
 		return methods.interfaces.getComponent(INTERFACE_OPTIONS, option).doClick() && methods.interfaces.getComponent(INTERFACE_OPTIONS, 5).doClick();
 	}

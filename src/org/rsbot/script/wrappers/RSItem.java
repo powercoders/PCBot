@@ -34,50 +34,79 @@ public class RSItem extends MethodProvider {
 	}
 
 	/**
-     * Performs the given action on the component wrapped by
-     * this RSItem if possible.
-     *
-     * @param action The action to perform.
-     * @return <tt>true</tt> if the component was clicked
-     *         successfully; otherwise <tt>false</tt>.
-     */
-    public boolean doAction(final String action) {
-    	return doAction(action, null);
-    }
+	 * Performs the given action on the component wrapped by
+	 * this RSItem if possible.
+	 *
+	 * @param action The action to perform.
+	 * @return <tt>true</tt> if the component was clicked
+	 *         successfully; otherwise <tt>false</tt>.
+	 */
+	public boolean interact(final String action) {
+		return interact(action, null);
+	}
 
 	/**
-     * Performs the given action on the component wrapped by
-     * this RSItem if possible.
-     *
-     * @param action The action to perform.
-     * @param option The option of the action to perform.
-     * @return <tt>true</tt> if the component was clicked
-     *         successfully; otherwise <tt>false</tt>.
-     */
-    public boolean doAction(final String action, final String option) {
-    	return component != null && component.doAction(action, option);
-    }
+	 * Performs the given action on the component wrapped by
+	 * this RSItem if possible.
+	 *
+	 * @param action The action to perform.
+	 * @return <tt>true</tt> if the component was clicked
+	 *         successfully; otherwise <tt>false</tt>.
+	 * @see org.rsbot.script.wrappers.RSItem#interact(String)
+	 */
+	@Deprecated
+	public boolean doAction(final String action) {
+		return interact(action);
+	}
 
 	/**
-     * Clicks the component wrapped by this RSItem if possible.
-     *
-     * @param left <tt>true</tt> if the component should be
-     *             left-click; <tt>false</tt> if it should be right-clicked.
-     * @return <tt>true</tt> if the component was clicked
-     *         successfully; otherwise <tt>false</tt>.
-     */
-    public boolean doClick(final boolean left) {
-    	return component != null && component.doClick(left);
-    }
+	 * Performs the given action on the component wrapped by
+	 * this RSItem if possible.
+	 *
+	 * @param action The action to perform.
+	 * @param option The option of the action to perform.
+	 * @return <tt>true</tt> if the component was clicked
+	 *         successfully; otherwise <tt>false</tt>.
+	 */
+	public boolean interact(final String action, final String option) {
+		return component != null && component.interact(action, option);
+	}
 
 	/**
-     * Gets the component wrapped by this RSItem.
-     *
-     * @return The wrapped component or <code>null</code>.
-     */
-    public RSComponent getComponent() {
-    	return component;
-    }
+	 * Performs the given action on the component wrapped by
+	 * this RSItem if possible.
+	 *
+	 * @param action The action to perform.
+	 * @param option The option of the action to perform.
+	 * @return <tt>true</tt> if the component was clicked
+	 *         successfully; otherwise <tt>false</tt>.
+	 * @see org.rsbot.script.wrappers.RSItem#interact(String, String)
+	 */
+	@Deprecated
+	public boolean doAction(final String action, final String option) {
+		return interact(action, option);
+	}
+
+	/**
+	 * Clicks the component wrapped by this RSItem if possible.
+	 *
+	 * @param left <tt>true</tt> if the component should be
+	 *             left-click; <tt>false</tt> if it should be right-clicked.
+	 * @return <tt>true</tt> if the component was clicked
+	 *         successfully; otherwise <tt>false</tt>.
+	 */
+	public boolean doClick(final boolean left) {
+		return component != null && component.doClick(left);
+	}
+
+	/**
+	 * Gets the component wrapped by this RSItem.
+	 *
+	 * @return The wrapped component or <code>null</code>.
+	 */
+	public RSComponent getComponent() {
+		return component;
+	}
 
 	/**
 	 * Gets this item's definition if available.
@@ -115,22 +144,22 @@ public class RSItem extends MethodProvider {
 	}
 
 	/**
-     * Gets the name of this item using the wrapped component's name
-     * if available, otherwise the definition if available.
-     *
-     * @return The item's name or <code>null</code> if not found.
-     */
-    public String getName() {
-    	if (component != null) {
-    		return component.getComponentName().replaceAll("\\<.*?>", "");
-    	} else {
-    		final RSItemDef definition = getDefinition();
-    		if (definition != null) {
-    			return definition.getName().replaceAll("\\<.*?>", "");
-    		}
-    	}
-    	return null;
-    }
+	 * Gets the name of this item using the wrapped component's name
+	 * if available, otherwise the definition if available.
+	 *
+	 * @return The item's name or <code>null</code> if not found.
+	 */
+	public String getName() {
+		if (component != null) {
+			return component.getComponentName().replaceAll("\\<.*?>", "");
+		} else {
+			final RSItemDef definition = getDefinition();
+			if (definition != null) {
+				return definition.getName().replaceAll("\\<.*?>", "");
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Gets this item's stack size.

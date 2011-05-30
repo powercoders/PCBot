@@ -61,7 +61,7 @@ public class Certer extends Random {
 			if (portal != null) {
 				final RSTile portalLocation = portal.getLocation();
 				if (portal.isOnScreen()) {
-					portal.doAction("Enter");
+					portal.interact("Enter");
 					return random(3000, 4000);
 				} else {
 					walking.walkTileMM(new RSTile(portalLocation.getX() - 1, portalLocation.getY()).randomize(1, 1));
@@ -108,7 +108,7 @@ public class Certer extends Random {
 		final RSNPC certer = npcs.getNearest("Niles", "Miles", "Giles");
 		if (certer != null) {
 			if (calc.distanceTo(certer) < 4) {
-				certer.doAction("Talk-to");
+				certer.interact("Talk-to");
 				return random(2500, 3000);
 			} else {
 				final RSTile certerLocation = certer.getLocation();

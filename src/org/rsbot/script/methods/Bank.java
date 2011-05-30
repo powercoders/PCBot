@@ -152,17 +152,17 @@ public class Bank extends MethodProvider {
 			}
 			switch (number) {
 				case 0:
-					item.doAction(itemCount > 1 ? "Deposit-All" : "Deposit");
+					item.interact(itemCount > 1 ? "Deposit-All" : "Deposit");
 					break;
 				case 1:
-					item.doAction("Deposit");
+					item.interact("Deposit");
 					break;
 				case 5:
-					item.doAction("Deposit-" + number);
+					item.interact("Deposit-" + number);
 					break;
 				default:
-					if (!item.doAction("Deposit-" + number)) {
-						if (item.doAction("Deposit-X")) {
+					if (!item.interact("Deposit-" + number)) {
+						if (item.interact("Deposit-X")) {
 							sleep(random(1000, 1300));
 							methods.inputManager.sendKeys(String.valueOf(number), true);
 						}
@@ -425,9 +425,9 @@ public class Bank extends MethodProvider {
 			if (lowestDist < 5 && methods.calc.tileOnMap(tile) && methods.calc.canReach(tile, true)) {
 				boolean didAction = false;
 				if (bankBooth != null) {
-					didAction = bankBooth.doAction("Use-quickly");
+					didAction = bankBooth.interact("Use-quickly");
 				} else if (banker != null) {
-					didAction = banker.doAction("Bank", "Banker");
+					didAction = banker.interact("Bank", "Banker");
 				}
 				if (didAction) {
 					int count = 0;
@@ -466,7 +466,7 @@ public class Bank extends MethodProvider {
 				}
 				final RSObject depositBox = methods.objects.getNearest(OBJECT_DEPOSIT_BOX);
 				if (depositBox != null && methods.calc.distanceTo(depositBox) < 8 && methods.calc.tileOnMap(depositBox.getLocation()) && methods.calc.canReach(depositBox.getLocation(), true)) {
-					if (depositBox.doAction("Deposit")) {
+					if (depositBox.interact("Deposit")) {
 						int count = 0;
 						while (!isDepositOpen() && ++count < 10) {
 							sleep(random(200, 400));
@@ -519,7 +519,7 @@ public class Bank extends MethodProvider {
 		if (!isOpen()) {
 			return false;
 		}
-		methods.interfaces.getComponent(INTERFACE_BANK, INTERFACE_BANK_BUTTON_SEARCH).doAction("Search");
+		methods.interfaces.getComponent(INTERFACE_BANK, INTERFACE_BANK_BUTTON_SEARCH).interact("Search");
 		sleep(random(1000, 1500));
 		if (!isSearchOpen()) {
 			sleep(500);
@@ -654,12 +654,12 @@ public class Bank extends MethodProvider {
 				}
 				if (i == count) {
 					action = defaultAction;
-				} else if (item.doAction("Withdraw-X")) {
+				} else if (item.interact("Withdraw-X")) {
 					sleep(random(1000, 1300));
 					methods.keyboard.sendText(String.valueOf(count), true);
 				}
 		}
-		if (action != null && item.doAction(action)) {
+		if (action != null && item.interact(action)) {
 			sleep(random(1000, 1300));
 		}
 		final int newInvCount = methods.inventory.getCount(true);

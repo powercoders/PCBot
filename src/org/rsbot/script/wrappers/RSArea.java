@@ -9,7 +9,6 @@ import java.util.ArrayList;
  * @author SpeedWing
  */
 public class RSArea {
-	
 	private final Polygon area;
 	private final int plane;
 	private final RSTile[] tiles;

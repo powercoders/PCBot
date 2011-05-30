@@ -37,35 +37,35 @@ public class Store extends MethodProvider {
 		final RSItem item = getItem(itemID);
 		if (item != null) {
 			if (count >= 500) {
-				if (item.doAction("Buy 500")) {
+				if (item.interact("Buy 500")) {
 					sleep(random(500, 700));
 					return buy(itemID, (count - 500));
 				} else {
 					return false;
 				}
 			} else if (count >= 50 && count < 500) {
-				if (item.doAction("Buy 50")) {
+				if (item.interact("Buy 50")) {
 					sleep(random(500, 700));
 					return buy(itemID, (count - 50));
 				} else {
 					return false;
 				}
 			} else if (count >= 10 && count < 50) {
-				if (item.doAction("Buy 10")) {
+				if (item.interact("Buy 10")) {
 					sleep(random(500, 700));
 					return buy(itemID, (count - 10));
 				} else {
 					return false;
 				}
 			} else if (count >= 5 && count < 10) {
-				if (item.doAction("Buy 5")) {
+				if (item.interact("Buy 5")) {
 					sleep(random(500, 700));
 					return buy(itemID, (count - 5));
 				} else {
 					return false;
 				}
 			} else if (count >= 1 && count < 5) {
-				if (item.doAction("Buy 1")) {
+				if (item.interact("Buy 1")) {
 					sleep(random(500, 700));
 					return buy(itemID, (count - 1));
 				} else {

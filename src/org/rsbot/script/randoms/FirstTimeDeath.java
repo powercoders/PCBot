@@ -39,7 +39,7 @@ public class FirstTimeDeath extends Random {
 		switch (step) {
 			case 0:
 				final RSObject reaperChair = objects.getNearest(45802);
-				reaperChair.doAction("Talk-to");
+				reaperChair.interact("Talk-to");
 				sleep(random(1000, 1200));
 				if (!interfaces.canContinue()) {
 					walking.walkTileOnScreen(new RSTile(
@@ -53,7 +53,7 @@ public class FirstTimeDeath extends Random {
 				final int portalID = 45803;
 				final RSObject portal = objects.getNearest(portalID);
 				final RSTile loc = getMyPlayer().getLocation();
-				portal.doAction("Enter");
+				portal.interact("Enter");
 				sleep(random(1000, 1200));
 				if (calc.distanceTo(loc) < 10) {
 					camera.turnTo(portal);

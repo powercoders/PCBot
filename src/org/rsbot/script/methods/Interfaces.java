@@ -283,7 +283,7 @@ public class Interfaces extends MethodProvider {
 		// Scroll to it if we missed it
 		while (component.getAbsoluteY() < areaY || component.getAbsoluteY() > areaY + areaHeight - component.getRealHeight()) {
 			final boolean scrollUp = component.getAbsoluteY() < areaY;
-			scrollBar.getComponent(scrollUp ? 4 : 5).doAction("");
+			scrollBar.getComponent(scrollUp ? 4 : 5).interact("");
 
 			sleep(random(100, 200));
 		}

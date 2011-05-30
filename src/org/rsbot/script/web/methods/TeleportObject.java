@@ -36,7 +36,7 @@ public class TeleportObject extends Teleport {
 	public boolean perform() {
 		RSObject obj = methods.objects.getNearest(objectID);
 		if (obj != null) {
-			if (obj.doAction(action)) {
+			if (obj.interact(action)) {
 				final long tO = System.currentTimeMillis();
 				while (System.currentTimeMillis() - tO < 10000) {
 					if (methods.interfaces.canContinue()) {

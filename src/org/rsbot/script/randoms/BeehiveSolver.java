@@ -120,7 +120,7 @@ public class BeehiveSolver extends Random {
 		if (getMyPlayer().getInteracting() == null && !solved) {
 			final RSNPC npc = npcs.getNearest(BEEHIVE_KEEPER_ID);
 			if (npc != null) {
-				if (!npc.doAction("Talk-to")) {
+				if (!npc.interact("Talk-to")) {
 					camera.setAngle(camera.getAngle() + random(-30, 30));
 				}
 			}

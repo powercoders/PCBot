@@ -62,7 +62,7 @@ public class TeleportItem extends Teleport {
 		}
 		if (item != null && methods.game.openTab(equip ? Game.Tab.EQUIPMENT : Game.Tab.INVENTORY)) {
 			for (String act : action) {
-				if (item.doAction(act)) {
+				if (item.interact(act)) {
 					final long tO = System.currentTimeMillis();
 					while (System.currentTimeMillis() - tO < 10000) {
 						sleep(100);

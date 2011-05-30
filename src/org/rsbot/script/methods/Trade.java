@@ -79,7 +79,7 @@ public class Trade extends MethodProvider {
 		if (!inTrade()) {
 			final RSPlayer targetPlayer = methods.players.getNearest(playerName);
 			if (targetPlayer != null) {
-				return targetPlayer.doAction("Trade with", targetPlayer.getName()) && waitForTrade(TRADE_TYPE_MAIN, tradeWait);
+				return targetPlayer.interact("Trade with", targetPlayer.getName()) && waitForTrade(TRADE_TYPE_MAIN, tradeWait);
 			} else {
 				return false;
 			}
@@ -108,7 +108,7 @@ public class Trade extends MethodProvider {
 	public boolean tradePlayer(final RSPlayer targetPlayer, final int tradeWait) {
 		if (!inTrade()) {
 			if (targetPlayer != null) {
-				return targetPlayer.doAction("Trade with", targetPlayer.getName()) && waitForTrade(TRADE_TYPE_MAIN, tradeWait);
+				return targetPlayer.interact("Trade with", targetPlayer.getName()) && waitForTrade(TRADE_TYPE_MAIN, tradeWait);
 			} else {
 				return false;
 			}
@@ -134,9 +134,9 @@ public class Trade extends MethodProvider {
 	 */
 	public boolean acceptTrade() {
 		if (inTradeMain()) {
-			return methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_ACCEPT).doAction("Accept");
+			return methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_ACCEPT).interact("Accept");
 		} else {
-			return inTradeSecond() && methods.interfaces.get(INTERFACE_TRADE_SECOND).getComponent(INTERFACE_TRADE_SECOND_ACCEPT).doAction("Accept");
+			return inTradeSecond() && methods.interfaces.get(INTERFACE_TRADE_SECOND).getComponent(INTERFACE_TRADE_SECOND_ACCEPT).interact("Accept");
 		}
 	}
 
@@ -147,9 +147,9 @@ public class Trade extends MethodProvider {
 	 */
 	public boolean declineTrade() {
 		if (inTradeMain()) {
-			return methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_DECLINE).doAction("Decline");
+			return methods.interfaces.get(INTERFACE_TRADE_MAIN).getComponent(INTERFACE_TRADE_MAIN_DECLINE).interact("Decline");
 		} else {
-			return inTradeSecond() && methods.interfaces.get(INTERFACE_TRADE_SECOND).getComponent(INTERFACE_TRADE_SECOND_DECLINE).doAction("Decline");
+			return inTradeSecond() && methods.interfaces.get(INTERFACE_TRADE_SECOND).getComponent(INTERFACE_TRADE_SECOND_DECLINE).interact("Decline");
 		}
 	}
 

@@ -66,7 +66,7 @@ public class ScapeRuneIsland extends Random {
 					walking.walkTileMM(walking.getClosestTileOnMap(servant.getLocation()));
 					return 700;
 				}
-				if (servant.doAction("Talk-to")) {
+				if (servant.interact("Talk-to")) {
 					forceTalk = false;
 				}
 				return random(1000, 2000);
@@ -87,7 +87,7 @@ public class ScapeRuneIsland extends Random {
 					walking.walkTileMM(walking.getClosestTileOnMap(portal.getLocation()));
 					return random(500, 1000);
 				} else {
-					if (portal.doAction("Enter")) {
+					if (portal.interact("Enter")) {
 						return random(6000, 7000);
 					}
 					return random(500, 1000);
@@ -103,7 +103,7 @@ public class ScapeRuneIsland extends Random {
 				return random(50, 100);
 			}
 			log("Item with ID " + randomID + " was deposited.");
-			if (interfaces.get(11).getComponent(17).getComponent(random(16, 26)).doAction("Dep")) {
+			if (interfaces.get(11).getComponent(17).getComponent(random(16, 26)).interact("Dep")) {
 				return random(500, 1000);
 			}
 			return random(50, 100);
@@ -119,7 +119,7 @@ public class ScapeRuneIsland extends Random {
 				return random(1000, 2000);
 			} else {
 				log("Depositing item(s) to make room.");
-				box.doAction("Deposit");
+				box.interact("Deposit");
 				return random(500, 1000);
 			}
 		}
@@ -130,9 +130,9 @@ public class ScapeRuneIsland extends Random {
 					walking.walkTileMM(walking.getClosestTileOnMap(pot.getLocation()));
 					return random(400, 800);
 				}
-				inventory.getItem(6202).doAction("Use");
+				inventory.getItem(6202).interact("Use");
 				sleep(random(800, 1000));
-				if (pot.doAction("Use")) {
+				if (pot.interact("Use")) {
 					sleep(1000);
 				}
 				return random(2000, 2400);
@@ -147,7 +147,7 @@ public class ScapeRuneIsland extends Random {
 					walking.walkTileMM(walking.getClosestTileOnMap(net.getLocation()));
 					return random(800, 1000);
 				} else {
-					tiles.doAction(net.getLocation(), "Take");
+					tiles.interact(net.getLocation(), "Take");
 					return random(800, 1000);
 				}
 			} else {
@@ -192,7 +192,7 @@ public class ScapeRuneIsland extends Random {
 						sleep(1000);
 					}
 				}
-				tiles.doAction(spot.getLocation(), "Net");
+				tiles.interact(spot.getLocation(), "Net");
 				return random(2000, 2500);
 			} else {
 				walking.walkTileMM(walking.getClosestTileOnMap(CENTER_TILE));
@@ -204,9 +204,9 @@ public class ScapeRuneIsland extends Random {
 				if (!calc.tileOnScreen(cat.getLocation())) {
 					walking.walkTileMM(walking.getClosestTileOnMap(cat.getLocation()));
 				}
-				inventory.getItem(6200).doAction("Use");
+				inventory.getItem(6200).interact("Use");
 				sleep(random(500, 1000));
-				cat.doAction("Use Raw fish-like thing -> Evil bob");
+				cat.interact("Use Raw fish-like thing -> Evil bob");
 			} else {
 				walking.walkTileMM(walking.getClosestTileOnMap(CENTER_TILE));
 			}
@@ -218,7 +218,7 @@ public class ScapeRuneIsland extends Random {
 				walking.walkTileMM(walking.getClosestTileOnMap(servant.getLocation()));
 				return 700;
 			}
-			servant.doAction("Talk-to");
+			servant.interact("Talk-to");
 			return random(1000, 2000);
 		}
 		if (servant == null) {

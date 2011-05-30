@@ -206,19 +206,19 @@ public class ImprovedRewardsBox extends Random {
 			return random(3000, 4000);
 		}
 		if (inventory.contains(BOX_ID)) {
-			inventory.getItem(BOX_ID).doAction("Open");
+			inventory.getItem(BOX_ID).interact("Open");
 			return random(3000, 4000);
 		}
 		if (inventory.contains(BOOK_KNOWLEDGE_ID)) {
-			inventory.getItem(BOOK_KNOWLEDGE_ID).doAction("Read");
+			inventory.getItem(BOOK_KNOWLEDGE_ID).interact("Read");
 			return random(3000, 4000);
 		}
 		if (inventory.contains(LAMP_ID)) {
-			inventory.getItem(LAMP_ID).doAction("Rub");
+			inventory.getItem(LAMP_ID).interact("Rub");
 			return random(3000, 4000);
 		}
 		if (inventory.contains(MYSTERY_BOX_ID)) {
-			inventory.getItem(MYSTERY_BOX_ID).doAction("Open");
+			inventory.getItem(MYSTERY_BOX_ID).interact("Open");
 			return random(3000, 4000);
 		}
 		return -1;

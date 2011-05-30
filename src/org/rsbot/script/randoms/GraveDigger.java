@@ -127,20 +127,20 @@ public class GraveDigger extends Random {
 					walking.getPath(depo.getLocation()).traverse();
 					camera.turnTo(depo);
 				} else {
-					depo.doAction("Deposit");
+					depo.interact("Deposit");
 				}
 			}
 			if (interfaces.get(Bank.INTERFACE_DEPOSIT_BOX).isValid()) {
 				sleep(random(700, 1200));
-				interfaces.get(11).getComponent(17).getComponent(27).doAction("Dep");
+				interfaces.get(11).getComponent(17).getComponent(27).interact("Dep");
 				sleep(random(700, 1200));
-				interfaces.get(11).getComponent(17).getComponent(26).doAction("Dep");
+				interfaces.get(11).getComponent(17).getComponent(26).interact("Dep");
 				sleep(random(700, 1200));
-				interfaces.get(11).getComponent(17).getComponent(25).doAction("Dep");
+				interfaces.get(11).getComponent(17).getComponent(25).interact("Dep");
 				sleep(random(700, 1200));
-				interfaces.get(11).getComponent(17).getComponent(24).doAction("Dep");
+				interfaces.get(11).getComponent(17).getComponent(24).interact("Dep");
 				sleep(random(700, 1200));
-				interfaces.get(11).getComponent(17).getComponent(23).doAction("Dep");
+				interfaces.get(11).getComponent(17).getComponent(23).interact("Dep");
 				sleep(random(700, 1200));
 				interfaces.getComponent(11, 15).doClick();
 				return random(500, 700);
@@ -228,7 +228,7 @@ public class GraveDigger extends Random {
 				game.logout(false);
 				return -1;
 			}
-			obj.doAction("Take-coffin");
+			obj.interact("Take-coffin");
 		} else if (tmpStatus == 0 && objects.getNearest(GraveDigger.emptyGraveIDs) != null) {
 			final RSObject obj = objects.getNearest(GraveDigger.emptyGraveIDs);
 			final int id = obj.getID();
@@ -244,7 +244,7 @@ public class GraveDigger extends Random {
 					// if (Bot.getClient().isItemSelected() == 1) {
 					// objects.atObject(objGS, "Use");
 					// }
-					objGS.doAction("Read");
+					objGS.interact("Read");
 				}
 			}
 		} else if (tmpStatus == -1) {
@@ -264,7 +264,7 @@ public class GraveDigger extends Random {
 				final int i = random(0, agc.size());
 				if (inventory.getCount(GraveDigger.coffinIDs[agc.get(i)]) > 0) {
 					tmpID = agc.get(i);
-					inventory.getItem(GraveDigger.coffinIDs[agc.get(i)]).doAction("Check");
+					inventory.getItem(GraveDigger.coffinIDs[agc.get(i)]).interact("Check");
 
 					return random(1800, 2400); // We are looking at the model
 				}
@@ -279,7 +279,7 @@ public class GraveDigger extends Random {
 			}
 			//Teleport Ani - 8939
 			if (getMyPlayer().getAnimation() == -1) {
-				leo.doAction("Talk-to");
+				leo.interact("Talk-to");
 			}
 		}
 		return random(1400, 1800);

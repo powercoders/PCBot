@@ -126,7 +126,7 @@ public class Inventory extends MethodProvider {
 			if (methods.interfaces.get(94).isValid()) {
 				methods.interfaces.getComponent(94, 3).doClick();
 			} else {
-				item.doAction("Destroy");
+				item.interact("Destroy");
 			}
 			sleep(random(700, 1100));
 		}
@@ -217,7 +217,7 @@ public class Inventory extends MethodProvider {
 			return false;
 		}
 		final RSItem item = getItems()[col + row * 4];
-		return item != null && item.getID() != -1 && item.doAction("Drop");
+		return item != null && item.getID() != -1 && item.interact("Drop");
 	}
 
 	/**
@@ -603,7 +603,7 @@ public class Inventory extends MethodProvider {
 		if (selItem != null && selItem.getID() == itemID) {
 			return true;
 		}
-		if (!item.doAction("Use")) {
+		if (!item.interact("Use")) {
 			return false;
 		}
 		for (int c = 0; c < 5 && (selItem = getSelectedItem()) == null; c++) {
@@ -649,7 +649,7 @@ public class Inventory extends MethodProvider {
 	 */
 	public boolean useItem(final RSItem item, final RSItem targetItem) {
 		methods.game.openTab(Game.Tab.INVENTORY);
-		return selectItem(item) && targetItem.doAction("Use");
+		return selectItem(item) && targetItem.interact("Use");
 	}
 
 	/**
@@ -662,6 +662,6 @@ public class Inventory extends MethodProvider {
 	 */
 	public boolean useItem(final RSItem item, final RSObject targetObject) {
 		methods.game.openTab(Game.Tab.INVENTORY);
-		return selectItem(item) && targetObject.doAction("Use", targetObject.getName());
+		return selectItem(item) && targetObject.interact("Use", targetObject.getName());
 	}
 }

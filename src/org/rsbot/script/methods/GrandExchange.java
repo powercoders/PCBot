@@ -56,7 +56,7 @@ public class GrandExchange extends MethodProvider {
 	 */
 	public boolean open() {
 		if (!methods.interfaces.get(INTERFACE_GRAND_EXCHANGE_WINDOW).isValid()) {
-			methods.npcs.getNearest(GRAND_EXCHANGE_CLERK).doAction("Exchange");
+			methods.npcs.getNearest(GRAND_EXCHANGE_CLERK).interact("Exchange");
 		}
 		return methods.interfaces.get(INTERFACE_GRAND_EXCHANGE_WINDOW)
 				.isValid();
@@ -189,13 +189,13 @@ public class GrandExchange extends MethodProvider {
 			if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW,
 					GRAND_EXCHANGE_COLLECT_BOX_TWO).containsAction("Collect")) {
 				methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW,
-						GRAND_EXCHANGE_COLLECT_BOX_TWO).doAction("Collect");
+						GRAND_EXCHANGE_COLLECT_BOX_TWO).interact("Collect");
 				sleep(random(400, 900));
 			}
 			if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW,
 					GRAND_EXCHANGE_COLLECT_BOX_ONE).containsAction("Collect")) {
 				methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW,
-						GRAND_EXCHANGE_COLLECT_BOX_ONE).doAction("Collect");
+						GRAND_EXCHANGE_COLLECT_BOX_ONE).interact("Collect");
 				sleep(random(400, 900));
 			}
 		}

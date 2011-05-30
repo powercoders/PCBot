@@ -71,8 +71,21 @@ public class RSComponent extends MethodProvider {
 	 * @param action The menu action to click.
 	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>.
 	 */
+	public boolean interact(final String action) {
+		return interact(action, null);
+	}
+
+	/**
+	 * Performs the given action on this RSInterfaceChild if it is
+	 * showing (valid).
+	 *
+	 * @param action The menu action to click.
+	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>.
+	 * @see org.rsbot.script.wrappers.RSComponent#interact(String)
+	 */
+	@Deprecated
 	public boolean doAction(final String action) {
-		return doAction(action, null);
+		return interact(action);
 	}
 
 	/**
@@ -83,7 +96,7 @@ public class RSComponent extends MethodProvider {
 	 * @param option The option of the menu action to click.
 	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>.
 	 */
-	public boolean doAction(final String action, final String option) {
+	public boolean interact(final String action, final String option) {
 		if (!isValid()) {
 			return false;
 		}
@@ -100,6 +113,20 @@ public class RSComponent extends MethodProvider {
 			sleep(random(40, 80));
 		}
 		return methods.menu.doAction(action, option);
+	}
+
+	/**
+	 * Performs the given action on this RSInterfaceChild if it is
+	 * showing (valid).
+	 *
+	 * @param action The menu action to click.
+	 * @param option The option of the menu action to click.
+	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>.
+	 * @see org.rsbot.script.wrappers.RSComponent#interact(String, String)
+	 */
+	@Deprecated
+	public boolean doAction(final String action, final String option) {
+		return interact(action, option);
 	}
 
 	/**

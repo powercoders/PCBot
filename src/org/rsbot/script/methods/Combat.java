@@ -26,7 +26,7 @@ public class Combat extends MethodProvider {
 			if (!methods.inventory.contains(food)) {
 				continue;
 			}
-			if (methods.inventory.getItem(food).doAction("Eat")) {
+			if (methods.inventory.getItem(food).interact("Eat")) {
 				for (int i = 0; i < 100; i++) {
 					sleep(random(100, 300));
 					if (firstPercent < percent) {

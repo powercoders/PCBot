@@ -89,7 +89,7 @@ public class CapnArnav extends Random {
 					if (!portal.isOnScreen()) {
 						camera.turnTo(portal);
 					}
-					if (portal.doAction("Enter")) {
+					if (portal.interact("Enter")) {
 						return random(3000, 3500);
 					}
 				}

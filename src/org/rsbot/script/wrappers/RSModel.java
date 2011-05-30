@@ -102,7 +102,7 @@ public abstract class RSModel extends MethodProvider {
 	 * @param option the option of the action to be clicked in the menu
 	 * @return true if clicked, false if failed.
 	 */
-	public boolean doAction(final String action, final String option) {
+	public boolean interact(final String action, final String option) {
 		try {
 			for (int i = 0; i < 10; i++) {
 				methods.mouse.move(getPoint());
@@ -121,10 +121,35 @@ public abstract class RSModel extends MethodProvider {
 	 * Clicks the RSModel and clicks the menu action
 	 *
 	 * @param action the action to be clicked in the menu
+	 * @param option the option of the action to be clicked in the menu
+	 * @return true if clicked, false if failed.
+	 * @see org.rsbot.script.wrappers.RSModel#interact(String, String)
+	 */
+	@Deprecated
+	public boolean doAction(final String action, final String option) {
+		return interact(action, option);
+	}
+
+	/**
+	 * Clicks the RSModel and clicks the menu action
+	 *
+	 * @param action the action to be clicked in the menu
 	 * @return true if clicked, false if failed.
 	 */
+	public boolean interact(final String action) {
+		return interact(action, null);
+	}
+
+	/**
+	 * Clicks the RSModel and clicks the menu action
+	 *
+	 * @param action the action to be clicked in the menu
+	 * @return true if clicked, false if failed.
+	 * @see org.rsbot.script.wrappers.RSModel#interact(String)
+	 */
+	@Deprecated
 	public boolean doAction(final String action) {
-		return doAction(action, null);
+		return interact(action);
 	}
 
 	/**

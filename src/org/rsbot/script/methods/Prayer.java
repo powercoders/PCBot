@@ -214,16 +214,16 @@ public class Prayer extends MethodProvider {
 	 */
 	public boolean setQuickPrayers(Book... prayers) {
 		if (!isQuickPrayerOn()) {
-			methods.interfaces.getComponent(INTERFACE_PRAYER_ORB, 1).doAction("Select quick prayers");
+			methods.interfaces.getComponent(INTERFACE_PRAYER_ORB, 1).interact("Select quick prayers");
 		}
 		for (Book effect : prayers) {
 			if (isQuickPrayerSet(effect)) {
 				continue;
 			}
-			methods.interfaces.getComponent(INTERFACE_PRAYER, 42).getComponent(effect.getComponentIndex()).doAction("Select");
+			methods.interfaces.getComponent(INTERFACE_PRAYER, 42).getComponent(effect.getComponentIndex()).interact("Select");
 			sleep(random(750, 1100));
 		}
-		return isQuickPrayerSet(prayers) && methods.interfaces.getComponent(INTERFACE_PRAYER, 42).getComponent(43).doAction("Confirm Selection");
+		return isQuickPrayerSet(prayers) && methods.interfaces.getComponent(INTERFACE_PRAYER, 42).getComponent(43).interact("Confirm Selection");
 	}
 
 
@@ -266,7 +266,7 @@ public class Prayer extends MethodProvider {
 				RSComponent component = methods.interfaces.getComponent(PRAYER_INTERFACE, 7)
 						.getComponent(pray.getComponentIndex());
 				if (component.isValid()) {
-					component.doAction(active ? "Activate" : "Deactivate");
+					component.interact(active ? "Activate" : "Deactivate");
 				}
 			}
 		}

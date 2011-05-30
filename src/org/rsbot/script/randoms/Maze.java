@@ -152,7 +152,7 @@ public class Maze extends Random {
 
 		if (getMyPlayer().getLocation().equals(new RSTile(2911, 4576))) {
 			if (getMyPlayer().getAnimation() == -1) {
-				tiles.doAction(new RSTile(2912, 4576), "Touch");
+				tiles.interact(new RSTile(2912, 4576), "Touch");
 				return random(5000, 6000);
 			}
 		}
@@ -182,7 +182,7 @@ public class Maze extends Random {
 					camera.setAngle(turnCameraTo());
 				}
 				final RSObject obj = objects.getTopAt(walkToTile, Objects.TYPE_BOUNDARY);
-				if (obj != null && obj.doAction("Open") || atDoor(walkToTile, doorDir)) {
+				if (obj != null && obj.interact("Open") || atDoor(walkToTile, doorDir)) {
 					return random(2750, 3250);
 				}
 			}

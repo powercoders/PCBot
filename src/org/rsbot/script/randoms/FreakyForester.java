@@ -214,9 +214,9 @@ public class FreakyForester extends Random implements MessageListener {
 			final int r = random(21, 27);
 			if (bank.isDepositOpen() && bank.getBoxCount() == 28) {
 				if (interfaces.get(11).getComponent(17).getComponent(r).getComponentStackSize() > 1) {
-					interfaces.get(11).getComponent(17).getComponent(r).doAction("Deposit-All");
+					interfaces.get(11).getComponent(17).getComponent(r).interact("Deposit-All");
 				} else {
-					interfaces.get(11).getComponent(17).getComponent(r).doAction("Deposit");
+					interfaces.get(11).getComponent(17).getComponent(r).interact("Deposit");
 				}
 				return random(1000, 1500);
 			} else if (bank.isDepositOpen()) {
@@ -230,7 +230,7 @@ public class FreakyForester extends Random implements MessageListener {
 				}
 				sleep(random(1200, 1400));
 			}
-			if (box.doAction("Deposit")) {
+			if (box.interact("Deposit")) {
 				return random(800, 1200);
 			}
 		}
@@ -238,7 +238,7 @@ public class FreakyForester extends Random implements MessageListener {
 			case 0: // Talk to forester
 				if (calc.tileOnScreen(forester.getLocation())
 						&& calc.distanceTo(forester.getLocation()) <= 5) {
-					forester.doAction("Talk");
+					forester.interact("Talk");
 				} else if (calc.distanceTo(forester.getLocation()) >= 5) {
 					walking.walkTileMM(walking.getClosestTileOnMap(forester
 							.getLocation().randomize(3, 3)));
@@ -268,12 +268,12 @@ public class FreakyForester extends Random implements MessageListener {
 				final RSNPC pheasant = npcs.getNearest(pheasantFilter);
 				final RSGroundItem tile = groundItems.getNearest(6178);
 				if (tile != null) {
-					tiles.doAction(tile.getLocation(), "Take");
+					tiles.interact(tile.getLocation(), "Take");
 					return random(600, 900);
 				} else if (pheasant != null) {
 					// log("Pheasant ID = " + pheasant.getID());
 					if (calc.tileOnScreen(pheasant.getLocation()) && calc.distanceTo(pheasant.getLocation()) <= 5) {
-						pheasant.doAction("Attack");
+						pheasant.interact("Attack");
 						return random(1000, 1500);
 					} else if (calc.distanceTo(pheasant.getLocation()) >= 5) {
 						walking.walkTileMM(walking.getClosestTileOnMap(pheasant.getLocation().randomize(3, 3)));
@@ -297,7 +297,7 @@ public class FreakyForester extends Random implements MessageListener {
 					log.info("Could not find portal.");
 					return random(800, 1200);
 				}
-				if (Portal.doAction("Enter")) {
+				if (Portal.interact("Enter")) {
 					return random(4000, 5000);
 				}
 				return random(200, 500);

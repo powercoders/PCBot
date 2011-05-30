@@ -158,7 +158,7 @@ public class Prison extends Random {
 							return random(1000, 1500);
 						}
 						camera.turnTo(depo, 20);
-						if (depo.doAction("Deposit")) {
+						if (depo.interact("Deposit")) {
 							sleep(random(1800, 2000));
 							if (getMyPlayer().isMoving()) {
 								sleep(random(200, 500));
@@ -168,7 +168,7 @@ public class Prison extends Random {
 								sleep(random(700, 1200));
 								interfaces.get(11).getComponent(17)
 										.getComponent(random(16, 17))
-										.doAction("Dep");
+										.interact("Dep");
 								sleep(random(700, 1200));
 								interfaces.getComponent(11, 15).doClick();
 							}
@@ -207,7 +207,7 @@ public class Prison extends Random {
 						walking.walkTileMM(pete.getLocation());
 						return random(1000, 1400);
 					}
-					if (pete.doAction("talk")) {
+					if (pete.interact("talk")) {
 						return random(1500, 1600);
 					} else {
 						camera.turnTo(pete.getLocation());
@@ -246,7 +246,7 @@ public class Prison extends Random {
 					if (atLever()) {
 						if (balloonToPop != null
 								&& interfaces.get(273).getComponent(4)
-								.doAction("Close")) {
+								.interact("Close")) {
 							state = 2;
 							return random(800, 900);
 						}
@@ -263,12 +263,12 @@ public class Prison extends Random {
 							&& calc.tileOnScreen(lever.getLocation())) {
 						// if (tiles.doAction(lever.getLocation(), 0.5, 0.5, 170,
 						// "Pull")) {
-						if (lever.doAction("Pull")) {
+						if (lever.interact("Pull")) {
 							sleep(random(1400, 1600));
 							if (atLever()) {
 								if (balloonToPop != null
 										&& interfaces.get(273).getComponent(4)
-										.doAction("Close")) {
+										.interact("Close")) {
 									state = 2;
 									return random(800, 900);
 								}
@@ -317,7 +317,7 @@ public class Prison extends Random {
 
 				if (!inventory.containsAll(DOOR_KEY)) {
 					if (calc.tileOnScreen(balloonToPop.getLocation())) {
-						balloonToPop.doAction("Pop");
+						balloonToPop.interact("Pop");
 						return random(1200, 1400);
 					} else {
 						if (!getMyPlayer().isMoving()) {
@@ -394,7 +394,7 @@ public class Prison extends Random {
 				}
 
 				if (inventory.containsAll(DOOR_KEY) && !getMyPlayer().isMoving()) {
-					inventory.getItem(DOOR_KEY).doAction("Return");
+					inventory.getItem(DOOR_KEY).interact("Return");
 					return random(1000, 2000);
 				}
 				if (!inventory.containsAll(DOOR_KEY)
@@ -420,7 +420,7 @@ public class Prison extends Random {
 				if (calc.tileOnScreen(doorTile)) {
 					final RSObject gate = objects.getNearest(11177, 11178);
 					if (gate != null) {
-						gate.doAction("Open");
+						gate.interact("Open");
 					}
 					// tiles.doAction(new RSTile(2085, 4459), 1, 0, 30, "Open");
 					return random(500, 600);

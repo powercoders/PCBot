@@ -204,23 +204,23 @@ public class DrillDemon extends Random {
 			if (sign1 == 1) {
 				if (calc.distanceTo(new RSTile(3167, 4820)) < 2) {
 					walking.walkTileMM(new RSTile(3160, 4820));
-					mat1.doAction("Use");
+					mat1.interact("Use");
 				} else {
-					mat1.doAction("Use");
+					mat1.interact("Use");
 				}
 				return random(2000, 2500);
 			} else if (sign2 == 1) {
-				mat2.doAction("Use");
+				mat2.interact("Use");
 				return random(2000, 2500);
 			} else if (sign3 == 1) {
-				mat3.doAction("Use");
+				mat3.interact("Use");
 				return random(2000, 2500);
 			} else if (sign4 == 1) {
 				if (calc.distanceTo(new RSTile(3159, 4820)) < 2) {
 					walking.walkTileMM(new RSTile(3166, 4820));
-					mat4.doAction("Use");
+					mat4.interact("Use");
 				} else {
-					mat4.doAction("Use");
+					mat4.interact("Use");
 				}
 				return random(2000, 2500);
 			}
@@ -229,23 +229,23 @@ public class DrillDemon extends Random {
 			if (sign1 == 2) {
 				if (calc.distanceTo(new RSTile(3167, 4820)) < 2) {
 					walking.walkTileMM(new RSTile(3160, 4820));
-					mat1.doAction("Use");
+					mat1.interact("Use");
 				} else {
-					mat1.doAction("Use");
+					mat1.interact("Use");
 				}
 				return random(2000, 2500);
 			} else if (sign2 == 2) {
-				mat2.doAction("Use");
+				mat2.interact("Use");
 				return random(2000, 2500);
 			} else if (sign3 == 2) {
-				mat3.doAction("Use");
+				mat3.interact("Use");
 				return random(2000, 2500);
 			} else if (sign4 == 2) {
 				if (calc.distanceTo(new RSTile(3159, 4820)) < 2) {
 					walking.walkTileMM(new RSTile(3166, 4820));
-					mat4.doAction("Use");
+					mat4.interact("Use");
 				} else {
-					mat4.doAction("Use");
+					mat4.interact("Use");
 				}
 				return random(2000, 2500);
 			}
@@ -254,23 +254,23 @@ public class DrillDemon extends Random {
 			if (sign1 == 3) {
 				if (calc.distanceTo(new RSTile(3167, 4820)) < 2) {
 					walking.walkTileMM(new RSTile(3160, 4820));
-					mat1.doAction("Use");
+					mat1.interact("Use");
 				} else {
-					mat1.doAction("Use");
+					mat1.interact("Use");
 				}
 				return random(1000, 1500);
 			} else if (sign2 == 3) {
-				mat2.doAction("Use");
+				mat2.interact("Use");
 				return random(2000, 2500);
 			} else if (sign3 == 3) {
-				mat3.doAction("Use");
+				mat3.interact("Use");
 				return random(2000, 2500);
 			} else if (sign4 == 3) {
 				if (calc.distanceTo(new RSTile(3159, 4820)) < 2) {
 					walking.walkTileMM(new RSTile(3166, 4820));
-					mat4.doAction("Use");
+					mat4.interact("Use");
 				} else {
-					mat4.doAction("Use");
+					mat4.interact("Use");
 				}
 				return random(2000, 2500);
 			}
@@ -278,30 +278,30 @@ public class DrillDemon extends Random {
 			if (sign1 == 4) {
 				if (calc.distanceTo(new RSTile(3167, 4820)) < 2) {
 					walking.walkTileMM(new RSTile(3160, 4820));
-					mat1.doAction("Use");
+					mat1.interact("Use");
 				} else {
-					mat1.doAction("Use");
+					mat1.interact("Use");
 				}
 				return random(2000, 2500);
 			} else if (sign2 == 4) {
-				mat2.doAction("Use");
+				mat2.interact("Use");
 				return random(2000, 2500);
 			} else if (sign3 == 4) {
-				mat3.doAction("Use");
+				mat3.interact("Use");
 				return random(2000, 2500);
 			} else if (sign4 == 4) {
 				if (calc.distanceTo(new RSTile(3159, 4820)) < 2) {
 					walking.walkTileMM(new RSTile(3166, 4820));
-					mat4.doAction("Use");
+					mat4.interact("Use");
 				} else {
-					mat4.doAction("Use");
+					mat4.interact("Use");
 				}
 				return random(2000, 2500);
 			}
 		}
 
 		if (!myClickContinue() && getMyPlayer().getAnimation() == -1) {
-			demon.doAction("Talk-to");
+			demon.interact("Talk-to");
 		}
 
 		return random(2000, 2500);

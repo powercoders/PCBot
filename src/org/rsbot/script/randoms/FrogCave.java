@@ -71,7 +71,7 @@ public class FrogCave extends Random {
 					if (!calc.tileOnScreen(herald.getLocation())) {
 						camera.turnTo(herald);
 					}
-					herald.doAction("Talk-to");
+					herald.interact("Talk-to");
 					return random(500, 1000);
 				} else {
 					walking.walkTileMM(herald.getLocation());
@@ -89,7 +89,7 @@ public class FrogCave extends Random {
 					if (!calc.tileOnScreen(frog.getLocation())) {
 						camera.turnTo(frog);
 					}
-					if (frog.doAction("Talk-to Frog")) {
+					if (frog.interact("Talk-to Frog")) {
 						sleep(750, 1250);
 						talkedToFrog = canContinue();
 					}

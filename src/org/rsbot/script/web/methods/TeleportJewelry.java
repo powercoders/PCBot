@@ -47,7 +47,7 @@ public class TeleportJewelry extends TeleportItem {
 		}
 		if (item != null && methods.game.openTab(equip ? Game.Tab.EQUIPMENT : Game.Tab.INVENTORY)) {
 			for (String s : action) {
-				if (item.doAction(s)) {
+				if (item.interact(s)) {
 					final long tO = System.currentTimeMillis();
 					while (System.currentTimeMillis() - tO < 10000) {
 						sleep(100);
@@ -58,7 +58,7 @@ public class TeleportJewelry extends TeleportItem {
 				}
 			}
 
-			if (item.doAction("Rub")) {
+			if (item.interact("Rub")) {
 				RSComponent comp = null;
 				long tO = System.currentTimeMillis();
 				while (System.currentTimeMillis() - tO < 10000) {

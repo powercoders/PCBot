@@ -28,8 +28,20 @@ public abstract class RSCharacter extends MethodProvider {
 	 * @param action The action of the menu entry to be clicked (if available).
 	 * @return <tt>true</tt> if the option was found; otherwise <tt>false</tt>.
 	 */
+	public boolean interact(final String action) {
+		return interact(action, null);
+	}
+
+	/**
+	 * Performs an action on a humanoid character (tall and skinny).
+	 *
+	 * @param action The action of the menu entry to be clicked (if available).
+	 * @return <tt>true</tt> if the option was found; otherwise <tt>false</tt>.
+	 * @see org.rsbot.script.wrappers.RSCharacter#interact(String)
+	 */
+	@Deprecated
 	public boolean doAction(final String action) {
-		return doAction(action, null);
+		return interact(action);
 	}
 
 	/**
@@ -39,11 +51,11 @@ public abstract class RSCharacter extends MethodProvider {
 	 * @param option The option of the menu entry to be clicked (if available).
 	 * @return <tt>true</tt> if the option was found; otherwise <tt>false</tt>.
 	 */
-	public boolean doAction(final String action, final String option) {
+	public boolean interact(final String action, final String option) {
 		if (isValid()) {
 			final RSModel model = getModel();
 			if (model != null) {
-				return model.doAction(action, option);
+				return model.interact(action, option);
 			}
 			try {
 				Point screenLoc;
@@ -63,6 +75,19 @@ public abstract class RSCharacter extends MethodProvider {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Performs an action on a humanoid character (tall and skinny).
+	 *
+	 * @param action The action of the menu entry to be clicked (if available).
+	 * @param option The option of the menu entry to be clicked (if available).
+	 * @return <tt>true</tt> if the option was found; otherwise <tt>false</tt>.
+	 * @see org.rsbot.script.wrappers.RSCharacter#interact(String, String)
+	 */
+	@Deprecated
+	public boolean doAction(final String action, final String option) {
+		return interact(action, option);
 	}
 
 	public int getAnimation() {
@@ -107,8 +132,8 @@ public abstract class RSCharacter extends MethodProvider {
 	}
 
 	public int getLevel() {
-    	return -1; // should be overridden too
-    }
+		return -1; // should be overridden too
+	}
 
 	public RSTile getLocation() {
 		final org.rsbot.client.RSCharacter c = getAccessor();
@@ -138,15 +163,15 @@ public abstract class RSCharacter extends MethodProvider {
 	}
 
 	public RSModel getModel() {
-    	final org.rsbot.client.RSCharacter c = getAccessor();
-    	if (c != null) {
-    		final Model model = c.getModel();
-    		if (model != null) {
-    			return new RSCharacterModel(methods, model, c);
-    		}
-    	}
-    	return null;
-    }
+		final org.rsbot.client.RSCharacter c = getAccessor();
+		if (c != null) {
+			final Model model = c.getModel();
+			if (model != null) {
+				return new RSCharacterModel(methods, model, c);
+			}
+		}
+		return null;
+	}
 
 	public String getName() {
 		return ""; // should be overridden, obviously
@@ -175,10 +200,10 @@ public abstract class RSCharacter extends MethodProvider {
 	}
 
 	public boolean isInCombat() {
-    	return methods.game.isLoggedIn()
-    			&& methods.client.getLoopCycle() < getAccessor()
-    			.getLoopCycleStatus();
-    }
+		return methods.game.isLoggedIn()
+				&& methods.client.getLoopCycle() < getAccessor()
+				.getLoopCycleStatus();
+	}
 
 	/**
 	 * Determines whether the character is dead or dying
@@ -222,17 +247,17 @@ public abstract class RSCharacter extends MethodProvider {
 	}
 
 	@Override
-    public int hashCode() {
-    	return System.identityHashCode(getAccessor());
-    }
+	public int hashCode() {
+		return System.identityHashCode(getAccessor());
+	}
 
 	@Override
 	public String toString() {
 		final RSCharacter inter = getInteracting();
 		final String msg = getMessage();
 		return "[anim=" + getAnimation()
-				+ (msg != null ?",msg=" + getMessage() : "")
+				+ (msg != null ? ",msg=" + getMessage() : "")
 				+ ",interact=" + (inter == null ? "null" :
-					inter.isValid() ? inter.getName() : "Invalid") + "]";
+				inter.isValid() ? inter.getName() : "Invalid") + "]";
 	}
 }

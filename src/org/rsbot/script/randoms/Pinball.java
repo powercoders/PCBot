@@ -44,9 +44,9 @@ public class Pinball extends Random {
 			final int OBJ_EXIT = 15010;
 			final RSObject exit = objects.getNearest(OBJ_EXIT);
 			if (exit != null) {
-				if (calc.tileOnScreen(exit.getLocation()) && exit.doAction("Exit")) {
+				if (calc.tileOnScreen(exit.getLocation()) && exit.interact("Exit")) {
 					sleep(random(2000, 2200));
-					exit.doAction("Exit");
+					exit.interact("Exit");
 					return random(2000, 2100);
 				} else {
 					camera.setCompass('s');

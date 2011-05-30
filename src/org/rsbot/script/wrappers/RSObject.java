@@ -33,8 +33,21 @@ public class RSObject extends MethodProvider {
 	 * @return returns true if clicked, false if object does not contain the
 	 *         desired action
 	 */
+	public boolean interact(final String action) {
+		return interact(action, null);
+	}
+
+	/**
+	 * Performs the specified action on this object.
+	 *
+	 * @param action the menu item to search and click
+	 * @return returns true if clicked, false if object does not contain the
+	 *         desired action
+	 * @see org.rsbot.script.wrappers.RSObject#interact(String)
+	 */
+	@Deprecated
 	public boolean doAction(final String action) {
-		return doAction(action, null);
+		return interact(action);
 	}
 
 	/**
@@ -45,12 +58,26 @@ public class RSObject extends MethodProvider {
 	 * @return returns true if clicked, false if object does not contain the
 	 *         desired action
 	 */
-	public boolean doAction(final String action, final String option) {
+	public boolean interact(final String action, final String option) {
 		final RSModel model = getModel();
 		if (model != null) {
-			return model.doAction(action, option);
+			return model.interact(action, option);
 		}
-		return methods.tiles.doAction(getLocation(), action, option);
+		return methods.tiles.interact(getLocation(), action, option);
+	}
+
+	/**
+	 * Performs the specified action on this object.
+	 *
+	 * @param action the action of the menu item to search and click
+	 * @param option the option of the menu item to search and click
+	 * @return returns true if clicked, false if object does not contain the
+	 *         desired action
+	 * @see org.rsbot.script.wrappers.RSObject#interact(String, String)
+	 */
+	@Deprecated
+	public boolean doAction(final String action, final String option) {
+		return interact(action, option);
 	}
 
 	/**
@@ -218,12 +245,13 @@ public class RSObject extends MethodProvider {
 	 * Determines whether the object is reachable by the player.
 	 *
 	 * @return <tt>true</tt> if a path can be made to the specified object;
-	 * otherwise <tt>false</tt>.
+	 *         otherwise <tt>false</tt>.
 	 */
 	public boolean isReachable() {
 		for (RSTile t : getArea().getTileArray()) {
-			if (methods.calc.canReach(t, true))
+			if (methods.calc.canReach(t, true)) {
 				return true;
+			}
 		}
 		return false;
 	}

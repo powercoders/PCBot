@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
  * Context menu related operations.
  */
 public class Menu extends MethodProvider {
-
 	private static final Pattern HTML_TAG = Pattern.compile("(^[^<]+>|<[^>]+>|<[^>]+$)");
 
 	private final Object menuCacheLock = new Object();

@@ -266,7 +266,7 @@ public class Magic extends MethodProvider {
             final RSInterface inter = getInterface();
             if (inter != null) {
                 final RSComponent comp = inter.getComponent(spell);
-                return comp != null && comp.doAction("Cast");
+                return comp != null && comp.interact("Cast");
             }
         }
         return false;
@@ -303,7 +303,7 @@ public class Magic extends MethodProvider {
             final RSInterface inter = getInterface();
             if (inter != null) {
                 final RSComponent comp = inter.getComponent(spell);
-                return comp != null && comp.doAction("Autocast");
+                return comp != null && comp.interact("Autocast");
             }
         }
         return false;
@@ -352,11 +352,11 @@ public class Magic extends MethodProvider {
         }
         if (castSpell(spell)) {
             if (entity instanceof RSCharacter) {
-                return ((RSCharacter) entity).doAction("Cast");
+                return ((RSCharacter) entity).interact("Cast");
             } else if (entity instanceof RSObject) {
-                return ((RSObject) entity).doAction("Cast");
+                return ((RSObject) entity).interact("Cast");
             } else if (entity instanceof RSGroundItem) {
-                return ((RSGroundItem) entity).doAction("Cast");
+                return ((RSGroundItem) entity).interact("Cast");
             }
         }
         return false;

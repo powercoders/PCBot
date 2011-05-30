@@ -232,7 +232,7 @@ public class LoginBot extends Random {
 				return random(500, 600);
 			}
 			if (!atLoginScreen()) {
-				interfaces.getComponent(INTERFACE_MAIN, INTERFACE_MAIN_CHILD).getComponent(INTERFACE_MAIN_CHILD_COMPONENT_ID).doAction("");
+				interfaces.getComponent(INTERFACE_MAIN, INTERFACE_MAIN_CHILD).getComponent(INTERFACE_MAIN_CHILD_COMPONENT_ID).interact("");
 				return random(500, 600);
 			}
 			if (isUsernameFilled() && isPasswordFilled()) {
