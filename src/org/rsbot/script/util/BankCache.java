@@ -1,17 +1,17 @@
 package org.rsbot.script.util;
 
+import org.rsbot.Configuration;
+import org.rsbot.script.wrappers.RSItem;
+import org.rsbot.util.io.IniParser;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
 
-import org.rsbot.Configuration;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.util.io.IniParser;
-
 /**
  * Bank cache class. Used for web.
- * 
+ *
  * @author Timer
  */
 public class BankCache {
@@ -20,30 +20,28 @@ public class BankCache {
 	private static final Object lock = new Object();
 
 	/**
-	 * Checks the bank cache for an item.
-	 * 
-	 * @param name
-	 *            Character name.
-	 * @param o
-	 *            The object to look for.
-	 * @return <tt>true</tt> if the bank cache contains it.
+	 * Saves a bank cache for a user.
+	 *
+	 * @param name  The name of the character.
+	 * @param items The array of items in the bank.
 	 */
-	public static boolean Contains(final String name, final Object o) {
+	public static void Save(final String name, final RSItem[] items) throws Exception {
 		synchronized (lock) {
-			try {
-				Load();// For multiple bot instances.
-				if (data.containsKey(name)) {
-					final HashMap<String, String> userData = data.get(name);
-					return userData.containsKey(o) || userData.containsValue(o);
-				}
-			} catch (final Exception e) {
+			Load();// For multiple bot instances.
+			final FileWriter fw = new FileWriter(cacheFile, false);
+			final BufferedWriter bw = new BufferedWriter(fw);
+			HashMap<String, String> newData = BankCache.genMap(name, items);
+			if (data.containsKey(name.toLowerCase())) {
+				data.get(name.toLowerCase()).putAll(newData);
+			} else {
+				data.put(name.toLowerCase(), newData);
 			}
-			return false;
+			IniParser.serialise(data, bw);
+			bw.close();
 		}
 	}
 
-	private static HashMap<String, String> genMap(final String name,
-			final RSItem[] items) {
+	private static HashMap<String, String> genMap(final String name, final RSItem[] items) {
 		synchronized (lock) {
 			final HashMap<String, String> newData = new HashMap<String, String>();
 			if (data.containsKey(name.toLowerCase())) {
@@ -84,27 +82,23 @@ public class BankCache {
 	}
 
 	/**
-	 * Saves a bank cache for a user.
-	 * 
-	 * @param name
-	 *            The name of the character.
-	 * @param items
-	 *            The array of items in the bank.
+	 * Checks the bank cache for an item.
+	 *
+	 * @param name Character name.
+	 * @param o    The object to look for.
+	 * @return <tt>true</tt> if the bank cache contains it.
 	 */
-	public static void Save(final String name, final RSItem[] items)
-			throws Exception {
+	public static boolean Contains(final String name, final Object o) {
 		synchronized (lock) {
-			Load();// For multiple bot instances.
-			final FileWriter fw = new FileWriter(cacheFile, false);
-			final BufferedWriter bw = new BufferedWriter(fw);
-			final HashMap<String, String> newData = BankCache.genMap(name, items);
-			if (data.containsKey(name.toLowerCase())) {
-				data.get(name.toLowerCase()).putAll(newData);
-			} else {
-				data.put(name.toLowerCase(), newData);
+			try {
+				Load();// For multiple bot instances.
+				if (data.containsKey(name)) {
+					final HashMap<String, String> userData = data.get(name);
+					return userData.containsKey(o) || userData.containsValue(o);
+				}
+			} catch (final Exception e) {
 			}
-			IniParser.serialise(data, bw);
-			bw.close();
+			return false;
 		}
 	}
 }

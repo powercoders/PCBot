@@ -1,14 +1,14 @@
 package org.rsbot.script.methods;
 
-import java.awt.image.BufferedImage;
-
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.util.io.ScreenshotUtil;
 
+import java.awt.image.BufferedImage;
+
 /**
  * Bot environment related operations.
- * 
+ *
  * @author Jacmob
  */
 public class Environment extends MethodProvider {
@@ -20,40 +20,50 @@ public class Environment extends MethodProvider {
 	}
 
 	/**
-	 * Disables a random event solver.
-	 * 
-	 * @param name
-	 *            the anti-random's (manifest) name (case insensitive)
-	 * @return <tt>true</tt> if random was found and set to disabled; otherwise
-	 *         <tt>false</tt>
+	 * Controls the available means of user input when user input is disabled.
+	 * <p/>
+	 * <br />
+	 * Disable all: <code>setUserInput(0);</code> <br />
+	 * Enable keyboard only:
+	 * <code>setUserInput(Environment.INPUT_KEYBOARD);</code> <br />
+	 * Enable mouse & keyboard:
+	 * <code>setUserInput(Environment.INPUT_MOUSE | Environment.INPUT_KEYBOARD);</code>
+	 *
+	 * @param mask flags indicating which types of input to allow
 	 */
-	public boolean disableRandom(final String name) {
-		for (final Random random : methods.bot.getScriptHandler().getRandoms()) {
-			if (random.getClass().getAnnotation(ScriptManifest.class).name().toLowerCase().equals(name.toLowerCase())) {
-				if (!random.isEnabled()) {
-					return true;
-				} else {
-					random.setEnabled(false);
-					return true;
-				}
-			}
-		}
-		return false;
+	public void setUserInput(final int mask) {
+		methods.bot.getScriptHandler().updateInput(methods.bot, mask);
 	}
 
-	public void disableRandoms() {
-		for (final Random random : methods.bot.getScriptHandler().getRandoms()) {
-			if (random.isEnabled()) {
-				random.setEnabled(false);
-			}
-		}
+	/**
+	 * Takes and saves a screenshot.
+	 *
+	 * @param hideUsername <tt>true</tt> to cover the player's username; otherwise
+	 *                     <tt>false</tt>
+	 */
+	public void saveScreenshot(final boolean hideUsername) {
+		ScreenshotUtil.saveScreenshot(methods.bot, hideUsername);
+	}
+
+	public void saveScreenshot(final boolean hideUsername, final String filename) {
+		ScreenshotUtil.saveScreenshot(methods.bot, hideUsername, filename);
+	}
+
+	/**
+	 * Takes a screenshot.
+	 *
+	 * @param hideUsername <tt>true</tt> to cover the player's username; otherwise
+	 *                     <tt>false</tt>
+	 * @return The screen capture image.
+	 */
+	public BufferedImage takeScreenshot(final boolean hideUsername) {
+		return ScreenshotUtil.takeScreenshot(methods.bot, hideUsername);
 	}
 
 	/**
 	 * Enables a random event solver.
-	 * 
-	 * @param name
-	 *            the anti-random's (manifest) name (case insensitive)
+	 *
+	 * @param name the anti-random's (manifest) name (case insensitive)
 	 * @return <tt>true</tt> if random was found and set to enabled; otherwise
 	 *         <tt>false</tt>
 	 */
@@ -72,6 +82,27 @@ public class Environment extends MethodProvider {
 	}
 
 	/**
+	 * Disables a random event solver.
+	 *
+	 * @param name the anti-random's (manifest) name (case insensitive)
+	 * @return <tt>true</tt> if random was found and set to disabled; otherwise
+	 *         <tt>false</tt>
+	 */
+	public boolean disableRandom(final String name) {
+		for (final Random random : methods.bot.getScriptHandler().getRandoms()) {
+			if (random.getClass().getAnnotation(ScriptManifest.class).name().toLowerCase().equals(name.toLowerCase())) {
+				if (!random.isEnabled()) {
+					return true;
+				} else {
+					random.setEnabled(false);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Enables all random event solvers.
 	 */
 	public void enableRandoms() {
@@ -82,47 +113,11 @@ public class Environment extends MethodProvider {
 		}
 	}
 
-	/**
-	 * Takes and saves a screenshot.
-	 * 
-	 * @param hideUsername
-	 *            <tt>true</tt> to cover the player's username; otherwise
-	 *            <tt>false</tt>
-	 */
-	public void saveScreenshot(final boolean hideUsername) {
-		ScreenshotUtil.saveScreenshot(methods.bot, hideUsername);
-	}
-
-	public void saveScreenshot(final boolean hideUsername, final String filename) {
-		ScreenshotUtil.saveScreenshot(methods.bot, hideUsername, filename);
-	}
-
-	/**
-	 * Controls the available means of user input when user input is disabled.
-	 * <p/>
-	 * <br />
-	 * Disable all: <code>setUserInput(0);</code> <br />
-	 * Enable keyboard only:
-	 * <code>setUserInput(Environment.INPUT_KEYBOARD);</code> <br />
-	 * Enable mouse & keyboard:
-	 * <code>setUserInput(Environment.INPUT_MOUSE | Environment.INPUT_KEYBOARD);</code>
-	 * 
-	 * @param mask
-	 *            flags indicating which types of input to allow
-	 */
-	public void setUserInput(final int mask) {
-		methods.bot.getScriptHandler().updateInput(methods.bot, mask);
-	}
-
-	/**
-	 * Takes a screenshot.
-	 * 
-	 * @param hideUsername
-	 *            <tt>true</tt> to cover the player's username; otherwise
-	 *            <tt>false</tt>
-	 * @return The screen capture image.
-	 */
-	public BufferedImage takeScreenshot(final boolean hideUsername) {
-		return ScreenshotUtil.takeScreenshot(methods.bot, hideUsername);
+	public void disableRandoms() {
+		for (final Random random : methods.bot.getScriptHandler().getRandoms()) {
+			if (random.isEnabled()) {
+				random.setEnabled(false);
+			}
+		}
 	}
 }

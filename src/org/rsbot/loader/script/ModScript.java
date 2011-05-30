@@ -1,23 +1,16 @@
 package org.rsbot.loader.script;
 
+import org.rsbot.loader.asm.ClassAdapter;
+import org.rsbot.loader.asm.ClassReader;
+import org.rsbot.loader.asm.ClassVisitor;
+import org.rsbot.loader.asm.ClassWriter;
+import org.rsbot.loader.script.adapter.*;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.rsbot.loader.asm.ClassAdapter;
-import org.rsbot.loader.asm.ClassReader;
-import org.rsbot.loader.asm.ClassVisitor;
-import org.rsbot.loader.asm.ClassWriter;
-import org.rsbot.loader.script.adapter.AddFieldAdapter;
-import org.rsbot.loader.script.adapter.AddGetterAdapter;
-import org.rsbot.loader.script.adapter.AddInterfaceAdapter;
-import org.rsbot.loader.script.adapter.AddMethodAdapter;
-import org.rsbot.loader.script.adapter.InsertCodeAdapter;
-import org.rsbot.loader.script.adapter.OverrideClassAdapter;
-import org.rsbot.loader.script.adapter.SetSignatureAdapter;
-import org.rsbot.loader.script.adapter.SetSuperAdapter;
 
 /**
  * @author Jacmob
@@ -49,27 +42,42 @@ public class ModScript {
 		load(new Buffer(data));
 	}
 
-	private ClassVisitor delegate(final String clazz) {
-		final ClassAdapter delegate = adapters.get(clazz);
-		if (delegate == null) {
-			final ClassWriter writer = new ClassWriter(0);
-			writers.put(clazz, writer);
-			return writer;
-		} else {
-			return delegate;
-		}
-	}
-
-	public String getAttribute(final String key) {
-		return attributes.get(key);
-	}
-
 	public String getName() {
 		return name;
 	}
 
 	public int getVersion() {
 		return version;
+	}
+
+	public String getAttribute(final String key) {
+		return attributes.get(key);
+	}
+
+	public byte[] process(final String key, final byte[] data) {
+		final ClassAdapter adapter = adapters.get(key);
+		if (adapter != null) {
+			final ClassReader reader = new ClassReader(data);
+			reader.accept(adapter, ClassReader.SKIP_FRAMES);
+			return writers.get(key).toByteArray();
+		}
+		return data;
+	}
+
+	public byte[] process(final String key, final InputStream is) throws IOException {
+		final ClassAdapter adapter = adapters.get(key);
+		if (adapter != null) {
+			final ClassReader reader = new ClassReader(is);
+			reader.accept(adapter, ClassReader.SKIP_FRAMES);
+			return writers.get(key).toByteArray();
+		}
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		final byte[] buffer = new byte[4096];
+		int n;
+		while ((n = is.read(buffer)) != -1) {
+			os.write(buffer, 0, n);
+		}
+		return os.toByteArray();
 	}
 
 	private void load(final Buffer buff) throws ParseException {
@@ -171,7 +179,8 @@ public class ModScript {
 					buff.gdata(code, code.length, 0);
 					fragments.put(off, code);
 				}
-				adapters.put(clazz, new InsertCodeAdapter(delegate(clazz), name, desc, fragments, buff.g1(), buff.g1()));
+				adapters.put(clazz, new InsertCodeAdapter(delegate(clazz),
+						name, desc, fragments, buff.g1(), buff.g1()));
 			} else if (op == Opcodes.OVERRIDE_CLASS) {
 				final String old_clazz = buff.gstr();
 				final String new_clazz = buff.gstr();
@@ -184,31 +193,15 @@ public class ModScript {
 		}
 	}
 
-	public byte[] process(final String key, final byte[] data) {
-		final ClassAdapter adapter = adapters.get(key);
-		if (adapter != null) {
-			final ClassReader reader = new ClassReader(data);
-			reader.accept(adapter, ClassReader.SKIP_FRAMES);
-			return writers.get(key).toByteArray();
+	private ClassVisitor delegate(final String clazz) {
+		final ClassAdapter delegate = adapters.get(clazz);
+		if (delegate == null) {
+			final ClassWriter writer = new ClassWriter(0);
+			writers.put(clazz, writer);
+			return writer;
+		} else {
+			return delegate;
 		}
-		return data;
-	}
-
-	public byte[] process(final String key, final InputStream is)
-			throws IOException {
-		final ClassAdapter adapter = adapters.get(key);
-		if (adapter != null) {
-			final ClassReader reader = new ClassReader(is);
-			reader.accept(adapter, ClassReader.SKIP_FRAMES);
-			return writers.get(key).toByteArray();
-		}
-		final ByteArrayOutputStream os = new ByteArrayOutputStream();
-		final byte[] buffer = new byte[4096];
-		int n;
-		while ((n = is.read(buffer)) != -1) {
-			os.write(buffer, 0, n);
-		}
-		return os.toByteArray();
 	}
 
 }

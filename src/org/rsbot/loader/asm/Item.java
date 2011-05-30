@@ -8,7 +8,7 @@ package org.rsbot.loader.asm;
 /**
  * A constant pool item. Constant pool items can be created with the 'newXXX'
  * methods in the {@link ClassWriter} class.
- * 
+ *
  * @author Eric Bruneton
  */
 final class Item {
@@ -85,9 +85,8 @@ final class Item {
 	/**
 	 * Constructs an uninitialized {@link Item} for constant pool element at
 	 * given position.
-	 * 
-	 * @param index
-	 *            index of the item to be constructed.
+	 *
+	 * @param index index of the item to be constructed.
 	 */
 	Item(final int index) {
 		this.index = index;
@@ -95,11 +94,9 @@ final class Item {
 
 	/**
 	 * Constructs a copy of the given item.
-	 * 
-	 * @param index
-	 *            index of the item to be constructed.
-	 * @param i
-	 *            the item that must be copied into the item to be constructed.
+	 *
+	 * @param index index of the item to be constructed.
+	 * @param i     the item that must be copied into the item to be constructed.
 	 */
 	Item(final int index, final Item i) {
 		this.index = index;
@@ -113,71 +110,9 @@ final class Item {
 	}
 
 	/**
-	 * Indicates if the given item is equal to this one. <i>This method assumes
-	 * that the two items have the same {@link #type}</i>.
-	 * 
-	 * @param i
-	 *            the item to be compared to this one. Both items must have the
-	 *            same {@link #type}.
-	 * @return <tt>true</tt> if the given item if equal to this one,
-	 *         <tt>false</tt> otherwise.
-	 */
-	boolean isEqualTo(final Item i) {
-		switch (type) {
-		case ClassWriter.UTF8:
-		case ClassWriter.STR:
-		case ClassWriter.CLASS:
-		case ClassWriter.TYPE_NORMAL:
-			return i.strVal1.equals(strVal1);
-		case ClassWriter.TYPE_MERGED:
-		case ClassWriter.LONG:
-		case ClassWriter.DOUBLE:
-			return i.longVal == longVal;
-		case ClassWriter.INT:
-		case ClassWriter.FLOAT:
-			return i.intVal == intVal;
-		case ClassWriter.TYPE_UNINIT:
-			return i.intVal == intVal && i.strVal1.equals(strVal1);
-		case ClassWriter.NAME_TYPE:
-			return i.strVal1.equals(strVal1) && i.strVal2.equals(strVal2);
-			// case ClassWriter.FIELD:
-			// case ClassWriter.METH:
-			// case ClassWriter.IMETH:
-		default:
-			return i.strVal1.equals(strVal1) && i.strVal2.equals(strVal2)
-					&& i.strVal3.equals(strVal3);
-		}
-	}
-
-	/**
-	 * Sets this item to a double item.
-	 * 
-	 * @param doubleVal
-	 *            the value of this item.
-	 */
-	void set(final double doubleVal) {
-		type = ClassWriter.DOUBLE;
-		longVal = Double.doubleToRawLongBits(doubleVal);
-		hashCode = 0x7FFFFFFF & type + (int) doubleVal;
-	}
-
-	/**
-	 * Sets this item to a float item.
-	 * 
-	 * @param floatVal
-	 *            the value of this item.
-	 */
-	void set(final float floatVal) {
-		type = ClassWriter.FLOAT;
-		intVal = Float.floatToRawIntBits(floatVal);
-		hashCode = 0x7FFFFFFF & type + (int) floatVal;
-	}
-
-	/**
 	 * Sets this item to an integer item.
-	 * 
-	 * @param intVal
-	 *            the value of this item.
+	 *
+	 * @param intVal the value of this item.
 	 */
 	void set(final int intVal) {
 		type = ClassWriter.INT;
@@ -186,53 +121,109 @@ final class Item {
 	}
 
 	/**
-	 * Sets this item to an item that do not hold a primitive value.
-	 * 
-	 * @param type
-	 *            the type of this item.
-	 * @param strVal1
-	 *            first part of the value of this item.
-	 * @param strVal2
-	 *            second part of the value of this item.
-	 * @param strVal3
-	 *            third part of the value of this item.
+	 * Sets this item to a long item.
+	 *
+	 * @param longVal the value of this item.
 	 */
-	void set(final int type, final String strVal1, final String strVal2,
+	void set(final long longVal) {
+		type = ClassWriter.LONG;
+		this.longVal = longVal;
+		hashCode = 0x7FFFFFFF & type + (int) longVal;
+	}
+
+	/**
+	 * Sets this item to a float item.
+	 *
+	 * @param floatVal the value of this item.
+	 */
+	void set(final float floatVal) {
+		type = ClassWriter.FLOAT;
+		intVal = Float.floatToRawIntBits(floatVal);
+		hashCode = 0x7FFFFFFF & type + (int) floatVal;
+	}
+
+	/**
+	 * Sets this item to a double item.
+	 *
+	 * @param doubleVal the value of this item.
+	 */
+	void set(final double doubleVal) {
+		type = ClassWriter.DOUBLE;
+		longVal = Double.doubleToRawLongBits(doubleVal);
+		hashCode = 0x7FFFFFFF & type + (int) doubleVal;
+	}
+
+	/**
+	 * Sets this item to an item that do not hold a primitive value.
+	 *
+	 * @param type    the type of this item.
+	 * @param strVal1 first part of the value of this item.
+	 * @param strVal2 second part of the value of this item.
+	 * @param strVal3 third part of the value of this item.
+	 */
+	void set(
+			final int type,
+			final String strVal1,
+			final String strVal2,
 			final String strVal3) {
 		this.type = type;
 		this.strVal1 = strVal1;
 		this.strVal2 = strVal2;
 		this.strVal3 = strVal3;
 		switch (type) {
-		case ClassWriter.UTF8:
-		case ClassWriter.STR:
-		case ClassWriter.CLASS:
-		case ClassWriter.TYPE_NORMAL:
-			hashCode = 0x7FFFFFFF & type + strVal1.hashCode();
-			return;
-		case ClassWriter.NAME_TYPE:
-			hashCode = 0x7FFFFFFF & type + strVal1.hashCode()
-					* strVal2.hashCode();
-			return;
+			case ClassWriter.UTF8:
+			case ClassWriter.STR:
+			case ClassWriter.CLASS:
+			case ClassWriter.TYPE_NORMAL:
+				hashCode = 0x7FFFFFFF & type + strVal1.hashCode();
+				return;
+			case ClassWriter.NAME_TYPE:
+				hashCode = 0x7FFFFFFF & type + strVal1.hashCode()
+						* strVal2.hashCode();
+				return;
 			// ClassWriter.FIELD:
 			// ClassWriter.METH:
 			// ClassWriter.IMETH:
-		default:
-			hashCode = 0x7FFFFFFF & type + strVal1.hashCode()
-					* strVal2.hashCode() * strVal3.hashCode();
+			default:
+				hashCode = 0x7FFFFFFF & type + strVal1.hashCode()
+						* strVal2.hashCode() * strVal3.hashCode();
 		}
 	}
 
 	/**
-	 * Sets this item to a long item.
-	 * 
-	 * @param longVal
-	 *            the value of this item.
+	 * Indicates if the given item is equal to this one. <i>This method assumes
+	 * that the two items have the same {@link #type}</i>.
+	 *
+	 * @param i the item to be compared to this one. Both items must have the
+	 *          same {@link #type}.
+	 * @return <tt>true</tt> if the given item if equal to this one,
+	 *         <tt>false</tt> otherwise.
 	 */
-	void set(final long longVal) {
-		type = ClassWriter.LONG;
-		this.longVal = longVal;
-		hashCode = 0x7FFFFFFF & type + (int) longVal;
+	boolean isEqualTo(final Item i) {
+		switch (type) {
+			case ClassWriter.UTF8:
+			case ClassWriter.STR:
+			case ClassWriter.CLASS:
+			case ClassWriter.TYPE_NORMAL:
+				return i.strVal1.equals(strVal1);
+			case ClassWriter.TYPE_MERGED:
+			case ClassWriter.LONG:
+			case ClassWriter.DOUBLE:
+				return i.longVal == longVal;
+			case ClassWriter.INT:
+			case ClassWriter.FLOAT:
+				return i.intVal == intVal;
+			case ClassWriter.TYPE_UNINIT:
+				return i.intVal == intVal && i.strVal1.equals(strVal1);
+			case ClassWriter.NAME_TYPE:
+				return i.strVal1.equals(strVal1) && i.strVal2.equals(strVal2);
+			// case ClassWriter.FIELD:
+			// case ClassWriter.METH:
+			// case ClassWriter.IMETH:
+			default:
+				return i.strVal1.equals(strVal1) && i.strVal2.equals(strVal2)
+						&& i.strVal3.equals(strVal3);
+		}
 	}
 
 }

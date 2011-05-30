@@ -15,26 +15,20 @@ public class CallbackImpl implements Callback {
 		this.bot = bot;
 	}
 
-	@Override
 	public Bot getBot() {
 		return bot;
 	}
 
-	@Override
-	public void notifyMessage(final int id, final String sender,
-			final String msg) {
+	public void notifyMessage(final int id, final String sender, final String msg) {
 		final MessageEvent m = new MessageEvent(sender, id, msg);
 		bot.getEventManager().dispatchEvent(m);
 	}
 
-	@Override
-	public void rsCharacterMoved(final org.rsbot.client.RSCharacter c,
-			final int i) {
+	public void rsCharacterMoved(final org.rsbot.client.RSCharacter c, final int i) {
 		final CharacterMovedEvent e = new CharacterMovedEvent(bot.getMethodContext(), c, i);
 		bot.getEventManager().dispatchEvent(e);
 	}
 
-	@Override
 	public void updateRenderInfo(final Render r, final RenderData rd) {
 		final MethodContext ctx = bot.getMethodContext();
 		if (ctx != null) {

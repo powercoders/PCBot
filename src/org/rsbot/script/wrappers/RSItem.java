@@ -6,8 +6,8 @@ import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
 
 /**
- * Represents an item (with an id and stack size). May or may not wrap a
- * component.
+ * Represents an item (with an id and stack size). May or may not
+ * wrap a component.
  */
 public class RSItem extends MethodProvider {
 	private final int id;
@@ -34,41 +34,66 @@ public class RSItem extends MethodProvider {
 	}
 
 	/**
-	 * Performs the given action on the component wrapped by this RSItem if
-	 * possible.
-	 * 
-	 * @param action
-	 *            The action to perform.
-	 * @return <tt>true</tt> if the component was clicked successfully;
-	 *         otherwise <tt>false</tt>.
+	 * Performs the given action on the component wrapped by
+	 * this RSItem if possible.
+	 *
+	 * @param action The action to perform.
+	 * @return <tt>true</tt> if the component was clicked
+	 *         successfully; otherwise <tt>false</tt>.
 	 */
-	public boolean doAction(final String action) {
-		return doAction(action, null);
+	public boolean interact(final String action) {
+		return interact(action, null);
 	}
 
 	/**
-	 * Performs the given action on the component wrapped by this RSItem if
-	 * possible.
-	 * 
-	 * @param action
-	 *            The action to perform.
-	 * @param option
-	 *            The option of the action to perform.
-	 * @return <tt>true</tt> if the component was clicked successfully;
-	 *         otherwise <tt>false</tt>.
+	 * Performs the given action on the component wrapped by
+	 * this RSItem if possible.
+	 *
+	 * @param action The action to perform.
+	 * @return <tt>true</tt> if the component was clicked
+	 *         successfully; otherwise <tt>false</tt>.
+	 * @see org.rsbot.script.wrappers.RSItem#interact(String)
 	 */
+	@Deprecated
+	public boolean doAction(final String action) {
+		return interact(action);
+	}
+
+	/**
+	 * Performs the given action on the component wrapped by
+	 * this RSItem if possible.
+	 *
+	 * @param action The action to perform.
+	 * @param option The option of the action to perform.
+	 * @return <tt>true</tt> if the component was clicked
+	 *         successfully; otherwise <tt>false</tt>.
+	 */
+	public boolean interact(final String action, final String option) {
+		return component != null && component.interact(action, option);
+	}
+
+	/**
+	 * Performs the given action on the component wrapped by
+	 * this RSItem if possible.
+	 *
+	 * @param action The action to perform.
+	 * @param option The option of the action to perform.
+	 * @return <tt>true</tt> if the component was clicked
+	 *         successfully; otherwise <tt>false</tt>.
+	 * @see org.rsbot.script.wrappers.RSItem#interact(String, String)
+	 */
+	@Deprecated
 	public boolean doAction(final String action, final String option) {
-		return component != null && component.doAction(action, option);
+		return interact(action, option);
 	}
 
 	/**
 	 * Clicks the component wrapped by this RSItem if possible.
-	 * 
-	 * @param left
-	 *            <tt>true</tt> if the component should be left-click;
-	 *            <tt>false</tt> if it should be right-clicked.
-	 * @return <tt>true</tt> if the component was clicked successfully;
-	 *         otherwise <tt>false</tt>.
+	 *
+	 * @param left <tt>true</tt> if the component should be
+	 *             left-click; <tt>false</tt> if it should be right-clicked.
+	 * @return <tt>true</tt> if the component was clicked
+	 *         successfully; otherwise <tt>false</tt>.
 	 */
 	public boolean doClick(final boolean left) {
 		return component != null && component.doClick(left);
@@ -76,7 +101,7 @@ public class RSItem extends MethodProvider {
 
 	/**
 	 * Gets the component wrapped by this RSItem.
-	 * 
+	 *
 	 * @return The wrapped component or <code>null</code>.
 	 */
 	public RSComponent getComponent() {
@@ -85,7 +110,7 @@ public class RSItem extends MethodProvider {
 
 	/**
 	 * Gets this item's definition if available.
-	 * 
+	 *
 	 * @return The RSItemDef; or <code>null</code> if unavailable.
 	 */
 	public RSItemDef getDefinition() {
@@ -111,7 +136,7 @@ public class RSItem extends MethodProvider {
 
 	/**
 	 * Gets this item's id.
-	 * 
+	 *
 	 * @return The id.
 	 */
 	public int getID() {
@@ -119,9 +144,9 @@ public class RSItem extends MethodProvider {
 	}
 
 	/**
-	 * Gets the name of this item using the wrapped component's name if
-	 * available, otherwise the definition if available.
-	 * 
+	 * Gets the name of this item using the wrapped component's name
+	 * if available, otherwise the definition if available.
+	 *
 	 * @return The item's name or <code>null</code> if not found.
 	 */
 	public String getName() {
@@ -138,7 +163,7 @@ public class RSItem extends MethodProvider {
 
 	/**
 	 * Gets this item's stack size.
-	 * 
+	 *
 	 * @return The stack size.
 	 */
 	public int getStackSize() {
@@ -147,9 +172,8 @@ public class RSItem extends MethodProvider {
 
 	/**
 	 * Determines if this item contains the desired action
-	 * 
-	 * @param action
-	 *            The item menu action to check.
+	 *
+	 * @param action The item menu action to check.
 	 * @return <tt>true</tt> if the item has the action; otherwise
 	 *         <tt>false</tt>.
 	 */
@@ -167,9 +191,9 @@ public class RSItem extends MethodProvider {
 
 	/**
 	 * Returns whether or not this item has an available definition.
-	 * 
-	 * @return <tt>true</tt> if an item definition is available; otherwise
-	 *         <tt>false</tt>.
+	 *
+	 * @return <tt>true</tt> if an item definition is available;
+	 *         otherwise <tt>false</tt>.
 	 */
 	public boolean hasDefinition() {
 		return getDefinition() != null;
@@ -177,7 +201,7 @@ public class RSItem extends MethodProvider {
 
 	/**
 	 * Checks whether or not a valid component is being wrapped.
-	 * 
+	 *
 	 * @return <tt>true</tt> if there is a visible wrapped component.
 	 */
 	public boolean isComponentValid() {

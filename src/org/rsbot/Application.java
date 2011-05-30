@@ -1,19 +1,5 @@
 package org.rsbot;
 
-import java.awt.Dimension;
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.log.LogOutputStream;
@@ -22,22 +8,66 @@ import org.rsbot.security.RestrictedSecurityManager;
 import org.rsbot.util.ApplicationException;
 import org.rsbot.util.io.IOHelper;
 
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Application {
 	private static BotGUI gui;
 
-	private static void bootstrap() {
-		Logger.getLogger("").setLevel(Level.ALL);
-		Logger.getLogger("").addHandler(new SystemConsoleHandler());
-		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-			private final Logger log = Logger.getLogger("EXCEPTION");
-
-			@Override
-			public void uncaughtException(final Thread t, final Throwable e) {
-				log.logp(Level.SEVERE, "EXCEPTION", "", "Unhandled exception in thread "
-						+ t.getName() + ": ", e);
+	public static void main(final String[] args) {
+		try {
+			bootstrap();
+			RestrictedSecurityManager.fixHosts();
+			extractResources();
+			commands(args);
+			System.setSecurityManager(new RestrictedSecurityManager());
+			System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
+			gui = new BotGUI();
+			gui.setVisible(true);
+		} catch (final Exception e) {
+			e.printStackTrace();
+			System.out.print(e.getMessage());
+			try {
+				if (gui != null) {
+					gui.setVisible(false);
+				}
+			} catch (final Exception ignored) {
 			}
-		});
-		System.setErr(new PrintStream(new LogOutputStream(Logger.getLogger("STDERR"), Level.SEVERE), true));
+			final String msg = (e.getClass().isAssignableFrom(ApplicationException.class)) ? e.getMessage() : "Error: " + e.toString() + "\nUnable to start.";
+			try {
+				final JFrame frame = new JFrame();
+				frame.setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON));
+				frame.setLocationRelativeTo(frame.getOwner());
+				frame.setVisible(true);
+				new Thread() {
+					@Override
+					public void run() {
+						final Dimension s = Toolkit.getDefaultToolkit().getScreenSize();
+						try {
+							Thread.sleep(64); // race condition :)
+						} catch (final InterruptedException ignored) {
+						}
+						frame.setLocation(s.width + 0xff, s.height + 0xff);
+					}
+				}.start();
+				JOptionPane.showMessageDialog(frame, msg, Configuration.NAME, JOptionPane.ERROR_MESSAGE);
+			} catch (final HeadlessException ignored) {
+			}
+			try {
+				if (gui != null) {
+					gui.cleanExit(false);
+				}
+			} catch (final Exception ignored) {
+			}
+			System.exit(1);
+		}
 	}
 
 	private static void commands(final String[] args) {
@@ -66,7 +96,7 @@ public class Application {
 			final InputStream in;
 			try {
 				in = Configuration.getResourceURL(path).openStream();
-			} catch (final IOException ignored) {
+			} catch (IOException ignored) {
 				continue;
 			}
 			final File output = new File(Configuration.Paths.getHomeDirectory(), item);
@@ -77,9 +107,8 @@ public class Application {
 	/**
 	 * Returns the Bot for any object loaded in its client. For internal use
 	 * only (not useful for script writers).
-	 * 
-	 * @param o
-	 *            Any object from within the client.
+	 *
+	 * @param o Any object from within the client.
 	 * @return The Bot for the client.
 	 */
 	public static Bot getBot(final Object o) {
@@ -89,60 +118,23 @@ public class Application {
 	/**
 	 * Returns the size of the panel that clients should be drawn into. For
 	 * internal use.
-	 * 
+	 *
 	 * @return The client panel size.
 	 */
 	public static Dimension getPanelSize() {
 		return gui.getPanel().getSize();
 	}
 
-	public static void main(final String[] args) {
-		try {
-			bootstrap();
-			RestrictedSecurityManager.fixHosts();
-			extractResources();
-			commands(args);
-			System.setSecurityManager(new RestrictedSecurityManager());
-			System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
-			gui = new BotGUI();
-			gui.setVisible(true);
-		} catch (final Exception e) {
-			e.printStackTrace();
-			System.out.print(e.getMessage());
-			try {
-				if (gui != null) {
-					gui.setVisible(false);
-				}
-			} catch (final Exception ignored) {
+	private static void bootstrap() {
+		Logger.getLogger("").setLevel(Level.ALL);
+		Logger.getLogger("").addHandler(new SystemConsoleHandler());
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			private final Logger log = Logger.getLogger("EXCEPTION");
+
+			public void uncaughtException(final Thread t, final Throwable e) {
+				log.logp(Level.SEVERE, "EXCEPTION", "", "Unhandled exception in thread " + t.getName() + ": ", e);
 			}
-			final String msg = e.getClass().isAssignableFrom(ApplicationException.class) ? e.getMessage()
-					: "Error: " + e.toString() + "\nUnable to start.";
-			try {
-				final JFrame frame = new JFrame();
-				frame.setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON));
-				frame.setLocationRelativeTo(frame.getOwner());
-				frame.setVisible(true);
-				new Thread() {
-					@Override
-					public void run() {
-						final Dimension s = Toolkit.getDefaultToolkit().getScreenSize();
-						try {
-							Thread.sleep(64); // race condition :)
-						} catch (final InterruptedException ignored) {
-						}
-						frame.setLocation(s.width + 0xff, s.height + 0xff);
-					}
-				}.start();
-				JOptionPane.showMessageDialog(frame, msg, Configuration.NAME, JOptionPane.ERROR_MESSAGE);
-			} catch (final HeadlessException ignored) {
-			}
-			try {
-				if (gui != null) {
-					gui.cleanExit(false);
-				}
-			} catch (final Exception ignored) {
-			}
-			System.exit(1);
-		}
+		});
+		System.setErr(new PrintStream(new LogOutputStream(Logger.getLogger("STDERR"), Level.SEVERE), true));
 	}
 }

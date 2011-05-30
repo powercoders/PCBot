@@ -8,17 +8,17 @@ import org.rsbot.script.util.SkillData;
  * Example usage: skills.getRealLevel(Skills.ATTACK);
  */
 public class Skills extends MethodProvider {
-	public static final String[] SKILL_NAMES = { "attack", "defence",
+	public static final String[] SKILL_NAMES = {"attack", "defence",
 			"strength", "constitution", "range", "prayer", "magic", "cooking",
 			"woodcutting", "fletching", "fishing", "firemaking", "crafting",
 			"smithing", "mining", "herblore", "agility", "thieving", "slayer",
 			"farming", "runecrafting", "hunter", "construction", "summoning",
-			"dungeoneering", "-unused-" };
+			"dungeoneering", "-unused-"};
 
 	/**
 	 * A table containing the experiences that begin each level.
 	 */
-	public static final int[] XP_TABLE = { 0, 0, 83, 174, 276, 388, 512, 650,
+	public static final int[] XP_TABLE = {0, 0, 83, 174, 276, 388, 512, 650,
 			801, 969, 1154, 1358, 1584, 1833, 2107, 2411, 2746, 3115, 3523,
 			3973, 4470, 5018, 5624, 6291, 7028, 7842, 8740, 9730, 10824, 12031,
 			13363, 14833, 16456, 18247, 20224, 22406, 24815, 27473, 30408,
@@ -33,7 +33,7 @@ public class Skills extends MethodProvider {
 			14391160, 15889109, 17542976, 19368992, 21385073, 23611006,
 			26068632, 28782069, 31777943, 35085654, 38737661, 42769801,
 			47221641, 52136869, 57563718, 63555443, 70170840, 77474828,
-			85539082, 94442737, 104273167 };
+			85539082, 94442737, 104273167};
 
 	public static final int ATTACK = 0;
 	public static final int DEFENSE = 1;
@@ -89,39 +89,10 @@ public class Skills extends MethodProvider {
 	public static final int INTERFACE_DUNGEONEERING = 152;
 
 	/**
-	 * Gets the experience at the given level.
-	 * 
-	 * @param lvl
-	 *            The level.
-	 * @return The level based on the experience given.
-	 */
-	public static int getExpAt(final int lvl) {
-		if (lvl > 120) {
-			return 1;
-		}
-		return Skills.XP_TABLE[lvl - 1];
-	}
-
-	/**
-	 * Gets the experience required for the given level.
-	 * 
-	 * @param lvl
-	 *            The level.
-	 * @return The level based on the experience given.
-	 */
-	public static int getExpRequired(final int lvl) {
-		if (lvl > 120) {
-			return 1;
-		}
-		return Skills.XP_TABLE[lvl];
-	}
-
-	/**
 	 * Gets the index of the skill with a given name. This is not case
 	 * sensitive.
-	 * 
-	 * @param statName
-	 *            The skill's name.
+	 *
+	 * @param statName The skill's name.
 	 * @return The index of the specified skill; otherwise -1.
 	 */
 	public static int getIndex(final String statName) {
@@ -135,9 +106,8 @@ public class Skills extends MethodProvider {
 
 	/**
 	 * Gets the level at the given experience.
-	 * 
-	 * @param exp
-	 *            The experience.
+	 *
+	 * @param exp The experience.
 	 * @return The level based on the experience given.
 	 * @see #XP_TABLE
 	 */
@@ -151,10 +121,35 @@ public class Skills extends MethodProvider {
 	}
 
 	/**
+	 * Gets the experience at the given level.
+	 *
+	 * @param lvl The level.
+	 * @return The level based on the experience given.
+	 */
+	public static int getExpAt(final int lvl) {
+		if (lvl > 120) {
+			return 1;
+		}
+		return Skills.XP_TABLE[lvl - 1];
+	}
+
+	/**
+	 * Gets the experience required for the given level.
+	 *
+	 * @param lvl The level.
+	 * @return The level based on the experience given.
+	 */
+	public static int getExpRequired(final int lvl) {
+		if (lvl > 120) {
+			return 1;
+		}
+		return Skills.XP_TABLE[lvl];
+	}
+
+	/**
 	 * Gets the skill name of an index.
-	 * 
-	 * @param index
-	 *            The index.
+	 *
+	 * @param index The index.
 	 * @return The name of the skill for that index.
 	 */
 	public static String getSkillName(final int index) {
@@ -169,80 +164,9 @@ public class Skills extends MethodProvider {
 	}
 
 	/**
-	 * Gets the number of actions needed until the level provided.
-	 * 
-	 * @param index
-	 *            The index.
-	 * @param exp
-	 *            The exp each action gives.
-	 * @param lvl
-	 *            The level to get the ammount till for.
-	 * @return How many you need to do until leveling to the level provided.
-	 */
-	public int ammountTillLevel(final int index, final double exp, final int lvl) {
-		if (!isSkill(index)) {
-			return -1;
-		}
-		return getExpToLevel(index, lvl) != -1 ? (int) (getExpToLevel(index, lvl) / exp)
-				: 0;
-	}
-
-	/**
-	 * Gets the number of actions needed until the max level.
-	 * 
-	 * @param index
-	 *            The index.
-	 * @param exp
-	 *            The exp each action gives.
-	 * @return How many you need to do until the max level.
-	 */
-	public int ammountTillMaxLevel(final int index, final double exp) {
-		if (!isSkill(index)) {
-			return -1;
-		}
-		int lvl = 99;
-		if (index == Skills.DUNGEONEERING) {
-			lvl = 120;
-		}
-		return ammountTillLevel(index, exp, lvl);
-	}
-
-	/**
-	 * Gets the number of actions needed until the next level.
-	 * 
-	 * @param index
-	 *            The index.
-	 * @param exp
-	 *            The exp each action gives.
-	 * @return How many you need to do until the next level.
-	 */
-	public int ammountTillNextLevel(final int index, final double exp) {
-		if (!isSkill(index)) {
-			return -1;
-		}
-		final int level = getRealLevel(index);
-		return ammountTillLevel(index, exp, level + 1);
-	}
-
-	/**
-	 * Moves the mouse over a given component in the stats tab.
-	 * 
-	 * @param component
-	 *            The component index.
-	 * @return <tt>true</tt> if the mouse was moved over the given component
-	 *         index.
-	 */
-	public boolean doHover(final int component) {
-		methods.game.openTab(Game.Tab.STATS);
-		sleep(random(10, 100));
-		return methods.interfaces.getComponent(INTERFACE_TAB_STATS, component).doHover();
-	}
-
-	/**
 	 * Gets the current experience for the given skill.
-	 * 
-	 * @param index
-	 *            The index of the skill.
+	 *
+	 * @param index The index of the skill.
 	 * @return -1 if the skill is unavailable
 	 */
 	public int getCurrentExp(final int index) {
@@ -261,9 +185,8 @@ public class Skills extends MethodProvider {
 	/**
 	 * Gets the effective level of the given skill (accounting for temporary
 	 * boosts and reductions).
-	 * 
-	 * @param index
-	 *            The index of the skill.
+	 *
+	 * @param index The index of the skill.
 	 * @return The current level of the given Skill.
 	 */
 	public int getCurrentLevel(final int index) {
@@ -274,99 +197,42 @@ public class Skills extends MethodProvider {
 	}
 
 	/**
-	 * Gets the experience remaining until reaching the a level in a given
-	 * skill.
-	 * 
-	 * @param index
-	 *            The index of the skill.
-	 * @param endLvl
-	 *            The level for the experience remaining.
-	 * @return The experience to the level provided of the skill.
+	 * Gets the player's current level in a skill based on their experience in
+	 * that skill.
+	 *
+	 * @param index The index of the skill.
+	 * @return The real level of the skill.
+	 * @see #getRealLevel(int)
 	 */
-	public int getExpToLevel(final int index, final int endLvl) {
+	public int getRealLevel(final int index) {
+		if (!isSkill(index)) {
+			return -1;
+		}
+		return Skills.getLevelAt(getCurrentExp(index));
+	}
+
+	/**
+	 * Gets the percentage to the next level in a given skill.
+	 *
+	 * @param index The index of the skill.
+	 * @return The percent to the next level of the provided skill or 0 if level
+	 *         of skill is 99.
+	 */
+	public int getPercentToNextLevel(final int index) {
 		if (!isSkill(index)) {
 			return -1;
 		}
 		final int lvl = getRealLevel(index);
-		if (index == Skills.DUNGEONEERING && (lvl == 120 || endLvl > 120)) {
-			return 0;
-		} else if (lvl == 99 || endLvl > 99) {
-			return 0;
-		}
-		return Skills.XP_TABLE[endLvl] - getCurrentExp(index);
-	}
-
-	/**
-	 * Gets the experience needed to the max level in the specified skill index
-	 * 
-	 * @param index
-	 *            Skill index.
-	 * @return Experience to level max level.
-	 */
-	public int getExpToMaxLevel(final int index) {
-		if (!isSkill(index)) {
-			return -1;
-		}
-		int lvl = 99;
-		if (index == Skills.DUNGEONEERING) {
-			lvl = 120;
-		}
-		return getExpToLevel(index, lvl);
-	}
-
-	/**
-	 * Gets the experience remaining until reaching the next level in a given
-	 * skill.
-	 * 
-	 * @param index
-	 *            The index of the skill.
-	 * @return The experience to the next level of the skill.
-	 */
-	public int getExpToNextLevel(final int index) {
-		if (!isSkill(index)) {
-			return -1;
-		}
-		final int lvl = getRealLevel(index);
-		return getExpToLevel(index, lvl + 1);
-	}
-
-	/**
-	 * Gets the maximum experience of a given skill.
-	 * 
-	 * @param index
-	 *            The index of the skill.
-	 * @return The max experience of the skill.
-	 */
-	public int getMaxExp(final int index) {
-		if (!isSkill(index)) {
-			return -1;
-		}
-		return methods.client.getSkillExperiencesMax()[index];
-	}
-
-	/**
-	 * Gets the maximum level of a given skill.
-	 * 
-	 * @param index
-	 *            The index of the skill.
-	 * @return The max level of the skill.
-	 */
-	public int getMaxLevel(final int index) {
-		if (!isSkill(index)) {
-			return -1;
-		}
-		return methods.client.getSkillLevelMaxes()[index];
+		return getPercentToLevel(index, lvl + 1);
 	}
 
 	/**
 	 * Gets the percentage to the a level in a given skill.
-	 * 
-	 * @param index
-	 *            The index of the skill.
-	 * @param endLvl
-	 *            The level for the percent.
-	 * @return The percent to the level provided of the provided skill or 0 if
-	 *         level of skill is 99.
+	 *
+	 * @param index  The index of the skill.
+	 * @param endLvl The level for the percent.
+	 * @return The percent to the level provided of the provided skill or 0 if level
+	 *         of skill is 99.
 	 */
 	public int getPercentToLevel(final int index, final int endLvl) {
 		if (!isSkill(index)) {
@@ -387,79 +253,93 @@ public class Skills extends MethodProvider {
 	}
 
 	/**
-	 * Gets the percent to max level in the specified skill index
-	 * 
-	 * @param index
-	 *            Skill index.
-	 * @return Percent to level max level.
+	 * Gets the maximum level of a given skill.
+	 *
+	 * @param index The index of the skill.
+	 * @return The max level of the skill.
 	 */
-	public int getPercentToMaxLevel(final int index) {
+	public int getMaxLevel(final int index) {
 		if (!isSkill(index)) {
 			return -1;
 		}
-		int lvl = 99;
-		if (index == Skills.DUNGEONEERING) {
-			lvl = 120;
-		}
-		return getPercentToLevel(index, lvl);
+		return methods.client.getSkillLevelMaxes()[index];
 	}
 
 	/**
-	 * Gets the percentage to the next level in a given skill.
-	 * 
-	 * @param index
-	 *            The index of the skill.
-	 * @return The percent to the next level of the provided skill or 0 if level
-	 *         of skill is 99.
+	 * Gets the maximum experience of a given skill.
+	 *
+	 * @param index The index of the skill.
+	 * @return The max experience of the skill.
 	 */
-	public int getPercentToNextLevel(final int index) {
+	public int getMaxExp(final int index) {
+		if (!isSkill(index)) {
+			return -1;
+		}
+		return methods.client.getSkillExperiencesMax()[index];
+	}
+
+	/**
+	 * Gets the experience remaining until reaching the next level in a given
+	 * skill.
+	 *
+	 * @param index The index of the skill.
+	 * @return The experience to the next level of the skill.
+	 */
+	public int getExpToNextLevel(final int index) {
 		if (!isSkill(index)) {
 			return -1;
 		}
 		final int lvl = getRealLevel(index);
-		return getPercentToLevel(index, lvl + 1);
+		return getExpToLevel(index, lvl + 1);
 	}
 
 	/**
-	 * Gets the player's current level in a skill based on their experience in
-	 * that skill.
-	 * 
-	 * @param index
-	 *            The index of the skill.
-	 * @return The real level of the skill.
-	 * @see #getRealLevel(int)
+	 * Gets the experience remaining until reaching the a level in a given
+	 * skill.
+	 *
+	 * @param index  The index of the skill.
+	 * @param endLvl The level for the experience remaining.
+	 * @return The experience to the level provided of the skill.
 	 */
-	public int getRealLevel(final int index) {
+	public int getExpToLevel(final int index, final int endLvl) {
 		if (!isSkill(index)) {
 			return -1;
 		}
-		return Skills.getLevelAt(getCurrentExp(index));
+		final int lvl = getRealLevel(index);
+		if (index == Skills.DUNGEONEERING && (lvl == 120 || endLvl > 120)) {
+			return 0;
+		} else if (lvl == 99 || endLvl > 99) {
+			return 0;
+		}
+		return Skills.XP_TABLE[endLvl] - getCurrentExp(index);
 	}
 
 	/**
-	 * Gets a skill data class.
-	 * 
-	 * @return The <tt>SkillData</tt> class.
+	 * Gets the time remaining until the next level.
+	 *
+	 * @param index The index of the skill.
+	 * @param exp   The start Exp.
+	 * @param time  The time the script has been running.
+	 * @return The time till the next level of the skill.
 	 */
-	public SkillData getSkillDataInstance() {
-		return new SkillData(methods, null);
+	public long getTimeTillNextLevel(final int index, final int exp, final long time) {
+		if (!isSkill(index)) {
+			return -1;
+		}
+		final int level = getRealLevel(index);
+		return getTimeTillLevel(index, exp, level + 1, time);
 	}
 
 	/**
 	 * Gets the time remaining until the level provided.
-	 * 
-	 * @param index
-	 *            The index of the skill.
-	 * @param exp
-	 *            The start Exp.
-	 * @param endLvl
-	 *            The level to get the time till for.
-	 * @param time
-	 *            The time the script has been running.
+	 *
+	 * @param index  The index of the skill.
+	 * @param exp    The start Exp.
+	 * @param endLvl The level to get the time till for.
+	 * @param time   The time the script has been running.
 	 * @return The time till the level provided of the skill.
 	 */
-	public long getTimeTillLevel(final int index, final int exp,
-			final int endLvl, final long time) {
+	public long getTimeTillLevel(final int index, final int exp, final int endLvl, final long time) {
 		if (!isSkill(index)) {
 			return -1;
 		}
@@ -478,51 +358,38 @@ public class Skills extends MethodProvider {
 	}
 
 	/**
-	 * Gets the time remaining until the max level.
-	 * 
-	 * @param index
-	 *            The index of the skill.
-	 * @param exp
-	 *            The start Exp.
-	 * @param time
-	 *            The time the script has been running.
-	 * @return The time till the max level of the skill.
+	 * Gets the number of actions needed until the next level.
+	 *
+	 * @param index The index.
+	 * @param exp   The exp each action gives.
+	 * @return How many you need to do until the next level.
 	 */
-	public long getTimeTillMaxLevel(final int index, final int exp,
-			final long time) {
-		if (!isSkill(index)) {
-			return -1;
-		}
-		int lvl = 99;
-		if (index == Skills.DUNGEONEERING) {
-			lvl = 120;
-		}
-		return getTimeTillLevel(index, exp, lvl, time);
-	}
-
-	/**
-	 * Gets the time remaining until the next level.
-	 * 
-	 * @param index
-	 *            The index of the skill.
-	 * @param exp
-	 *            The start Exp.
-	 * @param time
-	 *            The time the script has been running.
-	 * @return The time till the next level of the skill.
-	 */
-	public long getTimeTillNextLevel(final int index, final int exp,
-			final long time) {
+	public int ammountTillNextLevel(final int index, final double exp) {
 		if (!isSkill(index)) {
 			return -1;
 		}
 		final int level = getRealLevel(index);
-		return getTimeTillLevel(index, exp, level + 1, time);
+		return ammountTillLevel(index, exp, level + 1);
+	}
+
+	/**
+	 * Gets the number of actions needed until the level provided.
+	 *
+	 * @param index The index.
+	 * @param exp   The exp each action gives.
+	 * @param lvl   The level to get the ammount till for.
+	 * @return How many you need to do until leveling to the level provided.
+	 */
+	public int ammountTillLevel(final int index, final double exp, final int lvl) {
+		if (!isSkill(index)) {
+			return -1;
+		}
+		return getExpToLevel(index, lvl) != -1 ? (int) (getExpToLevel(index, lvl) / exp) : 0;
 	}
 
 	/**
 	 * Gets the total/overall level.
-	 * 
+	 *
 	 * @return The total/overall level.
 	 */
 	public int getTotalLevel() {
@@ -534,14 +401,126 @@ public class Skills extends MethodProvider {
 	}
 
 	/**
+	 * Gets the percent to max level in the specified skill index
+	 *
+	 * @param index Skill index.
+	 * @return Percent to level max level.
+	 */
+	public int getPercentToMaxLevel(final int index) {
+		if (!isSkill(index)) {
+			return -1;
+		}
+		int lvl = 99;
+		if (index == Skills.DUNGEONEERING) {
+			lvl = 120;
+		}
+		return getPercentToLevel(index, lvl);
+	}
+
+	/**
+	 * Gets the experience needed to the max level in the specified skill index
+	 *
+	 * @param index Skill index.
+	 * @return Experience to level max level.
+	 */
+	public int getExpToMaxLevel(final int index) {
+		if (!isSkill(index)) {
+			return -1;
+		}
+		int lvl = 99;
+		if (index == Skills.DUNGEONEERING) {
+			lvl = 120;
+		}
+		return getExpToLevel(index, lvl);
+	}
+
+	/**
+	 * Gets the time remaining until the max level.
+	 *
+	 * @param index The index of the skill.
+	 * @param exp   The start Exp.
+	 * @param time  The time the script has been running.
+	 * @return The time till the max level of the skill.
+	 */
+	public long getTimeTillMaxLevel(final int index, final int exp, final long time) {
+		if (!isSkill(index)) {
+			return -1;
+		}
+		int lvl = 99;
+		if (index == Skills.DUNGEONEERING) {
+			lvl = 120;
+		}
+		return getTimeTillLevel(index, exp, lvl, time);
+	}
+
+	/**
+	 * Gets the number of actions needed until the max level.
+	 *
+	 * @param index The index.
+	 * @param exp   The exp each action gives.
+	 * @return How many you need to do until the max level.
+	 */
+	public int ammountTillMaxLevel(final int index, final double exp) {
+		if (!isSkill(index)) {
+			return -1;
+		}
+		int lvl = 99;
+		if (index == Skills.DUNGEONEERING) {
+			lvl = 120;
+		}
+		return ammountTillLevel(index, exp, lvl);
+	}
+
+	/**
+	 * Moves the mouse over a given component in the stats tab.
+	 *
+	 * @param component The component index.
+	 * @return <tt>true</tt> if the mouse was moved over the given component
+	 *         index.
+	 */
+	public boolean doHover(final int component) {
+		methods.game.openTab(Game.Tab.STATS);
+		sleep(random(10, 100));
+		return methods.interfaces.getComponent(INTERFACE_TAB_STATS, component)	.doHover();
+	}
+
+	/**
+	 * Checks if one of the given skills is boosted.
+	 *
+	 * @param index The index of the skill.
+	 * @return <tt>true</tt> if one the given skills is boosted.
+	 */
+	public boolean isSkillBoosted(final int... index) {
+		if (!isSkill(index)) {
+			return false;
+		}
+		for (int i : index) {
+			int realLevel = getRealLevel(i);
+			if (realLevel > getMaxLevel(i)) {
+				switch (i) {
+					case Skills.DUNGEONEERING:
+						realLevel = 120;
+						break;
+					default:
+						realLevel = 99;
+						break;
+				}
+			}
+			if (realLevel == getCurrentLevel(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Checks if this index is not out of range.
-	 * 
-	 * @param index
-	 *            The index of the skill.
+	 *
+	 * @param index The index of the skill.
 	 * @return <tt>true</tt> if this index is not out of range.
 	 */
 	private boolean isSkill(final int... index) {
-		for (final int i : index) {
+		for (int i : index) {
 			if (i > Skills.SKILL_NAMES.length - 1) {
 				return false;
 			}
@@ -550,32 +529,11 @@ public class Skills extends MethodProvider {
 	}
 
 	/**
-	 * Checks if one of the given skills is boosted.
-	 * 
-	 * @param index
-	 *            The index of the skill.
-	 * @return <tt>true</tt> if one the given skills is boosted.
+	 * Gets a skill data class.
+	 *
+	 * @return The <tt>SkillData</tt> class.
 	 */
-	public boolean isSkillBoosted(final int... index) {
-		if (!isSkill(index)) {
-			return false;
-		}
-		for (final int i : index) {
-			int realLevel = getRealLevel(i);
-			if (realLevel > getMaxLevel(i)) {
-				switch (i) {
-				case Skills.DUNGEONEERING:
-					realLevel = 120;
-					break;
-				default:
-					realLevel = 99;
-					break;
-				}
-			}
-			if (realLevel == getCurrentLevel(i)) {
-				return false;
-			}
-		}
-		return true;
+	public SkillData getSkillDataInstance() {
+		return new SkillData(methods, null);
 	}
 }

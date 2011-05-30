@@ -1,20 +1,20 @@
 package org.rsbot.script.wrappers;
 
-import java.awt.Point;
-import java.util.Arrays;
-import java.util.Iterator;
-
 import org.rsbot.client.Client;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
 
+import java.awt.*;
+import java.util.Arrays;
+import java.util.Iterator;
+
 /**
- * Represents an interface. Each interface consists of a group of components.
- * 
+ * Represents an interface. Each interface consists
+ * of a group of components.
+ *
  * @author Qauters
  */
-public class RSInterface extends MethodProvider implements
-		Iterable<RSComponent> {
+public class RSInterface extends MethodProvider implements Iterable<RSComponent> {
 	/**
 	 * Cache of this interface's children.
 	 */
@@ -34,9 +34,8 @@ public class RSInterface extends MethodProvider implements
 
 	/**
 	 * Searches all it's actions, to find your phrase
-	 * 
-	 * @param phrase
-	 *            Text to search for
+	 *
+	 * @param phrase Text to search for
 	 * @return true if found
 	 */
 	public boolean containsAction(final String phrase) {
@@ -61,9 +60,8 @@ public class RSInterface extends MethodProvider implements
 
 	/**
 	 * Searches all components' text.
-	 * 
-	 * @param phrase
-	 *            Text to search for
+	 *
+	 * @param phrase Text to search for
 	 * @return true if found, false if null
 	 */
 	public boolean containsText(final String phrase) {
@@ -71,62 +69,28 @@ public class RSInterface extends MethodProvider implements
 	}
 
 	/**
-	 * @inheritDoc java/lang/Object#equals(java/lang/Object)
-	 */
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == this) {
-			return true;
-		}
-		if (obj instanceof RSInterface) {
-			final RSInterface inter = (RSInterface) obj;
-			return inter.index == index;
-		}
-		return false;
-	}
-
-	/**
-	 * Gets the amount of child components.
-	 * 
-	 * @return the amount of children, or 0 if null
-	 */
-	public int getChildCount() {
-		final org.rsbot.client.RSInterface[] children = getChildrenInternal();
-		if (children != null) {
-			return children.length;
-		}
-		return 0;
-	}
-
-	/**
-	 * Safely gets the array of children.
-	 * 
-	 * @return The child interfaces of the client.
-	 */
-	org.rsbot.client.RSInterface[] getChildrenInternal() {
-		final Client c = methods.client;
-		if (c == null) {
-			return null;
-		}
-		final org.rsbot.client.RSInterface[][] inters = c.getRSInterfaceCache();
-		if (inters != null && index < inters.length) {
-			return inters[index];
-		}
-		return null;
-	}
+     * Gets the amount of child components.
+     *
+     * @return the amount of children, or 0 if null
+     */
+    public int getChildCount() {
+    	final org.rsbot.client.RSInterface[] children = getChildrenInternal();
+    	if (children != null) {
+    		return children.length;
+    	}
+    	return 0;
+    }
 
 	/**
 	 * Gets the child component at the given index.
-	 * 
-	 * @param id
-	 *            The index of the child.
+	 *
+	 * @param id The index of the child.
 	 * @return The child component.
 	 */
 	public RSComponent getComponent(final int id) { // TODO sparseMap
 		synchronized (childCache) {
 			final org.rsbot.client.RSInterface[] children = getChildrenInternal();
-			final int ensureLen = Math.max(children != null ? children.length
-					: 0, id + 1);
+			final int ensureLen = Math.max(children != null ? children.length : 0, id + 1);
 			if (childCache.length < ensureLen) { // extend if necessary
 				final int prevLen = childCache.length;
 				childCache = Arrays.copyOf(childCache, ensureLen);
@@ -140,7 +104,7 @@ public class RSInterface extends MethodProvider implements
 
 	/**
 	 * Gets all child components of this interface.
-	 * 
+	 *
 	 * @return the component array
 	 */
 	public RSComponent[] getComponents() {
@@ -149,8 +113,7 @@ public class RSInterface extends MethodProvider implements
 			if (children == null) {
 				return childCache.clone(); // return as is
 			} else {
-				if (childCache.length < children.length) { // extend if
-															// necessary
+				if (childCache.length < children.length) { // extend if necessary
 					final int prevLen = childCache.length;
 					childCache = Arrays.copyOf(childCache, children.length);
 					for (int i = prevLen; i < childCache.length; i++) {
@@ -164,7 +127,7 @@ public class RSInterface extends MethodProvider implements
 
 	/**
 	 * Gets the index of this interface.
-	 * 
+	 *
 	 * @return The index of this interface.
 	 */
 	public int getIndex() {
@@ -173,9 +136,9 @@ public class RSInterface extends MethodProvider implements
 
 	/**
 	 * Gets the screen location of the interface.
-	 * 
-	 * @return the exact location of the interface, return (-1, -1) if interface
-	 *         was null.
+	 *
+	 * @return the exact location of the interface, return (-1, -1) if
+	 *         interface was null.
 	 */
 	public Point getLocation() {
 		final org.rsbot.client.RSInterface[] children = getChildrenInternal();
@@ -193,7 +156,7 @@ public class RSInterface extends MethodProvider implements
 
 	/**
 	 * Finds all the text in it, searches all his children for it.
-	 * 
+	 *
 	 * @return all the text found separated by newlines, empty if null
 	 */
 	public String getText() {
@@ -215,16 +178,8 @@ public class RSInterface extends MethodProvider implements
 	}
 
 	/**
-	 * @inheritDoc java/lang/Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		return index;
-	}
-
-	/**
 	 * Checks whether or not this interface is valid
-	 * 
+	 *
 	 * @return <tt>true</tt> if it's valid
 	 */
 	public boolean isValid() {
@@ -233,8 +188,7 @@ public class RSInterface extends MethodProvider implements
 		}
 		final int idx = getIndex();
 		final boolean[] validArray = methods.client.getValidRSInterfaceArray();
-		if (idx >= 0 && validArray != null && idx < validArray.length
-				&& validArray[idx]) {
+		if (idx >= 0 && validArray != null && idx < validArray.length && validArray[idx]) {
 			final org.rsbot.client.RSInterface[][] inters = methods.client.getRSInterfaceCache();
 			if (idx < inters.length && inters[idx] != null) {
 				final RSComponent[] children = getComponents();
@@ -254,28 +208,41 @@ public class RSInterface extends MethodProvider implements
 	 * Iterates over the children of the interface. Will never return null even
 	 * if the underlying interface is null.
 	 */
-	@Override
 	public Iterator<RSComponent> iterator() {
 		return new Iterator<RSComponent>() {
 			private int nextIdx = 0;
 
-			@Override
 			public boolean hasNext() {
 				return !isValid() && getChildCount() >= nextIdx;
 			}
 
-			@Override
 			public RSComponent next() {
 				final RSComponent child = getComponent(nextIdx);
 				nextIdx++;
 				return child;
 			}
 
-			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
 		};
+	}
+
+	/**
+	 * Safely gets the array of children.
+	 *
+	 * @return The child interfaces of the client.
+	 */
+	org.rsbot.client.RSInterface[] getChildrenInternal() {
+		final Client c = methods.client;
+		if (c == null) {
+			return null;
+		}
+		final org.rsbot.client.RSInterface[][] inters = c.getRSInterfaceCache();
+		if (inters != null && index < inters.length) {
+			return inters[index];
+		}
+		return null;
 	}
 
 	void setChild(final RSComponent child) {
@@ -287,5 +254,28 @@ public class RSInterface extends MethodProvider implements
 				childCache[idx] = child;
 			}
 		}
+	}
+
+	/**
+	 * @inheritDoc java/lang/Object#equals(java/lang/Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (obj instanceof RSInterface) {
+			final RSInterface inter = (RSInterface) obj;
+			return inter.index == index;
+		}
+		return false;
+	}
+
+	/**
+	 * @inheritDoc java/lang/Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return index;
 	}
 }

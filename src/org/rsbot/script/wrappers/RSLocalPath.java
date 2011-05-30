@@ -1,17 +1,98 @@
 package org.rsbot.script.wrappers;
 
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import org.rsbot.script.methods.MethodContext;
+
+import java.util.*;
 
 /**
  * @author Jacmob
  */
 public class RSLocalPath extends RSPath {
+	public static final int WALL_NORTH_WEST = 0x1;
+	public static final int WALL_NORTH = 0x2;
+	public static final int WALL_NORTH_EAST = 0x4;
+	public static final int WALL_EAST = 0x8;
+	public static final int WALL_SOUTH_EAST = 0x10;
+	public static final int WALL_SOUTH = 0x20;
+	public static final int WALL_SOUTH_WEST = 0x40;
+	public static final int WALL_WEST = 0x80;
+	public static final int BLOCKED = 0x100;
+
+	protected final RSTile end;
+	protected RSTile base;
+	protected int[][] flags;
+	protected int offX, offY;
+
+	private RSTilePath tilePath;
+
+	public RSLocalPath(final MethodContext ctx, final RSTile end) {
+		super(ctx);
+		this.end = end;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean traverse(final EnumSet<TraversalOption> options) {
+		return getNext() != null && tilePath.traverse(options);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isValid() {
+		return getNext() != null && !methods.players.getMyPlayer().getLocation().equals(getEnd());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RSTile getNext() {
+		if (!methods.game.getMapBase().equals(base)) {
+			final int[][] flags = methods.walking.getCollisionFlags(methods.game.getPlane());
+			if (flags != null) {
+				base = methods.game.getMapBase();
+				final RSTile start = methods.players.getMyPlayer().getLocation();
+				final RSTile[] tiles = findPath(start, end);
+				if (tiles == null) {
+					base = null;
+					return null;
+				}
+				tilePath = methods.walking.newTilePath(tiles);
+			}
+		}
+		return tilePath.getNext();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RSTile getStart() {
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RSTile getEnd() {
+		return end;
+	}
+
+	/**
+	 * Returns the calculated RSTilePath that is currently
+	 * providing data to this RSLocalPath.
+	 *
+	 * @return The current RSTile path; or <code>null</code>.
+	 */
+	public RSTilePath getCurrentTilePath() {
+		return tilePath;
+	}
+
 	protected class Node {
 
 		public final int x;
@@ -20,17 +101,22 @@ public class RSLocalPath extends RSPath {
 		public double g, f;
 		public boolean border;
 
+		public Node(final int x, final int y, final boolean border) {
+			this.border = border;
+			this.x = x;
+			this.y = y;
+			g = f = 0;
+		}
+
 		public Node(final int x, final int y) {
 			this.x = x;
 			this.y = y;
 			g = f = 0;
 		}
 
-		public Node(final int x, final int y, final boolean border) {
-			this.border = border;
-			this.x = x;
-			this.y = y;
-			g = f = 0;
+		@Override
+		public int hashCode() {
+			return x << 4 | y;
 		}
 
 		@Override
@@ -43,61 +129,23 @@ public class RSLocalPath extends RSPath {
 		}
 
 		@Override
-		public int hashCode() {
-			return x << 4 | y;
+		public String toString() {
+			return "(" + x + "," + y + ")";
 		}
 
 		public RSTile toRSTile(final int baseX, final int baseY) {
 			return new RSTile(x + baseX, y + baseY);
 		}
 
-		@Override
-		public String toString() {
-			return "(" + x + "," + y + ")";
-		}
-
-	}
-
-	public static final int WALL_NORTH_WEST = 0x1;
-	public static final int WALL_NORTH = 0x2;
-	public static final int WALL_NORTH_EAST = 0x4;
-	public static final int WALL_EAST = 0x8;
-	public static final int WALL_SOUTH_EAST = 0x10;
-	public static final int WALL_SOUTH = 0x20;
-	public static final int WALL_SOUTH_WEST = 0x40;
-	public static final int WALL_WEST = 0x80;
-
-	public static final int BLOCKED = 0x100;
-	protected final RSTile end;
-	protected RSTile base;
-	protected int[][] flags;
-
-	protected int offX, offY;
-
-	private RSTilePath tilePath;
-
-	public RSLocalPath(final MethodContext ctx, final RSTile end) {
-		super(ctx);
-		this.end = end;
-	}
-
-	private double dist(final Node start, final Node end) {
-		if (start.x != end.x && start.y != end.y) {
-			return 1.41421356;
-		} else {
-			return 1.0;
-		}
 	}
 
 	protected RSTile[] findPath(final RSTile start, final RSTile end) {
 		return findPath(start, end, false);
 	}
 
-	private RSTile[] findPath(final RSTile start, final RSTile end,
-			boolean remote) {
+	private RSTile[] findPath(final RSTile start, final RSTile end, boolean remote) {
 		final int base_x = base.getX(), base_y = base.getY();
-		final int curr_x = start.getX() - base_x, curr_y = start.getY()
-				- base_y;
+		final int curr_x = start.getX() - base_x, curr_y = start.getY() - base_y;
 		int dest_x = end.getX() - base_x, dest_y = end.getY() - base_y;
 
 		// load client data
@@ -108,11 +156,9 @@ public class RSLocalPath extends RSPath {
 		offY = offset.getY();
 
 		// loaded region only
-		if (flags == null || curr_x < 0 || curr_y < 0 || curr_x >= flags.length
-				|| curr_y >= flags.length) {
+		if (flags == null || curr_x < 0 || curr_y < 0 || curr_x >= flags.length || curr_y >= flags.length) {
 			return null;
-		} else if (dest_x < 0 || dest_y < 0 || dest_x >= flags.length
-				|| dest_y >= flags.length) {
+		} else if (dest_x < 0 || dest_y < 0 || dest_x >= flags.length || dest_y >= flags.length) {
 			remote = true;
 			if (dest_x < 0) {
 				dest_x = 0;
@@ -170,51 +216,20 @@ public class RSLocalPath extends RSPath {
 		return findPath(start, pull(end));
 	}
 
-	/**
-	 * Returns the calculated RSTilePath that is currently providing data to
-	 * this RSLocalPath.
-	 * 
-	 * @return The current RSTile path; or <code>null</code>.
-	 */
-	public RSTilePath getCurrentTilePath() {
-		return tilePath;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RSTile getEnd() {
-		return end;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RSTile getNext() {
-		if (!methods.game.getMapBase().equals(base)) {
-			final int[][] flags = methods.walking.getCollisionFlags(methods.game.getPlane());
-			if (flags != null) {
-				base = methods.game.getMapBase();
-				final RSTile start = methods.players.getMyPlayer().getLocation();
-				final RSTile[] tiles = findPath(start, end);
-				if (tiles == null) {
-					base = null;
-					return null;
-				}
-				tilePath = methods.walking.newTilePath(tiles);
-			}
+	private RSTile pull(final RSTile tile) {
+		final RSTile p = methods.players.getMyPlayer().getLocation();
+		int x = tile.getX(), y = tile.getY();
+		if (p.getX() < x) {
+			x -= 2;
+		} else if (p.getX() > x) {
+			x += 2;
 		}
-		return tilePath.getNext();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RSTile getStart() {
-		return null;
+		if (p.getY() < y) {
+			y -= 2;
+		} else if (p.getY() > y) {
+			y += 2;
+		}
+		return new RSTile(x, y);
 	}
 
 	private double heuristic(final Node start, final Node end) {
@@ -227,18 +242,17 @@ public class RSLocalPath extends RSPath {
 			dy = -dy;
 		}
 		return dx < dy ? dy : dx;
-		// double diagonal = dx > dy ? dy : dx;
-		// double manhattan = dx + dy;
-		// return 1.41421356 * diagonal + (manhattan - 2 * diagonal);
+		//double diagonal = dx > dy ? dy : dx;
+		//double manhattan = dx + dy;
+		//return 1.41421356 * diagonal + (manhattan - 2 * diagonal);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isValid() {
-		return getNext() != null
-				&& !methods.players.getMyPlayer().getLocation().equals(getEnd());
+	private double dist(final Node start, final Node end) {
+		if (start.x != end.x && start.y != end.y) {
+			return 1.41421356;
+		} else {
+			return 1.0;
+		}
 	}
 
 	private Node lowest_f(final Set<Node> open) {
@@ -261,80 +275,48 @@ public class RSLocalPath extends RSPath {
 		return path.toArray(new RSTile[path.size()]);
 	}
 
-	private RSTile pull(final RSTile tile) {
-		final RSTile p = methods.players.getMyPlayer().getLocation();
-		int x = tile.getX(), y = tile.getY();
-		if (p.getX() < x) {
-			x -= 2;
-		} else if (p.getX() > x) {
-			x += 2;
-		}
-		if (p.getY() < y) {
-			y -= 2;
-		} else if (p.getY() > y) {
-			y += 2;
-		}
-		return new RSTile(x, y);
-	}
-
 	private List<Node> successors(final Node t) {
 		final LinkedList<Node> tiles = new LinkedList<Node>();
 		final int x = t.x, y = t.y;
 		final int f_x = x - offX, f_y = y - offY;
 		final int here = flags[f_x][f_y];
 		final int upper = flags.length - 1;
-		if (f_y > 0 && (here & WALL_SOUTH) == 0
-				&& (flags[f_x][f_y - 1] & BLOCKED) == 0) {
+		if (f_y > 0 && (here & WALL_SOUTH) == 0 && (flags[f_x][f_y - 1] & BLOCKED) == 0) {
 			tiles.add(new Node(x, y - 1));
 		}
-		if (f_x > 0 && (here & WALL_WEST) == 0
-				&& (flags[f_x - 1][f_y] & BLOCKED) == 0) {
+		if (f_x > 0 && (here & WALL_WEST) == 0 && (flags[f_x - 1][f_y] & BLOCKED) == 0) {
 			tiles.add(new Node(x - 1, y));
 		}
-		if (f_y < upper && (here & WALL_NORTH) == 0
-				&& (flags[f_x][f_y + 1] & BLOCKED) == 0) {
+		if (f_y < upper && (here & WALL_NORTH) == 0 && (flags[f_x][f_y + 1] & BLOCKED) == 0) {
 			tiles.add(new Node(x, y + 1));
 		}
-		if (f_x < upper && (here & WALL_EAST) == 0
-				&& (flags[f_x + 1][f_y] & BLOCKED) == 0) {
+		if (f_x < upper && (here & WALL_EAST) == 0 && (flags[f_x + 1][f_y] & BLOCKED) == 0) {
 			tiles.add(new Node(x + 1, y));
 		}
-		if (f_x > 0 && f_y > 0
-				&& (here & (WALL_SOUTH_WEST | WALL_SOUTH | WALL_WEST)) == 0
+		if (f_x > 0 && f_y > 0 && (here & (WALL_SOUTH_WEST | WALL_SOUTH | WALL_WEST)) == 0
 				&& (flags[f_x - 1][f_y - 1] & BLOCKED) == 0
 				&& (flags[f_x][f_y - 1] & (BLOCKED | WALL_WEST)) == 0
 				&& (flags[f_x - 1][f_y] & (BLOCKED | WALL_SOUTH)) == 0) {
 			tiles.add(new Node(x - 1, y - 1));
 		}
-		if (f_x > 0 && f_y < upper
-				&& (here & (WALL_NORTH_WEST | WALL_NORTH | WALL_WEST)) == 0
+		if (f_x > 0 && f_y < upper && (here & (WALL_NORTH_WEST | WALL_NORTH | WALL_WEST)) == 0
 				&& (flags[f_x - 1][f_y + 1] & BLOCKED) == 0
 				&& (flags[f_x][f_y + 1] & (BLOCKED | WALL_WEST)) == 0
 				&& (flags[f_x - 1][f_y] & (BLOCKED | WALL_NORTH)) == 0) {
 			tiles.add(new Node(x - 1, y + 1));
 		}
-		if (f_x < upper && f_y > 0
-				&& (here & (WALL_SOUTH_EAST | WALL_SOUTH | WALL_EAST)) == 0
+		if (f_x < upper && f_y > 0 && (here & (WALL_SOUTH_EAST | WALL_SOUTH | WALL_EAST)) == 0
 				&& (flags[f_x + 1][f_y - 1] & BLOCKED) == 0
 				&& (flags[f_x][f_y - 1] & (BLOCKED | WALL_EAST)) == 0
 				&& (flags[f_x + 1][f_y] & (BLOCKED | WALL_SOUTH)) == 0) {
 			tiles.add(new Node(x + 1, y - 1));
 		}
-		if (f_x > 0 && f_y < upper
-				&& (here & (WALL_NORTH_EAST | WALL_NORTH | WALL_EAST)) == 0
+		if (f_x > 0 && f_y < upper && (here & (WALL_NORTH_EAST | WALL_NORTH | WALL_EAST)) == 0
 				&& (flags[f_x + 1][f_y + 1] & BLOCKED) == 0
 				&& (flags[f_x][f_y + 1] & (BLOCKED | WALL_EAST)) == 0
 				&& (flags[f_x + 1][f_y] & (BLOCKED | WALL_NORTH)) == 0) {
 			tiles.add(new Node(x + 1, y + 1));
 		}
 		return tiles;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean traverse(final EnumSet<TraversalOption> options) {
-		return getNext() != null && tilePath.traverse(options);
 	}
 }

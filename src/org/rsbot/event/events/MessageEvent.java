@@ -1,13 +1,13 @@
 package org.rsbot.event.events;
 
-import java.util.EventListener;
-
 import org.rsbot.event.EventMulticaster;
 import org.rsbot.event.listeners.MessageListener;
 
+import java.util.EventListener;
+
 /**
  * A message event.
- * 
+ *
  * @author Jacmob
  */
 public class MessageEvent extends RSEvent {
@@ -44,21 +44,21 @@ public class MessageEvent extends RSEvent {
 		((MessageListener) el).messageReceived(this);
 	}
 
-	public int getID() {
-		return id;
-	}
-
 	@Override
 	public long getMask() {
 		return EventMulticaster.MESSAGE_EVENT;
 	}
 
-	public String getMessage() {
-		return message;
-	}
-
 	public String getSender() {
 		return sender;
+	}
+
+	public int getID() {
+		return id;
+	}
+
+	public String getMessage() {
+		return message;
 	}
 
 }

@@ -1,42 +1,26 @@
 package org.rsbot.script.randoms;
 
-import java.awt.Point;
-
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSModel;
 import org.rsbot.script.wrappers.RSObject;
 
-@ScriptManifest(authors = { "Iscream", "Aelin", "LM3", "IceCandle", "Taha" }, name = "Pinball", version = 2.7)
+import java.awt.*;
+
+
+@ScriptManifest(authors = {"Iscream", "Aelin", "LM3", "IceCandle", "Taha"}, name = "Pinball", version = 2.7)
 public class Pinball extends Random {
 
-	private static final int[] OBJ_PILLARS = { 15000, 15002, 15004, 15006,
-			15008 };
+	private static final int[] OBJ_PILLARS = {15000, 15002, 15004, 15006, 15008};
 
-	private static final int[] OBJ_ACTIVATE = { 15000, 15002, 15004, 15006,
-			15007, 15008 };
+	private static final int[] OBJ_ACTIVATE = {15000, 15002, 15004, 15006, 15007, 15008};
 
 	private static final int INTERFACE_PINBALL = 263;
 
 	@Override
 	public boolean activateCondition() {
 		return game.isLoggedIn() && objects.getNearest(OBJ_ACTIVATE) != null;
-	}
-
-	private void doClick(final RSObject pillar) {
-		final RSModel model = pillar.getModel();
-		if (model != null) {
-			final Point central = model.getCentralPoint();
-			mouse.click(central.x, central.y, 4, 4, true);
-			return;
-		} else {
-			final Point p = calc.tileToScreen(pillar.getLocation());
-			if (calc.pointOnScreen(p)) {
-				mouse.click(p.x, p.y - 25, 4, 20, true);
-			}
-			return;
-		}
 	}
 
 	private int getScore() {
@@ -60,10 +44,9 @@ public class Pinball extends Random {
 			final int OBJ_EXIT = 15010;
 			final RSObject exit = objects.getNearest(OBJ_EXIT);
 			if (exit != null) {
-				if (calc.tileOnScreen(exit.getLocation())
-						&& exit.doAction("Exit")) {
+				if (calc.tileOnScreen(exit.getLocation()) && exit.interact("Exit")) {
 					sleep(random(2000, 2200));
-					exit.doAction("Exit");
+					exit.interact("Exit");
 					return random(2000, 2100);
 				} else {
 					camera.setCompass('s');
@@ -92,5 +75,21 @@ public class Pinball extends Random {
 		}
 		return random(50, 100);
 	}
+
+	private void doClick(final RSObject pillar) {
+		final RSModel model = pillar.getModel();
+		if (model != null) {
+			final Point central = model.getCentralPoint();
+			mouse.click(central.x, central.y, 4, 4, true);
+			return;
+		} else {
+			final Point p = calc.tileToScreen(pillar.getLocation());
+			if (calc.pointOnScreen(p)) {
+				mouse.click(p.x, p.y - 25, 4, 20, true);
+			}
+			return;
+		}
+	}
+
 
 }

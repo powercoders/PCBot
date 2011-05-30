@@ -1,51 +1,18 @@
 package org.rsbot.gui;
 
-import java.awt.Image;
-import java.awt.SystemTray;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
-
 import org.rsbot.Configuration;
 import org.rsbot.bot.Bot;
-import org.rsbot.event.impl.DrawBoundaries;
-import org.rsbot.event.impl.DrawInventory;
-import org.rsbot.event.impl.DrawItems;
-import org.rsbot.event.impl.DrawModel;
-import org.rsbot.event.impl.DrawMouse;
-import org.rsbot.event.impl.DrawNPCs;
-import org.rsbot.event.impl.DrawObjects;
-import org.rsbot.event.impl.DrawPlayers;
-import org.rsbot.event.impl.DrawSettings;
-import org.rsbot.event.impl.DrawWeb;
-import org.rsbot.event.impl.MessageLogger;
-import org.rsbot.event.impl.TAnimation;
-import org.rsbot.event.impl.TCamera;
-import org.rsbot.event.impl.TFPS;
-import org.rsbot.event.impl.TFloorHeight;
-import org.rsbot.event.impl.TLoginIndex;
-import org.rsbot.event.impl.TMenu;
-import org.rsbot.event.impl.TMenuActions;
-import org.rsbot.event.impl.TMousePosition;
-import org.rsbot.event.impl.TPlayerPosition;
-import org.rsbot.event.impl.TTab;
-import org.rsbot.event.impl.TUserInputAllowed;
-import org.rsbot.event.impl.TWebStatus;
+import org.rsbot.event.impl.*;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.event.listeners.TextPaintListener;
 import org.rsbot.gui.component.Messages;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.*;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * @author Paris
@@ -58,10 +25,8 @@ public class BotMenuBar extends JMenuBar {
 	public static final String[][] ELEMENTS;
 
 	private static final boolean EXTD_VIEW_INITIAL = !Configuration.RUNNING_FROM_JAR;
-	private static final String[] EXTD_VIEW_ITEMS = { "Game State",
-			"Current Tab", "Camera", "Floor Height", "Mouse Position",
-			"User Input Allowed", "Menu", "Menu Actions", "Cache", "Models",
-			"Calc Test", "Settings" };
+	private static final String[] EXTD_VIEW_ITEMS = {"Game State", "Current Tab", "Camera", "Floor Height",
+			"Mouse Position", "User Input Allowed", "Menu", "Menu Actions", "Cache", "Models", "Calc Test", "Settings"};
 
 	static {
 		// Text
@@ -93,26 +58,22 @@ public class BotMenuBar extends JMenuBar {
 		// Other
 		DEBUG_MAP.put("Log Messages", MessageLogger.class);
 
-		TITLES = new String[] { Messages.FILE, Messages.EDIT, Messages.VIEW,
-				Messages.TOOLS, Messages.HELP };
-		ELEMENTS = new String[][] {
-				{ Messages.NEWBOT, Messages.CLOSEBOT, Messages.MENUSEPERATOR,
-						Messages.ADDSCRIPT, Messages.RUNSCRIPT,
-						Messages.STOPSCRIPT, Messages.PAUSESCRIPT,
-						Messages.MENUSEPERATOR, Messages.SAVESCREENSHOT,
-						Messages.MENUSEPERATOR, Messages.HIDEBOT, Messages.EXIT },
-				{
-						Messages.ACCOUNTS,
-						Messages.MENUSEPERATOR,
+		TITLES = new String[]{Messages.FILE, Messages.EDIT, Messages.VIEW, Messages.TOOLS, Messages.HELP};
+		ELEMENTS = new String[][]{
+				{Messages.NEWBOT, Messages.CLOSEBOT, Messages.MENUSEPERATOR,
+						Messages.ADDSCRIPT,
+						Messages.RUNSCRIPT, Messages.STOPSCRIPT,
+						Messages.PAUSESCRIPT, Messages.MENUSEPERATOR,
+						Messages.SAVESCREENSHOT, Messages.MENUSEPERATOR,
+						Messages.HIDEBOT, Messages.EXIT},
+				{Messages.ACCOUNTS, Messages.MENUSEPERATOR,
 						Messages.TOGGLEFALSE + Messages.FORCEINPUT,
 						Messages.TOGGLEFALSE + Messages.LESSCPU,
-						(EXTD_VIEW_INITIAL ? Messages.TOGGLETRUE
-								: Messages.TOGGLEFALSE) + Messages.EXTDVIEWS,
+						(EXTD_VIEW_INITIAL ? Messages.TOGGLETRUE : Messages.TOGGLEFALSE) + Messages.EXTDVIEWS,
 						Messages.MENUSEPERATOR,
 						Messages.TOGGLEFALSE + Messages.DISABLEANTIRANDOMS,
-						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN },
-				constructDebugs(), { Messages.CLEARCACHE, Messages.OPTIONS },
-				{ Messages.SITE, Messages.PROJECT, Messages.ABOUT } };
+						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN},
+				constructDebugs(), {Messages.CLEARCACHE, Messages.OPTIONS}, {Messages.SITE, Messages.PROJECT, Messages.ABOUT}};
 	}
 
 	private static String[] constructDebugs() {
@@ -137,8 +98,7 @@ public class BotMenuBar extends JMenuBar {
 		debugItems.add(Messages.MENUSEPERATOR);
 		for (final String key : DEBUG_MAP.keySet()) {
 			final Class<?> el = DEBUG_MAP.get(key);
-			if (!TextPaintListener.class.isAssignableFrom(el)
-					&& !PaintListener.class.isAssignableFrom(el)) {
+			if (!TextPaintListener.class.isAssignableFrom(el) && !PaintListener.class.isAssignableFrom(el)) {
 				debugItems.add(key);
 			}
 		}
@@ -149,24 +109,6 @@ public class BotMenuBar extends JMenuBar {
 			}
 		}
 		return debugItems.toArray(new String[debugItems.size()]);
-	}
-
-	private final Map<String, JCheckBoxMenuItem> eventCheckMap = new HashMap<String, JCheckBoxMenuItem>();
-
-	private final Map<String, JCheckBoxMenuItem> commandCheckMap = new HashMap<String, JCheckBoxMenuItem>();
-	private final Map<String, JMenuItem> commandMenuItem = new HashMap<String, JMenuItem>();
-	private final ActionListener listener;
-
-	public BotMenuBar(final ActionListener listener) {
-		this.listener = listener;
-		for (int i = 0; i < TITLES.length; i++) {
-			final String title = TITLES[i];
-			final String[] elems = ELEMENTS[i];
-			add(constructMenu(title, elems));
-		}
-		constructItemIcons();
-		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
-		setExtendedView(EXTD_VIEW_INITIAL);
 	}
 
 	private void constructItemIcons() {
@@ -192,69 +134,46 @@ public class BotMenuBar extends JMenuBar {
 		}
 	}
 
-	private JMenu constructMenu(final String title, final String[] elems) {
-		final JMenu menu = new JMenu(title);
-		for (String e : elems) {
-			if (e.equals(Messages.MENUSEPERATOR)) {
-				menu.add(new JSeparator());
-			} else {
-				JMenuItem jmi;
-				if (e.startsWith(Messages.TOGGLE)) {
-					e = e.substring(Messages.TOGGLE.length());
-					final char state = e.charAt(0);
-					e = e.substring(2);
-					jmi = new JCheckBoxMenuItem(e);
-					if (state == 't' || state == 'T') {
-						jmi.setSelected(true);
-					}
-					if (DEBUG_MAP.containsKey(e)) {
-						final JCheckBoxMenuItem ji = (JCheckBoxMenuItem) jmi;
-						eventCheckMap.put(e, ji);
-					}
-					final JCheckBoxMenuItem ji = (JCheckBoxMenuItem) jmi;
-					commandCheckMap.put(e, ji);
-				} else {
-					jmi = new JMenuItem(e);
-					commandMenuItem.put(e, jmi);
-				}
-				jmi.addActionListener(listener);
-				jmi.setActionCommand(title + "." + e);
-				menu.add(jmi);
+	private final Map<String, JCheckBoxMenuItem> eventCheckMap = new HashMap<String, JCheckBoxMenuItem>();
+	private final Map<String, JCheckBoxMenuItem> commandCheckMap = new HashMap<String, JCheckBoxMenuItem>();
+	private final Map<String, JMenuItem> commandMenuItem = new HashMap<String, JMenuItem>();
+	private final ActionListener listener;
+
+	public BotMenuBar(final ActionListener listener) {
+		this.listener = listener;
+		for (int i = 0; i < TITLES.length; i++) {
+			final String title = TITLES[i];
+			final String[] elems = ELEMENTS[i];
+			add(constructMenu(title, elems));
+		}
+		constructItemIcons();
+		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
+		setExtendedView(EXTD_VIEW_INITIAL);
+	}
+
+	public void setExtendedView(final boolean show) {
+		for (String disableFeature : EXTD_VIEW_ITEMS) {
+			if (commandCheckMap.containsKey(disableFeature)) {
+				commandCheckMap.get(disableFeature).setVisible(show);
 			}
 		}
-		return menu;
 	}
 
-	private void disable(final String... items) {
-		for (final String item : items) {
-			commandCheckMap.get(item).setSelected(false);
-			commandCheckMap.get(item).setEnabled(false);
+	public void setOverrideInput(final boolean force) {
+		commandCheckMap.get(Messages.FORCEINPUT).setSelected(force);
+	}
+
+	public void setPauseScript(final boolean pause) {
+		final JMenuItem item = commandMenuItem.get(Messages.PAUSESCRIPT);
+		item.setText(pause ? Messages.RESUMESCRIPT : Messages.PAUSESCRIPT);
+		final Image image = Configuration.getImage(pause ? Configuration.Paths.Resources.ICON_START : Configuration.Paths.Resources.ICON_PAUSE);
+		if (image != null) {
+			item.setIcon(new ImageIcon(image));
 		}
-	}
-
-	public void doClick(final String item) {
-		commandMenuItem.get(item).doClick();
-	}
-
-	public void doTick(final String item) {
-		commandCheckMap.get(item).doClick();
-	}
-
-	public void enable(final String item, final boolean selected) {
-		commandCheckMap.get(item).setSelected(selected);
-		commandCheckMap.get(item).setEnabled(true);
-	}
-
-	public JCheckBoxMenuItem getCheckBox(final String key) {
-		return commandCheckMap.get(key);
 	}
 
 	public JMenuItem getMenuItem(final String name) {
 		return commandMenuItem.get(name);
-	}
-
-	public boolean isTicked(final String item) {
-		return commandCheckMap.get(item).isSelected();
 	}
 
 	public void setBot(final Bot bot) {
@@ -292,29 +211,68 @@ public class BotMenuBar extends JMenuBar {
 		}
 	}
 
+	public JCheckBoxMenuItem getCheckBox(final String key) {
+		return commandCheckMap.get(key);
+	}
+
+	private void disable(final String... items) {
+		for (final String item : items) {
+			commandCheckMap.get(item).setSelected(false);
+			commandCheckMap.get(item).setEnabled(false);
+		}
+	}
+
+	public void enable(final String item, final boolean selected) {
+		commandCheckMap.get(item).setSelected(selected);
+		commandCheckMap.get(item).setEnabled(true);
+	}
+
 	public void setEnabled(final String item, final boolean mode) {
 		commandCheckMap.get(item).setEnabled(mode);
 	}
 
-	public void setExtendedView(final boolean show) {
-		for (final String disableFeature : EXTD_VIEW_ITEMS) {
-			if (commandCheckMap.containsKey(disableFeature)) {
-				commandCheckMap.get(disableFeature).setVisible(show);
+	public void doClick(final String item) {
+		commandMenuItem.get(item).doClick();
+	}
+
+	public void doTick(final String item) {
+		commandCheckMap.get(item).doClick();
+	}
+
+	public boolean isTicked(final String item) {
+		return commandCheckMap.get(item).isSelected();
+	}
+
+	private JMenu constructMenu(final String title, final String[] elems) {
+		final JMenu menu = new JMenu(title);
+		for (String e : elems) {
+			if (e.equals(Messages.MENUSEPERATOR)) {
+				menu.add(new JSeparator());
+			} else {
+				JMenuItem jmi;
+				if (e.startsWith(Messages.TOGGLE)) {
+					e = e.substring(Messages.TOGGLE.length());
+					final char state = e.charAt(0);
+					e = e.substring(2);
+					jmi = new JCheckBoxMenuItem(e);
+					if (state == 't' || state == 'T') {
+						jmi.setSelected(true);
+					}
+					if (DEBUG_MAP.containsKey(e)) {
+						final JCheckBoxMenuItem ji = (JCheckBoxMenuItem) jmi;
+						eventCheckMap.put(e, ji);
+					}
+					final JCheckBoxMenuItem ji = (JCheckBoxMenuItem) jmi;
+					commandCheckMap.put(e, ji);
+				} else {
+					jmi = new JMenuItem(e);
+					commandMenuItem.put(e, jmi);
+				}
+				jmi.addActionListener(listener);
+				jmi.setActionCommand(title + "." + e);
+				menu.add(jmi);
 			}
 		}
-	}
-
-	public void setOverrideInput(final boolean force) {
-		commandCheckMap.get(Messages.FORCEINPUT).setSelected(force);
-	}
-
-	public void setPauseScript(final boolean pause) {
-		final JMenuItem item = commandMenuItem.get(Messages.PAUSESCRIPT);
-		item.setText(pause ? Messages.RESUMESCRIPT : Messages.PAUSESCRIPT);
-		final Image image = Configuration.getImage(pause ? Configuration.Paths.Resources.ICON_START
-				: Configuration.Paths.Resources.ICON_PAUSE);
-		if (image != null) {
-			item.setIcon(new ImageIcon(image));
-		}
+		return menu;
 	}
 }

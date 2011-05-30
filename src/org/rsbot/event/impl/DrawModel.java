@@ -1,20 +1,16 @@
 package org.rsbot.event.impl;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.HashMap;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.wrappers.RSGroundItem;
 import org.rsbot.script.wrappers.RSModel;
 import org.rsbot.script.wrappers.RSObject;
+
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.HashMap;
 
 /**
  * @author Jacmob
@@ -31,66 +27,13 @@ public class DrawModel implements PaintListener, MouseListener {
 		color_map.put(RSObject.Type.WALL_DECORATION, Color.GRAY);
 	}
 
-	private static final String[] OPTIONS = { "Objects", "Players", "NPCs",
-			"Piles" };
-	private static boolean[] enabled = { true, true, true, true };
+	private static final String[] OPTIONS = {"Objects", "Players", "NPCs", "Piles"};
+	private static boolean[] enabled = {true, true, true, true};
 
 	private final MethodContext ctx;
 
 	public DrawModel(final Bot bot) {
 		ctx = bot.getMethodContext();
-	}
-
-	public final void drawRect(final Graphics render) {
-		final Color j = Color.BLACK;
-		final Color w = Color.WHITE;
-		for (int i = 0; i < OPTIONS.length; i++) {
-			final int alpha = 150;
-			render.setColor(new Color(j.getRed(), j.getGreen(), j.getBlue(), alpha));
-			if (enabled[i]) {
-				render.setColor(new Color(w.getRed(), w.getGreen(), w.getBlue(), alpha));
-			}
-			render.fillRect(90 + 80 * i, 3, 80, 12);
-			render.setColor(Color.white);
-			if (enabled[i]) {
-				render.setColor(Color.BLACK);
-			}
-			render.drawString(OPTIONS[i], 90 + 80 * i + 10, 13);
-			render.setColor(Color.black);
-			render.drawRect(90 + 80 * i, 3, 80, 12);
-		}
-	}
-
-	@Override
-	public void mouseClicked(final MouseEvent e) {
-		for (int i = 0; i < OPTIONS.length; i++) {
-			final Rectangle rect = new Rectangle(90 + 80 * i, 3, 80, 12);
-			if (rect.contains(e.getPoint())) {
-				enabled[i] = !enabled[i];
-				e.consume();
-				return;
-			}
-		}
-	}
-
-	@Override
-	public void mouseEntered(final MouseEvent arg0) {
-
-	}
-
-	@Override
-	public void mouseExited(final MouseEvent arg0) {
-
-	}
-
-	@Override
-	public void mousePressed(final MouseEvent arg0) {
-
-	}
-
-	@Override
-	public void mouseReleased(final MouseEvent arg0) {
-
 	}
 
 	@Override
@@ -143,5 +86,57 @@ public class DrawModel implements PaintListener, MouseListener {
 				}
 			}
 		}
+	}
+
+	public final void drawRect(final Graphics render) {
+		final Color j = Color.BLACK;
+		final Color w = Color.WHITE;
+		for (int i = 0; i < OPTIONS.length; i++) {
+			final int alpha = 150;
+			render.setColor(new Color(j.getRed(), j.getGreen(), j.getBlue(), alpha));
+			if (enabled[i]) {
+				render.setColor(new Color(w.getRed(), w.getGreen(), w.getBlue(), alpha));
+			}
+			render.fillRect(90 + 80 * i, 3, 80, 12);
+			render.setColor(Color.white);
+			if (enabled[i]) {
+				render.setColor(Color.BLACK);
+			}
+			render.drawString(OPTIONS[i], 90 + 80 * i + 10, 13);
+			render.setColor(Color.black);
+			render.drawRect(90 + 80 * i, 3, 80, 12);
+		}
+	}
+
+	@Override
+	public void mouseClicked(final MouseEvent e) {
+		for (int i = 0; i < OPTIONS.length; i++) {
+			final Rectangle rect = new Rectangle(90 + 80 * i, 3, 80, 12);
+			if (rect.contains(e.getPoint())) {
+				enabled[i] = !enabled[i];
+				e.consume();
+				return;
+			}
+		}
+	}
+
+	@Override
+	public void mouseEntered(final MouseEvent arg0) {
+
+	}
+
+	@Override
+	public void mouseExited(final MouseEvent arg0) {
+
+	}
+
+	@Override
+	public void mousePressed(final MouseEvent arg0) {
+
+	}
+
+	@Override
+	public void mouseReleased(final MouseEvent arg0) {
+
 	}
 }

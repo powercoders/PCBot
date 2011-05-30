@@ -14,24 +14,8 @@ public class Nodes extends MethodProvider {
 	}
 
 	/**
-	 * @param loader
-	 *            The node's loader.
-	 * @param id
-	 *            The id of the node
-	 * @return A <tt>Node</tt> object corresponding to the ID in the loader.
-	 */
-	public Node lookup(final DefLoader loader, final long id) {
-		if (loader == null || loader.getCache() == null) {
-			return null;
-		}
-		return lookup(loader.getCache().getTable(), id);
-	}
-
-	/**
-	 * @param nc
-	 *            The node cache to check
-	 * @param id
-	 *            The id of the node
+	 * @param nc The node cache to check
+	 * @param id The id of the node
 	 * @return A <tt>Node</tt> object corresponding to the ID in the nodecache.
 	 */
 	public Node lookup(final HashTable nc, final long id) {
@@ -49,5 +33,17 @@ public class Nodes extends MethodProvider {
 		} catch (final Exception ignored) {
 		}
 		return null;
+	}
+
+	/**
+	 * @param loader The node's loader.
+	 * @param id     The id of the node
+	 * @return A <tt>Node</tt> object corresponding to the ID in the loader.
+	 */
+	public Node lookup(final DefLoader loader, final long id) {
+		if (loader == null || loader.getCache() == null) {
+			return null;
+		}
+		return lookup(loader.getCache().getTable(), id);
 	}
 }

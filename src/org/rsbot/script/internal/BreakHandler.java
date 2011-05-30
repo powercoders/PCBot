@@ -1,8 +1,8 @@
 package org.rsbot.script.internal;
 
-import java.util.Random;
-
 import org.rsbot.bot.Bot;
+
+import java.util.Random;
 
 public class BreakHandler {
 
@@ -19,6 +19,11 @@ public class BreakHandler {
 		this.bot = bot;
 	}
 
+	public boolean isBreaking() {
+		return ticks > 50 && nextBreak > 0 && nextBreak < System.currentTimeMillis()
+				&& breakEnd > System.currentTimeMillis() && can();
+	}
+
 	private boolean can() {
 		if (checked) {
 			return result;
@@ -27,21 +32,6 @@ public class BreakHandler {
 			result = bot.getScriptHandler().onBreak();
 			return result;
 		}
-	}
-
-	public long getBreakTime() {
-		return breakEnd - System.currentTimeMillis();
-	}
-
-	public boolean isBreaking() {
-		return ticks > 50 && nextBreak > 0
-				&& nextBreak < System.currentTimeMillis()
-				&& breakEnd > System.currentTimeMillis() && can();
-	}
-
-	private int random(final int min, final int max) {
-		final int n = Math.abs(max - min);
-		return Math.min(min, max) + (n == 0 ? 0 : random.nextInt(n));
 	}
 
 	public void tick() {
@@ -60,6 +50,15 @@ public class BreakHandler {
 				breakEnd = nextBreak + random(10, 60) * 1000;
 			}
 		}
+	}
+
+	public long getBreakTime() {
+		return breakEnd - System.currentTimeMillis();
+	}
+
+	private int random(final int min, final int max) {
+		final int n = Math.abs(max - min);
+		return Math.min(min, max) + (n == 0 ? 0 : random.nextInt(n));
 	}
 
 }

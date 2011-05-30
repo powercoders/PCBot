@@ -1,16 +1,11 @@
 package org.rsbot.gui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Image;
+import org.rsbot.bot.Bot;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
-
-import javax.swing.SwingUtilities;
-
-import org.rsbot.bot.Bot;
 
 /**
  * @author Jacmob
@@ -22,26 +17,17 @@ public class BotHome {
 	private int height;
 	private Bot[] bots = new Bot[0];
 
-	public void draw(final Graphics g, final int idx, final int x, final int y,
-			final int width, final int height) {
-		final BufferedImage img = bots[idx].getImage();
-		if (img != null && img.getWidth() > 0) {
-			final int w_img = img.getWidth(), h_img = img.getHeight();
-			final float img_ratio = (float) w_img / (float) h_img;
-			final float bound_ratio = (float) width / (float) height;
-			int w, h;
-			if (img_ratio < bound_ratio) {
-				h = height;
-				w = (int) ((float) w_img / (float) h_img * h);
-			} else {
-				w = width;
-				h = (int) ((float) h_img / (float) w_img * w);
+	public void setBots(final Collection<Bot> col) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				bots = col.toArray(new Bot[col.size()]);
 			}
-			g.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x
-					+ width / 2 - w / 2, y + height / 2 - h / 2, null);
-			g.setColor(Color.gray);
-			g.drawRect(x, y, width - 1, height - 1);
-		}
+		});
+	}
+
+	public void setSize(final int width, final int height) {
+		this.width = width;
+		this.height = height;
 	}
 
 	// TODO: Replace; temporary preview.
@@ -49,7 +35,8 @@ public class BotHome {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, width, height);
 		final int len = Math.min(bots.length, BotGUI.MAX_BOTS);
-		switch (len) {
+		switch (len)
+		{
 		case 1:
 			draw(g, 0, 0, 0, width, height);
 			break;
@@ -90,22 +77,26 @@ public class BotHome {
 		g.setColor(new Color(0, 0, 0, 170));
 		g.fillRect(0, height - 30, width, 30);
 		g.setColor(Color.white);
-		g.drawString("Spectating "
-				+ (bots.length == 1 ? "1 bot." : bots.length + " bots."), 5, height
-				+ metrics.getDescent() - 14);
+		g.drawString("Spectating " + (bots.length == 1 ? "1 bot." : bots.length + " bots."), 5, height + metrics.getDescent() - 14);
 	}
 
-	public void setBots(final Collection<Bot> col) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				bots = col.toArray(new Bot[col.size()]);
+	public void draw(final Graphics g, final int idx, final int x, final int y, final int width, final int height) {
+		final BufferedImage img = bots[idx].getImage();
+		if (img != null && img.getWidth() > 0) {
+			final int w_img = img.getWidth(), h_img = img.getHeight();
+			final float img_ratio = (float) w_img / (float) h_img;
+			final float bound_ratio = (float) width / (float) height;
+			int w, h;
+			if (img_ratio < bound_ratio) {
+				h = height;
+				w = (int) ((float) w_img / (float) h_img * h);
+			} else {
+				w = width;
+				h = (int) ((float) h_img / (float) w_img * w);
 			}
-		});
-	}
-
-	public void setSize(final int width, final int height) {
-		this.width = width;
-		this.height = height;
+			g.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x + width / 2 - w / 2, y + height / 2 - h / 2, null);
+			g.setColor(Color.gray);
+			g.drawRect(x, y, width - 1, height - 1);
+		}
 	}
 }

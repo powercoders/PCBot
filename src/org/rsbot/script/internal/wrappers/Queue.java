@@ -12,6 +12,18 @@ public class Queue<N extends org.rsbot.client.NodeSub> {
 		this.nl = nl;
 	}
 
+	public int size() {
+		int size = 0;
+		org.rsbot.client.NodeSub node = nl.getTail().getPrevSub();
+
+		while (node != nl.getTail()) {
+			node = node.getPrevSub();
+			size++;
+		}
+
+		return size;
+	}
+
 	public N getHead() {
 		final org.rsbot.client.NodeSub node = nl.getTail().getNextSub();
 
@@ -34,18 +46,6 @@ public class Queue<N extends org.rsbot.client.NodeSub> {
 		current = node.getNextSub();
 
 		return (N) node;
-	}
-
-	public int size() {
-		int size = 0;
-		org.rsbot.client.NodeSub node = nl.getTail().getPrevSub();
-
-		while (node != nl.getTail()) {
-			node = node.getPrevSub();
-			size++;
-		}
-
-		return size;
 	}
 
 }

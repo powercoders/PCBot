@@ -1,89 +1,22 @@
 package org.rsbot.script.methods;
 
-import java.awt.Color;
+import org.rsbot.Configuration;
+import org.rsbot.script.internal.reflection.Reflection;
+import org.rsbot.script.wrappers.*;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.imageio.ImageIO;
-
-import org.rsbot.Configuration;
-import org.rsbot.script.internal.reflection.Reflection;
-import org.rsbot.script.wrappers.RSGroundItem;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSPlayer;
-import org.rsbot.script.wrappers.RSTile;
 
 /**
  * Provides access to methods that can be used by RSBot scripts.
  */
 public class Methods {
-	/**
-	 * Returns a random double with min as the inclusive lower bound and max as
-	 * the exclusive upper bound.
-	 * 
-	 * @param min
-	 *            The inclusive lower bound.
-	 * @param max
-	 *            The exclusive upper bound.
-	 * @return Random double min <= n < max.
-	 */
-	public static double random(final double min, final double max) {
-		return Math.min(min, max) + random.nextDouble() * Math.abs(max - min);
-	}
-
-	/**
-	 * Returns a random integer with min as the inclusive lower bound and max as
-	 * the exclusive upper bound.
-	 * 
-	 * @param min
-	 *            The inclusive lower bound.
-	 * @param max
-	 *            The exclusive upper bound.
-	 * @return Random integer min <= n < max.
-	 */
-	public static int random(final int min, final int max) {
-		final int n = Math.abs(max - min);
-		return Math.min(min, max) + (n == 0 ? 0 : random.nextInt(n));
-	}
-
-	/**
-	 * Pauses execution for a given number of milliseconds.
-	 * 
-	 * @param toSleep
-	 *            The time to sleep in milliseconds.
-	 */
-	public static void sleep(final int toSleep) {
-		try {
-			final long start = System.currentTimeMillis();
-			Thread.sleep(toSleep);
-
-			// Guarantee minimum sleep
-			long now;
-			while (start + toSleep > (now = System.currentTimeMillis())) {
-				Thread.sleep(start + toSleep - now);
-			}
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Pauses execution for a random amount of time between two values.
-	 * 
-	 * @param minSleep
-	 *            The minimum time to sleep.
-	 * @param maxSleep
-	 *            The maximum time to sleep.
-	 * @see #sleep(int)
-	 * @see #random(int, int)
-	 */
-	public static void sleep(final int minSleep, final int maxSleep) {
-		sleep(random(minSleep, maxSleep));
-	}
-
 	public MethodContext ctx;
+
 	/**
 	 * The logger instance
 	 */
@@ -212,42 +145,28 @@ public class Methods {
 	 * The singleton of FriendsChat
 	 */
 	protected FriendChat friendChat;
-
 	/**
 	 * The singleton of Lobby
 	 */
 	protected Lobby lobby;
-
 	/**
 	 * The singleton of Trade
 	 */
 	protected Trade trade;
-
 	/**
 	 * The singleton of Web
 	 */
 	protected Web web;
-
 	/**
 	 * Reflection providers.
 	 */
 	protected Reflection reflection;
 
-	/**
-	 * Returns the current client's local player.
-	 * 
-	 * @return The current client's <tt>RSPlayer</tt>.
-	 * @see Players#getMyPlayer()
-	 */
-	public RSPlayer getMyPlayer() {
-		return players.getMyPlayer();
-	}
 
 	/**
 	 * For internal use only: initializes the method providers.
-	 * 
-	 * @param ctx
-	 *            The MethodContext.
+	 *
+	 * @param ctx The MethodContext.
 	 */
 	public void init(final MethodContext ctx) {
 		final File cache = new File(Configuration.Paths.getScriptCacheDirectory());
@@ -293,44 +212,32 @@ public class Methods {
 	}
 
 	/**
-	 * Prints to the RSBot log with a font color
-	 * 
-	 * @param color
-	 *            The color of the font
-	 * @param message
-	 *            Object to log
+	 * Returns the current client's local player.
+	 *
+	 * @return The current client's <tt>RSPlayer</tt>.
+	 * @see Players#getMyPlayer()
 	 */
-	public void log(final Color color, final Object message) {
-		final Object[] parameters = { color };
-		log.log(Level.INFO, message.toString(), parameters);
+	public RSPlayer getMyPlayer() {
+		return players.getMyPlayer();
 	}
 
 	/**
-	 * Prints to the RSBot log.
-	 * 
-	 * @param message
-	 *            Object to log.
+	 * Returns a random integer with min as the inclusive lower bound and max as
+	 * the exclusive upper bound.
+	 *
+	 * @param min The inclusive lower bound.
+	 * @param max The exclusive upper bound.
+	 * @return Random integer min <= n < max.
 	 */
-	public void log(final Object message) {
-		log.info(message.toString());
-	}
-
-	/**
-	 * Checks for the existence of a RSGroundItem.
-	 * 
-	 * @param i
-	 *            The RSGroundItem to check for.
-	 * @return <tt>true</tt> if found.
-	 */
-	public boolean verify(final RSGroundItem i) {
-		return i != null;
+	public static int random(final int min, final int max) {
+		final int n = Math.abs(max - min);
+		return Math.min(min, max) + (n == 0 ? 0 : random.nextInt(n));
 	}
 
 	/**
 	 * Checks for the existence of a NPC.
-	 * 
-	 * @param npc
-	 *            The NPC to check for.
+	 *
+	 * @param npc The NPC to check for.
 	 * @return <tt>true</tt> if found.
 	 */
 	public boolean verify(final RSNPC npc) {
@@ -339,9 +246,8 @@ public class Methods {
 
 	/**
 	 * Checks for the existence of a RSObject.
-	 * 
-	 * @param o
-	 *            The RSObject to check for.
+	 *
+	 * @param o The RSObject to check for.
 	 * @return <tt>true</tt> if found.
 	 */
 	public boolean verify(final RSObject o) {
@@ -350,12 +256,85 @@ public class Methods {
 
 	/**
 	 * Checks for the existence of a RSTile.
-	 * 
-	 * @param t
-	 *            The RSTile to check for.
+	 *
+	 * @param t The RSTile to check for.
 	 * @return <tt>true</tt> if found.
 	 */
 	public boolean verify(final RSTile t) {
 		return t != null;
+	}
+
+	/**
+	 * Checks for the existence of a RSGroundItem.
+	 *
+	 * @param i The RSGroundItem to check for.
+	 * @return <tt>true</tt> if found.
+	 */
+	public boolean verify(final RSGroundItem i) {
+		return i != null;
+	}
+
+	/**
+	 * Returns a random double with min as the inclusive lower bound and max as
+	 * the exclusive upper bound.
+	 *
+	 * @param min The inclusive lower bound.
+	 * @param max The exclusive upper bound.
+	 * @return Random double min <= n < max.
+	 */
+	public static double random(final double min, final double max) {
+		return Math.min(min, max) + random.nextDouble() * Math.abs(max - min);
+	}
+
+	/**
+	 * Pauses execution for a random amount of time between two values.
+	 *
+	 * @param minSleep The minimum time to sleep.
+	 * @param maxSleep The maximum time to sleep.
+	 * @see #sleep(int)
+	 * @see #random(int, int)
+	 */
+	public static void sleep(final int minSleep, final int maxSleep) {
+		sleep(random(minSleep, maxSleep));
+	}
+
+	/**
+	 * Pauses execution for a given number of milliseconds.
+	 *
+	 * @param toSleep The time to sleep in milliseconds.
+	 */
+	public static void sleep(final int toSleep) {
+		try {
+			final long start = System.currentTimeMillis();
+			Thread.sleep(toSleep);
+
+			// Guarantee minimum sleep
+			long now;
+			while (start + toSleep > (now = System.currentTimeMillis())) {
+				Thread.sleep(start + toSleep - now);
+			}
+		} catch (final InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Prints to the RSBot log.
+	 *
+	 * @param message Object to log.
+	 */
+	public void log(final Object message) {
+		log.info(message.toString());
+	}
+
+	/**
+	 * Prints to the RSBot log with a font color
+	 *
+	 * @param color   The color of the font
+	 * @param message Object to log
+	 */
+	public void log(final Color color, final Object message) {
+		final Object[] parameters = {color};
+		log.log(Level.INFO, message.toString(), parameters);
 	}
 }
