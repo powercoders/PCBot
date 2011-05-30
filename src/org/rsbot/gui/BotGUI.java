@@ -609,7 +609,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 		setVisible(false);
 		try {
-			Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(!prefs.ads));
+			Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(!prefs.hideAds));
 		} catch (NoClassDefFoundError ncdfe) {
 		}
 		if (doExit) {

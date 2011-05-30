@@ -51,7 +51,7 @@ public class Application {
 					public void run() {
 						final Dimension s = Toolkit.getDefaultToolkit().getScreenSize();
 						try {
-							Thread.sleep(64); // race condition :)
+							Thread.sleep(1000); // race condition :)
 						} catch (final InterruptedException ignored) {
 						}
 						frame.setLocation(s.width + 0xff, s.height + 0xff);
