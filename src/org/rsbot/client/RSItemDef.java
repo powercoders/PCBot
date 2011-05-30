@@ -12,9 +12,9 @@ public interface RSItemDef {
 
 	int getID();
 
+	RSItemDefLoader getLoader();
+
 	String getName();
 
 	boolean isMembersObject();
-
-	RSItemDefLoader getLoader();
 }

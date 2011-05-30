@@ -11,14 +11,22 @@ public class Equipment extends MethodProvider {
 	public static RSItem[] equips = null;
 	private static long lastSet = 0;
 
+	/**
+	 * Resets the cache to grab again next web-gen.
+	 */
+	public static void resetCache() {
+		Equipment.lastSet = 0;
+	}
+
 	public Equipment(final MethodContext ctx) {
 		super(ctx);
 	}
 
 	/**
 	 * Checks if the cache has an item.
-	 *
-	 * @param itemIDs The item ID.
+	 * 
+	 * @param itemIDs
+	 *            The item ID.
 	 * @return <tt>true</tt> if true, otherwise <tt>false</tt>.
 	 */
 	public boolean equipmentContainsOneOf(final int[] itemIDs) {
@@ -34,7 +42,7 @@ public class Equipment extends MethodProvider {
 
 	/**
 	 * Returns the cache of items.
-	 *
+	 * 
 	 * @return The array of RSItems.
 	 */
 	public RSItem[] equips() {
@@ -48,12 +56,5 @@ public class Equipment extends MethodProvider {
 			}
 		}
 		return equips;
-	}
-
-	/**
-	 * Resets the cache to grab again next web-gen.
-	 */
-	public static void resetCache() {
-		Equipment.lastSet = 0;
 	}
 }

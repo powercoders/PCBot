@@ -9,34 +9,76 @@ import org.rsbot.script.wrappers.RSTile;
 
 /**
  * The class that handles all teleportation actions via jewelry transportation.
- *
+ * 
  * @author Timer
  * @author kyleshay
  */
 public class TeleportJewelry extends TeleportItem {
-	public TeleportJewelry(MethodContext ctx, RSTile teleportationLocation, String[] action, int[] itemIDs) {
+	public TeleportJewelry(final MethodContext ctx,
+			final RSTile teleportationLocation, final String action,
+			final int[] itemIDs) {
 		super(ctx, teleportationLocation, action, itemIDs);
 	}
 
-	public TeleportJewelry(MethodContext ctx, RSTile teleportationLocation, String action, int[] itemIDs) {
+	public TeleportJewelry(final MethodContext ctx,
+			final RSTile teleportationLocation, final String[] action,
+			final int[] itemIDs) {
 		super(ctx, teleportationLocation, action, itemIDs);
 	}
 
+	/**
+	 * Jewelry restriction for wilderness is > 30 instead of 20. confirmed for:
+	 * Amulet of glory Combat bracelet Skills necklace Pharaoh's sceptre Grand
+	 * seed pod Ring of Life
+	 */
+	private boolean deepWilderness() {
+		return methods.combat.getWildernessLevel() > 30;
+	}
+
+	/**
+	 * Looks for the dialog option to select.
+	 * 
+	 * @param opts
+	 *            The options.
+	 * @return The RSComponent matched.
+	 */
+	private RSComponent getDialogOption(final String... opts) {
+		final RSInterface[] valid = methods.interfaces.getAll();
+		for (final RSInterface iface : valid) {
+			if (iface.getIndex() != 137) {
+				final int len = iface.getChildCount();
+				for (int i = 0; i < len; i++) {
+					final RSComponent child = iface.getComponent(i);
+					for (final String opt : opts) {
+						if (child.containsText(opt) && child.isValid()
+								&& child.getAbsoluteX() > 10
+								&& child.getAbsoluteY() > 300) {
+							return child;
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public boolean meetsPrerequisites() {
-		return !deepWilderness() /* && !teleportBlocked()*/;
+		return !deepWilderness() /* && !teleportBlocked() */;
 	}
 
 	/**
 	 * Performs the usage on the jewelery.
-	 *
+	 * 
 	 * @return <tt>true</tt> if succeeded.
 	 */
+	@Override
 	public boolean perform() {
 		RSItem item = methods.inventory.getItem(itemIDs);
 		boolean equip = false;
 		if (item == null) {
-			for (RSItem itm : methods.equipment.getItems()) {
-				for (int id : itemIDs) {
+			for (final RSItem itm : methods.equipment.getItems()) {
+				for (final int id : itemIDs) {
 					if (itm.getID() == id) {
 						equip = true;
 						item = itm;
@@ -45,8 +87,10 @@ public class TeleportJewelry extends TeleportItem {
 				}
 			}
 		}
-		if (item != null && methods.game.openTab(equip ? Game.Tab.EQUIPMENT : Game.Tab.INVENTORY)) {
-			for (String s : action) {
+		if (item != null
+				&& methods.game.openTab(equip ? Game.Tab.EQUIPMENT
+						: Game.Tab.INVENTORY)) {
+			for (final String s : action) {
 				if (item.doAction(s)) {
 					final long tO = System.currentTimeMillis();
 					while (System.currentTimeMillis() - tO < 10000) {
@@ -79,43 +123,5 @@ public class TeleportJewelry extends TeleportItem {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Looks for the dialog option to select.
-	 *
-	 * @param opts The options.
-	 * @return The RSComponent matched.
-	 */
-	private RSComponent getDialogOption(String... opts) {
-		final RSInterface[] valid = methods.interfaces.getAll();
-		for (final RSInterface iface : valid) {
-			if (iface.getIndex() != 137) {
-				final int len = iface.getChildCount();
-				for (int i = 0; i < len; i++) {
-					final RSComponent child = iface.getComponent(i);
-					for (String opt : opts) {
-						if (child.containsText(opt) && child.isValid() && child.getAbsoluteX() > 10 && child.getAbsoluteY() > 300) {
-							return child;
-						}
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Jewelry restriction for wilderness is > 30 instead of 20.
-	 * confirmed for:
-	 * Amulet of glory
-	 * Combat bracelet
-	 * Skills necklace
-	 * Pharaoh's sceptre
-	 * Grand seed pod
-	 * Ring of Life
-	 */
-	private boolean deepWilderness() {
-		return methods.combat.getWildernessLevel() > 30;
 	}
 }

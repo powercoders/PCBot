@@ -1,13 +1,13 @@
 package org.rsbot.script.background;
 
+import java.util.HashMap;
+
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.util.BankCache;
 import org.rsbot.script.wrappers.RSItem;
 
-import java.util.HashMap;
-
-@ScriptManifest(name = "Bank Monitor", authors = {"Timer"})
+@ScriptManifest(name = "Bank Monitor", authors = { "Timer" })
 public class BankMonitor extends BackgroundScript {
 	private final HashMap<String, Long> updateTimes = new HashMap<String, Long>();
 	private static final Object lock = new Object();
@@ -15,6 +15,11 @@ public class BankMonitor extends BackgroundScript {
 	@Override
 	public boolean activateCondition() {
 		return game.isLoggedIn() && bank.isOpen();
+	}
+
+	@Override
+	public int iterationSleep() {
+		return 100;
 	}
 
 	@Override
@@ -41,10 +46,5 @@ public class BankMonitor extends BackgroundScript {
 			}
 		}
 		return -1;
-	}
-
-	@Override
-	public int iterationSleep() {
-		return 100;
 	}
 }

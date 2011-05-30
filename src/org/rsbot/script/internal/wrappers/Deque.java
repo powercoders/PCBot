@@ -12,20 +12,20 @@ public class Deque<N> {
 		this.nl = nl;
 	}
 
-	public int size() {
-		int size = 0;
-		org.rsbot.client.Node node = nl.getTail().getPrevious();
-
-		while (node != nl.getTail()) {
-			node = node.getPrevious();
-			size++;
-		}
-
-		return size;
-	}
-
 	public N getHead() {
 		final org.rsbot.client.Node node = nl.getTail().getNext();
+
+		if (node == nl.getTail()) {
+			current = null;
+			return null;
+		}
+		current = node.getNext();
+
+		return (N) node;
+	}
+
+	public N getNext() {
+		final org.rsbot.client.Node node = current;
 
 		if (node == nl.getTail()) {
 			current = null;
@@ -48,16 +48,16 @@ public class Deque<N> {
 		return (N) node;
 	}
 
-	public N getNext() {
-		final org.rsbot.client.Node node = current;
+	public int size() {
+		int size = 0;
+		org.rsbot.client.Node node = nl.getTail().getPrevious();
 
-		if (node == nl.getTail()) {
-			current = null;
-			return null;
+		while (node != nl.getTail()) {
+			node = node.getPrevious();
+			size++;
 		}
-		current = node.getNext();
 
-		return (N) node;
+		return size;
 	}
 
 }

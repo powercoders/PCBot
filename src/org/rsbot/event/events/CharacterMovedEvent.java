@@ -1,10 +1,10 @@
 package org.rsbot.event.events;
 
+import java.util.EventListener;
+
 import org.rsbot.event.EventMulticaster;
 import org.rsbot.event.listeners.CharacterMovedListener;
 import org.rsbot.script.methods.MethodContext;
-
-import java.util.EventListener;
 
 /**
  * A character moved event.
@@ -18,7 +18,8 @@ public class CharacterMovedEvent extends RSEvent {
 	private final int direction;
 	private org.rsbot.script.wrappers.RSCharacter wrapped;
 
-	public CharacterMovedEvent(final MethodContext ctx, final org.rsbot.client.RSCharacter character, final int direction) {
+	public CharacterMovedEvent(final MethodContext ctx,
+			final org.rsbot.client.RSCharacter character, final int direction) {
 		this.ctx = ctx;
 		this.character = character;
 		this.direction = direction;
@@ -43,15 +44,8 @@ public class CharacterMovedEvent extends RSEvent {
 	}
 
 	/**
-	 * 0 = NW
-	 * 1 = N
-	 * 2 = NE
-	 * 3 = W
-	 * 4 = E
-	 * 5 = SW
-	 * 6 = S
-	 * 7 = SE
-	 *
+	 * 0 = NW 1 = N 2 = NE 3 = W 4 = E 5 = SW 6 = S 7 = SE
+	 * 
 	 * @return Returns the direction of the character movement event.
 	 */
 	public int getDirection() {

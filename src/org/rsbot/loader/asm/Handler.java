@@ -7,7 +7,7 @@ package org.rsbot.loader.asm;
 
 /**
  * Information about an exception handler block.
- *
+ * 
  * @author Eric Bruneton
  */
 class Handler {

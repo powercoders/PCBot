@@ -1,11 +1,11 @@
 package org.rsbot.script.methods;
 
+import java.awt.event.KeyEvent;
+
 import org.rsbot.script.util.Timer;
 import org.rsbot.script.wrappers.RSCharacter;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSTile;
-
-import java.awt.event.KeyEvent;
 
 /**
  * Camera related operations.
@@ -16,75 +16,199 @@ public class Camera extends MethodProvider {
 	}
 
 	/**
-	 * Turns to a RSCharacter (RSNPC or RSPlayer).
-	 *
-	 * @param c The RSCharacter to turn to.
+	 * Returns the current compass orientation in degrees, with North at 0,
+	 * increasing counter-clockwise to 360.
+	 * 
+	 * @return The current camera angle in degrees.
 	 */
-	public void turnTo(final RSCharacter c) {
-		final int angle = getCharacterAngle(c);
-		setAngle(angle);
+	public int getAngle() {
+		// the client uses fixed point radians 0 - 2^14
+		// degrees = yaw * 360 / 2^14 = yaw / 45.5111...
+		return (int) (methods.client.getCameraYaw() / 45.51);
 	}
 
 	/**
-	 * Turns to within a few degrees of an RSCharacter (RSNPC or RSPlayer).
-	 *
-	 * @param c   The RSCharacter to turn to.
-	 * @param dev The maximum difference in the angle.
+	 * Returns the angle between the current camera angle and the given angle in
+	 * degrees.
+	 * 
+	 * @param degrees
+	 *            The target angle.
+	 * @return The angle between the who angles in degrees.
 	 */
-	public void turnTo(final RSCharacter c, final int dev) {
-		int angle = getCharacterAngle(c);
-		angle = random(angle - dev, angle + dev + 1);
-		setAngle(angle);
+	public int getAngleTo(final int degrees) {
+		int ca = getAngle();
+		if (ca < degrees) {
+			ca += 360;
+		}
+		int da = ca - degrees;
+		if (da > 180) {
+			da -= 360;
+		}
+		return da;
 	}
 
 	/**
-	 * Turns to an RSObject.
-	 *
-	 * @param o The RSObject to turn to.
+	 * Returns the camera angle at which the camera would be facing a certain
+	 * character.
+	 * 
+	 * @param n
+	 *            the RSCharacter
+	 * @return The angle
 	 */
-	public void turnTo(final RSObject o) {
-		final int angle = getObjectAngle(o);
-		setAngle(angle);
+	public int getCharacterAngle(final RSCharacter n) {
+		return getTileAngle(n.getLocation());
 	}
 
 	/**
-	 * Turns to within a few degrees of an RSObject.
-	 *
-	 * @param o   The RSObject to turn to.
-	 * @param dev The maximum difference in the turn angle.
+	 * Returns the camera angle at which the camera would be facing a certain
+	 * object.
+	 * 
+	 * @param o
+	 *            The RSObject
+	 * @return The angle
 	 */
-	public void turnTo(final RSObject o, final int dev) {
-		int angle = getObjectAngle(o);
-		angle = random(angle - dev, angle + dev + 1);
-		setAngle(angle);
+	public int getObjectAngle(final RSObject o) {
+		return getTileAngle(o.getLocation());
 	}
 
 	/**
-	 * Turns to a specific RSTile.
-	 *
-	 * @param tile Tile to turn to.
+	 * Returns the current percentage of the maximum pitch of the camera in an
+	 * open area.
+	 * 
+	 * @return The current camera altitude percentage.
 	 */
-	public void turnTo(final RSTile tile) {
-		final int angle = getTileAngle(tile);
-		setAngle(angle);
+	public int getPitch() {
+		return (int) ((methods.client.getCameraPitch() - 1024) / 20.48);
 	}
 
 	/**
-	 * Turns within a few degrees to a specific RSTile.
-	 *
-	 * @param tile Tile to turn to.
-	 * @param dev  Maximum deviation from the angle to the tile.
+	 * Returns the camera angle at which the camera would be facing a certain
+	 * tile.
+	 * 
+	 * @param t
+	 *            The target tile
+	 * @return The angle in degrees
 	 */
-	public void turnTo(final RSTile tile, final int dev) {
-		int angle = getTileAngle(tile);
-		angle = random(angle - dev, angle + dev + 1);
-		setAngle(angle);
+	public int getTileAngle(final RSTile t) {
+		final int a = (methods.calc.angleToTile(t) - 90) % 360;
+		return a < 0 ? a + 360 : a;
+	}
+
+	/**
+	 * Returns the current x position of the camera.
+	 * 
+	 * @return The x position.
+	 */
+	public int getX() {
+		return methods.client.getCamPosX();
+	}
+
+	/**
+	 * Returns the current y position of the camera.
+	 * 
+	 * @return The y position.
+	 */
+	public int getY() {
+		return methods.client.getCamPosY();
+	}
+
+	/**
+	 * Returns the current z position of the camera.
+	 * 
+	 * @return The z position.
+	 */
+	public int getZ() {
+		return methods.client.getCamPosZ();
+	}
+
+	/**
+	 * Moves the camera in a random direction for a given time.
+	 * 
+	 * @param timeOut
+	 *            The maximum time in milliseconds to move the camera for.
+	 */
+	public void moveRandomly(final int timeOut) {
+		final Timer timeToHold = new Timer(timeOut);
+		final int lowestCamAltPossible = random(75, 100);
+		final int vertical = random(0, 20) < 15 ? KeyEvent.VK_UP
+				: KeyEvent.VK_DOWN;
+		final int horizontal = random(0, 20) < 5 ? KeyEvent.VK_LEFT
+				: KeyEvent.VK_RIGHT;
+		if (random(0, 10) < 8) {
+			methods.inputManager.pressKey((char) vertical);
+		}
+		if (random(0, 10) < 8) {
+			methods.inputManager.pressKey((char) horizontal);
+		}
+		while (timeToHold.isRunning()
+				&& methods.client.getCamPosZ() >= lowestCamAltPossible) {
+			sleep(10);
+		}
+		methods.inputManager.releaseKey((char) vertical);
+		methods.inputManager.releaseKey((char) horizontal);
+	}
+
+	/**
+	 * Rotates the camera to a specific angle in the closest direction.
+	 * 
+	 * @param degrees
+	 *            The angle to rotate to.
+	 */
+	public void setAngle(final int degrees) {
+		if (getAngleTo(degrees) > 5) {
+			methods.inputManager.pressKey((char) KeyEvent.VK_LEFT);
+			while (getAngleTo(degrees) > 5) {
+				sleep(10);
+			}
+			methods.inputManager.releaseKey((char) KeyEvent.VK_LEFT);
+		} else if (getAngleTo(degrees) < -5) {
+			methods.inputManager.pressKey((char) KeyEvent.VK_RIGHT);
+			while (getAngleTo(degrees) < -5) {
+				sleep(10);
+			}
+			methods.inputManager.releaseKey((char) KeyEvent.VK_RIGHT);
+		}
+	}
+
+	/**
+	 * Rotates the camera to the specified cardinal direction.
+	 * 
+	 * @param direction
+	 *            The char direction to turn the map. char options are w,s,e,n
+	 *            and defaults to north if character is unrecognized.
+	 */
+	public void setCompass(final char direction) {
+		switch (direction) {
+		case 'n':
+			setAngle(359);
+			break;
+		case 'w':
+			setAngle(89);
+			break;
+		case 's':
+			setAngle(179);
+			break;
+		case 'e':
+			setAngle(269);
+			break;
+		default:
+			setAngle(359);
+			break;
+		}
+	}
+
+	/**
+	 * Uses the compass component to set the camera to face north.
+	 */
+	public void setNorth() {
+		methods.interfaces.getComponent(methods.gui.getCompass().getID()).doClick();
 	}
 
 	/**
 	 * Sets the altitude to max or minimum.
-	 *
-	 * @param up True to go up. False to go down.
+	 * 
+	 * @param up
+	 *            True to go up. False to go down.
 	 * @return <tt>true</tt> if the altitude was changed.
 	 */
 	public boolean setPitch(final boolean up) {
@@ -112,8 +236,9 @@ public class Camera extends MethodProvider {
 	 * <p/>
 	 * Mess around a little to find the altitude percentage you like. In later
 	 * versions, there will be easier-to-work-with methods regarding altitude.
-	 *
-	 * @param percent The percentage of the maximum pitch to set the camera to.
+	 * 
+	 * @param percent
+	 *            The percentage of the maximum pitch to set the camera to.
 	 * @return true if the camera was successfully moved; otherwise false.
 	 */
 	public boolean setPitch(final int percent) {
@@ -124,7 +249,8 @@ public class Camera extends MethodProvider {
 		} else if (curAlt < percent) {
 			methods.inputManager.pressKey((char) KeyEvent.VK_UP);
 			long start = System.currentTimeMillis();
-			while (curAlt < percent && System.currentTimeMillis() - start < random(50, 100)) {
+			while (curAlt < percent
+					&& System.currentTimeMillis() - start < random(50, 100)) {
 				if (lastAlt != curAlt) {
 					start = System.currentTimeMillis();
 				}
@@ -137,7 +263,8 @@ public class Camera extends MethodProvider {
 		} else {
 			methods.inputManager.pressKey((char) KeyEvent.VK_DOWN);
 			long start = System.currentTimeMillis();
-			while (curAlt > percent && System.currentTimeMillis() - start < random(50, 100)) {
+			while (curAlt > percent
+					&& System.currentTimeMillis() - start < random(50, 100)) {
 				if (lastAlt != curAlt) {
 					start = System.currentTimeMillis();
 				}
@@ -151,181 +278,77 @@ public class Camera extends MethodProvider {
 	}
 
 	/**
-	 * Moves the camera in a random direction for a given time.
-	 *
-	 * @param timeOut The maximum time in milliseconds to move the camera for.
+	 * Turns to a RSCharacter (RSNPC or RSPlayer).
+	 * 
+	 * @param c
+	 *            The RSCharacter to turn to.
 	 */
-	public void moveRandomly(final int timeOut) {
-		final Timer timeToHold = new Timer(timeOut);
-		final int lowestCamAltPossible = random(75, 100);
-		final int vertical = random(0, 20) < 15 ? KeyEvent.VK_UP : KeyEvent.VK_DOWN;
-		final int horizontal = random(0, 20) < 5 ? KeyEvent.VK_LEFT : KeyEvent.VK_RIGHT;
-		if (random(0, 10) < 8) {
-			methods.inputManager.pressKey((char) vertical);
-		}
-		if (random(0, 10) < 8) {
-			methods.inputManager.pressKey((char) horizontal);
-		}
-		while (timeToHold.isRunning() && methods.client.getCamPosZ() >= lowestCamAltPossible) {
-			sleep(10);
-		}
-		methods.inputManager.releaseKey((char) vertical);
-		methods.inputManager.releaseKey((char) horizontal);
+	public void turnTo(final RSCharacter c) {
+		final int angle = getCharacterAngle(c);
+		setAngle(angle);
 	}
 
 	/**
-	 * Rotates the camera to a specific angle in the closest direction.
-	 *
-	 * @param degrees The angle to rotate to.
+	 * Turns to within a few degrees of an RSCharacter (RSNPC or RSPlayer).
+	 * 
+	 * @param c
+	 *            The RSCharacter to turn to.
+	 * @param dev
+	 *            The maximum difference in the angle.
 	 */
-	public void setAngle(final int degrees) {
-		if (getAngleTo(degrees) > 5) {
-			methods.inputManager.pressKey((char) KeyEvent.VK_LEFT);
-			while (getAngleTo(degrees) > 5) {
-				sleep(10);
-			}
-			methods.inputManager.releaseKey((char) KeyEvent.VK_LEFT);
-		} else if (getAngleTo(degrees) < -5) {
-			methods.inputManager.pressKey((char) KeyEvent.VK_RIGHT);
-			while (getAngleTo(degrees) < -5) {
-				sleep(10);
-			}
-			methods.inputManager.releaseKey((char) KeyEvent.VK_RIGHT);
-		}
+	public void turnTo(final RSCharacter c, final int dev) {
+		int angle = getCharacterAngle(c);
+		angle = random(angle - dev, angle + dev + 1);
+		setAngle(angle);
 	}
 
 	/**
-	 * Rotates the camera to the specified cardinal direction.
-	 *
-	 * @param direction The char direction to turn the map. char options are w,s,e,n
-	 *                  and defaults to north if character is unrecognized.
+	 * Turns to an RSObject.
+	 * 
+	 * @param o
+	 *            The RSObject to turn to.
 	 */
-	public void setCompass(final char direction) {
-		switch (direction) {
-			case 'n':
-				setAngle(359);
-				break;
-			case 'w':
-				setAngle(89);
-				break;
-			case 's':
-				setAngle(179);
-				break;
-			case 'e':
-				setAngle(269);
-				break;
-			default:
-				setAngle(359);
-				break;
-		}
+	public void turnTo(final RSObject o) {
+		final int angle = getObjectAngle(o);
+		setAngle(angle);
 	}
 
 	/**
-	 * Uses the compass component to set the camera to face north.
+	 * Turns to within a few degrees of an RSObject.
+	 * 
+	 * @param o
+	 *            The RSObject to turn to.
+	 * @param dev
+	 *            The maximum difference in the turn angle.
 	 */
-	public void setNorth() {
-		methods.interfaces.getComponent(methods.gui.getCompass().getID()).doClick();
+	public void turnTo(final RSObject o, final int dev) {
+		int angle = getObjectAngle(o);
+		angle = random(angle - dev, angle + dev + 1);
+		setAngle(angle);
 	}
 
 	/**
-	 * Returns the camera angle at which the camera would be facing a certain
-	 * character.
-	 *
-	 * @param n the RSCharacter
-	 * @return The angle
+	 * Turns to a specific RSTile.
+	 * 
+	 * @param tile
+	 *            Tile to turn to.
 	 */
-	public int getCharacterAngle(final RSCharacter n) {
-		return getTileAngle(n.getLocation());
+	public void turnTo(final RSTile tile) {
+		final int angle = getTileAngle(tile);
+		setAngle(angle);
 	}
 
 	/**
-	 * Returns the camera angle at which the camera would be facing a certain
-	 * object.
-	 *
-	 * @param o The RSObject
-	 * @return The angle
+	 * Turns within a few degrees to a specific RSTile.
+	 * 
+	 * @param tile
+	 *            Tile to turn to.
+	 * @param dev
+	 *            Maximum deviation from the angle to the tile.
 	 */
-	public int getObjectAngle(final RSObject o) {
-		return getTileAngle(o.getLocation());
-	}
-
-	/**
-	 * Returns the camera angle at which the camera would be facing a certain
-	 * tile.
-	 *
-	 * @param t The target tile
-	 * @return The angle in degrees
-	 */
-	public int getTileAngle(final RSTile t) {
-		final int a = (methods.calc.angleToTile(t) - 90) % 360;
-		return a < 0 ? a + 360 : a;
-	}
-
-	/**
-	 * Returns the angle between the current camera angle and the given angle in
-	 * degrees.
-	 *
-	 * @param degrees The target angle.
-	 * @return The angle between the who angles in degrees.
-	 */
-	public int getAngleTo(final int degrees) {
-		int ca = getAngle();
-		if (ca < degrees) {
-			ca += 360;
-		}
-		int da = ca - degrees;
-		if (da > 180) {
-			da -= 360;
-		}
-		return da;
-	}
-
-	/**
-	 * Returns the current compass orientation in degrees, with North at 0,
-	 * increasing counter-clockwise to 360.
-	 *
-	 * @return The current camera angle in degrees.
-	 */
-	public int getAngle() {
-		// the client uses fixed point radians 0 - 2^14
-		// degrees = yaw * 360 / 2^14 = yaw / 45.5111...
-		return (int) (methods.client.getCameraYaw() / 45.51);
-	}
-
-	/**
-	 * Returns the current percentage of the maximum pitch of the camera in an
-	 * open area.
-	 *
-	 * @return The current camera altitude percentage.
-	 */
-	public int getPitch() {
-		return (int) ((methods.client.getCameraPitch() - 1024) / 20.48);
-	}
-
-	/**
-	 * Returns the current x position of the camera.
-	 *
-	 * @return The x position.
-	 */
-	public int getX() {
-		return methods.client.getCamPosX();
-	}
-
-	/**
-	 * Returns the current y position of the camera.
-	 *
-	 * @return The y position.
-	 */
-	public int getY() {
-		return methods.client.getCamPosY();
-	}
-
-	/**
-	 * Returns the current z position of the camera.
-	 *
-	 * @return The z position.
-	 */
-	public int getZ() {
-		return methods.client.getCamPosZ();
+	public void turnTo(final RSTile tile, final int dev) {
+		int angle = getTileAngle(tile);
+		angle = random(angle - dev, angle + dev + 1);
+		setAngle(angle);
 	}
 }

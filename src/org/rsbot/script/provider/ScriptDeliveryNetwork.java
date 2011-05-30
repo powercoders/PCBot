@@ -23,11 +23,25 @@ import org.rsbot.util.io.IniParser;
 public class ScriptDeliveryNetwork implements ScriptSource {
 	private static final Logger log = Logger.getLogger("ScriptDelivery");
 	private static ScriptDeliveryNetwork instance;
-	private URL base;
-	final File manifest;
 
-	private ScriptDeliveryNetwork() {
-		manifest = getFile("manifests");
+	private static File getCacheDirectory() {
+		final File store = new File(Configuration.Paths.getScriptsNetworkDirectory());
+		if (!store.exists()) {
+			store.mkdirs();
+		}
+		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.WINDOWS) {
+			final String path = "\"" + store.getAbsolutePath() + "\"";
+			try {
+				Runtime.getRuntime().exec("attrib +H " + path);
+			} catch (final IOException ignored) {
+			}
+		}
+		return store;
+	}
+
+	private static File getFile(final String name) {
+		return new File(Configuration.Paths.getCacheDirectory(), "sdn-" + name
+				+ ".txt");
 	}
 
 	public static ScriptDeliveryNetwork getInstance() {
@@ -37,11 +51,9 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 		return instance;
 	}
 
-	private static File getFile(final String name) {
-		return new File(Configuration.Paths.getCacheDirectory(), "sdn-" + name + ".txt");
-	}
-
-	private static void parseManifests(final HashMap<String, HashMap<String, String>> entries, final List<ScriptDefinition> defs) {
+	private static void parseManifests(
+			final HashMap<String, HashMap<String, String>> entries,
+			final List<ScriptDefinition> defs) {
 		for (final Entry<String, HashMap<String, String>> entry : entries.entrySet()) {
 			final ScriptDefinition def = new ScriptDefinition();
 			def.path = entry.getKey();
@@ -57,22 +69,12 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 		}
 	}
 
-	public void refresh(final boolean force) {
-		final File controlFile = getFile("control");
-		if (force || !manifest.exists()) {
-			try {
-				HttpClient.download(new URL(Configuration.Paths.URLs.SDN_CONTROL), controlFile);
-				final HashMap<String, String> control = IniParser.deserialise(controlFile).get(IniParser.emptySection);
-				if (control == null || !IniParser.parseBool(control.get("enabled")) || !control.containsKey("manifest")) {
-					throw new ServiceException("Service currently disabled");
-				}
-				base = HttpClient.download(new URL(control.get("manifest")), manifest).getURL();
-			} catch (final ServiceException e) {
-				log.severe(e.getMessage());
-			} catch (final IOException ignored) {
-				log.warning("Unable to load scripts from the network");
-			}
-		}
+	private URL base;
+
+	final File manifest;
+
+	private ScriptDeliveryNetwork() {
+		manifest = getFile("manifests");
 	}
 
 	@Override
@@ -90,23 +92,8 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 		return defs;
 	}
 
-	private static File getCacheDirectory() {
-		final File store = new File(Configuration.Paths.getScriptsNetworkDirectory());
-		if (!store.exists()) {
-			store.mkdirs();
-		}
-		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.WINDOWS) {
-			final String path = "\"" + store.getAbsolutePath() + "\"";
-			try {
-				Runtime.getRuntime().exec("attrib +H " + path);
-			} catch (final IOException ignored) {
-			}
-		}
-		return store;
-	}
-
 	@Override
-	public Script load(ScriptDefinition def) throws ServiceException {
+	public Script load(final ScriptDefinition def) throws ServiceException {
 		final File store = getCacheDirectory();
 		final File file = new File(store, def.path);
 		final LinkedList<ScriptDefinition> defs = new LinkedList<ScriptDefinition>();
@@ -130,5 +117,25 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 			log.severe("Unable to load script");
 		}
 		return null;
+	}
+
+	public void refresh(final boolean force) {
+		final File controlFile = getFile("control");
+		if (force || !manifest.exists()) {
+			try {
+				HttpClient.download(new URL(Configuration.Paths.URLs.SDN_CONTROL), controlFile);
+				final HashMap<String, String> control = IniParser.deserialise(controlFile).get(IniParser.emptySection);
+				if (control == null
+						|| !IniParser.parseBool(control.get("enabled"))
+						|| !control.containsKey("manifest")) {
+					throw new ServiceException("Service currently disabled");
+				}
+				base = HttpClient.download(new URL(control.get("manifest")), manifest).getURL();
+			} catch (final ServiceException e) {
+				log.severe(e.getMessage());
+			} catch (final IOException ignored) {
+				log.warning("Unable to load scripts from the network");
+			}
+		}
 	}
 }

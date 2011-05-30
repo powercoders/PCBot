@@ -5,7 +5,7 @@ import org.rsbot.script.methods.Game.Tab;
 
 /**
  * For internal use to find GUI components.
- *
+ * 
  * @author Qauters
  */
 class GameGUI extends MethodProvider {
@@ -37,8 +37,8 @@ class GameGUI extends MethodProvider {
 		checkGUI();
 
 		// Get GUI interface
-		final RSInterface[] gui = ind_GUI != -1 ? methods.client
-				.getRSInterfaceCache()[ind_GUI] : null;
+		final RSInterface[] gui = ind_GUI != -1 ? methods.client.getRSInterfaceCache()[ind_GUI]
+				: null;
 		if (gui == null) {
 			return null;
 		}
@@ -46,7 +46,9 @@ class GameGUI extends MethodProvider {
 		// Check if we need to find a new compass index
 		if (ind_Compass == -1) {
 			for (int i = 0; i < gui.length; i++) {
-				if (gui[i] != null && gui[i].getActions() != null && gui[i].getActions().length == 1 && gui[i].getActions()[0].equals("Face North")) {
+				if (gui[i] != null && gui[i].getActions() != null
+						&& gui[i].getActions().length == 1
+						&& gui[i].getActions()[0].equals("Face North")) {
 					ind_Compass = i;
 					break;
 				}
@@ -69,7 +71,8 @@ class GameGUI extends MethodProvider {
 		checkGUI();
 
 		// Get the GUI interface
-		final RSInterface[] gui = ind_GUI != -1 ? methods.client.getRSInterfaceCache()[ind_GUI] : null;
+		final RSInterface[] gui = ind_GUI != -1 ? methods.client.getRSInterfaceCache()[ind_GUI]
+				: null;
 		if (gui == null) {
 			return null;
 		}
@@ -93,7 +96,8 @@ class GameGUI extends MethodProvider {
 	}
 
 	/**
-	 * @param tab The tab.
+	 * @param tab
+	 *            The tab.
 	 * @return The specified tab <tt>RSInterface</tt>; otherwise null.
 	 */
 	public synchronized RSInterface getTab(final Game.Tab tab) {
@@ -105,14 +109,16 @@ class GameGUI extends MethodProvider {
 		checkGUI();
 
 		// Get GUI interface
-		final RSInterface[] gui = ind_GUI != -1 ? methods.client.getRSInterfaceCache()[ind_GUI] : null;
+		final RSInterface[] gui = ind_GUI != -1 ? methods.client.getRSInterfaceCache()[ind_GUI]
+				: null;
 		if (gui != null) {
 			// Check if we need to find a new tab index
 			if (ind_Tabs[tab.index()] == -1) {
 				for (int i = 0; i < gui.length; i++) {
 					if (gui[i] != null) {
 						final String[] actions = gui[i].getActions();
-						if (actions != null && actions.length > 0 && actions[0].equals(tab.description())) {
+						if (actions != null && actions.length > 0
+								&& actions[0].equals(tab.description())) {
 							ind_Tabs[tab.index()] = i;
 							break;
 						}

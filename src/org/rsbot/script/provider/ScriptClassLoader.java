@@ -18,13 +18,33 @@ class ScriptClassLoader extends ClassLoader {
 	}
 
 	@Override
+	public URL getResource(final String name) {
+		try {
+			return new URL(base, name);
+		} catch (final MalformedURLException e) {
+			return null;
+		}
+	}
+
+	@Override
+	public InputStream getResourceAsStream(final String name) {
+		try {
+			return new URL(base, name).openStream();
+		} catch (final IOException e) {
+			return null;
+		}
+	}
+
+	@Override
 	@SuppressWarnings("rawtypes")
-	public Class<?> loadClass(final String name, final boolean resolve) throws ClassNotFoundException {
+	public Class<?> loadClass(final String name, final boolean resolve)
+			throws ClassNotFoundException {
 		Class clazz = findLoadedClass(name);
 
 		if (clazz == null) {
 			try {
-				final InputStream in = getResourceAsStream(name.replace('.', '/') + ".class");
+				final InputStream in = getResourceAsStream(name.replace('.', '/')
+						+ ".class");
 				final byte[] buffer = new byte[4096];
 				final ByteArrayOutputStream out = new ByteArrayOutputStream();
 				int n;
@@ -42,24 +62,6 @@ class ScriptClassLoader extends ClassLoader {
 		}
 
 		return clazz;
-	}
-
-	@Override
-	public URL getResource(final String name) {
-		try {
-			return new URL(base, name);
-		} catch (final MalformedURLException e) {
-			return null;
-		}
-	}
-
-	@Override
-	public InputStream getResourceAsStream(final String name) {
-		try {
-			return new URL(base, name).openStream();
-		} catch (final IOException e) {
-			return null;
-		}
 	}
 
 }

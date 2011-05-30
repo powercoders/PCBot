@@ -2,11 +2,11 @@ package org.rsbot.client;
 
 public interface Cache {
 
-	HashTable getTable();
-
 	int getInitialCount();
+
+	NodeSubQueue getList();
 
 	int getSpaceLeft();
 
-	NodeSubQueue getList();
+	HashTable getTable();
 }

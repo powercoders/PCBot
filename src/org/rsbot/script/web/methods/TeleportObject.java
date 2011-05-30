@@ -11,30 +11,46 @@ public class TeleportObject extends Teleport {
 	public final String action;
 	public final RSComponent comp;
 
-	public TeleportObject(final MethodContext ctx, final RSTile teleportationLocation, final String action, final int objectID) {
+	public TeleportObject(final MethodContext ctx,
+			final RSTile teleportationLocation, final String action,
+			final int objectID) {
 		super(ctx, teleportationLocation);
 		this.objectID = objectID;
 		this.action = action;
 		comp = null;
 	}
 
-	public TeleportObject(final MethodContext ctx, final RSTile teleportationLocation, final String action, final RSComponent comp, final int objectID) {
+	public TeleportObject(final MethodContext ctx,
+			final RSTile teleportationLocation, final String action,
+			final RSComponent comp, final int objectID) {
 		super(ctx, teleportationLocation);
 		this.objectID = objectID;
 		this.action = action;
 		this.comp = comp;
 	}
 
+	@Override
+	public double getDistance(final RSTile destination) {
+		return methods.calc.distanceBetween(teleportationLocation(), destination);// TODO
+																					// use
+																					// web
+																					// distancing.
+	}
+
+	@Override
+	public boolean isApplicable(final RSTile base, final RSTile destination) {
+		return methods.calc.distanceBetween(base, teleportationLocation()) > 30
+				&& methods.calc.distanceBetween(teleportationLocation(), destination) < methods.calc.distanceTo(destination);
+	}
+
+	@Override
 	public boolean meetsPrerequisites() {
 		return methods.objects.getNearest(objectID) != null;
 	}
 
-	public boolean isApplicable(RSTile base, RSTile destination) {
-		return methods.calc.distanceBetween(base, teleportationLocation()) > 30 && methods.calc.distanceBetween(teleportationLocation(), destination) < methods.calc.distanceTo(destination);
-	}
-
+	@Override
 	public boolean perform() {
-		RSObject obj = methods.objects.getNearest(objectID);
+		final RSObject obj = methods.objects.getNearest(objectID);
 		if (obj != null) {
 			if (obj.doAction(action)) {
 				final long tO = System.currentTimeMillis();
@@ -55,9 +71,5 @@ public class TeleportObject extends Teleport {
 			return methods.calc.distanceBetween(methods.players.getMyPlayer().getLocation(), teleportationLocation()) < 15;
 		}
 		return false;
-	}
-
-	public double getDistance(RSTile destination) {
-		return methods.calc.distanceBetween(teleportationLocation(), destination);// TODO use web distancing.
 	}
 }

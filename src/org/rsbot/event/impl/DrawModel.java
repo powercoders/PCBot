@@ -1,16 +1,20 @@
 package org.rsbot.event.impl;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.HashMap;
+
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.wrappers.RSGroundItem;
 import org.rsbot.script.wrappers.RSModel;
 import org.rsbot.script.wrappers.RSObject;
-
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.HashMap;
 
 /**
  * @author Jacmob
@@ -27,65 +31,14 @@ public class DrawModel implements PaintListener, MouseListener {
 		color_map.put(RSObject.Type.WALL_DECORATION, Color.GRAY);
 	}
 
-	private static final String[] OPTIONS = {"Objects", "Players", "NPCs", "Piles"};
-	private static boolean[] enabled = {true, true, true, true};
+	private static final String[] OPTIONS = { "Objects", "Players", "NPCs",
+			"Piles" };
+	private static boolean[] enabled = { true, true, true, true };
 
 	private final MethodContext ctx;
 
 	public DrawModel(final Bot bot) {
 		ctx = bot.getMethodContext();
-	}
-
-	@Override
-	public void onRepaint(final Graphics render) {
-		drawRect(render);
-		if (enabled[0]) {
-			for (final org.rsbot.script.wrappers.RSObject o : ctx.objects.getAll()) {
-				final RSModel model = o.getModel();
-				if (model != null) {
-					render.setColor(color_map.get(o.getType()));
-					for (final Polygon polygon : model.getTriangles()) {
-						render.drawPolygon(polygon);
-					}
-					render.setColor(Color.GREEN);
-					final Point p = model.getPoint();
-					render.fillOval(p.x - 1, p.y - 1, 2, 2);
-				}
-			}
-		}
-		if (enabled[1]) {
-			for (final org.rsbot.script.wrappers.RSCharacter c : ctx.players.getAll()) {
-				final RSModel model = c.getModel();
-				if (model != null) {
-					render.setColor(Color.RED);
-					for (final Polygon polygon : model.getTriangles()) {
-						render.drawPolygon(polygon);
-					}
-				}
-			}
-		}
-		if (enabled[2]) {
-			for (final org.rsbot.script.wrappers.RSCharacter c : ctx.npcs.getAll()) {
-				final RSModel model = c.getModel();
-				if (model != null) {
-					render.setColor(Color.MAGENTA);
-					for (final Polygon polygon : model.getTriangles()) {
-						render.drawPolygon(polygon);
-					}
-				}
-			}
-		}
-		if (enabled[3]) {
-			for (final RSGroundItem item : ctx.groundItems.getAll()) {
-				final RSModel model = item.getModel();
-				if (model != null) {
-					render.setColor(Color.CYAN);
-					for (final Polygon polygon : model.getTriangles()) {
-						render.drawPolygon(polygon);
-					}
-				}
-			}
-		}
 	}
 
 	public final void drawRect(final Graphics render) {
@@ -138,5 +91,57 @@ public class DrawModel implements PaintListener, MouseListener {
 	@Override
 	public void mouseReleased(final MouseEvent arg0) {
 
+	}
+
+	@Override
+	public void onRepaint(final Graphics render) {
+		drawRect(render);
+		if (enabled[0]) {
+			for (final org.rsbot.script.wrappers.RSObject o : ctx.objects.getAll()) {
+				final RSModel model = o.getModel();
+				if (model != null) {
+					render.setColor(color_map.get(o.getType()));
+					for (final Polygon polygon : model.getTriangles()) {
+						render.drawPolygon(polygon);
+					}
+					render.setColor(Color.GREEN);
+					final Point p = model.getPoint();
+					render.fillOval(p.x - 1, p.y - 1, 2, 2);
+				}
+			}
+		}
+		if (enabled[1]) {
+			for (final org.rsbot.script.wrappers.RSCharacter c : ctx.players.getAll()) {
+				final RSModel model = c.getModel();
+				if (model != null) {
+					render.setColor(Color.RED);
+					for (final Polygon polygon : model.getTriangles()) {
+						render.drawPolygon(polygon);
+					}
+				}
+			}
+		}
+		if (enabled[2]) {
+			for (final org.rsbot.script.wrappers.RSCharacter c : ctx.npcs.getAll()) {
+				final RSModel model = c.getModel();
+				if (model != null) {
+					render.setColor(Color.MAGENTA);
+					for (final Polygon polygon : model.getTriangles()) {
+						render.drawPolygon(polygon);
+					}
+				}
+			}
+		}
+		if (enabled[3]) {
+			for (final RSGroundItem item : ctx.groundItems.getAll()) {
+				final RSModel model = item.getModel();
+				if (model != null) {
+					render.setColor(Color.CYAN);
+					for (final Polygon polygon : model.getTriangles()) {
+						render.drawPolygon(polygon);
+					}
+				}
+			}
+		}
 	}
 }

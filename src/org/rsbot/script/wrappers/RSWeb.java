@@ -1,13 +1,13 @@
 package org.rsbot.script.wrappers;
 
+import java.util.LinkedList;
+
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.web.Route;
 
-import java.util.LinkedList;
-
 /**
  * A transportation action consisting of a list of routes.
- *
+ * 
  * @author Timer
  */
 public class RSWeb {
@@ -16,7 +16,7 @@ public class RSWeb {
 	private final RSTile start, end;
 
 	public RSWeb(final Route[] routes, final RSTile start, final RSTile end) {
-		for (Route route : routes) {
+		for (final Route route : routes) {
 			this.routes.addLast(route);
 		}
 		oldCount = Web.rs_map.size();
@@ -24,8 +24,20 @@ public class RSWeb {
 		this.end = end;
 	}
 
+	public boolean finished() {
+		return routes.size() == 0;
+	}
+
+	public RSTile getEnd() {
+		return end;
+	}
+
 	public Route[] getRoutes() {
 		return routes.toArray(new Route[routes.size()]);
+	}
+
+	public RSTile getStart() {
+		return start;
 	}
 
 	public boolean step() {
@@ -34,7 +46,7 @@ public class RSWeb {
 				oldCount = Web.rs_map.size();
 				update();
 			}
-			Route route = routes.poll();
+			final Route route = routes.poll();
 			if (route.execute()) {
 				if (!route.finished()) {
 					routes.addFirst(route);
@@ -47,20 +59,8 @@ public class RSWeb {
 		return true;
 	}
 
-	public boolean finished() {
-		return routes.size() == 0;
-	}
-
-	public RSTile getStart() {
-		return start;
-	}
-
-	public RSTile getEnd() {
-		return end;
-	}
-
 	public void update() {
-		for (Route route : getRoutes()) {
+		for (final Route route : getRoutes()) {
 			if (route != null) {
 				route.updateRoute();
 			}

@@ -1,10 +1,10 @@
 package org.rsbot.script.methods;
 
+import java.util.ArrayList;
+
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
 import org.rsbot.script.wrappers.RSItem;
-
-import java.util.ArrayList;
 
 /**
  * Store related operations.
@@ -21,9 +21,11 @@ public class Store extends MethodProvider {
 	/**
 	 * Tries to buy an item. 0 is All. 1, 5 and 10 use buy 1/5/10 while the
 	 * other numbers use buy x.
-	 *
-	 * @param itemID The id of the item.
-	 * @param count  The number to buy.
+	 * 
+	 * @param itemID
+	 *            The id of the item.
+	 * @param count
+	 *            The number to buy.
 	 * @return <tt>true</tt> on success
 	 */
 	public boolean buy(final int itemID, final int count) {
@@ -80,14 +82,14 @@ public class Store extends MethodProvider {
 
 	/**
 	 * Closes the store interface.
-	 *
+	 * 
 	 * @return <tt>true</tt> if the interface is no longer open
 	 */
 	public boolean close() {
 		if (!isOpen()) {
 			return true;
 		}
-		if (methods.interfaces.getComponent(INTERFACE_STORE,INTERFACE_STORE_BUTTON_CLOSE).doClick()) {
+		if (methods.interfaces.getComponent(INTERFACE_STORE, INTERFACE_STORE_BUTTON_CLOSE).doClick()) {
 			sleep(random(500, 600));
 			return !isOpen();
 		} else {
@@ -97,7 +99,7 @@ public class Store extends MethodProvider {
 
 	/**
 	 * Gets the store interface.
-	 *
+	 * 
 	 * @return the store <tt>RSInterface</tt>
 	 */
 	public RSInterface getInterface() {
@@ -105,10 +107,31 @@ public class Store extends MethodProvider {
 	}
 
 	/**
+	 * Gets the first item found with the given id.
+	 * 
+	 * @param id
+	 *            ID of the item to get
+	 * @return The <tt>RSComponent</tt> of the item; otherwise null.
+	 */
+	public RSItem getItem(final int id) {
+		final RSItem[] items = getItems();
+		if (items != null) {
+			for (final RSItem item : items) {
+				if (item.getID() == id) {
+					return item;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Gets the item at a given component index.
-	 *
-	 * @param index The index of the component based off of the components in the
-	 *              Store interface.
+	 * 
+	 * @param index
+	 *            The index of the component based off of the components in the
+	 *            Store interface.
 	 * @return <tt>RSComponent</tt> for the item at the given index; otherwise
 	 *         null.
 	 */
@@ -126,32 +149,14 @@ public class Store extends MethodProvider {
 	}
 
 	/**
-	 * Gets the first item found with the given id.
-	 *
-	 * @param id ID of the item to get
-	 * @return The <tt>RSComponent</tt> of the item; otherwise null.
-	 */
-	public RSItem getItem(final int id) {
-		final RSItem[] items = getItems();
-		if (items != null) {
-			for (final RSItem item : items) {
-				if (item.getID() == id) {
-					return item;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
 	 * Gets all the items in the store inventory.
-	 *
+	 * 
 	 * @return An <tt>RSComponent</tt> array representing all of the components
 	 *         in the stores <tt>RSInterface</tt>.
 	 */
 	public RSItem[] getItems() {
-		if (getInterface() == null	|| getInterface().getComponent(INTERFACE_STORE_ITEMS) == null) {
+		if (getInterface() == null
+				|| getInterface().getComponent(INTERFACE_STORE_ITEMS) == null) {
 			return null;
 		}
 
@@ -169,7 +174,7 @@ public class Store extends MethodProvider {
 
 	/**
 	 * Returns whether or not the store interface is open.
-	 *
+	 * 
 	 * @return <tt>true</tt> if the store interface is open, otherwise
 	 *         <tt>false</tt>.
 	 */

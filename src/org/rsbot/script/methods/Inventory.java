@@ -1,16 +1,16 @@
 package org.rsbot.script.methods;
 
+import java.awt.Point;
+import java.util.LinkedList;
+
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSItem;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSTile;
 
-import java.awt.*;
-import java.util.LinkedList;
-
 /**
  * Inventory related operations.
- *
+ * 
  * @author Jacmob
  * @author kiko
  */
@@ -28,7 +28,7 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Left-clicks on the selected item.
-	 *
+	 * 
 	 * @return <tt>true</tt> if item was selected, </tt>false</tt> if not.
 	 * @see #clickSelectedItem(boolean)
 	 */
@@ -38,9 +38,10 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Clicks selected inventory item, if it's selected.
-	 *
-	 * @param leftClick <tt>true</tt> for left button click, <tt>false</tt> for right
-	 *                  button.
+	 * 
+	 * @param leftClick
+	 *            <tt>true</tt> for left button click, <tt>false</tt> for right
+	 *            button.
 	 * @return <tt>true</tt> if item was selected, <tt>false</tt> if not.
 	 */
 	public boolean clickSelectedItem(final boolean leftClick) {
@@ -50,8 +51,9 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Checks whether or not your inventory contains the provided item ID.
-	 *
-	 * @param itemID The item(s) you wish to evaluate.
+	 * 
+	 * @param itemID
+	 *            The item(s) you wish to evaluate.
 	 * @return <tt>true</tt> if your inventory contains an item with the ID
 	 *         provided; otherwise <tt>false</tt>.
 	 * @see #containsOneOf(int...)
@@ -63,8 +65,9 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Checks whether or not your inventory contains the provided item name.
-	 *
-	 * @param name The item(s) you wish to evaluate.
+	 * 
+	 * @param name
+	 *            The item(s) you wish to evaluate.
 	 * @return <tt>true</tt> if your inventory contains an item with the name
 	 *         provided; otherwise <tt>false</tt>.
 	 */
@@ -75,8 +78,9 @@ public class Inventory extends MethodProvider {
 	/**
 	 * Checks whether or not your inventory contains all of the provided item
 	 * IDs.
-	 *
-	 * @param itemID The item(s) you wish to evaluate.
+	 * 
+	 * @param itemID
+	 *            The item(s) you wish to evaluate.
 	 * @return <tt>true</tt> if your inventory contains at least one of all of
 	 *         the item IDs provided; otherwise <tt>false</tt>.
 	 * @see #containsOneOf(int...)
@@ -93,8 +97,9 @@ public class Inventory extends MethodProvider {
 	/**
 	 * Checks whether or not your inventory contains at least one of the
 	 * provided item IDs.
-	 *
-	 * @param itemID The item ID to check for.
+	 * 
+	 * @param itemID
+	 *            The item ID to check for.
 	 * @return <tt>true</tt> if inventory contains one of the specified items;
 	 *         otherwise <tt>false</tt>.
 	 * @see #containsAll(int...)
@@ -112,8 +117,9 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Destroys any inventory items with the given ID.
-	 *
-	 * @param itemID The ID of items to destroy.
+	 * 
+	 * @param itemID
+	 *            The ID of items to destroy.
 	 * @return <tt>true</tt> if the items were destroyed; otherwise
 	 *         <tt>false</tt>.
 	 */
@@ -135,24 +141,13 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Drops all items except those with one of the provided IDs.
-	 * This method drops items vertically going down the inventory.
-	 *
-	 * @param ids The item IDs to drop.
-	 * @return <tt>true</tt> if items were dropped from the inventory;
-	 *         otherwise <tt>false</tt>.
-	 * @see #dropAllExcept(boolean, int...)
-	 */
-	public boolean dropAllExcept(final int... ids) {
-		return dropAllExcept(false, ids);
-	}
-
-	/**
-	 * Drops all items except those with one of the provided IDs.
-	 *
-	 * @param leftToRight <tt>true</tt> to drop items from left to right.
-	 * @param ids         The item IDs to drop
-	 * @return <tt>true</tt> if items were dropped from the inventory;
-	 *         otherwise <tt>false</tt>.
+	 * 
+	 * @param leftToRight
+	 *            <tt>true</tt> to drop items from left to right.
+	 * @param ids
+	 *            The item IDs to drop
+	 * @return <tt>true</tt> if items were dropped from the inventory; otherwise
+	 *         <tt>false</tt>.
 	 */
 	public boolean dropAllExcept(final boolean leftToRight, final int... ids) {
 		final int startCount = getCount();
@@ -169,7 +164,7 @@ public class Inventory extends MethodProvider {
 				final int r = leftToRight ? j / 4 : j % 7;
 				final RSItem curItem = getItems()[c + r * 4];
 				if (curItem != null) {
-					int id = curItem.getID();
+					final int id = curItem.getID();
 					if (id != -1) {
 						boolean isInItems = false;
 						for (final int i : ids) {
@@ -196,12 +191,28 @@ public class Inventory extends MethodProvider {
 	}
 
 	/**
+	 * Drops all items except those with one of the provided IDs. This method
+	 * drops items vertically going down the inventory.
+	 * 
+	 * @param ids
+	 *            The item IDs to drop.
+	 * @return <tt>true</tt> if items were dropped from the inventory; otherwise
+	 *         <tt>false</tt>.
+	 * @see #dropAllExcept(boolean, int...)
+	 */
+	public boolean dropAllExcept(final int... ids) {
+		return dropAllExcept(false, ids);
+	}
+
+	/**
 	 * Drops the item in the specified column and row.
-	 *
-	 * @param col The column the item is in.
-	 * @param row The row the item is in.
-	 * @return <tt>true</tt> if we tried to drop the item,
-	 *         <tt>false</tt> if not (e.g., if item is undroppable)
+	 * 
+	 * @param col
+	 *            The column the item is in.
+	 * @param row
+	 *            The row the item is in.
+	 * @return <tt>true</tt> if we tried to drop the item, <tt>false</tt> if not
+	 *         (e.g., if item is undroppable)
 	 */
 	public boolean dropItem(final int col, final int row) {
 		if (methods.interfaces.canContinue()) {
@@ -222,7 +233,7 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Gets the count of all items in your inventory, ignoring stack sizes.
-	 *
+	 * 
 	 * @return The count.
 	 */
 	public int getCount() {
@@ -231,9 +242,10 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Gets the count of all items in your inventory.
-	 *
-	 * @param includeStacks <tt>false</tt> if stacked items should be counted as a
-	 *                      single item; otherwise <tt>true</tt>.
+	 * 
+	 * @param includeStacks
+	 *            <tt>false</tt> if stacked items should be counted as a single
+	 *            item; otherwise <tt>true</tt>.
 	 * @return The count.
 	 */
 	public int getCount(final boolean includeStacks) {
@@ -253,22 +265,13 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Gets the count of all the items in the inventory with the any of the
-	 * specified IDs. This ignores stack sizes.
-	 *
-	 * @param itemIDs the item IDs to include
-	 * @return The count.
-	 */
-	public int getCount(final int... itemIDs) {
-		return getCount(false, itemIDs);
-	}
-
-	/**
-	 * Gets the count of all the items in the inventory with the any of the
 	 * specified IDs.
-	 *
-	 * @param includeStacks <tt>true</tt> to count the stack sizes of each item;
-	 *                      <tt>false</tt> to count a stack as a single item.
-	 * @param itemIDs       the item IDs to include
+	 * 
+	 * @param includeStacks
+	 *            <tt>true</tt> to count the stack sizes of each item;
+	 *            <tt>false</tt> to count a stack as a single item.
+	 * @param itemIDs
+	 *            the item IDs to include
 	 * @return The count.
 	 */
 	public int getCount(final boolean includeStacks, final int... itemIDs) {
@@ -290,23 +293,26 @@ public class Inventory extends MethodProvider {
 	}
 
 	/**
-	 * Gets the count of all the items in the inventory without any of the
-	 * provided IDs, ignoring stack sizes.
-	 *
-	 * @param ids The item IDs to exclude.
+	 * Gets the count of all the items in the inventory with the any of the
+	 * specified IDs. This ignores stack sizes.
+	 * 
+	 * @param itemIDs
+	 *            the item IDs to include
 	 * @return The count.
 	 */
-	public int getCountExcept(final int... ids) {
-		return getCountExcept(false, ids);
+	public int getCount(final int... itemIDs) {
+		return getCount(false, itemIDs);
 	}
 
 	/**
 	 * Gets the count of all the items in the inventory without any of the
 	 * provided IDs.
-	 *
-	 * @param includeStacks <tt>true</tt> to count the stack sizes of each item;
-	 *                      <tt>false</tt> to count a stack as a single item.
-	 * @param ids           The item IDs to exclude.
+	 * 
+	 * @param includeStacks
+	 *            <tt>true</tt> to count the stack sizes of each item;
+	 *            <tt>false</tt> to count a stack as a single item.
+	 * @param ids
+	 *            The item IDs to exclude.
 	 * @return The count.
 	 */
 	public int getCountExcept(final boolean includeStacks, final int... ids) {
@@ -329,136 +335,20 @@ public class Inventory extends MethodProvider {
 	}
 
 	/**
-	 * Gets the first item in the inventory with any of the provided IDs.
-	 *
-	 * @param ids The IDs of the item to find.
-	 * @return The first <tt>RSItem</tt> for the given IDs; otherwise null.
+	 * Gets the count of all the items in the inventory without any of the
+	 * provided IDs, ignoring stack sizes.
+	 * 
+	 * @param ids
+	 *            The item IDs to exclude.
+	 * @return The count.
 	 */
-	public RSItem getItem(final int... ids) {
-		for (final RSItem item : getItems()) {
-			for (final int id : ids) {
-				if (item.getID() == id) {
-					return item;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the first item in the inventory containing any of the provided names.
-	 *
-	 * @param names The names of the item to find.
-	 * @return The first <tt>RSItem</tt> for the given name(s); otherwise null.
-	 */
-	public RSItem getItem(final String... names) {
-		for (final RSItem item : getItems()) {
-			String name = item.getName();
-			if (name != null) {
-				name = name.toLowerCase();
-				for (final String n : names) {
-					if (n != null && name.contains(n.toLowerCase())) {
-						return item;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Gets inventory item at specified index.
-	 *
-	 * @param index The index of inventory item.
-	 * @return The item, or <tt>null</tt> if not found.
-	 */
-	public RSItem getItemAt(final int index) {
-		final RSComponent comp = getInterface().getComponent(index);
-		return 0 <= index && index < 28 && comp != null ? new RSItem(methods,
-				comp) : null;
-	}
-
-	/**
-	 * Gets the ID of an item in the inventory with a given name.
-	 *
-	 * @param name The name of the item you wish to find.
-	 * @return The ID of the item or -1 if not in inventory.
-	 */
-	public int getItemID(final String name) {
-		final RSItem item = getItem(name);
-		return item != null ? item.getID() : -1;
-	}
-
-
-	/**
-	 * Gets all the items in the inventory.
-	 *
-	 * @return <tt>RSItem</tt> array of the current inventory items or an
-	 *         empty <tt>RSItem[]</tt> if unavailable.
-	 */
-	public RSItem[] getItems() {
-		return getItems(false);
-	}
-
-	/**
-	 * Gets all the items in the inventory.
-	 *
-	 * @param cached If the inventory interface should be updated before
-	 *               returning the items.
-	 * @return <tt>RSItem</tt> array of the current inventory items or an
-	 *         empty <tt>RSItem[]</tt> if unavailable.
-	 */
-	public RSItem[] getItems(final boolean cached) {
-		final RSComponent invIface = getInterface(cached);
-		if (invIface != null) {
-			final RSComponent[] comps = invIface.getComponents();
-			if (comps.length > 0) {
-				int len = 0;
-				for (final RSComponent com : comps) {
-					if (com.getType() == 5) {
-						++len;
-					}
-				}
-
-				final RSItem[] inv = new RSItem[len];
-				for (int i = 0; i < len; ++i) {
-					final RSComponent item = comps[i];
-					final int idx = item.getComponentIndex();
-					if (idx >= 0) {
-						inv[idx] = new RSItem(methods, item);
-					} else {
-						return new RSItem[0];
-					}
-				}
-				return inv;
-			}
-		}
-
-		return new RSItem[0];
-	}
-
-	/**
-	 * Gets all the items in the inventory matching any of the provided IDs.
-	 *
-	 * @param ids Valid IDs.
-	 * @return <tt>RSItem</tt> array of the matching inventory items.
-	 */
-	public RSItem[] getItems(final int... ids) {
-		final LinkedList<RSItem> items = new LinkedList<RSItem>();
-		for (final RSItem item : getItems()) {
-			for (final int i : ids) {
-				if (item.getID() == i) {
-					items.add(item);
-					break;
-				}
-			}
-		}
-		return items.toArray(new RSItem[items.size()]);
+	public int getCountExcept(final int... ids) {
+		return getCountExcept(false, ids);
 	}
 
 	/**
 	 * Gets the inventory interface.
-	 *
+	 * 
 	 * @return the current inventory interface if available; otherwise null.
 	 */
 	public RSComponent getInterface() {
@@ -467,21 +357,20 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Gets the inventory interface.
-	 *
-	 * @param cached <tt>true</tt> to skip updating the inventory interface.
+	 * 
+	 * @param cached
+	 *            <tt>true</tt> to skip updating the inventory interface.
 	 * @return the current inventory interface if available; otherwise null.
 	 */
 	public RSComponent getInterface(final boolean cached) {
 		if (methods.interfaces.get(INTERFACE_INVENTORY_BANK).isValid()) {
-			final RSComponent bankInv = methods.interfaces.getComponent(
-					INTERFACE_INVENTORY_BANK, 0);
+			final RSComponent bankInv = methods.interfaces.getComponent(INTERFACE_INVENTORY_BANK, 0);
 			if (bankInv != null && bankInv.getAbsoluteX() > 50) {
 				return bankInv;
 			}
 		}
 		if (methods.interfaces.get(INTERFACE_INVENTORY_SHOP).isValid()) {
-			final RSComponent shopInv = methods.interfaces.getComponent(
-					INTERFACE_INVENTORY_SHOP, 0);
+			final RSComponent shopInv = methods.interfaces.getComponent(INTERFACE_INVENTORY_SHOP, 0);
 			if (shopInv != null && shopInv.getAbsoluteX() > 50) {
 				return shopInv;
 			}
@@ -514,8 +403,142 @@ public class Inventory extends MethodProvider {
 	}
 
 	/**
+	 * Gets the first item in the inventory with any of the provided IDs.
+	 * 
+	 * @param ids
+	 *            The IDs of the item to find.
+	 * @return The first <tt>RSItem</tt> for the given IDs; otherwise null.
+	 */
+	public RSItem getItem(final int... ids) {
+		for (final RSItem item : getItems()) {
+			for (final int id : ids) {
+				if (item.getID() == id) {
+					return item;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the first item in the inventory containing any of the provided
+	 * names.
+	 * 
+	 * @param names
+	 *            The names of the item to find.
+	 * @return The first <tt>RSItem</tt> for the given name(s); otherwise null.
+	 */
+	public RSItem getItem(final String... names) {
+		for (final RSItem item : getItems()) {
+			String name = item.getName();
+			if (name != null) {
+				name = name.toLowerCase();
+				for (final String n : names) {
+					if (n != null && name.contains(n.toLowerCase())) {
+						return item;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Gets inventory item at specified index.
+	 * 
+	 * @param index
+	 *            The index of inventory item.
+	 * @return The item, or <tt>null</tt> if not found.
+	 */
+	public RSItem getItemAt(final int index) {
+		final RSComponent comp = getInterface().getComponent(index);
+		return 0 <= index && index < 28 && comp != null ? new RSItem(methods, comp)
+				: null;
+	}
+
+	/**
+	 * Gets the ID of an item in the inventory with a given name.
+	 * 
+	 * @param name
+	 *            The name of the item you wish to find.
+	 * @return The ID of the item or -1 if not in inventory.
+	 */
+	public int getItemID(final String name) {
+		final RSItem item = getItem(name);
+		return item != null ? item.getID() : -1;
+	}
+
+	/**
+	 * Gets all the items in the inventory.
+	 * 
+	 * @return <tt>RSItem</tt> array of the current inventory items or an empty
+	 *         <tt>RSItem[]</tt> if unavailable.
+	 */
+	public RSItem[] getItems() {
+		return getItems(false);
+	}
+
+	/**
+	 * Gets all the items in the inventory.
+	 * 
+	 * @param cached
+	 *            If the inventory interface should be updated before returning
+	 *            the items.
+	 * @return <tt>RSItem</tt> array of the current inventory items or an empty
+	 *         <tt>RSItem[]</tt> if unavailable.
+	 */
+	public RSItem[] getItems(final boolean cached) {
+		final RSComponent invIface = getInterface(cached);
+		if (invIface != null) {
+			final RSComponent[] comps = invIface.getComponents();
+			if (comps.length > 0) {
+				int len = 0;
+				for (final RSComponent com : comps) {
+					if (com.getType() == 5) {
+						++len;
+					}
+				}
+
+				final RSItem[] inv = new RSItem[len];
+				for (int i = 0; i < len; ++i) {
+					final RSComponent item = comps[i];
+					final int idx = item.getComponentIndex();
+					if (idx >= 0) {
+						inv[idx] = new RSItem(methods, item);
+					} else {
+						return new RSItem[0];
+					}
+				}
+				return inv;
+			}
+		}
+
+		return new RSItem[0];
+	}
+
+	/**
+	 * Gets all the items in the inventory matching any of the provided IDs.
+	 * 
+	 * @param ids
+	 *            Valid IDs.
+	 * @return <tt>RSItem</tt> array of the matching inventory items.
+	 */
+	public RSItem[] getItems(final int... ids) {
+		final LinkedList<RSItem> items = new LinkedList<RSItem>();
+		for (final RSItem item : getItems()) {
+			for (final int i : ids) {
+				if (item.getID() == i) {
+					items.add(item);
+					break;
+				}
+			}
+		}
+		return items.toArray(new RSItem[items.size()]);
+	}
+
+	/**
 	 * Gets the selected inventory item.
-	 *
+	 * 
 	 * @return The current selected item, or <tt>null</tt> if none is selected.
 	 */
 	public RSItem getSelectedItem() {
@@ -525,7 +548,7 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Gets the selected item index.
-	 *
+	 * 
 	 * @return The index of current selected item, or -1 if none is selected.
 	 */
 	public int getSelectedItemIndex() {
@@ -540,18 +563,19 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Gets the selected item name.
-	 *
+	 * 
 	 * @return The name of the current selected item, or null if none is
 	 *         selected.
 	 */
 	public String getSelectedItemName() {
 		final String name = methods.client.getSelectedItemName();
-		return name == null ? null : name.replaceAll("<[\\w\\d]+=[\\w\\d]+>", "");
+		return name == null ? null
+				: name.replaceAll("<[\\w\\d]+=[\\w\\d]+>", "");
 	}
 
 	/**
 	 * Checks whether or not your inventory is full.
-	 *
+	 * 
 	 * @return <tt>true</tt> if your inventory contains 28 items; otherwise
 	 *         <tt>false</tt>.
 	 */
@@ -561,7 +585,7 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Checks whether or not an inventory item is selected.
-	 *
+	 * 
 	 * @return <tt>true</tt> if an item in your inventory is selected; otherwise
 	 *         <tt>false</tt>.
 	 */
@@ -571,19 +595,22 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Randomizes a point.
-	 *
-	 * @param inventoryPoint The inventory point to be randomized.
+	 * 
+	 * @param inventoryPoint
+	 *            The inventory point to be randomized.
 	 * @return A randomized <tt>Point</tt> from the center of the given
 	 *         <tt>Point</tt>.
 	 */
 	public Point randomizeItemPoint(final Point inventoryPoint) {
-		return new Point(inventoryPoint.x + random(-10, 10), inventoryPoint.y + random(-10, 10));
+		return new Point(inventoryPoint.x + random(-10, 10), inventoryPoint.y
+				+ random(-10, 10));
 	}
 
 	/**
 	 * Selects the first item in the inventory with the provided ID.
-	 *
-	 * @param itemID The ID of the item to select.
+	 * 
+	 * @param itemID
+	 *            The ID of the item to select.
 	 * @return <tt>true</tt> if the item was selected; otherwise <tt>false</tt>.
 	 */
 	public boolean selectItem(final int itemID) {
@@ -593,8 +620,9 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Selects the specified item in the inventory
-	 *
-	 * @param item The item to select.
+	 * 
+	 * @param item
+	 *            The item to select.
 	 * @return <tt>true</tt> if the item was selected; otherwise <tt>false</tt>.
 	 */
 	public boolean selectItem(final RSItem item) {
@@ -614,9 +642,11 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Uses two items together.
-	 *
-	 * @param itemID   The first item ID to use.
-	 * @param targetID The item ID you want the first parameter to be used on.
+	 * 
+	 * @param itemID
+	 *            The first item ID to use.
+	 * @param targetID
+	 *            The item ID you want the first parameter to be used on.
 	 * @return <tt>true</tt> if the first item has been "used" on the other;
 	 *         otherwise <tt>false</tt>.
 	 */
@@ -628,9 +658,11 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Uses an item on an object.
-	 *
-	 * @param itemID The item ID to use on the object.
-	 * @param object The RSObject you want the item to be used on.
+	 * 
+	 * @param itemID
+	 *            The item ID to use on the object.
+	 * @param object
+	 *            The RSObject you want the item to be used on.
 	 * @return <tt>true</tt> if the "use" action had been used on both the
 	 *         RSItem and RSObject; otherwise <tt>false</tt>.
 	 */
@@ -641,9 +673,11 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Uses two items together.
-	 *
-	 * @param item       The item to use on another item.
-	 * @param targetItem The item you want the first parameter to be used on.
+	 * 
+	 * @param item
+	 *            The item to use on another item.
+	 * @param targetItem
+	 *            The item you want the first parameter to be used on.
 	 * @return <tt>true</tt> if the "use" action had been used on both items;
 	 *         otherwise <tt>false</tt>.
 	 */
@@ -654,14 +688,17 @@ public class Inventory extends MethodProvider {
 
 	/**
 	 * Uses an item on an object.
-	 *
-	 * @param item         The item to use on another item.
-	 * @param targetObject The RSObject you want the first parameter to be used on.
+	 * 
+	 * @param item
+	 *            The item to use on another item.
+	 * @param targetObject
+	 *            The RSObject you want the first parameter to be used on.
 	 * @return <tt>true</tt> if the "use" action had been used on both the
 	 *         RSItem and RSObject; otherwise <tt>false</tt>.
 	 */
 	public boolean useItem(final RSItem item, final RSObject targetObject) {
 		methods.game.openTab(Game.Tab.INVENTORY);
-		return selectItem(item) && targetObject.doAction("Use", targetObject.getName());
+		return selectItem(item)
+				&& targetObject.doAction("Use", targetObject.getName());
 	}
 }

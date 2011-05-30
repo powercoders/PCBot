@@ -1,6 +1,12 @@
 package org.rsbot.util.io;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * @author Paris
@@ -33,6 +39,23 @@ public class IOHelper {
 		return buffer == null ? null : buffer.toByteArray();
 	}
 
+	public static void recursiveDelete(final File path,
+			final boolean deleteParent) {
+		if (!path.exists()) {
+			return;
+		}
+		for (final File file : path.listFiles()) {
+			if (file.isDirectory()) {
+				recursiveDelete(file, true);
+			} else {
+				file.delete();
+			}
+		}
+		if (deleteParent) {
+			path.delete();
+		}
+	}
+
 	public static void write(final InputStream in, final File out) {
 		OutputStream outStream = null;
 		try {
@@ -53,22 +76,6 @@ public class IOHelper {
 				}
 			} catch (final IOException ignored) {
 			}
-		}
-	}
-
-	public static void recursiveDelete(final File path, final boolean deleteParent) {
-		if (!path.exists()) {
-			return;
-		}
-		for (final File file : path.listFiles()) {
-			if (file.isDirectory()) {
-				recursiveDelete(file, true);
-			} else {
-				file.delete();
-			}
-		}
-		if (deleteParent) {
-			path.delete();
 		}
 	}
 }

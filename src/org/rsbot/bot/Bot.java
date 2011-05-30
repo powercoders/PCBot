@@ -1,5 +1,14 @@
 package org.rsbot.bot;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Constructor;
+import java.util.EventListener;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.rsbot.Application;
 import org.rsbot.client.Client;
 import org.rsbot.client.input.Canvas;
@@ -16,13 +25,6 @@ import org.rsbot.script.internal.InputManager;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.methods.Environment;
 import org.rsbot.script.methods.MethodContext;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.lang.reflect.Constructor;
-import java.util.EventListener;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class Bot {
 	private String account;
@@ -67,13 +69,15 @@ public class Bot {
 	 * Defines what types of input are enabled when overrideInput is false.
 	 * Defaults to 'keyboard only' whenever a script is started.
 	 */
-	public volatile int inputFlags = Environment.INPUT_KEYBOARD | Environment.INPUT_MOUSE;
+	public volatile int inputFlags = Environment.INPUT_KEYBOARD
+			| Environment.INPUT_MOUSE;
 
 	public Bot() {
 		im = new InputManager(this);
 		loader = new RSLoader();
 		final Dimension size = Application.getPanelSize();
 		loader.setCallback(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					setClient((Client) loader.getClient());
@@ -92,6 +96,140 @@ public class Bot {
 		textPaintEvent = new TextPaintEvent();
 		eventManager = new EventManager();
 		listeners = new TreeMap<String, EventListener>();
+	}
+
+	public void addListener(final Class<?> clazz) {
+		final EventListener el = instantiateListener(clazz);
+		listeners.put(clazz.getName(), el);
+		eventManager.addListener(el);
+	}
+
+	public String getAccountName() {
+		return account;
+	}
+
+	public BackgroundScriptHandler getBackgroundScriptHandler() {
+		return bsh;
+	}
+
+	public BotStub getBotStub() {
+		return botStub;
+	}
+
+	public BreakHandler getBreakHandler() {
+		return bh;
+	}
+
+	public Graphics getBufferGraphics() {
+		final Graphics back = backBuffer.getGraphics();
+		paintEvent.graphics = back;
+		textPaintEvent.graphics = back;
+		textPaintEvent.idx = 0;
+		eventManager.processEvent(paintEvent);
+		eventManager.processEvent(textPaintEvent);
+		back.dispose();
+		image.getGraphics().drawImage(backBuffer, 0, 0, null);
+		if (panel != null) {
+			panel.repaint();
+		}
+		return backBuffer.getGraphics();
+	}
+
+	public Canvas getCanvas() {
+		if (client == null) {
+			return null;
+		}
+		return (Canvas) client.getCanvas();
+	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public EventManager getEventManager() {
+		return eventManager;
+	}
+
+	public BufferedImage getImage() {
+		return image;
+	}
+
+	public InputManager getInputManager() {
+		return im;
+	}
+
+	public RSLoader getLoader() {
+		return loader;
+	}
+
+	public MethodContext getMethodContext() {
+		return methods;
+	}
+
+	public ScriptHandler getScriptHandler() {
+		return sh;
+	}
+
+	public boolean hasListener(final Class<?> clazz) {
+		return clazz != null && listeners.get(clazz.getName()) != null;
+	}
+
+	private EventListener instantiateListener(final Class<?> clazz) {
+		try {
+			EventListener listener;
+			try {
+				final Constructor<?> constructor = clazz.getConstructor(Bot.class);
+				listener = (EventListener) constructor.newInstance(this);
+			} catch (final Exception e) {
+				listener = clazz.asSubclass(EventListener.class).newInstance();
+			}
+			return listener;
+		} catch (final Exception ignored) {
+		}
+		return null;
+	}
+
+	public void removeListener(final Class<?> clazz) {
+		final EventListener el = listeners.get(clazz.getName());
+		listeners.remove(clazz.getName());
+		eventManager.removeListener(el);
+	}
+
+	public void resize(final int width, final int height) {
+		backBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		// client reads size of loader applet for drawing
+		loader.setSize(width, height);
+		// simulate loader repaint awt event dispatch
+		final Graphics g = backBuffer.getGraphics();
+		loader.update(g);
+		loader.paint(g);
+	}
+
+	public boolean setAccount(final String name) {
+		boolean exist = false;
+		for (final String s : AccountManager.getAccountNames()) {
+			if (s.toLowerCase().equals(name.toLowerCase())) {
+				exist = true;
+			}
+		}
+		if (exist) {
+			account = name;
+			return true;
+		}
+		account = null;
+		return false;
+	}
+
+	private void setClient(final Client cl) {
+		client = cl;
+		client.setCallback(new CallbackImpl(this));
+		methods = new MethodContext(this);
+		sh.init();
+	}
+
+	public void setPanel(final Component c) {
+		panel = c;
 	}
 
 	public void start() {
@@ -136,139 +274,5 @@ public class Bot {
 		loader.destroy();
 		killBackground = true;
 		loader = null;
-	}
-
-	public void resize(final int width, final int height) {
-		backBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		// client reads size of loader applet for drawing
-		loader.setSize(width, height);
-		// simulate loader repaint awt event dispatch
-		final Graphics g = backBuffer.getGraphics();
-		loader.update(g);
-		loader.paint(g);
-	}
-
-	public boolean setAccount(final String name) {
-		boolean exist = false;
-		for (final String s : AccountManager.getAccountNames()) {
-			if (s.toLowerCase().equals(name.toLowerCase())) {
-				exist = true;
-			}
-		}
-		if (exist) {
-			account = name;
-			return true;
-		}
-		account = null;
-		return false;
-	}
-
-	public void setPanel(final Component c) {
-		panel = c;
-	}
-
-	public void addListener(final Class<?> clazz) {
-		final EventListener el = instantiateListener(clazz);
-		listeners.put(clazz.getName(), el);
-		eventManager.addListener(el);
-	}
-
-	public void removeListener(final Class<?> clazz) {
-		final EventListener el = listeners.get(clazz.getName());
-		listeners.remove(clazz.getName());
-		eventManager.removeListener(el);
-	}
-
-	public boolean hasListener(final Class<?> clazz) {
-		return clazz != null && listeners.get(clazz.getName()) != null;
-	}
-
-	public String getAccountName() {
-		return account;
-	}
-
-	public Client getClient() {
-		return client;
-	}
-
-	public Canvas getCanvas() {
-		if (client == null) {
-			return null;
-		}
-		return (Canvas) client.getCanvas();
-	}
-
-	public Graphics getBufferGraphics() {
-		final Graphics back = backBuffer.getGraphics();
-		paintEvent.graphics = back;
-		textPaintEvent.graphics = back;
-		textPaintEvent.idx = 0;
-		eventManager.processEvent(paintEvent);
-		eventManager.processEvent(textPaintEvent);
-		back.dispose();
-		image.getGraphics().drawImage(backBuffer, 0, 0, null);
-		if (panel != null) {
-			panel.repaint();
-		}
-		return backBuffer.getGraphics();
-	}
-
-	public BufferedImage getImage() {
-		return image;
-	}
-
-	public BotStub getBotStub() {
-		return botStub;
-	}
-
-	public RSLoader getLoader() {
-		return loader;
-	}
-
-	public MethodContext getMethodContext() {
-		return methods;
-	}
-
-	public EventManager getEventManager() {
-		return eventManager;
-	}
-
-	public InputManager getInputManager() {
-		return im;
-	}
-
-	public BreakHandler getBreakHandler() {
-		return bh;
-	}
-
-	public ScriptHandler getScriptHandler() {
-		return sh;
-	}
-
-	public BackgroundScriptHandler getBackgroundScriptHandler() {
-		return bsh;
-	}
-
-	private void setClient(final Client cl) {
-		client = cl;
-		client.setCallback(new CallbackImpl(this));
-		methods = new MethodContext(this);
-		sh.init();
-	}
-
-	private EventListener instantiateListener(final Class<?> clazz) {
-		try {
-			EventListener listener;
-			try {
-				final Constructor<?> constructor = clazz.getConstructor(Bot.class);
-				listener = (EventListener) constructor.newInstance(this);
-			} catch (final Exception e) {
-				listener = clazz.asSubclass(EventListener.class).newInstance();
-			}
-			return listener;
-		} catch (final Exception ignored) {
-		}
-		return null;
 	}
 }
