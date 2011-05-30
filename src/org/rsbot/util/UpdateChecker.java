@@ -46,7 +46,8 @@ public final class UpdateChecker {
 	public static boolean isDeprecatedVersion() {
 		final int kill;
 		try {
-			kill = Integer.parseInt(HttpClient.downloadAsString(new URL(Configuration.Paths.URLs.VERSION_KILL)));
+			final String s = HttpClient.downloadAsString(new URL(Configuration.Paths.URLs.VERSION_KILL)).trim();
+			kill = Integer.parseInt(s);
 		} catch (final Exception ignored) {
 			return false;
 		}
