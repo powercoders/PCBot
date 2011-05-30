@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import org.rsbot.Configuration;
-import org.rsbot.bot.Bot;
 import org.rsbot.event.EventMulticaster;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.gui.AccountManager;
