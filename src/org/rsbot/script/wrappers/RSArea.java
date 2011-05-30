@@ -9,15 +9,18 @@ import java.util.ArrayList;
  * @author SpeedWing
  */
 public class RSArea {
+	
 	private final Polygon area;
 	private final int plane;
+	private final RSTile[] tiles;
 
 	/**
 	 * @param tiles An Array containing of <b>RSTiles</b> forming a polygon shape.
 	 * @param plane The plane of the <b>RSArea</b>.
 	 */
 	public RSArea(final RSTile[] tiles, final int plane) {
-		area = tileArrayToPolygon(tiles);
+		this.tiles = tiles;
+		area = tileArrayToPolygon(this.tiles);
 		this.plane = plane;
 	}
 
@@ -210,6 +213,13 @@ public class RSArea {
 	 */
 	public int getY() {
 		return area.getBounds().y;
+	}
+	
+	/**
+	 * @return An array of <b>RSTile<b>'s that make the area.
+	 */
+	public RSTile[] getAreaTiles() {
+		return this.tiles;
 	}
 
 	/**
