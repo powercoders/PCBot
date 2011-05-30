@@ -129,48 +129,50 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			return null;
 		}
 
-		public void search(final String find, final String[] keys) {
+		public void filter(final String find, final String[] keys) {
 			matches.clear();
-			for (final ScriptDefinition def : scripts) {
-				if (find.length() != 0
-						&& !def.name.toLowerCase().contains(find)) {
-					continue;
-				}
-				final ArrayList<String> list = new ArrayList<String>(
-						def.keywords.length);
-				for (final String key : def.keywords) {
-					list.add(key.toLowerCase());
-				}
-				boolean hit = true;
-				for (final String key : keys) {
-					if (!list.contains(key)) {
-						hit = false;
-						break;
-					}
-				}
-				if (hit) {
-					matches.add(def);
-				}
-			}
-			fireTableDataChanged();
-		}
-
-		public void catagorize(String[] str) {
-			matches.clear();
+			final String item = find.toLowerCase().trim();
 			for (final ScriptDefinition def : scripts) {
 				if (def.category == null) {
 					def.category = Script.Category.OTHER;
 				}
-				String category = def.category.description().toLowerCase()
-						.trim();
+				final String name = def.name.toLowerCase().trim();
+				final String keywords[] = def.keywords;
 				boolean hit = false;
-				if (str.length == 0) {// Incase they are showing all scripts!
-					hit = true;
-				} else {
-					for (final String string : str) {
-						if (string.toLowerCase().trim().contains(category)) {
+				final String category = def.category.description()
+						.toLowerCase().trim();
+				for (final String key : keywords) {
+					final String keyword = key.toLowerCase().trim();
+					if (keys.length == 0 && item.length() == 0
+							&& keyword.length() != 0) {
+						hit = true;
+					} else if (keys.length != 0 && item.length() == 0) {
+						for (final String string : keys) {
+							if (string.toLowerCase().trim().contains(category)) {
+								hit = true;
+								break;
+							}
+						}
+					} else if (item.length() != 0 && keys.length == 0
+							&& keyword.length() != 0) {
+						if (item.contains(keyword) || keyword.contains(item)
+								|| name.contains(item) || item.contains(item)) {
 							hit = true;
 							break;
+						}
+					} else if (item.length() != 0 && keys.length != 0
+							&& keyword.length() != 0) {
+						for (final String string : keys) {
+							if (string.toLowerCase().trim().contains(category)) {
+								if (item.contains(keyword)
+										|| keyword.contains(item)
+										|| name.contains(item)
+										|| item.toLowerCase().trim()
+												.contains(name)) {
+									hit = true;
+									break;
+								}
+							}
 						}
 					}
 				}
@@ -229,12 +231,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		model = new ScriptTableModel(scripts);
 	}
 
-	private void catagorize() {
-		model.catagorize(categories.getSelectedItems());
-	}
-
 	private void filter() {
-		model.search(search == null || search.getText().contains("\0") ? ""
+		model.filter(search == null || search.getText().contains("\0") ? ""
 				: search.getText(), categories.getSelectedItems());
 	}
 
@@ -479,7 +477,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					break;
 				}
 				categories.setText(s.toString());
-				catagorize();
+				filter();
 			}
 		});
 		toolBar.add(search);
@@ -532,7 +530,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			}
 		}
 		categories.populate(keywords, false);
-		catagorize();
+		filter();
 		table.revalidate();
 	}
 
