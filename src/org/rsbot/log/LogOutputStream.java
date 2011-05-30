@@ -53,16 +53,12 @@ public class LogOutputStream extends OutputStream {
 
 	/**
 	 * Creates the LogOutputStream to flush to the given Category.
-	 * 
-	 * @param cat
-	 *            the Category to write to
-	 * @param priority
-	 *            the Priority to use when writing to the Category
-	 * @throws IllegalArgumentException
-	 *             if cat == null or priority == null
+	 *
+	 * @param cat      the Category to write to
+	 * @param priority the Priority to use when writing to the Category
+	 * @throws IllegalArgumentException if cat == null or priority == null
 	 */
-	public LogOutputStream(final Logger cat, final Level priority)
-			throws IllegalArgumentException {
+	public LogOutputStream(final Logger cat, final Level priority) throws IllegalArgumentException {
 		if (cat == null) {
 			throw new IllegalArgumentException("cat == null");
 		}
@@ -103,15 +99,13 @@ public class LogOutputStream extends OutputStream {
 		// don't print out blank lines; flushing from PrintStream puts out these
 		if (pos == LogOutputStream.LINE_SEPARATOR.length()) {
 
-			if ((char) buffer.get(0) == LogOutputStream.LINE_SEPARATOR.charAt(0)
-					&& (pos == 1 || // <-
+			if ((char) buffer.get(0) == LogOutputStream.LINE_SEPARATOR.charAt(0) && (pos == 1 || // <-
 					// Unix
 					// &
 					// Mac,
 					// ->
 					// Windows
-					pos == 2
-							&& (char) buffer.get(1) == LogOutputStream.LINE_SEPARATOR.charAt(1))) {
+					pos == 2 && (char) buffer.get(1) == LogOutputStream.LINE_SEPARATOR.charAt(1))) {
 				reset();
 				return;
 			}
@@ -130,13 +124,11 @@ public class LogOutputStream extends OutputStream {
 	 * <code>write</code> is that one byte is written to the output stream. The
 	 * byte to be written is the eight low-order bits of the argument
 	 * <code>b</code>. The 24 high-order bits of <code>b</code> are ignored.
-	 * 
-	 * @param b
-	 *            the <code>byte</code> to write
-	 * @throws IOException
-	 *             if an I/O error occurs. In particular, an
-	 *             <code>IOException</code> may be thrown if the output stream
-	 *             has been closed.
+	 *
+	 * @param b the <code>byte</code> to write
+	 * @throws IOException if an I/O error occurs. In particular, an
+	 *                     <code>IOException</code> may be thrown if the output stream
+	 *                     has been closed.
 	 */
 	@Override
 	public void write(final int b) throws IOException {
@@ -150,7 +142,7 @@ public class LogOutputStream extends OutputStream {
 		}
 
 		if (buffer.position() >= buffer.capacity()) {
-			// make bigger
+			//make bigger
 			final ByteBuffer newBuffer = ByteBuffer.allocate(buffer.capacity() * 2);
 			newBuffer.put(buffer);
 			buffer = newBuffer;

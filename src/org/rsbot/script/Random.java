@@ -1,15 +1,13 @@
 package org.rsbot.script;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.util.logging.Level;
-
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Methods;
 import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
+
+import java.awt.*;
+import java.util.logging.Level;
 
 public abstract class Random extends Methods implements PaintListener {
 
@@ -26,21 +24,38 @@ public abstract class Random extends Methods implements PaintListener {
 	private final long timeout = random(240, 300);
 
 	/**
-	 * Detects whether or not this anti-random should activate.
-	 * 
-	 * @return <tt>true</tt> if the current script should be paused and control
-	 *         passed to this anti-random's loop.
+	 * Detects whether or not this anti-random should
+	 * activate.
+	 *
+	 * @return <tt>true</tt> if the current script
+	 *         should be paused and control passed to this
+	 *         anti-random's loop.
 	 */
 	public abstract boolean activateCondition();
 
+	public abstract int loop();
+
+
 	/**
-	 * Override to provide a time limit in seconds for this anti-random to
-	 * complete.
-	 * 
-	 * @return The number of seconds after activateCondition returns
-	 *         <tt>true</tt> before the anti-random should be detected as having
-	 *         failed. If this time is reached the random and running script
-	 *         will be stopped.
+	 * Called after the method providers for this Random
+	 * become available for use in initialization.
+	 */
+	public void onStart() {
+
+	}
+
+	public void onFinish() {
+
+	}
+
+	/**
+	 * Override to provide a time limit in seconds for
+	 * this anti-random to complete.
+	 *
+	 * @return The number of seconds after activateCondition
+	 *         returns <tt>true</tt> before the anti-random should be
+	 *         detected as having failed. If this time is reached
+	 *         the random and running script will be stopped.
 	 */
 	public long getTimeout() {
 		return timeout;
@@ -60,37 +75,19 @@ public abstract class Random extends Methods implements PaintListener {
 		return enabled;
 	}
 
-	public abstract int loop();
-
-	public void onFinish() {
-
-	}
-
-	@Override
-	public final void onRepaint(final Graphics g) {
-		final Point p = mouse.getLocation();
-		final int w = game.getWidth(), h = game.getHeight();
-		if (i >= 70 && !up) {
-			i--;
-		} else {
-			i++;
-			up = i < 130;
-		}
-		g.setColor(new Color(0, 255, 0, i));
-		g.fillRect(0, 0, p.x - 1, p.y - 1);
-		g.fillRect(p.x + 1, 0, w - (p.x + 1), p.y - 1);
-		g.fillRect(0, p.y + 1, p.x - 1, h - (p.y - 1));
-		g.fillRect(p.x + 1, p.y + 1, w - (p.x + 1), h - (p.y - 1));
-		g.setColor(Color.RED);
-		g.drawString("Random Active: " + name, 540, 20);
+	public final void setEnabled(final boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	/**
-	 * Called after the method providers for this Random become available for
-	 * use in initialization.
+	 * Stops the current script; player can be logged out before
+	 * the script is stopped.
+	 *
+	 * @param logout <tt>true</tt> if the player should be logged
+	 *               out before the script is stopped.
 	 */
-	public void onStart() {
-
+	protected void stopScript(final boolean logout) {
+		script.stopScript(logout);
 	}
 
 	public final void run(final Script ctx) {
@@ -137,19 +134,22 @@ public abstract class Random extends Methods implements PaintListener {
 		}
 	}
 
-	public final void setEnabled(final boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	/**
-	 * Stops the current script; player can be logged out before the script is
-	 * stopped.
-	 * 
-	 * @param logout
-	 *            <tt>true</tt> if the player should be logged out before the
-	 *            script is stopped.
-	 */
-	protected void stopScript(final boolean logout) {
-		script.stopScript(logout);
+	@Override
+	public final void onRepaint(final Graphics g) {
+		final Point p = mouse.getLocation();
+		final int w = game.getWidth(), h = game.getHeight();
+		if (i >= 70 && !up) {
+			i--;
+		} else {
+			i++;
+			up = i < 130;
+		}
+		g.setColor(new Color(0, 255, 0, i));
+		g.fillRect(0, 0, p.x - 1, p.y - 1);
+		g.fillRect(p.x + 1, 0, w - (p.x + 1), p.y - 1);
+		g.fillRect(0, p.y + 1, p.x - 1, h - (p.y - 1));
+		g.fillRect(p.x + 1, p.y + 1, w - (p.x + 1), h - (p.y - 1));
+		g.setColor(Color.RED);
+		g.drawString("Random Active: " + name, 540, 20);
 	}
 }

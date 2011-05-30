@@ -2,7 +2,7 @@ package org.rsbot.script.internal.wrappers;
 
 /**
  * A class that handles flags of tiles.
- * 
+ *
  * @author Timer
  */
 public class TileData {
@@ -20,15 +20,14 @@ public class TileData {
 	}
 
 	public static boolean Questionable(final int FLAG) {
-		return (FLAG & (Key.W_NW | Key.W_N | Key.W_NE | Key.W_E | Key.W_SE
-				| Key.W_S | Key.W_SW | Key.W_W)) != 0;
-	}
-
-	public static boolean Special(final int FLAG) {
-		return (FLAG & Key.BLOCKED) == 0 && (FLAG & Key.WATER) != 0;
+		return (FLAG & (Key.W_NW | Key.W_N | Key.W_NE | Key.W_E | Key.W_SE | Key.W_S | Key.W_SW | Key.W_W)) != 0;
 	}
 
 	public static boolean Walkable(final int FLAG) {
 		return (FLAG & (Key.BLOCKED | Key.WATER)) == 0;
+	}
+
+	public static boolean Special(final int FLAG) {
+		return (FLAG & Key.BLOCKED) == 0 && (FLAG & Key.WATER) != 0;
 	}
 }

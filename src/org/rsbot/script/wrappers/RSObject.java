@@ -1,11 +1,12 @@
 package org.rsbot.script.wrappers;
 
-import java.awt.Point;
-
 import org.rsbot.client.Model;
 import org.rsbot.client.RSAnimable;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
+
+import java.awt.*;
+
 
 public class RSObject extends MethodProvider {
 	public static enum Type {
@@ -17,8 +18,8 @@ public class RSObject extends MethodProvider {
 	private final int plane;
 
 	public RSObject(final MethodContext ctx,
-			final org.rsbot.client.RSObject obj, final Type type,
-			final int plane) {
+	                final org.rsbot.client.RSObject obj, final Type type,
+	                final int plane) {
 		super(ctx);
 		this.obj = obj;
 		this.type = type;
@@ -27,9 +28,8 @@ public class RSObject extends MethodProvider {
 
 	/**
 	 * Performs the specified action on this object.
-	 * 
-	 * @param action
-	 *            the menu item to search and click
+	 *
+	 * @param action the menu item to search and click
 	 * @return returns true if clicked, false if object does not contain the
 	 *         desired action
 	 */
@@ -39,11 +39,9 @@ public class RSObject extends MethodProvider {
 
 	/**
 	 * Performs the specified action on this object.
-	 * 
-	 * @param action
-	 *            the action of the menu item to search and click
-	 * @param option
-	 *            the option of the menu item to search and click
+	 *
+	 * @param action the action of the menu item to search and click
+	 * @param option the option of the menu item to search and click
 	 * @return returns true if clicked, false if object does not contain the
 	 *         desired action
 	 */
@@ -57,7 +55,7 @@ public class RSObject extends MethodProvider {
 
 	/**
 	 * Left-clicks this object.
-	 * 
+	 *
 	 * @return <tt>true</tt> if clicked.
 	 */
 	public boolean doClick() {
@@ -66,9 +64,8 @@ public class RSObject extends MethodProvider {
 
 	/**
 	 * Clicks this object.
-	 * 
-	 * @param leftClick
-	 *            <tt>true</tt> to left-click; <tt>false</tt> to right-click.
+	 *
+	 * @param leftClick <tt>true</tt> to left-click; <tt>false</tt> to right-click.
 	 * @return <tt>true</tt> if clicked.
 	 */
 	public boolean doClick(final boolean leftClick) {
@@ -110,24 +107,17 @@ public class RSObject extends MethodProvider {
 		}
 	}
 
-	@Override
-	public boolean equals(final Object o) {
-		return o instanceof RSObject && ((RSObject) o).obj == obj;
-	}
-
 	/**
 	 * Gets the area of tiles covered by this object.
-	 * 
+	 *
 	 * @return The RSArea containing all the tiles on which this object can be
 	 *         found.
 	 */
 	public RSArea getArea() {
 		if (obj instanceof RSAnimable) {
 			final RSAnimable a = (RSAnimable) obj;
-			final RSTile sw = new RSTile(methods.client.getBaseX() + a.getX1(), methods.client.getBaseY()
-					+ a.getY1());
-			final RSTile ne = new RSTile(methods.client.getBaseX() + a.getX2(), methods.client.getBaseY()
-					+ a.getY2());
+			final RSTile sw = new RSTile(methods.client.getBaseX() + a.getX1(), methods.client.getBaseY() + a.getY1());
+			final RSTile ne = new RSTile(methods.client.getBaseX() + a.getX2(), methods.client.getBaseY() + a.getY2());
 			return new RSArea(sw, ne, plane);
 		}
 		final RSTile loc = getLocation();
@@ -136,11 +126,12 @@ public class RSObject extends MethodProvider {
 
 	/**
 	 * Gets the object definition of this object.
-	 * 
+	 *
 	 * @return The RSObjectDef if available, otherwise <code>null</code>.
 	 */
 	public RSObjectDef getDef() {
-		final org.rsbot.client.Node ref = methods.nodes.lookup(methods.client.getRSObjectDefLoader(), getID());
+		final org.rsbot.client.Node ref = methods.nodes.lookup(
+				methods.client.getRSObjectDefLoader(), getID());
 		if (ref != null) {
 			if (ref instanceof org.rsbot.client.HardReference) {
 				return new RSObjectDef((org.rsbot.client.RSObjectDef) ((org.rsbot.client.HardReference) ref).get());
@@ -156,7 +147,7 @@ public class RSObject extends MethodProvider {
 
 	/**
 	 * Gets the ID of this object.
-	 * 
+	 *
 	 * @return The ID.
 	 */
 	public int getID() {
@@ -166,18 +157,17 @@ public class RSObject extends MethodProvider {
 	/**
 	 * Gets the RSTile on which this object is centered. An RSObject may cover
 	 * multiple tiles, in which case this will return the floored central tile.
-	 * 
+	 *
 	 * @return The central RSTile.
 	 * @see #getArea()
 	 */
 	public RSTile getLocation() {
-		return new RSTile(methods.client.getBaseX() + obj.getX() / 512, methods.client.getBaseY()
-				+ obj.getY() / 512, plane);
+		return new RSTile(methods.client.getBaseX() + obj.getX() / 512, methods.client.getBaseY() + obj.getY() / 512, plane);
 	}
 
 	/**
 	 * Gets the Model of this object.
-	 * 
+	 *
 	 * @return The RSModel, or null if unavailable.
 	 */
 	public RSModel getModel() {
@@ -193,7 +183,7 @@ public class RSObject extends MethodProvider {
 
 	/**
 	 * Returns the name of the object.
-	 * 
+	 *
 	 * @return The object name if the definition is available; otherwise "".
 	 */
 	public String getName() {
@@ -203,21 +193,16 @@ public class RSObject extends MethodProvider {
 
 	/**
 	 * Returns this object's type.
-	 * 
+	 *
 	 * @return The type of the object.
 	 */
 	public Type getType() {
 		return type;
 	}
 
-	@Override
-	public int hashCode() {
-		return obj.hashCode();
-	}
-
 	/**
 	 * Determines whether or not this object is on the game screen.
-	 * 
+	 *
 	 * @return <tt>true</tt> if the object is on screen.
 	 */
 	public boolean isOnScreen() {
@@ -231,16 +216,25 @@ public class RSObject extends MethodProvider {
 
 	/**
 	 * Determines whether the object is reachable by the player.
-	 * 
+	 *
 	 * @return <tt>true</tt> if a path can be made to the specified object;
-	 *         otherwise <tt>false</tt>.
+	 * otherwise <tt>false</tt>.
 	 */
 	public boolean isReachable() {
-		for (final RSTile t : getArea().getTileArray()) {
-			if (methods.calc.canReach(t, true)) {
+		for (RSTile t : getArea().getTileArray()) {
+			if (methods.calc.canReach(t, true))
 				return true;
-			}
 		}
 		return false;
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		return o instanceof RSObject && ((RSObject) o).obj == obj;
+	}
+
+	@Override
+	public int hashCode() {
+		return obj.hashCode();
 	}
 }

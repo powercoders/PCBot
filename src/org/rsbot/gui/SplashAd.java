@@ -1,6 +1,14 @@
 package org.rsbot.gui;
 
-import java.awt.Cursor;
+import org.rsbot.Configuration;
+import org.rsbot.service.Monitoring;
+import org.rsbot.service.Monitoring.Type;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IniParser;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -12,18 +20,6 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
-import org.rsbot.Configuration;
-import org.rsbot.service.Monitoring;
-import org.rsbot.service.Monitoring.Type;
-import org.rsbot.util.io.HttpClient;
-import org.rsbot.util.io.IniParser;
 
 /**
  * @author Paris
@@ -78,43 +74,6 @@ public class SplashAd extends JDialog implements MouseListener {
 		addMouseListener(this);
 	}
 
-	public void display() {
-		setLocationRelativeTo(getOwner());
-		setVisible(true);
-
-		final Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				Monitoring.pushState(Type.ENVIRONMENT, "ADS", "CLICK", "false");
-				dispose();
-			}
-		}, display);
-	}
-
-	@Override
-	public void mouseClicked(final MouseEvent e) {
-	}
-
-	@Override
-	public void mouseEntered(final MouseEvent e) {
-	}
-
-	@Override
-	public void mouseExited(final MouseEvent e) {
-	}
-
-	@Override
-	public void mousePressed(final MouseEvent e) {
-	}
-
-	@Override
-	public void mouseReleased(final MouseEvent e) {
-		BotGUI.openURL(link);
-		Monitoring.pushState(Type.ENVIRONMENT, "ADS", "CLICK", "true");
-		dispose();
-	}
-
 	private boolean sync() {
 		HashMap<String, String> keys = null;
 
@@ -127,8 +86,7 @@ public class SplashAd extends JDialog implements MouseListener {
 			return false;
 		}
 
-		if (keys == null || keys.isEmpty() || !keys.containsKey("enabled")
-				|| !IniParser.parseBool(keys.get("enabled"))) {
+		if (keys == null || keys.isEmpty() || !keys.containsKey("enabled") || !IniParser.parseBool(keys.get("enabled"))) {
 			return false;
 		}
 		if (!keys.containsKey("link")) {
@@ -153,6 +111,43 @@ public class SplashAd extends JDialog implements MouseListener {
 		}
 
 		return true;
+	}
+
+	public void display() {
+		setLocationRelativeTo(getOwner());
+		setVisible(true);
+
+		final Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				Monitoring.pushState(Type.ENVIRONMENT, "ADS", "CLICK", "false");
+				dispose();
+			}
+		}, display);
+	}
+
+	@Override
+	public void mouseClicked(final MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(final MouseEvent e) {
+	}
+
+	@Override
+	public void mouseReleased(final MouseEvent e) {
+		BotGUI.openURL(link);
+		Monitoring.pushState(Type.ENVIRONMENT, "ADS", "CLICK", "true");
+		dispose();
+	}
+
+	@Override
+	public void mouseEntered(final MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(final MouseEvent e) {
 	}
 
 }

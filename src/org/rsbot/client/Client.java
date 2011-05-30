@@ -1,18 +1,27 @@
 package org.rsbot.client;
 
-import java.awt.Canvas;
-import java.awt.Rectangle;
-
 import org.rsbot.client.input.Keyboard;
 import org.rsbot.client.input.Mouse;
 
+import java.awt.*;
+
 public interface Client {
+
+	ChatLine[] getChatLines();
+
+	boolean isMenuCollapsed();
+
+	NodeDeque getMenuItems();
+
+	NodeSubQueue getCollapsedMenuItems();
 
 	int getBaseX();
 
 	int getBaseY();
 
 	Callback getCallBack();
+
+	Canvas getCanvas();
 
 	int getCameraPitch();
 
@@ -23,14 +32,6 @@ public interface Client {
 	int getCamPosY();
 
 	int getCamPosZ();
-
-	Canvas getCanvas();
-
-	ChatLine[] getChatLines();
-
-	NodeSubQueue getCollapsedMenuItems();
-
-	MenuGroupNode getCurrentMenuGroupNode();
 
 	String getCurrentPassword();
 
@@ -54,13 +55,19 @@ public interface Client {
 
 	int getLoopCycle();
 
-	NodeDeque getMenuItems();
-
 	int getMenuOptionsCount();
 
 	int getMenuX();
 
 	int getMenuY();
+
+	MenuGroupNode getCurrentMenuGroupNode();
+
+	int getSubMenuX();
+
+	int getSubMenuY();
+
+	int getSubMenuWidth();
 
 	int getMinimapAngle();
 
@@ -72,6 +79,8 @@ public interface Client {
 
 	Mouse getMouse();
 
+	//MouseWheel getMouseWheel();
+
 	RSPlayer getMyRSPlayer();
 
 	int getPlane();
@@ -80,11 +89,7 @@ public interface Client {
 
 	RSGround[][][] getRSGroundArray();
 
-	// MouseWheel getMouseWheel();
-
 	RSGroundData[] getRSGroundDataArray();
-
-	StatusNodeListLoader getRSInteractableDefListLoader();
 
 	StatusNodeList getRSInteractingDefList();
 
@@ -94,17 +99,13 @@ public interface Client {
 
 	HashTable getRSInterfaceNC();
 
-	RSItemDefLoader getRSItemDefLoader();
-
 	HashTable getRSItemHashTable();
+
+	HashTable getRSNPCNC();
 
 	int getRSNPCCount();
 
 	int[] getRSNPCIndexArray();
-
-	HashTable getRSNPCNC();
-
-	RSObjectDefLoader getRSObjectDefLoader();
 
 	RSPlayer[] getRSPlayerArray();
 
@@ -118,8 +119,6 @@ public interface Client {
 
 	Settings getSettingArray();
 
-	Signlink getSignlink();
-
 	Signlink getSignLink();
 
 	int[] getSkillExperiences();
@@ -130,27 +129,27 @@ public interface Client {
 
 	int[] getSkillLevels();
 
-	int getSubMenuWidth();
-
-	int getSubMenuX();
-
-	int getSubMenuY();
-
 	TileData[] getTileData();
 
 	boolean[] getValidRSInterfaceArray();
-
-	ServerData getWorldData();
 
 	boolean isFlagged();
 
 	int isItemSelected();
 
-	boolean isMenuCollapsed();
-
 	boolean isMenuOpen();
 
 	boolean isSpellSelected();
+
+	RSItemDefLoader getRSItemDefLoader();
+
+	RSObjectDefLoader getRSObjectDefLoader();
+
+	StatusNodeListLoader getRSInteractableDefListLoader();
+
+	Signlink getSignlink();
+
+	ServerData getWorldData();
 
 	void setCallback(Callback cb);
 

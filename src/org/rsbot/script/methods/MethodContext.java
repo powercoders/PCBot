@@ -7,7 +7,7 @@ import org.rsbot.script.internal.reflection.Reflection;
 
 /**
  * For internal use to link MethodProviders.
- * 
+ *
  * @author Jacmob
  */
 public class MethodContext {
@@ -210,7 +210,7 @@ public class MethodContext {
 
 	public MethodContext(final Bot bot) {
 		this.bot = bot;
-		reflection = new Reflection(bot);
+		this.reflection = new Reflection(bot);
 		client = bot.getClient();
 		inputManager = bot.getInputManager();
 	}

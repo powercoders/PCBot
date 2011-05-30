@@ -3,9 +3,11 @@ package org.rsbot.client;
 import java.util.Arrays;
 
 /**
- * Implementation of the Model interface used to store model data by injection
- * in transform methods where model implementations in the client are reused.
- * 
+ * Implementation of the Model interface used to
+ * store model data by injection in transform
+ * methods where model implementations in the
+ * client are reused.
+ *
  * @author Jacmob
  */
 public class ModelCapture implements Model {
@@ -38,21 +40,6 @@ public class ModelCapture implements Model {
 	}
 
 	@Override
-	public short[] getIndices1() {
-		return face_a;
-	}
-
-	@Override
-	public short[] getIndices2() {
-		return face_b;
-	}
-
-	@Override
-	public short[] getIndices3() {
-		return face_c;
-	}
-
-	@Override
 	public int[] getXPoints() {
 		return vertex_x;
 	}
@@ -65,6 +52,21 @@ public class ModelCapture implements Model {
 	@Override
 	public int[] getZPoints() {
 		return vertex_z;
+	}
+
+	@Override
+	public short[] getIndices1() {
+		return face_a;
+	}
+
+	@Override
+	public short[] getIndices2() {
+		return face_b;
+	}
+
+	@Override
+	public short[] getIndices3() {
+		return face_c;
 	}
 
 }

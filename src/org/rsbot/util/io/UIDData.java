@@ -1,12 +1,12 @@
 package org.rsbot.util.io;
 
+import org.rsbot.Configuration;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.HashMap;
-
-import org.rsbot.Configuration;
 
 public class UIDData {
 
@@ -56,6 +56,14 @@ public class UIDData {
 		return data;
 	}
 
+	public void setUID(String name, final byte[] uid) {
+		if (name.equals("")) {
+			name = "DEFAULT";
+		}
+
+		uids.put(name, uid);
+	}
+
 	public void save() {
 		try {
 			final File fUIDs = new File(Configuration.Paths.getUIDsFile());
@@ -72,13 +80,5 @@ public class UIDData {
 			}
 		} catch (final Exception ignored) {
 		}
-	}
-
-	public void setUID(String name, final byte[] uid) {
-		if (name.equals("")) {
-			name = "DEFAULT";
-		}
-
-		uids.put(name, uid);
 	}
 }

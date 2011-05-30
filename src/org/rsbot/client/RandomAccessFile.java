@@ -1,13 +1,13 @@
 package org.rsbot.client;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.rsbot.Application;
 import org.rsbot.bot.Bot;
 import org.rsbot.util.io.PreferenceData;
 import org.rsbot.util.io.UIDData;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class RandomAccessFile {
 	private UIDData uidData = null;
@@ -18,18 +18,32 @@ public class RandomAccessFile {
 	private byte[] data = null;
 	private int offset = 0;
 
-	public RandomAccessFile(final File file, final String mode)
-			throws FileNotFoundException {
+	public RandomAccessFile(final String name, final String mode) throws FileNotFoundException {
+		if (!shouldOverride(name, mode)) {
+			raf = new java.io.RandomAccessFile(name, mode);
+		}
+	}
+
+	public RandomAccessFile(final File file, final String mode) throws FileNotFoundException {
 		if (!shouldOverride(file.getName(), mode)) {
 			raf = new java.io.RandomAccessFile(file, mode);
 		}
 	}
 
-	public RandomAccessFile(final String name, final String mode)
-			throws FileNotFoundException {
-		if (!shouldOverride(name, mode)) {
-			raf = new java.io.RandomAccessFile(name, mode);
+	private boolean shouldOverride(final String filename, final String mode) throws FileNotFoundException {
+		if (filename.equals("random.dat")) {
+			uidData = new UIDData();
+		} else if (filename.endsWith("preferences.dat")) {
+			prefData = new PreferenceData(1);
+		} else if (filename.endsWith("preferences2.dat")) {
+			prefData = new PreferenceData(2);
+		} else if (filename.endsWith("preferences3.dat")) {
+			prefData = new PreferenceData(3);
+		} else {
+			return false;
 		}
+
+		return true;
 	}
 
 	private void checkData() {
@@ -38,8 +52,7 @@ public class RandomAccessFile {
 				final Bot b = Application.getBot(this);
 				client = b.getClient();
 			}
-			final String accountName = client != null ? client.getCurrentUsername()
-					: "";
+			final String accountName = client != null ? client.getCurrentUsername() : "";
 
 			if (!uidData.getLastUsed().equals(accountName) && data != null) {
 				uidData.setUID(uidData.getLastUsed(), data);
@@ -51,6 +64,15 @@ public class RandomAccessFile {
 			}
 		} else if (prefData != null && data == null) {
 			data = prefData.get();
+		}
+	}
+
+	private void saveData() {
+		if (uidData != null && data != null) {
+			uidData.setUID(client != null ? client.getCurrentUsername() : "", data);
+			uidData.save();
+		} else if (prefData != null && data != null) {
+			prefData.set(data);
 		}
 	}
 
@@ -120,15 +142,6 @@ public class RandomAccessFile {
 		return raf.read(b, off, len);
 	}
 
-	private void saveData() {
-		if (uidData != null && data != null) {
-			uidData.setUID(client != null ? client.getCurrentUsername() : "", data);
-			uidData.save();
-		} else if (prefData != null && data != null) {
-			prefData.set(data);
-		}
-	}
-
 	public void seek(final long pos) throws IOException {
 		checkData();
 
@@ -143,29 +156,11 @@ public class RandomAccessFile {
 		}
 	}
 
-	private boolean shouldOverride(final String filename, final String mode)
-			throws FileNotFoundException {
-		if (filename.equals("random.dat")) {
-			uidData = new UIDData();
-		} else if (filename.endsWith("preferences.dat")) {
-			prefData = new PreferenceData(1);
-		} else if (filename.endsWith("preferences2.dat")) {
-			prefData = new PreferenceData(2);
-		} else if (filename.endsWith("preferences3.dat")) {
-			prefData = new PreferenceData(3);
-		} else {
-			return false;
-		}
-
-		return true;
-	}
-
-	public void write(final byte[] b, final int off, int len)
-			throws IOException {
+	public void write(final byte[] b, final int off, int len) throws IOException {
 		checkData();
 
 		if (data != null) {
-			// Check arguments
+			//Check arguments
 			if (b.length < off + len) {
 				len = b.length - off;
 			}
@@ -174,15 +169,14 @@ public class RandomAccessFile {
 				return;
 			}
 
-			// Increase buffer if needed
+			//Increase buffer if needed
 			if (data.length < offset + len) {
 				final byte[] tmp = data;
 				data = new byte[offset + len];
-				System.arraycopy(tmp, 0, data, 0, (offset <= tmp.length ? offset
-						: tmp.length));
+				System.arraycopy(tmp, 0, data, 0, (offset <= tmp.length ? offset : tmp.length));
 			}
 
-			// Write bytes
+			//Write bytes
 			for (int i = 0; i < len; i++) {
 				data[offset++] = b[off + i];
 			}
@@ -197,15 +191,14 @@ public class RandomAccessFile {
 		checkData();
 
 		if (data != null) {
-			// Increase bufer if needed
+			//Increase bufer if needed
 			if (data.length < offset + 1) {
 				final byte[] tmp = data;
 				data = new byte[offset + 1];
-				System.arraycopy(tmp, 0, data, 0, (offset <= tmp.length ? offset
-						: tmp.length));
+				System.arraycopy(tmp, 0, data, 0, (offset <= tmp.length ? offset : tmp.length));
 			}
 
-			// Write byte
+			//Write byte
 			data[offset++] = (byte) b;
 			saveData();
 		} else {

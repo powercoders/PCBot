@@ -7,7 +7,7 @@ package org.rsbot.loader.asm;
 
 /**
  * An edge in the control flow graph of a method body. See {@link Label Label}.
- * 
+ *
  * @author Eric Bruneton
  */
 class Edge {

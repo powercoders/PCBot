@@ -9,36 +9,22 @@ public class TeleportNPC extends Teleport {
 	public final int npcID;
 	public final String action;
 
-	public TeleportNPC(final MethodContext ctx,
-			final RSTile teleportationLocation, final String action,
-			final int npcID) {
+	public TeleportNPC(final MethodContext ctx, final RSTile teleportationLocation, final String action, final int npcID) {
 		super(ctx, teleportationLocation);
 		this.npcID = npcID;
 		this.action = action;
 	}
 
-	@Override
-	public double getDistance(final RSTile destination) {
-		return methods.calc.distanceBetween(teleportationLocation(), destination);// TODO
-																					// use
-																					// web
-																					// distancing.
-	}
-
-	@Override
-	public boolean isApplicable(final RSTile base, final RSTile destination) {
-		return methods.calc.distanceBetween(base, teleportationLocation()) > 30
-				&& methods.calc.distanceBetween(teleportationLocation(), destination) < methods.calc.distanceTo(destination);
-	}
-
-	@Override
 	public boolean meetsPrerequisites() {
 		return methods.npcs.getNearest(npcID) != null;
 	}
 
-	@Override
+	public boolean isApplicable(RSTile base, RSTile destination) {
+		return methods.calc.distanceBetween(base, teleportationLocation()) > 30 && methods.calc.distanceBetween(teleportationLocation(), destination) < methods.calc.distanceTo(destination);
+	}
+
 	public boolean perform() {
-		final RSNPC npc = methods.npcs.getNearest(npcID);
+		RSNPC npc = methods.npcs.getNearest(npcID);
 		if (npc != null) {
 			if (npc.doAction(action)) {
 				final long tO = System.currentTimeMillis();
@@ -52,5 +38,9 @@ public class TeleportNPC extends Teleport {
 			return !npc.isValid() || npc == null;
 		}
 		return false;
+	}
+
+	public double getDistance(RSTile destination) {
+		return methods.calc.distanceBetween(teleportationLocation(), destination);// TODO use web distancing.
 	}
 }

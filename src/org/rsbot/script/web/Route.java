@@ -7,18 +7,14 @@ public class Route {
 	public Route parent = null;
 
 	public Route(final RouteStep[] steps) {
-		for (final RouteStep step : steps) {
+		for (RouteStep step : steps) {
 			subRoutes.addLast(step);
 		}
 	}
 
-	public void add(final RouteStep step) {
-		subRoutes.addLast(step);
-	}
-
 	public boolean execute() {
 		if (subRoutes.size() > 0) {
-			final RouteStep routeStep = subRoutes.poll();
+			RouteStep routeStep = subRoutes.poll();
 			if (!routeStep.execute()) {
 				return false;
 			} else {
@@ -34,8 +30,12 @@ public class Route {
 		return subRoutes.size() == 0;
 	}
 
+	public void add(final RouteStep step) {
+		subRoutes.addLast(step);
+	}
+
 	public void updateRoute() {
-		for (final RouteStep route : subRoutes) {
+		for (RouteStep route : subRoutes) {
 			route.update();
 		}
 	}

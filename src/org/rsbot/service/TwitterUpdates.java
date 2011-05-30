@@ -1,6 +1,8 @@
 package org.rsbot.service;
 
-import java.awt.Color;
+import org.rsbot.Configuration;
+
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,14 +10,15 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.rsbot.Configuration;
-
 public class TwitterUpdates {
+
+	private TwitterUpdates() {
+	}
 
 	public static void loadTweets(final int count) {
 		final Logger log = Logger.getLogger("@" + Configuration.Twitter.NAME);
 		final Level level = Level.INFO;
-		final Object[] param = new Object[] { new Color(0x1d, 0x83, 0xae) };
+		final Object[] param = new Object[]{new Color(0x1d, 0x83, 0xae)};
 
 		final StringBuilder url = new StringBuilder();
 		url.append("http://api.twitter.com/1/statuses/user_timeline.xml?screen_name=");
@@ -47,8 +50,7 @@ public class TwitterUpdates {
 					continue;
 				}
 				if (msg.endsWith(Configuration.Twitter.HASHTAG)) {
-					msg = msg.substring(0, msg.length()
-							- Configuration.Twitter.HASHTAG.length()).trim();
+					msg = msg.substring(0, msg.length() - Configuration.Twitter.HASHTAG.length()).trim();
 				}
 				if (msg.isEmpty()) {
 					continue;
@@ -70,8 +72,5 @@ public class TwitterUpdates {
 			} catch (final IOException ioe1) {
 			}
 		}
-	}
-
-	private TwitterUpdates() {
 	}
 }

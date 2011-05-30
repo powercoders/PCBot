@@ -1,43 +1,12 @@
 package org.rsbot.script.internal;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.event.ScriptListener;
-import org.rsbot.script.randoms.BankPins;
-import org.rsbot.script.randoms.BeehiveSolver;
-import org.rsbot.script.randoms.CapnArnav;
-import org.rsbot.script.randoms.Certer;
-import org.rsbot.script.randoms.CloseAllInterface;
-import org.rsbot.script.randoms.DrillDemon;
-import org.rsbot.script.randoms.Exam;
-import org.rsbot.script.randoms.FirstTimeDeath;
-import org.rsbot.script.randoms.FreakyForester;
-import org.rsbot.script.randoms.FrogCave;
-import org.rsbot.script.randoms.GraveDigger;
-import org.rsbot.script.randoms.ImprovedRewardsBox;
-import org.rsbot.script.randoms.LeaveSafeArea;
-import org.rsbot.script.randoms.LoginBot;
-import org.rsbot.script.randoms.LostAndFound;
-import org.rsbot.script.randoms.Maze;
-import org.rsbot.script.randoms.Mime;
-import org.rsbot.script.randoms.Molly;
-import org.rsbot.script.randoms.Pillory;
-import org.rsbot.script.randoms.Pinball;
-import org.rsbot.script.randoms.Prison;
-import org.rsbot.script.randoms.QuizSolver;
-import org.rsbot.script.randoms.SandwhichLady;
-import org.rsbot.script.randoms.ScapeRuneIsland;
-import org.rsbot.script.randoms.SystemUpdate;
-import org.rsbot.script.randoms.TeleotherCloser;
+import org.rsbot.script.randoms.*;
+
+import java.util.*;
 
 public class ScriptHandler {
 
@@ -51,36 +20,6 @@ public class ScriptHandler {
 
 	public ScriptHandler(final Bot bot) {
 		this.bot = bot;
-	}
-
-	public void addScriptListener(final ScriptListener l) {
-		listeners.add(l);
-	}
-
-	private void addScriptToPool(final Script ss, final Thread t) {
-		for (int off = 0; off < scripts.size(); ++off) {
-			if (!scripts.containsKey(off)) {
-				scripts.put(off, ss);
-				ss.setID(off);
-				scriptThreads.put(off, t);
-				return;
-			}
-		}
-		ss.setID(scripts.size());
-		scripts.put(scripts.size(), ss);
-		scriptThreads.put(scriptThreads.size(), t);
-	}
-
-	public Bot getBot() {
-		return bot;
-	}
-
-	public Collection<org.rsbot.script.Random> getRandoms() {
-		return randoms;
-	}
-
-	public Map<Integer, Script> getRunningScripts() {
-		return Collections.unmodifiableMap(scripts);
 	}
 
 	public void init() {
@@ -119,48 +58,38 @@ public class ScriptHandler {
 		}
 	}
 
-	public boolean onBreak() {
-		final Thread curThread = Thread.currentThread();
-		for (int i = 0; i < scripts.size(); i++) {
-			final Script script = scripts.get(i);
-			if (script != null && script.isRunning()) {
-				if (scriptThreads.get(i) == curThread) {
-					return onBreak(i);
-				}
+	public void addScriptListener(final ScriptListener l) {
+		listeners.add(l);
+	}
+
+	public void removeScriptListener(final ScriptListener l) {
+		listeners.remove(l);
+	}
+
+	private void addScriptToPool(final Script ss, final Thread t) {
+		for (int off = 0; off < scripts.size(); ++off) {
+			if (!scripts.containsKey(off)) {
+				scripts.put(off, ss);
+				ss.setID(off);
+				scriptThreads.put(off, t);
+				return;
 			}
 		}
-		if (curThread == null) {
-			throw new ThreadDeath();
-		}
-		return false;
+		ss.setID(scripts.size());
+		scripts.put(scripts.size(), ss);
+		scriptThreads.put(scriptThreads.size(), t);
 	}
 
-	public boolean onBreak(final int id) {
-		final Script script = scripts.get(id);
-		return script != null && script.onBreakStart();
+	public Bot getBot() {
+		return bot;
 	}
 
-	public void onBreakConclude(final int id) {
-		final Script script = scripts.get(id);
-		if (script != null) {
-			script.onBreakFinish();
-		}
+	public Collection<org.rsbot.script.Random> getRandoms() {
+		return randoms;
 	}
 
-	public void onBreakResume() {
-		final Thread curThread = Thread.currentThread();
-		for (int i = 0; i < scripts.size(); i++) {
-			final Script script = scripts.get(i);
-			if (script != null && script.isRunning()) {
-				if (scriptThreads.get(i) == curThread) {
-					onBreakConclude(i);
-					return;
-				}
-			}
-		}
-		if (curThread == null) {
-			throw new ThreadDeath();
-		}
+	public Map<Integer, Script> getRunningScripts() {
+		return Collections.unmodifiableMap(scripts);
 	}
 
 	public void pauseScript(final int id) {
@@ -177,8 +106,28 @@ public class ScriptHandler {
 		}
 	}
 
-	public void removeScriptListener(final ScriptListener l) {
-		listeners.remove(l);
+	public void stopScript(final int id) {
+		final Script script = scripts.get(id);
+		if (script != null) {
+			script.deactivate(id);
+			scripts.remove(id);
+			scriptThreads.remove(id);
+			for (final ScriptListener l : listeners) {
+				l.scriptStopped(this, script);
+			}
+		}
+	}
+
+	public boolean onBreak(final int id) {
+		final Script script = scripts.get(id);
+		return script != null && script.onBreakStart();
+	}
+
+	public void onBreakConclude(final int id) {
+		final Script script = scripts.get(id);
+		if (script != null) {
+			script.onBreakFinish();
+		}
 	}
 
 	public void runScript(final Script script) {
@@ -220,15 +169,35 @@ public class ScriptHandler {
 		}
 	}
 
-	public void stopScript(final int id) {
-		final Script script = scripts.get(id);
-		if (script != null) {
-			script.deactivate(id);
-			scripts.remove(id);
-			scriptThreads.remove(id);
-			for (final ScriptListener l : listeners) {
-				l.scriptStopped(this, script);
+	public boolean onBreak() {
+		final Thread curThread = Thread.currentThread();
+		for (int i = 0; i < scripts.size(); i++) {
+			final Script script = scripts.get(i);
+			if (script != null && script.isRunning()) {
+				if (scriptThreads.get(i) == curThread) {
+					return onBreak(i);
+				}
 			}
+		}
+		if (curThread == null) {
+			throw new ThreadDeath();
+		}
+		return false;
+	}
+
+	public void onBreakResume() {
+		final Thread curThread = Thread.currentThread();
+		for (int i = 0; i < scripts.size(); i++) {
+			final Script script = scripts.get(i);
+			if (script != null && script.isRunning()) {
+				if (scriptThreads.get(i) == curThread) {
+					onBreakConclude(i);
+					return;
+				}
+			}
+		}
+		if (curThread == null) {
+			throw new ThreadDeath();
 		}
 	}
 

@@ -1,12 +1,12 @@
 package org.rsbot.script.methods;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.rsbot.client.RSAnimableNode;
 import org.rsbot.script.util.Filter;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSTile;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Provides access to in-game physical objects.
@@ -21,7 +21,6 @@ public class Objects extends MethodProvider {
 	 * A filter that accepts all matches.
 	 */
 	public static final Filter<RSObject> ALL_FILTER = new Filter<RSObject>() {
-		@Override
 		public boolean accept(final RSObject obj) {
 			return true;
 		}
@@ -33,7 +32,7 @@ public class Objects extends MethodProvider {
 
 	/**
 	 * Returns all the <tt>RSObject</tt>s in the local region.
-	 * 
+	 *
 	 * @return An <tt>RSObject[]</tt> of all objects in the loaded region.
 	 */
 	public RSObject[] getAll() {
@@ -43,9 +42,8 @@ public class Objects extends MethodProvider {
 	/**
 	 * Returns all the <tt>RSObject</tt>s in the local region accepted by the
 	 * provided Filter.
-	 * 
-	 * @param filter
-	 *            Filters out unwanted objects.
+	 *
+	 * @param filter Filters out unwanted objects.
 	 * @return An <tt>RSObject[]</tt> of all the accepted objects in the loaded
 	 *         region.
 	 */
@@ -66,14 +64,12 @@ public class Objects extends MethodProvider {
 	/**
 	 * Returns all the <tt>RSObject</tt>s in the local region with the provided
 	 * ID(s).
-	 * 
-	 * @param ids
-	 *            Allowed object IDs.
+	 *
+	 * @param ids Allowed object IDs.
 	 * @return An array of the region's RSObjects matching the provided ID(s).
 	 */
 	public RSObject[] getAll(final int... ids) {
 		return getAll(new Filter<RSObject>() {
-			@Override
 			public boolean accept(final RSObject o) {
 				for (final int id : ids) {
 					if (o.getID() == id) {
@@ -88,14 +84,12 @@ public class Objects extends MethodProvider {
 	/**
 	 * Returns all the <tt>RSObject</tt>s in the local region with the provided
 	 * name(s).
-	 * 
-	 * @param names
-	 *            Allowed object names.
+	 *
+	 * @param names Allowed object names.
 	 * @return An array of the region's RSObjects matching the provided name(s).
 	 */
 	public RSObject[] getAll(final String... names) {
 		return getAll(new Filter<RSObject>() {
-			@Override
 			public boolean accept(final RSObject o) {
 				final String name = o.getName();
 				if (!name.isEmpty()) {
@@ -111,11 +105,9 @@ public class Objects extends MethodProvider {
 	}
 
 	/**
-	 * Returns the <tt>RSObject</tt>s which are on the specified <tt>RSTile</tt>
-	 * .
-	 * 
-	 * @param t
-	 *            The tile on which to search.
+	 * Returns the <tt>RSObject</tt>s which are on the specified <tt>RSTile</tt>.
+	 *
+	 * @param t The tile on which to search.
 	 * @return An RSObject[] of the objects on the specified tile.
 	 */
 	public RSObject[] getAllAt(final RSTile t) {
@@ -125,21 +117,17 @@ public class Objects extends MethodProvider {
 	/**
 	 * Returns the <tt>RSObject</tt>s which are on the specified <tt>RSTile</tt>
 	 * matching types specified by the flags in the provided mask.
-	 * 
-	 * @param t
-	 *            The tile on which to search.
-	 * @param mask
-	 *            The type flags.
+	 *
+	 * @param t    The tile on which to search.
+	 * @param mask The type flags.
 	 * @return An RSObject[] of the objects on the specified tile.
 	 */
 	public RSObject[] getAt(final RSTile t, final int mask) {
-		final Set<RSObject> objects = getAtLocal(t.getX()
-				- methods.client.getBaseX(), t.getY()
-				- methods.client.getBaseY(), mask);
+		final Set<RSObject> objects = getAtLocal(t.getX() - methods.client.getBaseX(), t.getY() - methods.client.getBaseY(), mask);
 		return objects.toArray(new RSObject[objects.size()]);
 	}
 
-	private Set<RSObject> getAtLocal(final int x, final int y, final int mask) {
+	private Set<RSObject> getAtLocal(int x, int y, final int mask) {
 		final org.rsbot.client.Client client = methods.client;
 		final Set<RSObject> objects = new LinkedHashSet<RSObject>();
 		if (client.getRSGroundArray() == null) {
@@ -225,9 +213,8 @@ public class Objects extends MethodProvider {
 	/**
 	 * Returns the <tt>RSObject</tt> that is nearest out of all objects that are
 	 * accepted by the provided Filter.
-	 * 
-	 * @param filter
-	 *            Filters out unwanted objects.
+	 *
+	 * @param filter Filters out unwanted objects.
 	 * @return An <tt>RSObject</tt> representing the nearest object that was
 	 *         accepted by the filter; or null if there are no matching objects
 	 *         in the current region.
@@ -259,16 +246,14 @@ public class Objects extends MethodProvider {
 	/**
 	 * Returns the <tt>RSObject</tt> that is nearest, out of all of the
 	 * RSObjects with the provided ID(s).
-	 * 
-	 * @param ids
-	 *            The ID(s) of the RSObject that you are searching.
+	 *
+	 * @param ids The ID(s) of the RSObject that you are searching.
 	 * @return An <tt>RSObject</tt> representing the nearest object with one of
 	 *         the provided IDs; or null if there are no matching objects in the
 	 *         current region.
 	 */
 	public RSObject getNearest(final int... ids) {
 		return getNearest(new Filter<RSObject>() {
-			@Override
 			public boolean accept(final RSObject o) {
 				for (final int id : ids) {
 					if (o.getID() == id) {
@@ -283,16 +268,14 @@ public class Objects extends MethodProvider {
 	/**
 	 * Returns the <tt>RSObject</tt> that is nearest, out of all of the
 	 * RSObjects with the provided name(s).
-	 * 
-	 * @param names
-	 *            The name(s) of the RSObject that you are searching.
+	 *
+	 * @param names The name(s) of the RSObject that you are searching.
 	 * @return An <tt>RSObject</tt> representing the nearest object with one of
 	 *         the provided names; or null if there are no matching objects in
 	 *         the current region.
 	 */
 	public RSObject getNearest(final String... names) {
 		return getNearest(new Filter<RSObject>() {
-			@Override
 			public boolean accept(final RSObject o) {
 				final String name = o.getName();
 				if (!name.isEmpty()) {
@@ -309,9 +292,8 @@ public class Objects extends MethodProvider {
 
 	/**
 	 * Returns the top <tt>RSObject</tt> on the specified tile.
-	 * 
-	 * @param t
-	 *            The tile on which to search.
+	 *
+	 * @param t The tile on which to search.
 	 * @return The top RSObject on the provided tile; or null if none found.
 	 */
 	public RSObject getTopAt(final RSTile t) {
@@ -321,11 +303,9 @@ public class Objects extends MethodProvider {
 	/**
 	 * Returns the top <tt>RSObject</tt> on the specified tile matching types
 	 * specified by the flags in the provided mask.
-	 * 
-	 * @param t
-	 *            The tile on which to search.
-	 * @param mask
-	 *            The type flags.
+	 *
+	 * @param t    The tile on which to search.
+	 * @param mask The type flags.
 	 * @return The top RSObject on the provided tile matching the specified
 	 *         flags; or null if none found.
 	 */

@@ -10,14 +10,52 @@ import java.net.URL;
  * <p/>
  * Example: Hiscores.Stats stats = hiscores.lookup("username"); int attack =
  * stats.getCurrentLevel(Skills.ATTACK);
- * 
+ *
  * @author Aion
  * @version 0.2
  */
 public class Hiscores extends MethodProvider {
+	private static final String HOST = "http://hiscore.runescape.com";
+	private static final String GET = "/index_lite.ws?player=";
+
+	public Hiscores() {
+		super(null);
+	}
+
+	/**
+	 * Collects data for a given player from the hiscore website.
+	 *
+	 * @param username The username
+	 * @return An instance of Hiscores.Stats; <code>null</code> if unable to
+	 *         fetch data.
+	 */
+	public Stats lookup(final String username) {
+		if (username != null && !username.isEmpty()) {
+			try {
+				final URL url = new URL(Hiscores.HOST + Hiscores.GET + username);
+				final BufferedReader br = new BufferedReader(new InputStreamReader(
+						url.openStream()));
+				String[] html;
+				final int[] exps = new int[26];
+				final int[] lvls = new int[26];
+				final int[] ranks = new int[26];
+				for (int i = 0; i < 26; i++) {
+					html = br.readLine().split(",");
+					exps[i] = Integer.parseInt(html[2]);
+					lvls[i] = Integer.parseInt(html[1]);
+					ranks[i] = Integer.parseInt(html[0]);
+				}
+				br.close();
+				return new Stats(username, exps, lvls, ranks);
+			} catch (final IOException ignored) {
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Provides access to High Scores Information.
-	 * 
+	 *
 	 * @author Jacmob, Aut0r
 	 */
 	public static class Stats {
@@ -28,8 +66,7 @@ public class Hiscores extends MethodProvider {
 		private final int[] lvls;
 		private final int[] ranks;
 
-		Stats(final String username, final int[] exps, final int[] lvls,
-				final int[] ranks) {
+		Stats(final String username, final int[] exps, final int[] lvls, final int[] ranks) {
 			this.username = username;
 			this.exps = exps;
 			this.lvls = lvls;
@@ -38,9 +75,8 @@ public class Hiscores extends MethodProvider {
 
 		/**
 		 * Gets the experience of a given skill
-		 * 
-		 * @param index
-		 *            The index of the skill
+		 *
+		 * @param index The index of the skill
 		 * @return The experience or -1
 		 */
 		public int getExperience(final int index) {
@@ -53,9 +89,8 @@ public class Hiscores extends MethodProvider {
 
 		/**
 		 * Gets the level of a given skill
-		 * 
-		 * @param index
-		 *            The index of the skill
+		 *
+		 * @param index The index of the skill
 		 * @return The level or -1
 		 */
 		public int getLevel(final int index) {
@@ -67,37 +102,9 @@ public class Hiscores extends MethodProvider {
 		}
 
 		/**
-		 * Gets the overall experience
-		 * 
-		 * @return The overall experience or -1
-		 */
-		public int getOverallExp() {
-			return exps[0];
-		}
-
-		/**
-		 * Gets the overall level (also known as total level)
-		 * 
-		 * @return The overall level or -1
-		 */
-		public int getOverallLevel() {
-			return lvls[0];
-		}
-
-		/**
-		 * Gets the overall rank
-		 * 
-		 * @return The overall rank or -1
-		 */
-		public int getOverallRank() {
-			return ranks[0];
-		}
-
-		/**
 		 * Gets the rank of a given skill
-		 * 
-		 * @param index
-		 *            The index of the skill
+		 *
+		 * @param index The index of the skill
 		 * @return The rank or -1
 		 */
 		public int getRank(final int index) {
@@ -109,8 +116,35 @@ public class Hiscores extends MethodProvider {
 		}
 
 		/**
+		 * Gets the overall experience
+		 *
+		 * @return The overall experience or -1
+		 */
+		public int getOverallExp() {
+			return exps[0];
+		}
+
+		/**
+		 * Gets the overall level (also known as total level)
+		 *
+		 * @return The overall level or -1
+		 */
+		public int getOverallLevel() {
+			return lvls[0];
+		}
+
+		/**
+		 * Gets the overall rank
+		 *
+		 * @return The overall rank or -1
+		 */
+		public int getOverallRank() {
+			return ranks[0];
+		}
+
+		/**
 		 * Gets the username of this instance
-		 * 
+		 *
 		 * @return The username
 		 */
 		public String getUsername() {
@@ -131,45 +165,6 @@ public class Hiscores extends MethodProvider {
 			return sb.toString().replaceFirst("\\s+$", "]");
 		}
 
-	}
-
-	private static final String HOST = "http://hiscore.runescape.com";
-
-	private static final String GET = "/index_lite.ws?player=";
-
-	public Hiscores() {
-		super(null);
-	}
-
-	/**
-	 * Collects data for a given player from the hiscore website.
-	 * 
-	 * @param username
-	 *            The username
-	 * @return An instance of Hiscores.Stats; <code>null</code> if unable to
-	 *         fetch data.
-	 */
-	public Stats lookup(final String username) {
-		if (username != null && !username.isEmpty()) {
-			try {
-				final URL url = new URL(Hiscores.HOST + Hiscores.GET + username);
-				final BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-				String[] html;
-				final int[] exps = new int[26];
-				final int[] lvls = new int[26];
-				final int[] ranks = new int[26];
-				for (int i = 0; i < 26; i++) {
-					html = br.readLine().split(",");
-					exps[i] = Integer.parseInt(html[2]);
-					lvls[i] = Integer.parseInt(html[1]);
-					ranks[i] = Integer.parseInt(html[0]);
-				}
-				br.close();
-				return new Stats(username, exps, lvls, ranks);
-			} catch (final IOException ignored) {
-			}
-		}
-		return null;
 	}
 
 }

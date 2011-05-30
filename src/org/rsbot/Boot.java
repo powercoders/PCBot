@@ -3,6 +3,7 @@ package org.rsbot;
 import java.io.IOException;
 import java.net.URLDecoder;
 
+
 /**
  * @author Paris
  */
@@ -17,32 +18,32 @@ public class Boot {
 		final StringBuilder param = new StringBuilder(64);
 
 		switch (Configuration.getCurrentOperatingSystem()) {
-		case WINDOWS:
-			sh = false;
-			param.append("javaw");
-			param.append(s);
-			param.append(flags);
-			break;
-		case MAC:
-			param.append("java");
-			param.append(s);
-			param.append(flags);
-			param.append(s);
-			param.append("-Xdock:name=");
-			param.append(q);
-			param.append(Configuration.NAME);
-			param.append(q);
-			param.append(s);
-			param.append("-Xdock:icon=");
-			param.append(q);
-			param.append(Configuration.Paths.Resources.ICON);
-			param.append(q);
-			break;
-		default:
-			param.append("java");
-			param.append(s);
-			param.append(flags);
-			break;
+			case WINDOWS:
+				sh = false;
+				param.append("javaw");
+				param.append(s);
+				param.append(flags);
+				break;
+			case MAC:
+				param.append("java");
+				param.append(s);
+				param.append(flags);
+				param.append(s);
+				param.append("-Xdock:name=");
+				param.append(q);
+				param.append(Configuration.NAME);
+				param.append(q);
+				param.append(s);
+				param.append("-Xdock:icon=");
+				param.append(q);
+				param.append(Configuration.Paths.Resources.ICON);
+				param.append(q);
+				break;
+			default:
+				param.append("java");
+				param.append(s);
+				param.append(flags);
+				break;
 		}
 
 		param.append(s);
@@ -62,7 +63,7 @@ public class Boot {
 		final Runtime run = Runtime.getRuntime();
 
 		if (sh) {
-			run.exec(new String[] { "/bin/sh", "-c", param.toString() });
+			run.exec(new String[]{"/bin/sh", "-c", param.toString()});
 		} else {
 			run.exec(param.toString());
 		}
