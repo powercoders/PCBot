@@ -142,7 +142,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			public void run() {
 				JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 				ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
-				if (!prefs.ads) {
+				if (!prefs.hideAds) {
 					new SplashAd(BotGUI.this).display();
 				}
 				UpdateChecker.notify(BotGUI.this);
@@ -355,7 +355,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 		setVisible(false);
 		try {
-			Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(!prefs.ads));
+			Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(!prefs.hideAds));
 		} catch (final NoClassDefFoundError ncdfe) {
 		}
 		if (doExit) {

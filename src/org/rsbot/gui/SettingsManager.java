@@ -45,10 +45,7 @@ public class SettingsManager extends JDialog {
 	public class Preferences {
 		private final File store;
 
-		/**
-		 * Whether or not to disable ads.
-		 */
-		public boolean ads = true;
+		public boolean hideAds = false;
 		public String user = "";
 		public boolean confirmations = true;
 		public boolean monitoring = true;
@@ -83,14 +80,14 @@ public class SettingsManager extends JDialog {
 			if (keys.containsKey("user")) {
 				user = keys.get("user");
 			}
-			if (keys.containsKey("ads")) {
-				ads = IniParser.parseBool(keys.get("ads"));
+			if (keys.containsKey("hideAds")) {
+				hideAds = IniParser.parseBool(keys.get("hideAds"));
 			}
 			if (keys.containsKey("confirmations")) {
 				confirmations = IniParser.parseBool(keys.get("confirmations"));
 			}
 			if (keys.containsKey("monitoring")) {
-				monitoring = IniParser.parseBool(keys.get("ads"));
+				monitoring = IniParser.parseBool(keys.get("monitoring"));
 			}
 			if (keys.containsKey("shutdown")) {
 				shutdown = IniParser.parseBool(keys.get("shutdown"));
@@ -116,7 +113,7 @@ public class SettingsManager extends JDialog {
 		public void save() {
 			final HashMap<String, String> keys = new HashMap<String, String>(5);
 			keys.put("user", user);
-			keys.put("ads", Boolean.toString(ads));
+			keys.put("hideAds", Boolean.toString(hideAds));
 			keys.put("confirmations", Boolean.toString(confirmations));
 			keys.put("monitoring", Boolean.toString(monitoring));
 			keys.put("shutdown", Boolean.toString(shutdown));
@@ -177,7 +174,7 @@ public class SettingsManager extends JDialog {
 
 		final JCheckBox checkAds = new JCheckBox(Messages.DISABLEADS);
 		checkAds.setToolTipText("Show advertisment on startup");
-		checkAds.setSelected(prefs.ads);
+		checkAds.setSelected(prefs.hideAds);
 
 		final JCheckBox checkConf = new JCheckBox(Messages.DISABLECONFIRMATIONS);
 		checkConf.setToolTipText("Supress confirmation messages");
@@ -269,7 +266,7 @@ public class SettingsManager extends JDialog {
 			@Override
 			public void actionPerformed(final ActionEvent arg0) {
 				setVisible(false);
-				prefs.ads = checkAds.isSelected();
+				prefs.hideAds = checkAds.isSelected();
 				prefs.confirmations = checkConf.isSelected();
 				prefs.monitoring = checkMonitor.isSelected();
 				prefs.shutdown = checkShutdown.isSelected();
@@ -302,7 +299,7 @@ public class SettingsManager extends JDialog {
 			@Override
 			public void actionPerformed(final ActionEvent arg0) {
 				setVisible(false);
-				checkAds.setSelected(prefs.ads);
+				checkAds.setSelected(prefs.hideAds);
 				checkConf.setSelected(prefs.confirmations);
 				checkMonitor.setSelected(prefs.monitoring);
 				checkShutdown.setSelected(prefs.shutdown);
