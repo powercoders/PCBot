@@ -1,5 +1,10 @@
 package org.rsbot.service;
 
+import org.rsbot.Configuration;
+import org.rsbot.util.StringUtil;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IOHelper;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -7,11 +12,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.logging.Logger;
-
-import org.rsbot.Configuration;
-import org.rsbot.util.StringUtil;
-import org.rsbot.util.io.HttpClient;
-import org.rsbot.util.io.IOHelper;
 
 public class DRM {
 	private static Logger log = Logger.getLogger(DRM.class.getName());

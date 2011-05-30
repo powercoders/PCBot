@@ -1,5 +1,12 @@
 package org.rsbot.script.provider;
 
+import org.rsbot.Configuration;
+import org.rsbot.script.Script;
+import org.rsbot.script.provider.FileScriptSource.FileScriptDefinition;
+import org.rsbot.service.ServiceException;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IniParser;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -9,13 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
-
-import org.rsbot.Configuration;
-import org.rsbot.script.Script;
-import org.rsbot.script.provider.FileScriptSource.FileScriptDefinition;
-import org.rsbot.service.ServiceException;
-import org.rsbot.util.io.HttpClient;
-import org.rsbot.util.io.IniParser;
 
 /**
  * @author Paris

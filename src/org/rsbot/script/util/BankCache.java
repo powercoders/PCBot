@@ -4,7 +4,9 @@ import org.rsbot.Configuration;
 import org.rsbot.script.wrappers.RSItem;
 import org.rsbot.util.io.IniParser;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.HashMap;
 
 /**

@@ -1,18 +1,12 @@
 package org.rsbot.util.io;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLEncoder;
-
-import javax.tools.ToolProvider;
-
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
+
+import javax.tools.ToolProvider;
+import java.io.*;
+import java.net.URL;
+import java.net.URLEncoder;
 
 public class JavaCompiler {
 	private final static String JAVACARGS = "-g:none";

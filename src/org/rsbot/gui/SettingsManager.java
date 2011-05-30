@@ -3,16 +3,18 @@ package org.rsbot.gui;
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.gui.component.Messages;
-import org.rsbot.service.Monitoring;
 import org.rsbot.service.DRM;
+import org.rsbot.service.Monitoring;
 import org.rsbot.util.StringUtil;
 import org.rsbot.util.io.IniParser;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Logger;
 

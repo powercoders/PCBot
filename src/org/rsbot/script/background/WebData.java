@@ -10,59 +10,56 @@ import java.util.HashMap;
 
 @ScriptManifest(name = "Web Data Collector", authors = {"Timer"})
 public class WebData extends BackgroundScript {
-	private RSTile lb = null;
-	private int lp = -1;
-	public final HashMap<Short[], Integer> rs_map = new HashMap<Short[], Integer>();
-	private static final Object lock = new Object();
+	private RSTile lastBase = null;
+	private int lastPlane = -1;
+	public final HashMap<Short[], Integer> collectionMap = new HashMap<Short[], Integer>();
+	private static final Object botCollectionLock = new Object();
 
 	@Override
 	public boolean activateCondition() {
 		final RSTile curr_base = game.getMapBase();
 		final int curr_plane = game.getPlane();
-		return game.isLoggedIn() && ((lb == null || !lb.equals(curr_base)) || (lp == -1 || lp != curr_plane));
+		return game.isLoggedIn() && ((lastBase == null || !lastBase.equals(curr_base)) || (lastPlane == -1 || lastPlane != curr_plane));
 	}
 
 	@Override
 	public int loop() {
 		try {
+			sleep(5000);
 			final RSTile curr_base = game.getMapBase();
 			final int curr_plane = game.getPlane();
-			rs_map.clear();
-			sleep(5000);
+			collectionMap.clear();
 			if (!curr_base.equals(game.getMapBase())) {
 				return -1;
 			}
-			lb = curr_base;
-			lp = curr_plane;
-			Node t;
+			lastBase = curr_base;
+			lastPlane = curr_plane;
 			final int flags[][] = walking.getCollisionFlags(curr_plane);
 			for (int i = 3; i < 102; i++) {
 				for (int j = 3; j < 102; j++) {
-					final RSTile start = new RSTile(curr_base.getX() + i, curr_base.getY() + j, curr_plane);
+					final RSTile collectingTile = new RSTile(curr_base.getX() + i, curr_base.getY() + j, curr_plane);
 					final int base_x = game.getBaseX(), base_y = game.getBaseY();
-					final int curr_x = start.getX() - base_x, curr_y = start.getY() - base_y;
-					t = new Node(curr_x, curr_y);
+					final int curr_x = collectingTile.getX() - base_x, curr_y = collectingTile.getY() - base_y;
 					final RSTile offset = walking.getCollisionOffset(curr_plane);
 					final int off_x = offset.getX();
 					final int off_y = offset.getY();
-					final int x = t.x, y = t.y;
-					final int f_x = x - off_x, f_y = y - off_y;
-					final int here = flags[f_x][f_y];
-					final Short[] theArray = {(short) start.getX(), (short) start.getY(), (short) start.getZ()};
-					synchronized (lock) {
-						if (!Web.rs_map.containsKey(theArray) && (!RSTile.Walkable(here) || RSTile.Questionable(here))) {
-							rs_map.put(theArray, here);
+					final int flagIndex_x = curr_x - off_x, flagIndex_y = curr_y - off_y;
+					final int here = flags[flagIndex_x][flagIndex_y];
+					final Short[] tileShortInformation = {(short) collectingTile.getX(), (short) collectingTile.getY(), (short) collectingTile.getZ()};
+					synchronized (botCollectionLock) {
+						if (!Web.rs_map.containsKey(tileShortInformation) && (!RSTile.Walkable(here) || RSTile.Questionable(here))) {
+							collectionMap.put(tileShortInformation, here);
 						} else {
-							if (Web.rs_map.containsKey(theArray) && Web.rs_map.get(theArray) != here) {
-								WebQueue.Remove(start);
-								lb = null;
-								lp = -1;
+							if (Web.rs_map.containsKey(tileShortInformation) && Web.rs_map.get(tileShortInformation) != here) {
+								WebQueue.Remove(collectingTile);
+								lastBase = null;
+								lastPlane = -1;
 							}
 						}
 					}
 				}
 			}
-			WebQueue.Add(rs_map);
+			WebQueue.Add(collectionMap);
 			return -1;
 		} catch (final Exception ignored) {
 		}
@@ -72,14 +69,5 @@ public class WebData extends BackgroundScript {
 	@Override
 	public int iterationSleep() {
 		return 1000;
-	}
-
-	private class Node {
-		public int x, y;
-
-		public Node(final int x, final int y) {
-			this.x = x;
-			this.y = y;
-		}
 	}
 }

@@ -4,7 +4,10 @@ import org.rsbot.Configuration;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IniParser;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.*;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;

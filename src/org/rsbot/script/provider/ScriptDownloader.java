@@ -6,7 +6,10 @@ import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IOHelper;
 import org.rsbot.util.io.JavaCompiler;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;

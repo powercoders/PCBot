@@ -9,7 +9,6 @@ import org.rsbot.util.ApplicationException;
 import org.rsbot.util.io.IOHelper;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
