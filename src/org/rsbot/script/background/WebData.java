@@ -74,8 +74,7 @@ public class WebData extends BackgroundScript {
 								&& (!TileData.Walkable(here) || TileData.Questionable(here))) {
 							rs_map.put(theArray, here);
 						} else {
-							if (Web.rs_map.containsKey(theArray)
-									&& (Web.rs_map.get(theArray) != here || here == 0)) {
+							if (Web.rs_map.containsKey(theArray) && Web.rs_map.get(theArray) != here) {
 								WebQueue.Remove(start);
 								lb = null;
 								lp = -1;
