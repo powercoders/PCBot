@@ -1,6 +1,5 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.internal.wrappers.TileData;
 import org.rsbot.script.web.PlaneHandler;
 import org.rsbot.script.web.PlaneTraverse;
 import org.rsbot.script.web.Route;
@@ -297,44 +296,44 @@ public class Web extends MethodProvider {
 		final LinkedList<Node> tiles = new LinkedList<Node>();
 		final int x = t.x, y = t.y;
 		final RSTile here = t.toRSTile();
-		if (!Flag(here, TileData.Key.W_S) &&
-				!Flag(here.getX(), here.getY() - 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER)) {
+		if (!Flag(here, RSTile.Flag.W_S) &&
+				!Flag(here.getX(), here.getY() - 1, here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER)) {
 			tiles.add(new Node(x, y - 1, here.getZ()));
 		}
-		if (!Flag(here, TileData.Key.W_W) &&
-				!Flag(here.getX() - 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER)) {
+		if (!Flag(here, RSTile.Flag.W_W) &&
+				!Flag(here.getX() - 1, here.getY(), here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER)) {
 			tiles.add(new Node(x - 1, y, here.getZ()));
 		}
-		if (!Flag(here, TileData.Key.W_N) &&
-				!Flag(here.getX(), here.getY() + 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER)) {
+		if (!Flag(here, RSTile.Flag.W_N) &&
+				!Flag(here.getX(), here.getY() + 1, here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER)) {
 			tiles.add(new Node(x, y + 1, here.getZ()));
 		}
-		if (!Flag(here, TileData.Key.W_E) &&
-				!Flag(here.getX() + 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER)) {
+		if (!Flag(here, RSTile.Flag.W_E) &&
+				!Flag(here.getX() + 1, here.getY(), here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER)) {
 			tiles.add(new Node(x + 1, y, here.getZ()));
 		}
-		if (!Flag(here, TileData.Key.W_SW | TileData.Key.W_S | TileData.Key.W_W) &&
-				!Flag(here.getX() - 1, here.getY() - 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER) &&
-				!Flag(here.getX(), here.getY() - 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_W) &&
-				!Flag(here.getX() - 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_S)) {
+		if (!Flag(here, RSTile.Flag.W_SW | RSTile.Flag.W_S | RSTile.Flag.W_W) &&
+				!Flag(here.getX() - 1, here.getY() - 1, here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER) &&
+				!Flag(here.getX(), here.getY() - 1, here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER | RSTile.Flag.W_W) &&
+				!Flag(here.getX() - 1, here.getY(), here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER | RSTile.Flag.W_S)) {
 			tiles.add(new Node(x - 1, y - 1, here.getZ()));
 		}
-		if (!Flag(here, TileData.Key.W_NW | TileData.Key.W_N | TileData.Key.W_W) &&
-				!Flag(here.getX() - 1, here.getY() + 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER) &&
-				!Flag(here.getX(), here.getY() + 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_W) &&
-				!Flag(here.getX() - 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_N)) {
+		if (!Flag(here, RSTile.Flag.W_NW | RSTile.Flag.W_N | RSTile.Flag.W_W) &&
+				!Flag(here.getX() - 1, here.getY() + 1, here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER) &&
+				!Flag(here.getX(), here.getY() + 1, here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER | RSTile.Flag.W_W) &&
+				!Flag(here.getX() - 1, here.getY(), here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER | RSTile.Flag.W_N)) {
 			tiles.add(new Node(x - 1, y + 1, here.getZ()));
 		}
-		if (!Flag(here, TileData.Key.W_SE | TileData.Key.W_S | TileData.Key.W_E) &&
-				!Flag(here.getX() + 1, here.getY() - 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER) &&
-				!Flag(here.getX(), here.getY() - 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_E) &&
-				!Flag(here.getX() + 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_S)) {
+		if (!Flag(here, RSTile.Flag.W_SE | RSTile.Flag.W_S | RSTile.Flag.W_E) &&
+				!Flag(here.getX() + 1, here.getY() - 1, here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER) &&
+				!Flag(here.getX(), here.getY() - 1, here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER | RSTile.Flag.W_E) &&
+				!Flag(here.getX() + 1, here.getY(), here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER | RSTile.Flag.W_S)) {
 			tiles.add(new Node(x + 1, y - 1, here.getZ()));
 		}
-		if (!Flag(here, TileData.Key.W_NE | TileData.Key.W_N | TileData.Key.W_E) &&
-				!Flag(here.getX() + 1, here.getY() + 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER) &&
-				!Flag(here.getX(), here.getY() + 1, here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_E) &&
-				!Flag(here.getX() + 1, here.getY(), here.getZ(), TileData.Key.BLOCKED | TileData.Key.WATER | TileData.Key.W_N)) {
+		if (!Flag(here, RSTile.Flag.W_NE | RSTile.Flag.W_N | RSTile.Flag.W_E) &&
+				!Flag(here.getX() + 1, here.getY() + 1, here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER) &&
+				!Flag(here.getX(), here.getY() + 1, here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER | RSTile.Flag.W_E) &&
+				!Flag(here.getX() + 1, here.getY(), here.getZ(), RSTile.Flag.BLOCKED | RSTile.Flag.WATER | RSTile.Flag.W_N)) {
 			tiles.add(new Node(x + 1, y + 1, here.getZ()));
 		}
 		return tiles;
@@ -358,9 +357,9 @@ public class Web extends MethodProvider {
 	 * @return <tt>true</tt> if the tile contains flags.
 	 */
 	public static boolean Flag(final RSTile tile, final int key) {
-		final Short[] tileData = {(short) tile.getX(), (short) tile.getY(), (short) tile.getZ()};
-		if (Web.rs_map.containsKey(tileData)) {
-			final int theTile = Web.rs_map.get(tileData);
+		final Short[] RSTile = {(short) tile.getX(), (short) tile.getY(), (short) tile.getZ()};
+		if (Web.rs_map.containsKey(RSTile)) {
+			final int theTile = Web.rs_map.get(RSTile);
 			return (theTile & key) != 0;
 		}
 		return false;
@@ -369,13 +368,13 @@ public class Web extends MethodProvider {
 	/**
 	 * Checks the flags of a tile.
 	 *
-	 * @param tileData The tile to check.
-	 * @param key      Keys to look for.
+	 * @param RSTile The tile to check.
+	 * @param key    Keys to look for.
 	 * @return <tt>true</tt> if the tile contains flags.
 	 */
-	public static boolean Flag(final Short[] tileData, final int key) {
-		if (Web.rs_map.containsKey(tileData)) {
-			final int theTile = Web.rs_map.get(tileData);
+	public static boolean Flag(final Short[] RSTile, final int key) {
+		if (Web.rs_map.containsKey(RSTile)) {
+			final int theTile = Web.rs_map.get(RSTile);
 			return (theTile & key) != 0;
 		}
 		return false;
@@ -391,9 +390,9 @@ public class Web extends MethodProvider {
 	 * @return <tt>true</tt> if the tile contains flags.
 	 */
 	public static boolean Flag(final short x, final short y, final short z, final int key) {
-		final Short[] tileData = {x, y, z};
-		if (Web.rs_map.containsKey(tileData)) {
-			final int theTile = Web.rs_map.get(tileData);
+		final Short[] RSTile = {x, y, z};
+		if (Web.rs_map.containsKey(RSTile)) {
+			final int theTile = Web.rs_map.get(RSTile);
 			return (theTile & key) != 0;
 		}
 		return false;
@@ -409,9 +408,9 @@ public class Web extends MethodProvider {
 	 * @return <tt>true</tt> if the tile contains flags.
 	 */
 	public static boolean Flag(final int x, final int y, final int z, final int key) {
-		final Short[] tileData = {(short) x, (short) y, (short) z};
-		if (Web.rs_map.containsKey(tileData)) {
-			final int theTile = Web.rs_map.get(tileData);
+		final Short[] RSTile = {(short) x, (short) y, (short) z};
+		if (Web.rs_map.containsKey(RSTile)) {
+			final int theTile = Web.rs_map.get(RSTile);
 			return (theTile & key) != 0;
 		}
 		return false;

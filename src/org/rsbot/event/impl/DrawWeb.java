@@ -2,7 +2,6 @@ package org.rsbot.event.impl;
 
 import org.rsbot.bot.Bot;
 import org.rsbot.event.listeners.PaintListener;
-import org.rsbot.script.internal.wrappers.TileData;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.wrappers.RSPlayer;
@@ -55,7 +54,7 @@ public class DrawWeb implements PaintListener {
 			final RSTile t = new RSTile(tile[0], tile[1], tile[2]);
 			final int key = e.getValue();
 			if (t.getZ() == plane && ctx.calc.distanceBetween(t, oT) < 105) {
-				render.setColor(TileData.Questionable(key) ? Color.yellow : TileData.Special(key) ? Color.cyan : Color.red);
+				render.setColor(RSTile.Questionable(key) ? Color.yellow : RSTile.Special(key) ? Color.cyan : Color.red);
 				final Point p = tileToMap(t, oT);
 				render.drawLine(p.x, p.y, p.x, p.y);
 			}
