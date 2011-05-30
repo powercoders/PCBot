@@ -1,37 +1,19 @@
 package org.rsbot.script.provider;
 
-import org.rsbot.script.Script;
 import org.rsbot.util.StringUtil;
+
 
 /**
  * @author Paris
  */
 public class ScriptDefinition implements Comparable<ScriptDefinition> {
 
-	public int id;
+	public String getName() {
+		return StringUtil.stripHtml(name);
+	}
 
-	public String name;
-
-	public double version;
-
-	public Script.Category category;
-
-	public String description;
-
-	public String[] authors;
-
-	public String[] keywords;
-
-	public String website;
-
-	public ScriptSource source;
-
-	public String path;
-
-	@Override
-	public int compareTo(final ScriptDefinition def) {
-		final int c = getName().compareToIgnoreCase(def.getName());
-		return c == 0 ? Double.compare(version, def.version) : c;
+	public String getDescription() {
+		return StringUtil.stripHtml(description);
 	}
 
 	public String getAuthors() {
@@ -45,12 +27,27 @@ public class ScriptDefinition implements Comparable<ScriptDefinition> {
 		return StringUtil.stripHtml(s.toString());
 	}
 
-	public String getDescription() {
-		return StringUtil.stripHtml(description);
-	}
+	public int id;
 
-	public String getName() {
-		return StringUtil.stripHtml(name);
+	public String name;
+
+	public double version;
+
+	public String description;
+
+	public String[] authors;
+
+	public String[] keywords;
+
+	public String website;
+
+	public ScriptSource source;
+
+	public String path;
+
+	public int compareTo(final ScriptDefinition def) {
+		final int c = getName().compareToIgnoreCase(def.getName());
+		return c == 0 ? Double.compare(version, def.version) : c;
 	}
 
 	@Override

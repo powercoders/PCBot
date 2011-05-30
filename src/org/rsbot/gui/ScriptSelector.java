@@ -146,6 +146,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					if (keys.length == 0 && item.length() == 0
 							&& keyword.length() != 0) {
 						hit = true;
+						break;
 					} else if (keys.length != 0 && item.length() == 0) {
 						for (final String string : keys) {
 							if (string.toLowerCase().trim().contains(category)) {
@@ -156,7 +157,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					} else if (item.length() != 0 && keys.length == 0
 							&& keyword.length() != 0) {
 						if (item.contains(keyword) || keyword.contains(item)
-								|| name.contains(item) || item.contains(item)) {
+								|| name.contains(item) || item.contains(name)) {
 							hit = true;
 							break;
 						}
@@ -509,6 +510,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	public void inputChanged(final Bot bot, final int mask) {
 	}
 
+	private boolean firstRun = true;
+
 	private void load() {
 		scripts.clear();
 		if (connected) {
@@ -520,16 +523,18 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		scripts.addAll(SRC_PRECOMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
 		Collections.sort(scripts);
-
-		final ArrayList<String> keywords = new ArrayList<String>(
-				Category.values().length);
-		for (Category c : Category.values()) {
-			String id = c.description().trim();
-			if (id.length() > 0 && !keywords.contains(id)) {
-				keywords.add(id);
+		if (firstRun) {
+			ArrayList<String> keywords = new ArrayList<String>(
+					Category.values().length);
+			for (Category c : Category.values()) {
+				String id = c.description().trim();
+				if (id.length() > 0 && !keywords.contains(id)) {
+					keywords.add(id);
+				}
 			}
+			categories.populate(keywords, false);
+			firstRun = false;
 		}
-		categories.populate(keywords, false);
 		filter();
 		table.revalidate();
 	}
