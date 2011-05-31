@@ -36,7 +36,7 @@ public class ScriptDefinition implements Comparable<ScriptDefinition> {
 			return list;
 		}
 		for (int i = 0; i < keywords.length; i++) {
-			for (String sub : keywords[i].split("&|,|;")) {
+			for (String sub : keywords[i].split("&|,|;|\\s")) {
 				sub = sub.trim().toLowerCase();
 				if (sub.length() != 0) {
 					list.add(sub);
