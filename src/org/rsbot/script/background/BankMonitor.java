@@ -45,6 +45,6 @@ public class BankMonitor extends BackgroundScript {
 
 	@Override
 	public int iterationSleep() {
-		return 100;
+		return 2000;
 	}
 }

@@ -453,6 +453,7 @@ public class Web extends MethodProvider {
 		if (isInActive()) {
 			Web.rs_map.clear();
 			Web.loaded = false;
+			System.gc();
 		}
 	}
 
