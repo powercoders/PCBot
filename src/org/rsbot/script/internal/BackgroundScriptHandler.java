@@ -19,18 +19,19 @@ public class BackgroundScriptHandler {
 		this.bot = bot;
 	}
 
-	private void addScriptToPool(final BackgroundScript ss, final Thread t) {
+	private int addScriptToPool(final BackgroundScript ss, final Thread t) {
 		for (int off = 0; off < scripts.size(); ++off) {
 			if (!scripts.containsKey(off)) {
 				scripts.put(off, ss);
 				ss.setID(off);
 				scriptThreads.put(off, t);
-				return;
+				return off;
 			}
 		}
 		ss.setID(scripts.size());
 		scripts.put(scripts.size(), ss);
 		scriptThreads.put(scriptThreads.size(), t);
+		return scripts.size();
 	}
 
 	public Bot getBot() {
@@ -50,14 +51,15 @@ public class BackgroundScriptHandler {
 		}
 	}
 
-	public void runScript(final BackgroundScript script) {
+	public int runScript(final BackgroundScript script) {
 		script.init(bot.getMethodContext());
 		final ScriptManifest prop = script.getClass().getAnnotation(ScriptManifest.class);
 		final Thread t = new Thread(script, "BackgroundScript-" + prop.name());
 		t.setDaemon(true);
 		t.setPriority(Thread.MIN_PRIORITY);
-		addScriptToPool(script, t);
+		final int id = addScriptToPool(script, t);
 		t.start();
+		return id;
 	}
 
 	public void stopAllScripts() {
