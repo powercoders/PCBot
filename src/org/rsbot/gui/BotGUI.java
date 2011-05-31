@@ -17,7 +17,6 @@ import org.rsbot.service.Monitoring;
 import org.rsbot.service.Monitoring.Type;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.service.WebQueue;
-import org.rsbot.util.ApplicationException;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.IOHelper;
 import org.rsbot.util.io.ScreenshotUtil;
@@ -56,16 +55,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private java.util.Timer clean = null;
 	private Thread webManager = null;
 
-	public BotGUI() throws ApplicationException {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (final Exception ignored) {
-		}
-		if (UpdateChecker.isError()) {
-			throw new ApplicationException("Unable to obtain latest version information.\nPlease check your internet connection and try again.");
-		} else if (Configuration.RUNNING_FROM_JAR && UpdateChecker.isDeprecatedVersion()) {
-			throw new ApplicationException("This version has been deprecated, please update at " + Configuration.Paths.URLs.DOWNLOAD);
-		}
+	public BotGUI() {
 		init();
 		pack();
 		setTitle(null);

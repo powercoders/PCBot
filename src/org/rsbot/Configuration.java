@@ -65,6 +65,7 @@ public class Configuration {
 			public static final String HOST = "powerbot.org";
 			private static final String BASE = "http://links." + HOST + "/";
 			public static final String DOWNLOAD = BASE + "download";
+			public static final String DOWNLOAD_SHORT = HOST + "/download";
 			public static final String UPDATE = BASE + "modscript";
 			public static final String VERSION = BASE + "version.txt";
 			public static final String VERSION_KILL = BASE + "version-kill";
@@ -206,8 +207,10 @@ public class Configuration {
 		public static final int MESSAGES = 3;
 	}
 
+	static final URL resource;
+
 	static {
-		final URL resource = Configuration.class.getClassLoader().getResource(Paths.Resources.VERSION);
+		resource = Configuration.class.getClassLoader().getResource(Paths.Resources.VERSION);
 		if (resource != null) {
 			Configuration.RUNNING_FROM_JAR = true;
 		}
@@ -221,6 +224,9 @@ public class Configuration {
 		} else {
 			CURRENT_OS = OperatingSystem.UNKNOWN;
 		}
+	}
+
+	public static void createDirectories() {
 		final ArrayList<String> dirs = new ArrayList<String>();
 		dirs.add(Paths.getHomeDirectory());
 		dirs.add(Paths.getLogsDirectory());
@@ -235,6 +241,9 @@ public class Configuration {
 				dir.mkdirs();
 			}
 		}
+	}
+
+	public static void registerLogging() {
 		final Properties logging = new Properties();
 		final String logFormatter = LogFormatter.class.getCanonicalName();
 		final String fileHandler = FileHandler.class.getCanonicalName();

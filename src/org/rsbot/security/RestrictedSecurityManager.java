@@ -5,6 +5,7 @@ import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.bot.RSLoader;
 import org.rsbot.gui.BotGUI;
+import org.rsbot.gui.LoadScreen;
 import org.rsbot.script.AccountStore;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.util.UpdateChecker;
@@ -178,7 +179,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	@Override
 	public void checkExit(final int status) {
 		final String calling = getCallingClass();
-		if (calling.equals(BotGUI.class.getName()) || calling.equals(Application.class.getName())) {
+		if (calling.equals(BotGUI.class.getName()) || calling.equals(Application.class.getName()) || calling.startsWith(LoadScreen.class.getName())) {
 			super.checkExit(status);
 		} else {
 			throw new SecurityException();
