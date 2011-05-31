@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * The web class.
@@ -20,10 +21,11 @@ import java.util.*;
  * @author Timer
  */
 public class Web extends MethodProvider {
-	public static final HashMap<Short[], Integer> rs_map = new HashMap<Short[], Integer>();
+	public static final HashMap<RSTile, Integer> rs_map = new HashMap<RSTile, Integer>();
 	public static boolean loaded = false;
 	private static final Object lock = new Object();
 	private static long lastAccess = 0;
+	private static final Logger log = Logger.getLogger("Web");
 
 	Web(final MethodContext ctx) {
 		super(ctx);
@@ -369,42 +371,8 @@ public class Web extends MethodProvider {
 	 * @return <tt>true</tt> if the tile contains flags.
 	 */
 	public static boolean Flag(final RSTile tile, final int key) {
-		final Short[] theTile = {(short) tile.getX(), (short) tile.getY(), (short) tile.getZ()};
-		if (Web.rs_map.containsKey(theTile)) {
-			final int theFlag = Web.rs_map.get(theTile);
-			return (theFlag & key) != 0;
-		}
-		return false;
-	}
-
-	/**
-	 * Checks the flags of a tile.
-	 *
-	 * @param theTile The tile to check.
-	 * @param key     Keys to look for.
-	 * @return <tt>true</tt> if the tile contains flags.
-	 */
-	public static boolean Flag(final Short[] theTile, final int key) {
-		if (Web.rs_map.containsKey(theTile)) {
-			final int theFlag = Web.rs_map.get(theTile);
-			return (theFlag & key) != 0;
-		}
-		return false;
-	}
-
-	/**
-	 * Checks the flags of a tile.
-	 *
-	 * @param x   The tile to check (x).
-	 * @param y   The tile to check (y).
-	 * @param z   The tile to check (z).
-	 * @param key Keys to look for.
-	 * @return <tt>true</tt> if the tile contains flags.
-	 */
-	public static boolean Flag(final short x, final short y, final short z, final int key) {
-		final Short[] theTile = {x, y, z};
-		if (Web.rs_map.containsKey(theTile)) {
-			final int theFlag = Web.rs_map.get(theTile);
+		if (Web.rs_map.containsKey(tile)) {
+			final int theFlag = Web.rs_map.get(tile);
 			return (theFlag & key) != 0;
 		}
 		return false;
@@ -420,12 +388,7 @@ public class Web extends MethodProvider {
 	 * @return <tt>true</tt> if the tile contains flags.
 	 */
 	public static boolean Flag(final int x, final int y, final int z, final int key) {
-		final Short[] theTile = {(short) x, (short) y, (short) z};
-		if (Web.rs_map.containsKey(theTile)) {
-			final int theFlag = Web.rs_map.get(theTile);
-			return (theFlag & key) != 0;
-		}
-		return false;
+		return Flag(new RSTile(x, y, z), key);
 	}
 
 	/**
@@ -473,14 +436,14 @@ public class Web extends MethodProvider {
 				}
 				final BufferedReader bufferedReader = new BufferedReader(new FileReader(Configuration.Paths.getWebDatabase()));
 				String dataLine;
-				final HashMap<Short[], Integer> mapData = new HashMap<Short[], Integer>();
+				final HashMap<RSTile, Integer> mapData = new HashMap<RSTile, Integer>();
 				while ((dataLine = bufferedReader.readLine()) != null) {
 					final String[] storeData = dataLine.split("k");
 					if (storeData.length == 2) {
 						final String[] tileData = storeData[0].split(",");
 						if (tileData.length == 3) {
 							try {
-								final Short[] tile = {Short.parseShort(tileData[0]), Short.parseShort(tileData[1]), Short.parseShort(tileData[2])};
+								final RSTile tile = new RSTile(Integer.parseInt(tileData[0]), Integer.parseInt(tileData[1]), Integer.parseInt(tileData[2]));
 								final int tileFlag = Integer.parseInt(storeData[1]);
 								synchronized (lock) {
 									if (mapData.containsKey(tile)) {

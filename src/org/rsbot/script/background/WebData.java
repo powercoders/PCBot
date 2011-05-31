@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class WebData extends BackgroundScript {
 	private RSTile lastBase = null;
 	private int lastPlane = -1;
-	public final HashMap<Short[], Integer> collectionMap = new HashMap<Short[], Integer>();
+	public final HashMap<RSTile, Integer> collectionMap = new HashMap<RSTile, Integer>();
 	private static final Object botCollectionLock = new Object();
 
 	@Override
@@ -45,12 +45,11 @@ public class WebData extends BackgroundScript {
 					final int off_y = offset.getY();
 					final int flagIndex_x = curr_x - off_x, flagIndex_y = curr_y - off_y;
 					final int here = flags[flagIndex_x][flagIndex_y];
-					final Short[] tileShortInformation = {(short) collectingTile.getX(), (short) collectingTile.getY(), (short) collectingTile.getZ()};
 					synchronized (botCollectionLock) {
-						if (!Web.rs_map.containsKey(tileShortInformation) && (!RSTile.Walkable(here) || RSTile.Questionable(here))) {
-							collectionMap.put(tileShortInformation, here);
+						if (!Web.rs_map.containsKey(collectingTile) && (!RSTile.Walkable(here) || RSTile.Questionable(here))) {
+							collectionMap.put(collectingTile, here);
 						} else {
-							if (Web.rs_map.containsKey(tileShortInformation) && Web.rs_map.get(tileShortInformation) != here) {
+							if (Web.rs_map.containsKey(collectingTile) && Web.rs_map.get(collectingTile) != here) {
 								WebQueue.Remove(collectingTile);
 								lastBase = null;
 								lastPlane = -1;
