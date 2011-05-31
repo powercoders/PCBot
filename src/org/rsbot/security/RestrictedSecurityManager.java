@@ -341,6 +341,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 					if (sysroot != null && sysroot.length() > 0 && path.startsWith(sysroot)) {
 						fail = !readOnly;
 					}
+					if (path.endsWith(".ttf") && readOnly) {
+						fail = false;
+					}
 				}
 				if (fail) {
 					log.warning((readOnly ? "Read" : "Write") + " access denied: " + path);
