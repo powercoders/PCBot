@@ -9,7 +9,6 @@ import org.rsbot.event.events.TextPaintEvent;
 import org.rsbot.gui.AccountManager;
 import org.rsbot.script.background.BankMonitor;
 import org.rsbot.script.background.WebData;
-import org.rsbot.script.background.WebLoader;
 import org.rsbot.script.internal.BackgroundScriptHandler;
 import org.rsbot.script.internal.BreakHandler;
 import org.rsbot.script.internal.InputManager;
@@ -119,7 +118,6 @@ public class Bot {
 					}
 					if (methods != null && !killBackground) {
 						bsh.runScript(new WebData());
-						bsh.runScript(new WebLoader());
 						bsh.runScript(new BankMonitor());
 					}
 				}

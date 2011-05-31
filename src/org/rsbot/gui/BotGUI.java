@@ -10,6 +10,7 @@ import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
 import org.rsbot.script.methods.Environment;
+import org.rsbot.script.methods.Web;
 import org.rsbot.script.provider.ScriptDownloader;
 import org.rsbot.script.util.WindowUtil;
 import org.rsbot.service.Monitoring;
@@ -53,6 +54,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private TrayIcon tray = null;
 	private java.util.Timer shutdown = null;
 	private java.util.Timer clean = null;
+	private Thread webManager = null;
 
 	public BotGUI() throws ApplicationException {
 		try {
@@ -98,6 +100,21 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				System.gc();
 			}
 		}, 1000 * 60 * 10, 1000 * 60 * 10);
+		webManager = new Thread() {
+			@Override
+			public void run() {
+				for (; ;) {
+					if (Web.isLoaded() && Web.isInActive()) {
+						Web.free();
+					}
+					try {
+						Thread.sleep(15000);
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+		};
+		webManager.start();
 	}
 
 	@Override
@@ -603,24 +620,24 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				doExit = false;
 			}
 		}
-		try {
-			WebQueue.Destroy();
-		} catch (NoClassDefFoundError ncdfe) {
-		}
-		setVisible(false);
-		try {
-			Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(!prefs.hideAds));
-		} catch (NoClassDefFoundError ncdfe) {
-		}
 		if (doExit) {
+			Web.free();
+			webManager.interrupt();
+			setVisible(false);
+			try {
+				WebQueue.Destroy();
+			} catch (NoClassDefFoundError ncdfe) {
+			}
+			try {
+				Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(!prefs.hideAds));
+			} catch (NoClassDefFoundError ncdfe) {
+			}
 			prefs.save();
 			try {
 				Monitoring.stop();
 			} catch (NoClassDefFoundError ncdfe) {
 			}
 			System.exit(0);
-		} else {
-			setVisible(true);
 		}
 		return doExit;
 	}

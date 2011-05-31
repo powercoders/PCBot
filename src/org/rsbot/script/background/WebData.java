@@ -19,7 +19,7 @@ public class WebData extends BackgroundScript {
 	public boolean activateCondition() {
 		final RSTile curr_base = game.getMapBase();
 		final int curr_plane = game.getPlane();
-		return game.isLoggedIn() && ((lastBase == null || !lastBase.equals(curr_base)) || (lastPlane == -1 || lastPlane != curr_plane));
+		return Web.isLoaded() && game.isLoggedIn() && ((lastBase == null || !lastBase.equals(curr_base)) || (lastPlane == -1 || lastPlane != curr_plane));
 	}
 
 	@Override
