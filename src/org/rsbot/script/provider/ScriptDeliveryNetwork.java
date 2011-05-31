@@ -59,7 +59,9 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 			def.authors = values.get("authors").split(ScriptList.DELIMITER);
 			def.keywords = values.get("keywords").split(ScriptList.DELIMITER);
 			def.website = values.get("website");
+			if (values.get("category") != null) {
 			def.category = getCategory(values.get("category"));
+			}
 			defs.add(def);
 		}
 	}
