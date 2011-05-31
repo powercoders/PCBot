@@ -137,7 +137,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					def.category = Script.Category.OTHER;
 				}
 				final String name = def.name.toLowerCase().trim();
-				final String keywords[] = def.keywords;
+				final String[] keywords = def.getKeywords();
 				boolean hit = false;
 				final String category = def.category.description()
 						.toLowerCase().trim();
