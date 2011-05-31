@@ -88,8 +88,10 @@ public class LoadScreen extends JFrame {
 
 		log.info("Downloading resources");
 		try {
-			HttpClient.download(new URL(Configuration.Paths.URLs.TRIDENT), new File(Configuration.Paths.getTrident()));
-			HttpClient.download(new URL(Configuration.Paths.URLs.SUBSTANCE), new File(Configuration.Paths.getSubstance()));
+			if (Configuration.SKINNED) {
+				HttpClient.download(new URL(Configuration.Paths.URLs.TRIDENT), new File(Configuration.Paths.getTrident()));
+				HttpClient.download(new URL(Configuration.Paths.URLs.SUBSTANCE), new File(Configuration.Paths.getSubstance()));
+			}
 		} catch (final IOException ignored) {
 		}
 
