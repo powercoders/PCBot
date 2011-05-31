@@ -53,7 +53,7 @@ public class LoadScreen extends JFrame {
 		final int pad = 10;
 		panel.setBorder(BorderFactory.createEmptyBorder(pad, pad, pad, pad));
 		final JProgressBar progress = new JProgressBar();
-		progress.setPreferredSize(new Dimension(300, progress.getPreferredSize().height));
+		progress.setPreferredSize(new Dimension(350, progress.getPreferredSize().height));
 		progress.setIndeterminate(true);
 		panel.add(progress);
 		final LabelLogHandler handler = new LabelLogHandler();
