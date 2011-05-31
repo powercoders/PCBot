@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * The web class.
@@ -25,7 +24,6 @@ public class Web extends MethodProvider {
 	public static boolean loaded = false;
 	private static final Object lock = new Object();
 	private static long lastAccess = 0;
-	private static final Logger log = Logger.getLogger("Web");
 
 	Web(final MethodContext ctx) {
 		super(ctx);

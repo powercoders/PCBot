@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import static org.rsbot.script.Script.Category.valueOf;
+
 /**
  * @author Paris
  */
@@ -42,7 +44,7 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 	}
 
 	private static Script.Category getCategory(final String category) {
-		return Script.Category.valueOf(category);
+		return valueOf(category);
 	}
 
 	private static void parseManifests(final HashMap<String, HashMap<String, String>> entries, final List<ScriptDefinition> defs) {

@@ -88,7 +88,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			return String.class;
 		}
 
-		@Override
 		public int getColumnCount() {
 			return COLUMN_NAMES.length;
 		}
@@ -102,12 +101,10 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			return matches.get(rowIndex);
 		}
 
-		@Override
 		public int getRowCount() {
 			return matches.size();
 		}
 
-		@Override
 		public Object getValueAt(final int rowIndex, final int columnIndex) {
 			if (rowIndex >= 0 && rowIndex < matches.size()) {
 				final ScriptDefinition def = matches.get(rowIndex);
@@ -186,7 +183,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	private class TableSelectionListener implements ListSelectionListener {
-		@Override
 		public void valueChanged(final ListSelectionEvent evt) {
 			if (!evt.getValueIsAdjusting()) {
 				submit.setEnabled(table.getSelectedRow() != -1);
@@ -257,14 +253,11 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
 		refresh.setToolTipText("Refresh");
 		refresh.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent arg0) {
 				refresh.setEnabled(false);
 				SwingUtilities.invokeLater(new Runnable() {
-					@Override
 					public void run() {
 						new Thread() {
-							@Override
 							public void run() {
 								ScriptDeliveryNetwork.getInstance().refresh(
 										true);
@@ -317,7 +310,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				start.setIcon(new ImageIcon(Configuration
 						.getImage(Configuration.Paths.Resources.ICON_PLAY)));
 				start.addActionListener(new ActionListener() {
-					@Override
 					public void actionPerformed(final ActionEvent e) {
 						submit.doClick();
 					}
@@ -329,7 +321,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				delete.setIcon(new ImageIcon(Configuration
 						.getImage(Configuration.Paths.Resources.ICON_CLOSE)));
 				delete.addActionListener(new ActionListener() {
-					@Override
 					public void actionPerformed(final ActionEvent e) {
 						final File path = def.path == null
 								|| def.path.isEmpty() ? null : new File(
@@ -409,7 +400,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		connect.setToolTipText("Show network scripts");
 		submit.setEnabled(false);
 		submit.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent evt) {
 				final ScriptDefinition def = model.getDefinition(table
 						.getSelectedRow());
@@ -419,7 +409,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						.removeScriptListener(ScriptSelector.this);
 				dispose();
 				new Thread() {
-					@Override
 					public void run() {
 						Script script = null;
 						frame.updateScriptControls(true);
@@ -439,7 +428,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		});
 		if (connect.isEnabled()) {
 			final ActionListener listenConnect = new ActionListener() {
-				@Override
 				public void actionPerformed(final ActionEvent e) {
 					final String icon = connected ? Configuration.Paths.Resources.ICON_DISCONNECT
 							: Configuration.Paths.Resources.ICON_CONNECT;
@@ -455,7 +443,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		accounts.setPreferredSize(new Dimension(125, 20));
 		categories.setPreferredSize(new Dimension(150, 20));
 		categories.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent arg0) {
 				final String[] selected = categories.getSelectedItems();
 				final StringBuilder s = new StringBuilder(16);
@@ -506,7 +493,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		search.requestFocus();
 	}
 
-	@Override
 	public void inputChanged(final Bot bot, final int mask) {
 	}
 
@@ -539,20 +525,16 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		table.revalidate();
 	}
 
-	@Override
 	public void scriptPaused(final ScriptHandler handler, final Script script) {
 	}
 
-	@Override
 	public void scriptResumed(final ScriptHandler handler, final Script script) {
 	}
 
-	@Override
 	public void scriptStarted(final ScriptHandler handler, final Script script) {
 		update();
 	}
 
-	@Override
 	public void scriptStopped(final ScriptHandler handler, final Script script) {
 		update();
 	}

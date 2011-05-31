@@ -80,6 +80,8 @@ public class ScriptDefinition implements Comparable<ScriptDefinition> {
 		s.append(version);
 		s.append(" by ");
 		s.append(getAuthors());
+		s.append(" Category: ");
+		s.append(category.description());
 		return s.toString();
 	}
 }
