@@ -10,7 +10,7 @@ import java.awt.*;
  */
 public class Bank extends MethodProvider {
 	public static final Filter<RSObject> OBJECT_BANKS = new Filter<RSObject>() {
-		private final String[] bankNames = {"Bank Booth", "Bank Chest", "Counter"};
+		private final String[] bankNames = {"Bank booth", "Shantay chest", "Bank chest", "Counter"};
 
 		public boolean accept(final RSObject rsObject) {
 			final String name = rsObject != null ? rsObject.getName() : null;
@@ -24,7 +24,7 @@ public class Bank extends MethodProvider {
 	};
 
 	public static final Filter<RSObject> OBJECT_DEPOSIT_BOX = new Filter<RSObject>() {
-		private final String[] depositBoxNames = {"Deposit Box"};
+		private final String[] depositBoxNames = {"Bank deposit box"};
 
 		public boolean accept(final RSObject rsObject) {
 			final String name = rsObject != null ? rsObject.getName() : null;
@@ -425,7 +425,7 @@ public class Bank extends MethodProvider {
 			if (lowestDist < 5 && methods.calc.tileOnMap(tile) && methods.calc.canReach(tile, true)) {
 				boolean didAction = false;
 				if (bankBooth != null) {
-					didAction = bankBooth.interact("Use-quickly");
+					didAction = bankBooth.interact("Use-quickly", "Bank booth") || bankBooth.interact("Open", "Shantay chest") || bankBooth.interact("Use", "Bank chest");
 				} else if (banker != null) {
 					didAction = banker.interact("Bank", "Banker");
 				}
