@@ -59,9 +59,9 @@ public class LoadScreen extends JFrame {
 		final LabelLogHandler handler = new LabelLogHandler();
 		Logger.getLogger("").addHandler(handler);
 		handler.label.setBorder(BorderFactory.createEmptyBorder(pad, 0, 0, 0));
-		handler.label.setPreferredSize(new Dimension(progress.getWidth(), handler.label.getPreferredSize().height + pad));
 		final Font font = handler.label.getFont();
 		handler.label.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
+		handler.label.setPreferredSize(new Dimension(progress.getWidth(), handler.label.getPreferredSize().height + pad));
 		panel.add(handler.label);
 		log.info("Loading");
 		add(panel);
