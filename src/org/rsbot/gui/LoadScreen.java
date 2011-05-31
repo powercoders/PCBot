@@ -96,7 +96,7 @@ public class LoadScreen extends JFrame {
 		log.info("Downloading network scripts");
 		ScriptDeliveryNetwork.getInstance().list();
 
-		log.info("Checkign for updates");
+		log.info("Checking for updates");
 
 		final String error;
 
