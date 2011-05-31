@@ -1,5 +1,8 @@
 package org.rsbot.script.provider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.rsbot.util.StringUtil;
 
 
@@ -25,6 +28,22 @@ public class ScriptDefinition implements Comparable<ScriptDefinition> {
 			s.append(authors[i]);
 		}
 		return StringUtil.stripHtml(s.toString());
+	}
+
+	public List<String> getKeywords() {
+		final ArrayList<String> list = new ArrayList<String>(keywords.length);
+		if (keywords == null) {
+			return list;
+		}
+		for (int i = 0; i < keywords.length; i++) {
+			for (String sub : keywords[i].split("&|,|;")) {
+				sub = sub.trim().toLowerCase();
+				if (sub.length() != 0) {
+					list.add(sub);
+				}
+			}
+		}
+		return list;
 	}
 
 	public int id;

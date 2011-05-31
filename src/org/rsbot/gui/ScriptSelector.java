@@ -21,7 +21,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -90,23 +92,21 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		scripts.addAll(SRC_SOURCES.list());
 		Collections.sort(scripts);
 
-		final ArrayList<String> keywords = new ArrayList<String>(scripts.size());
-		for (final ScriptDefinition def : scripts) {
-			if (def.keywords == null || def.keywords.length == 0) {
-				continue;
-			}
-			for (String keyword : def.keywords) {
-				keyword = keyword.toLowerCase().trim();
-				if (keyword.length() > 0 && !keywords.contains(keyword)) {
-					keywords.add(keyword);
-				}
-			}
-		}
-		Collections.sort(keywords);
-		categories.populate(keywords, false);
-
+		categories.populate(getScriptKeywords(), false);
 		filter();
 		table.revalidate();
+	}
+
+	private Iterable<String> getScriptKeywords() {
+		final LinkedHashSet<String> keywords = new LinkedHashSet<String>(scripts.size());
+		for (final ScriptDefinition def : scripts) {
+			keywords.addAll(def.getKeywords());
+		}
+		final String[] array = new String[keywords.size()];
+		keywords.toArray(array);
+		final List<String> list = Arrays.asList(array);
+		Collections.sort(list);
+		return list;
 	}
 
 	private void init() {
