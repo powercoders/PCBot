@@ -53,15 +53,15 @@ public class LoadScreen extends JFrame {
 		final int pad = 10;
 		panel.setBorder(BorderFactory.createEmptyBorder(pad, pad, pad, pad));
 		final JProgressBar progress = new JProgressBar();
-		progress.setPreferredSize(new Dimension(300, progress.getPreferredSize().height));
+		progress.setPreferredSize(new Dimension(350, progress.getPreferredSize().height));
 		progress.setIndeterminate(true);
 		panel.add(progress);
 		final LabelLogHandler handler = new LabelLogHandler();
 		Logger.getLogger("").addHandler(handler);
 		handler.label.setBorder(BorderFactory.createEmptyBorder(pad, 0, 0, 0));
-		handler.label.setPreferredSize(new Dimension(progress.getWidth(), handler.label.getPreferredSize().height + pad));
 		final Font font = handler.label.getFont();
 		handler.label.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
+		handler.label.setPreferredSize(new Dimension(progress.getWidth(), handler.label.getPreferredSize().height + pad));
 		panel.add(handler.label);
 		log.info("Loading");
 		add(panel);
@@ -88,15 +88,17 @@ public class LoadScreen extends JFrame {
 
 		log.info("Downloading resources");
 		try {
-			HttpClient.download(new URL(Configuration.Paths.URLs.TRIDENT), new File(Configuration.Paths.getTrident()));
-			HttpClient.download(new URL(Configuration.Paths.URLs.SUBSTANCE), new File(Configuration.Paths.getSubstance()));
+			if (Configuration.SKINNED) {
+				HttpClient.download(new URL(Configuration.Paths.URLs.TRIDENT), new File(Configuration.Paths.getTrident()));
+				HttpClient.download(new URL(Configuration.Paths.URLs.SUBSTANCE), new File(Configuration.Paths.getSubstance()));
+			}
 		} catch (final IOException ignored) {
 		}
 
 		log.info("Downloading network scripts");
 		ScriptDeliveryNetwork.getInstance().list();
 
-		log.info("Checkign for updates");
+		log.info("Checking for updates");
 
 		final String error;
 
