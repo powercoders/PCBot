@@ -299,8 +299,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 		super.checkWrite(file);
 	}
 
-	private void checkFilePath(String path, final boolean readOnly) {
-		path = new File(path).getAbsolutePath();
+	private void checkFilePath(final String pathRaw, final boolean readOnly) {
+		final String path = new File(pathRaw).getAbsolutePath();
 		if (isCallerScript()) {
 			if (!path.startsWith(Configuration.Paths.getScriptCacheDirectory())) {
 				boolean fail = true;
