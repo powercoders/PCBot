@@ -3,7 +3,6 @@ package org.rsbot.security;
 import org.rsbot.Application;
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
-import org.rsbot.bot.RSLoader;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.gui.LoadScreen;
 import org.rsbot.script.AccountStore;
@@ -300,8 +299,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 		super.checkWrite(file);
 	}
 
-	private void checkFilePath(String path, final boolean readOnly) {
-		path = new File(path).getAbsolutePath();
+	private void checkFilePath(final String pathRaw, final boolean readOnly) {
+		final String path = new File(pathRaw).getAbsolutePath();
 		if (isCallerScript()) {
 			if (!path.startsWith(Configuration.Paths.getScriptCacheDirectory())) {
 				boolean fail = true;
@@ -341,9 +340,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 					final String sysroot = System.getenv("SystemRoot");
 					if (sysroot != null && sysroot.length() > 0 && path.startsWith(sysroot)) {
 						fail = !readOnly;
-						if (getCallingClass().startsWith(RSLoader.class.getName())) {
-							fail = false;
-						}
+					}
+					if (path.endsWith(".ttf") && readOnly) {
+						fail = false;
 					}
 				}
 				if (fail) {
