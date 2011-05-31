@@ -1,5 +1,10 @@
 package org.rsbot.script.provider;
 
+import org.rsbot.Configuration;
+import org.rsbot.script.Script;
+import org.rsbot.script.ScriptManifest;
+import org.rsbot.service.ServiceException;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -8,11 +13,6 @@ import java.util.LinkedList;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
-
-import org.rsbot.Configuration;
-import org.rsbot.script.Script;
-import org.rsbot.script.ScriptManifest;
-import org.rsbot.service.ServiceException;
 
 /**
  * @author Jacmob
@@ -32,13 +32,10 @@ public class FileScriptSource implements ScriptSource {
 	}
 
 	public static boolean isJar(final File file) {
-		return file.getName().endsWith(".jar")
-				|| file.getName().endsWith(".dat");
+		return file.getName().endsWith(".jar") || file.getName().endsWith(".dat");
 	}
 
-	private static void load(final ClassLoader loader,
-			final LinkedList<ScriptDefinition> scripts, final File file,
-			final String prefix) {
+	private static void load(final ClassLoader loader, final LinkedList<ScriptDefinition> scripts, final File file, final String prefix) {
 		if (file.isDirectory()) {
 			if (!file.getName().startsWith(".")) {
 				for (final File f : file.listFiles()) {
@@ -48,31 +45,26 @@ public class FileScriptSource implements ScriptSource {
 		} else {
 			String name = prefix + file.getName();
 			final String ext = ".class";
-			if (name.endsWith(ext) && !name.startsWith(".")
-					&& !name.contains("!") && !name.contains("$")) {
+			if (name.endsWith(ext) && !name.startsWith(".") && !name.contains("!") && !name.contains("$")) {
 				name = name.substring(0, name.length() - ext.length());
 				load(loader, scripts, name, file.getAbsolutePath());
 			}
 		}
 	}
 
-	private static void load(final ClassLoader loader,
-			final LinkedList<ScriptDefinition> scripts, final JarFile jar) {
+	private static void load(final ClassLoader loader, final LinkedList<ScriptDefinition> scripts, final JarFile jar) {
 		final Enumeration<JarEntry> entries = jar.entries();
 		while (entries.hasMoreElements()) {
 			final JarEntry e = entries.nextElement();
 			final String name = e.getName().replace('/', '.');
 			final String ext = ".class";
 			if (name.endsWith(ext) && !name.contains("$")) {
-				load(loader, scripts, name.substring(0, name.length()
-						- ext.length()), jar.getName());
+				load(loader, scripts, name.substring(0, name.length() - ext.length()), jar.getName());
 			}
 		}
 	}
 
-	private static void load(final ClassLoader loader,
-			final LinkedList<ScriptDefinition> scripts, final String name,
-			final String path) {
+	private static void load(final ClassLoader loader, final LinkedList<ScriptDefinition> scripts, final String name, final String path) {
 		Class<?> clazz;
 		try {
 			clazz = loader.loadClass(name);
@@ -103,8 +95,7 @@ public class FileScriptSource implements ScriptSource {
 		}
 	}
 
-	public static void load(final File file,
-			final LinkedList<ScriptDefinition> defs, ClassLoader loader)
+	public static void load(final File file, final LinkedList<ScriptDefinition> defs, ClassLoader loader)
 			throws IOException {
 		if (isJar(file)) {
 			load(new ScriptClassLoader(getJarUrl(file)), defs, new JarFile(file));
@@ -116,8 +107,7 @@ public class FileScriptSource implements ScriptSource {
 		}
 	}
 
-	public static Script load(final FileScriptDefinition def)
-			throws InstantiationException, IllegalAccessException {
+	public static Script load(final FileScriptDefinition def) throws InstantiationException, IllegalAccessException {
 		return def.clazz.asSubclass(Script.class).newInstance();
 	}
 
@@ -135,7 +125,6 @@ public class FileScriptSource implements ScriptSource {
 		}
 	}
 
-	@Override
 	public LinkedList<ScriptDefinition> list() {
 		final LinkedList<ScriptDefinition> defs = new LinkedList<ScriptDefinition>();
 		for (final File file : files) {
@@ -167,7 +156,6 @@ public class FileScriptSource implements ScriptSource {
 		}
 	}
 
-	@Override
 	public Script load(final ScriptDefinition def) throws ServiceException {
 		if (!(def instanceof FileScriptDefinition)) {
 			throw new IllegalArgumentException("Invalid definition!");
@@ -178,5 +166,4 @@ public class FileScriptSource implements ScriptSource {
 			throw new ServiceException(ex.toString());
 		}
 	}
-
 }

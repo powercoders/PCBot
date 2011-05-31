@@ -10,7 +10,6 @@ import java.net.URL;
  * @author Jacmob
  */
 class ScriptClassLoader extends ClassLoader {
-
 	private final URL base;
 
 	public ScriptClassLoader(final URL url) {
@@ -21,7 +20,6 @@ class ScriptClassLoader extends ClassLoader {
 	@SuppressWarnings("rawtypes")
 	public Class<?> loadClass(final String name, final boolean resolve) throws ClassNotFoundException {
 		Class clazz = findLoadedClass(name);
-
 		if (clazz == null) {
 			try {
 				final InputStream in = getResourceAsStream(name.replace('.', '/') + ".class");
@@ -40,7 +38,6 @@ class ScriptClassLoader extends ClassLoader {
 				clazz = super.loadClass(name, resolve);
 			}
 		}
-
 		return clazz;
 	}
 
@@ -61,5 +58,4 @@ class ScriptClassLoader extends ClassLoader {
 			return null;
 		}
 	}
-
 }

@@ -1,10 +1,10 @@
 package org.rsbot.script.provider;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import org.rsbot.script.Script;
 import org.rsbot.util.StringUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Paris
@@ -31,7 +31,6 @@ public class ScriptDefinition implements Comparable<ScriptDefinition> {
 
 	public String path;
 
-	@Override
 	public int compareTo(final ScriptDefinition def) {
 		final int c = getName().compareToIgnoreCase(def.getName());
 		return c == 0 ? Double.compare(version, def.version) : c;
@@ -59,7 +58,7 @@ public class ScriptDefinition implements Comparable<ScriptDefinition> {
 	public String[] getKeywords() {
 		final ArrayList<String> s = new ArrayList<String>(keywords.length);
 		if (keywords == null) {
-			return new String[] { "" };
+			return new String[]{""};
 		}
 		for (int i = 0; i < keywords.length; i++) {
 			for (String sub : keywords[i].split("&|,|;|\\s")) {
@@ -70,7 +69,7 @@ public class ScriptDefinition implements Comparable<ScriptDefinition> {
 			}
 		}
 		Collections.sort(s);
-		return (String[]) s.toArray(new String[0]);
+		return s.toArray(new String[0]);
 	}
 
 	@Override
