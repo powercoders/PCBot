@@ -76,6 +76,8 @@ public class Configuration {
 			public static final String MONITORING_CONTROL = BASE + "monitoring";
 			public static final String WEBCOMPILER = BASE + "webcompile";
 			public static final String SERVICELOGIN = BASE + "servicelogin";
+			public static final String TRIDENT = BASE + "trident";
+			public static final String SUBSTANCE = BASE + "substance";
 		}
 
 		public static final String ROOT = new File(".").getAbsolutePath();
@@ -158,6 +160,14 @@ public class Configuration {
 
 		public static String getServiceKey() {
 			return Paths.getSettingsDirectory() + File.separator + "service.key";
+		}
+
+		public static String getTrident() {
+			return Paths.getCacheDirectory() + File.separator + "trident.jar";
+		}
+
+		public static String getSubstance() {
+			return Paths.getCacheDirectory() + File.separator + "substance.jar";
 		}
 
 		public static String getSettingsDirectory() {

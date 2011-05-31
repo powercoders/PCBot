@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +27,7 @@ import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.security.RestrictedSecurityManager;
 import org.rsbot.util.UpdateChecker;
+import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IOHelper;
 
 public class LoadScreen extends JFrame {
@@ -83,6 +85,13 @@ public class LoadScreen extends JFrame {
 		log.info("Enforcing security policy");
 		System.setSecurityManager(new RestrictedSecurityManager());
 		System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
+
+		log.info("Downloading resources");
+		try {
+			HttpClient.download(new URL(Configuration.Paths.URLs.TRIDENT), new File(Configuration.Paths.getTrident()));
+			HttpClient.download(new URL(Configuration.Paths.URLs.SUBSTANCE), new File(Configuration.Paths.getSubstance()));
+		} catch (final IOException ignored) {
+		}
 
 		log.info("Downloading network scripts");
 		ScriptDeliveryNetwork.getInstance().list();
