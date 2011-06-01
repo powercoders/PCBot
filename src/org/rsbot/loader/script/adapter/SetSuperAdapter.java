@@ -3,7 +3,6 @@ package org.rsbot.loader.script.adapter;
 import org.rsbot.loader.asm.*;
 
 /**
- * @author Jacmob
  */
 public class SetSuperAdapter extends ClassAdapter {
 

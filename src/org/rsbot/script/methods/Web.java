@@ -191,7 +191,6 @@ public class Web extends MethodProvider {
 	/**
 	 * Node class.
 	 *
-	 * @author Jacmob
 	 */
 	private static class Node {
 		public int x, y, z;

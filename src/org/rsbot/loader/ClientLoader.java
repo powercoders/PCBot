@@ -17,7 +17,6 @@ import java.util.jar.JarOutputStream;
 import java.util.logging.Logger;
 
 /**
- * @author Jacmob
  */
 public class ClientLoader {
 

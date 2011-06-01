@@ -13,7 +13,6 @@ import java.util.LinkedList;
 /**
  * A screen space model.
  *
- * @author Jacmob
  * @author SpeedWing
  */
 public abstract class RSModel extends MethodProvider {

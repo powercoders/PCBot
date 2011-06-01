@@ -8,7 +8,6 @@ import java.util.EventListener;
 /**
  * A message event.
  *
- * @author Jacmob
  */
 public class MessageEvent extends RSEvent {
 

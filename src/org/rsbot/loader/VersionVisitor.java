@@ -3,7 +3,6 @@ package org.rsbot.loader;
 import org.rsbot.loader.asm.*;
 
 /**
- * @author Jacmob
  */
 public class VersionVisitor implements ClassVisitor {
 

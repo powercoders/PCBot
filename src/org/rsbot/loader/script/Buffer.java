@@ -1,7 +1,6 @@
 package org.rsbot.loader.script;
 
 /**
- * @author Jacmob
  */
 class Buffer {
 

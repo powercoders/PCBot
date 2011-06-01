@@ -13,7 +13,6 @@ import java.awt.event.MouseListener;
 import java.util.HashMap;
 
 /**
- * @author Jacmob
  * @author Kosaki
  */
 public class DrawModel implements PaintListener, MouseListener {

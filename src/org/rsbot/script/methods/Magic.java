@@ -5,7 +5,6 @@ import org.rsbot.script.wrappers.*;
 /**
  * Magic tab and spell related operations.
  *
- * @author Jacmob
  * @author Timer
  */
 public class Magic extends MethodProvider {
@@ -13,7 +12,6 @@ public class Magic extends MethodProvider {
     /**
      * Provides Magic Book(s) Information.
      *
-     * @author Jacmob
      */
     public static enum Book {
         MODERN(192),

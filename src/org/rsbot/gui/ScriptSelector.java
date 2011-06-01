@@ -29,7 +29,6 @@ import java.util.logging.Logger;
 
 /**
  * @author Paris
- * @author Jacmob
  */
 public class ScriptSelector extends JDialog implements ScriptListener {
 	private static final long serialVersionUID = 5475451138208522511L;

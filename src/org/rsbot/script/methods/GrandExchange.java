@@ -337,8 +337,7 @@ public class GrandExchange extends MethodProvider {
 
 	/**
 	 * Provides access to GEItem Information.
-	 *
-	 * @author Jacmob, Aut0r
+	 *, Aut0r
 	 */
 	public static class GEItem {
 

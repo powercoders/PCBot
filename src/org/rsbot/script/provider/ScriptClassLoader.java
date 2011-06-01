@@ -7,7 +7,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * @author Jacmob
  */
 class ScriptClassLoader extends ClassLoader {
 

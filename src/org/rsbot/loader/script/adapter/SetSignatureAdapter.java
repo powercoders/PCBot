@@ -5,7 +5,6 @@ import org.rsbot.loader.asm.ClassVisitor;
 import org.rsbot.loader.asm.MethodVisitor;
 
 /**
- * @author Jacmob
  */
 public class SetSignatureAdapter extends ClassAdapter {
 

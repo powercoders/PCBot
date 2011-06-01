@@ -6,7 +6,6 @@ import org.rsbot.loader.asm.MethodVisitor;
 import org.rsbot.loader.asm.Opcodes;
 
 /**
- * @author Jacmob
  */
 public class AddGetterAdapter extends ClassAdapter implements Opcodes {
 

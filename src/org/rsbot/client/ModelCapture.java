@@ -8,7 +8,6 @@ import java.util.Arrays;
  * methods where model implementations in the
  * client are reused.
  *
- * @author Jacmob
  */
 public class ModelCapture implements Model {
 

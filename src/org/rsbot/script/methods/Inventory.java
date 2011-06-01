@@ -11,7 +11,6 @@ import java.util.LinkedList;
 /**
  * Inventory related operations.
  *
- * @author Jacmob
  * @author kiko
  */
 public class Inventory extends MethodProvider {

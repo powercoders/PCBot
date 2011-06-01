@@ -34,7 +34,6 @@ import java.util.logging.Logger;
 
 /**
  * @author Paris
- * @author Jacmob
  */
 public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public static final int PANEL_WIDTH = 765, PANEL_HEIGHT = 503, LOG_HEIGHT = 120;
