@@ -1,7 +1,6 @@
 package org.rsbot.script.wrappers;
 
 import org.rsbot.client.Model;
-import org.rsbot.client.TileData;
 import org.rsbot.script.methods.Calculations;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;

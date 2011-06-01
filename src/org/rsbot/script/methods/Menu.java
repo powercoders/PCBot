@@ -231,7 +231,7 @@ public class Menu extends MethodProvider {
 	/**
 	 * Returns an array of each item in the current menu context.
 	 *
-	 * @return First half + second half. As displayed in RuneScape.
+	 * @return First half + second half. As displayed in the game.
 	 */
 	public String[] getItems() {
 		String[] options;

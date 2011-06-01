@@ -7,7 +7,6 @@ import org.rsbot.script.wrappers.RSPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Trade handling.
@@ -16,8 +15,6 @@ import java.util.logging.Logger;
  * @author kyleshay
  */
 public class Trade extends MethodProvider {
-	private static final Logger log = Logger.getLogger(Trade.class.getName());
-
 	public static final int INTERFACE_TRADE_MAIN = 335;
 	public static final int INTERFACE_TRADE_SECOND = 334;
 	public static final int INTERFACE_TRADE_MAIN_NAME = 15;
