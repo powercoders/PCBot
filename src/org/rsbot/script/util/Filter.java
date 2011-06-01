@@ -4,7 +4,6 @@ package org.rsbot.script.util;
  * Provides a predicate that determines whether or not
  * a given input should be filtered out of a collection.
  *
- * @author Jacmob
  */
 public interface Filter<T> {
 

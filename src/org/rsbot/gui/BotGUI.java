@@ -34,7 +34,6 @@ import java.util.logging.Logger;
 
 /**
  * @author Paris
- * @author Jacmob
  */
 public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public static final int PANEL_WIDTH = 765, PANEL_HEIGHT = 503, LOG_HEIGHT = 120;
@@ -255,10 +254,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	public void updateScriptControls() {
-		updateScriptControls(false);
-	}
-
-	public void updateScriptControls(final boolean block) {
 		boolean idle = true, paused = false;
 		final Bot bot = getCurrentBot();
 
@@ -270,10 +265,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			} else {
 				idle = true;
 			}
-		}
-
-		if (block) {
-			idle = false;
 		}
 
 		menuBar.getMenuItem(Messages.RUNSCRIPT).setVisible(idle);

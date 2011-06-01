@@ -5,7 +5,6 @@ import org.rsbot.client.RSAnimable;
 import org.rsbot.script.methods.MethodContext;
 
 /**
- * @author Jacmob
  */
 class RSAnimableModel extends RSModel {
 	private final RSAnimable animable;

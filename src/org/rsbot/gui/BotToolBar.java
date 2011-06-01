@@ -267,7 +267,6 @@ public class BotToolBar extends JToolBar {
 	}
 
 	/**
-	 * @author Jacmob
 	 */
 	private class HomeButton extends JPanel {
 

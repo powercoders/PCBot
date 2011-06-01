@@ -5,7 +5,6 @@ import org.rsbot.script.methods.Calculations;
 import org.rsbot.script.methods.MethodContext;
 
 /**
- * @author Jacmob
  */
 class RSCharacterModel extends RSModel {
 	private final org.rsbot.client.RSCharacter c;

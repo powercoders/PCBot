@@ -6,7 +6,6 @@ import org.rsbot.service.ServiceException;
 import java.util.List;
 
 /**
- * @author Jacmob
  */
 public interface ScriptSource {
 

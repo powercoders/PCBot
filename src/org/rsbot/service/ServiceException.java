@@ -1,7 +1,6 @@
 package org.rsbot.service;
 
 /**
- * @author Jacmob
  */
 public class ServiceException extends Exception {
 
