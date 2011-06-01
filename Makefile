@@ -22,7 +22,7 @@ Bot:
 	@if [ ! -d "$(BINDIR)" ]; then mkdir "$(BINDIR)"; fi
 	$(CC) $(CFLAGS) -d "$(BINDIR)" `find "$(SRC)" -name \*.java`
 
-Bundle:
+Bundle: Bot
 	@rm -fv "$(LSTF)"
 	@cp "$(MANIFEST)" "$(LSTF)"
 	@echo "Specification-Version: \"$(VERSION)\"" >> "$(LSTF)"
