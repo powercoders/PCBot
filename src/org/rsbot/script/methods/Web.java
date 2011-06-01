@@ -32,7 +32,7 @@ public class Web extends MethodProvider {
 	}
 
 	/**
-	 * Gets the closest supported bank in runescape that is usable.
+	 * Gets the closest supported bank that is usable.
 	 *
 	 * @param tile The tile to look off of.
 	 * @return The closest bank's tile.
@@ -54,7 +54,7 @@ public class Web extends MethodProvider {
 	}
 
 	/**
-	 * Gets the closest supported bank in runescape that is usable.
+	 * Gets the closest supported bank that is usable.
 	 *
 	 * @return The closest bank's tile.
 	 */

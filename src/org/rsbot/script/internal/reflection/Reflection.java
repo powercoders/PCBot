@@ -12,7 +12,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets an integer from the runescape client.
+	 * Gets an integer from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -27,7 +27,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets long from the runescape client.
+	 * Gets long from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -42,7 +42,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets a float from the runescape client.
+	 * Gets a float from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -57,7 +57,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets an integer array from the runescape client.
+	 * Gets an integer array from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -72,7 +72,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets an integer[][] from the runescape client.
+	 * Gets an integer[][] from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -87,7 +87,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets a string from the runescape client.
+	 * Gets a string from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -102,7 +102,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets a string array from the runescape client.
+	 * Gets a string array from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -117,7 +117,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets a short from the runescape client.
+	 * Gets a short from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -132,7 +132,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets a short array from the runescape client.
+	 * Gets a short array from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -147,7 +147,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets a byte from the runescape client.
+	 * Gets a byte from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -162,7 +162,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets a boolean from the runescape client.
+	 * Gets a boolean from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -177,7 +177,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets a boolean array from the runescape client.
+	 * Gets a boolean array from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -192,7 +192,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets an object from the runescape client.
+	 * Gets an object from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -207,7 +207,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets an object array from the runescape client.
+	 * Gets an object array from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -222,7 +222,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets an object[][] from the runescape client.
+	 * Gets an object[][] from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -237,7 +237,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets an object[][][] from the runescape client.
+	 * Gets an object[][][] from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.
@@ -252,7 +252,7 @@ public class Reflection {
 	}
 
 	/**
-	 * Gets a rectangle array from the runescape client.
+	 * Gets a rectangle array from the game client.
 	 *
 	 * @param parent   The parent class.
 	 * @param hookName The name of the field.

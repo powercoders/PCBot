@@ -107,7 +107,7 @@ public final class RSClassLoader extends ClassLoader {
             }
             catch (Throwable throwable)
             {
-                log.log(Level.SEVERE, "Error occured while loading runescape.",throwable);
+                log.log(Level.SEVERE, "Error occured while loading the game client",throwable);
             }
 
 		}
