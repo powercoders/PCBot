@@ -1,6 +1,9 @@
 package org.rsbot.script.methods;
 
 import org.rsbot.Configuration;
+import org.rsbot.script.background.BankMonitor;
+import org.rsbot.script.background.WebData;
+import org.rsbot.script.internal.BackgroundScriptHandler;
 import org.rsbot.script.web.PlaneHandler;
 import org.rsbot.script.web.PlaneTraverse;
 import org.rsbot.script.web.Route;
@@ -13,7 +16,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * The web class.
@@ -23,9 +25,11 @@ import java.util.logging.Logger;
 public class Web extends MethodProvider {
 	public static final HashMap<RSTile, Integer> rs_map = new HashMap<RSTile, Integer>();
 	public static boolean loaded = false;
+	public static boolean webScriptsLoaded = false;
 	private static final Object lock = new Object();
 	private static long lastAccess = 0;
-	private static final Logger log = Logger.getLogger("Web");
+	private long lastLocalAccess = 0;
+	private int webDataId = 0, bankCacheId = 0;
 
 	Web(final MethodContext ctx) {
 		super(ctx);
@@ -76,6 +80,10 @@ public class Web extends MethodProvider {
 		if (start.equals(end)) {
 			return new RSTile[]{};
 		}
+		if (!areScriptsLoaded()) {
+			loadWebScripts();
+		}
+		lastLocalAccess = System.currentTimeMillis();
 		final HashSet<Node> open = new HashSet<Node>();
 		final HashSet<Node> closed = new HashSet<Node>();
 		Node curr = new Node(start.getX(), start.getY(), start.getZ());
@@ -148,6 +156,10 @@ public class Web extends MethodProvider {
 	}
 
 	public Route planeRoute(final RSTile start, final RSTile end, final PlaneTraverse transfer) {
+		if (!areScriptsLoaded()) {
+			loadWebScripts();
+		}
+		lastLocalAccess = System.currentTimeMillis();
 		if (transfer != null) {
 			final Route walkRoute = planeRoute(start, transfer.walkTo(), null);
 			if (walkRoute == null) {
@@ -405,7 +417,7 @@ public class Web extends MethodProvider {
 	 * @return <tt>true</tt> if in use; otherwise <tt>false</tt>.
 	 */
 	public static boolean isInActive() {
-		return System.currentTimeMillis() - Web.lastAccess > (1000 * 60 * 5);
+		return isLoaded() && System.currentTimeMillis() - Web.lastAccess > (1000 * 60 * 5);
 	}
 
 	/**
@@ -475,5 +487,29 @@ public class Web extends MethodProvider {
 		}
 		Web.loaded = true;
 		return true;
+	}
+
+	public boolean areScriptsLoaded() {
+		return webScriptsLoaded;
+	}
+
+	public boolean areScriptsInActive() {
+		return webScriptsLoaded && System.currentTimeMillis() - lastLocalAccess > (1000 * 60 * 5);
+	}
+
+	public void loadWebScripts() {
+		final BackgroundScriptHandler bsh = methods.bot.getBackgroundScriptHandler();
+		webDataId = bsh.runScript(new WebData());
+		bankCacheId = bsh.runScript(new BankMonitor());
+		webScriptsLoaded = true;
+	}
+
+	public void unloadWebScripts() {
+		if (webScriptsLoaded) {
+			final BackgroundScriptHandler bsh = methods.bot.getBackgroundScriptHandler();
+			bsh.stopScript(webDataId);
+			bsh.stopScript(bankCacheId);
+			webScriptsLoaded = false;
+		}
 	}
 }

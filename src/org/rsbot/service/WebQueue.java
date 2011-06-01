@@ -156,8 +156,15 @@ public class WebQueue {
 					if (removeQueue.size() > 0) {
 						synchronized (removeLock) {
 							removeStack.clear();
-							removeStack.addAll(removeQueue);
-							removeQueue.clear();
+							if (removeQueue.size() > 100) {
+								final List<String> removeQueueSub = new ArrayList<String>();
+								removeQueueSub.addAll(removeQueue.subList(0, 99));
+								removeStack.addAll(removeQueueSub);
+								removeQueue.remove(removeQueueSub);
+							} else {
+								removeStack.addAll(removeQueue);
+								removeQueue.clear();
+							}
 						}
 						final BufferedReader br = new BufferedReader(new FileReader(file));
 						final PrintWriter pw = new PrintWriter(new FileWriter(tmpFile));
