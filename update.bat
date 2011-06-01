@@ -9,9 +9,12 @@ GOTO :eof
 :git
 ECHO Updating Git...
 CALL git stash save
+CALL git clean -d -f
+CALL git reset --hard HEAD
 CALL git remote add internal_update https://github.com/powerbot/RSBot.git
 CALL git fetch internal_update
 CALL git merge internal_update/master -s recursive -X theirs
+CALL git remote rm internal_update
 CALL git stash pop
 CALL git gc --prune=now
 GOTO :eof
