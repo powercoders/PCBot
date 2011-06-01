@@ -31,7 +31,7 @@ public class SetSignatureAdapter extends ClassAdapter {
 			final String signature,
 			final String[] exceptions) {
 		for (final Signature s : signatures) {
-			if (s.name.equals(name) && s.desc.equals("") || s.desc.equals(desc)) {
+			if (s.name.equals(name) && (s.desc.equals("") || s.desc.equals(desc))) {
 				return cv.visitMethod(
 						s.new_access == -1 ? access : s.new_access,
 						s.new_name,

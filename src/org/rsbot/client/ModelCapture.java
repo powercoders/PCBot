@@ -23,7 +23,22 @@ public class ModelCapture implements Model {
 		if (model == null) {
 			return;
 		}
-		int[] vertices = model.getXPoints();
+        update(model);
+	}
+
+    public static Model updateModel(final Model model, final Model container)
+    {
+        if(container == null || !(container instanceof ModelCapture))
+            return new ModelCapture(model);
+        ((ModelCapture)container).update(model);
+        return container;
+    }
+
+    private void update(Model model) {
+        if (model == null) {
+			return;
+		}
+        int[] vertices = model.getXPoints();
 		vertex_x = Arrays.copyOf(vertices, vertices.length);
 		vertices = model.getYPoints();
 		vertex_y = Arrays.copyOf(vertices, vertices.length);
@@ -36,9 +51,9 @@ public class ModelCapture implements Model {
 		face_b = Arrays.copyOf(faces, faces.length);
 		faces = model.getIndices3();
 		face_c = Arrays.copyOf(faces, faces.length);
-	}
+    }
 
-	@Override
+    @Override
 	public int[] getXPoints() {
 		return vertex_x;
 	}

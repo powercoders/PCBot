@@ -1,6 +1,8 @@
 package org.rsbot.script.wrappers;
 
 import org.rsbot.client.Model;
+import org.rsbot.client.TileData;
+import org.rsbot.script.methods.Calculations;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
 import org.rsbot.script.util.Filter;
@@ -360,4 +362,110 @@ public abstract class RSModel extends MethodProvider {
 		}
 		return null;
 	}
+
+    /**
+     * Draws a wireeframe of the model. It is optimized for fast rendering.
+     * Scripters should use this method instead of fetching every triangle and rendering them.
+     * @param graphics the graphics object to render on.
+     */
+    public void drawWireFrame(Graphics graphics)
+    {
+        Calculations.RenderData renderData = methods.calc.renderData;
+        Calculations.Render render = methods.calc.render;
+
+        update();
+
+        final int locX = getLocalX();
+		final int locY = getLocalY();
+
+        int numVertices = xPoints.length;
+        if(yPoints.length < numVertices)
+            numVertices = yPoints.length;
+        if(zPoints.length < numVertices)
+            numVertices = zPoints.length;
+
+        int[] screenX = new int[numVertices];
+        int[] screenY = new int[numVertices];
+        boolean[] validVertices = new boolean[numVertices];
+
+        float xOff = renderData.xOff;
+        float yOff = renderData.yOff;
+        float zOff = renderData.zOff;
+
+        float xX = renderData.xX;
+        float xY = renderData.xY;
+        float xZ = renderData.xZ;
+        float yX = renderData.yX;
+        float yY = renderData.yY;
+        float yZ = renderData.yZ;
+        float zX = renderData.zX;
+        float zY = renderData.zY;
+        float zZ = renderData.zZ;
+
+        int xFactor = render.xMultiplier;
+        int yFactor = render.yMultiplier;
+
+        boolean isFixed = methods.game.isFixed();
+
+        int height = methods.calc.tileHeight(locX, locY);
+        for(int index = 0; index < numVertices; index++)
+        {
+            int vertexX = xPoints[index] + locX;
+            int vertexY = yPoints[index] + height;
+            int vertexZ = zPoints[index] + locY;
+
+            final float _z = zOff + (int) (zX * vertexX + zY * vertexY + zZ * vertexZ);
+            if (_z >= render.zNear && _z <= render.zFar) {
+                final int _x = (int) (xFactor * ((int) xOff + (int) (xX * vertexX + xY
+                        * vertexY + xZ * vertexZ)) / _z);
+                final int _y = (int) (yFactor * ((int) yOff + (int) (yX * vertexX + yY
+                        * vertexY + yZ * vertexZ)) / _z);
+                if (_x >= render.absoluteX1 && _x <= render.absoluteX2 && _y >= render.absoluteY1 && _y <=
+                        render.absoluteY2) {
+                    if (isFixed) {
+                        screenX[index] = (int) (_x - render.absoluteX1) + 4;
+                        screenY[index] = (int) (_y - render.absoluteY1) + 4;
+                        validVertices[index] = true;
+                    } else {
+                        screenX[index] = (int) (_x - render.absoluteX1);
+                        screenY[index] = (int) (_y - render.absoluteY1);
+                        validVertices[index] = true;
+                    }
+                }
+                else
+                {
+                    screenX[index] = -1;
+                    screenY[index] = -1;
+                    validVertices[index] = false;
+                }
+            }
+            else
+            {
+                screenX[index] = -1;
+                screenY[index] = -1;
+                validVertices[index] = false;
+            }
+        }
+
+        // That was it for the projection part
+        for(int index = 0; index < indices1.length; index++)
+        {
+            int index1 = indices1[index];
+            int index2 = indices2[index];
+            int index3 = indices3[index];
+
+            int point1X  = screenX[index1];
+            int point1Y = screenY[index1];
+            int point2X = screenX[index2];
+            int point2Y = screenY[index2];
+            int point3X = screenX[index3];
+            int point3Y = screenY[index3];
+
+            if (validVertices[index1] && validVertices[index2] && validVertices[index3]) {
+                graphics.drawLine(point1X, point1Y, point2X, point2Y);
+                graphics.drawLine(point2X, point2Y, point3X, point3Y);
+                graphics.drawLine(point3X, point3Y, point1X, point1Y);
+            }
+        }
+    }
 }
