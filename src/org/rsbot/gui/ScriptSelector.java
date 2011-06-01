@@ -268,23 +268,17 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				final String account = (String) accounts.getSelectedItem();
 				bot.getScriptHandler().removeScriptListener(ScriptSelector.this);
 				dispose();
-				new Thread() {
-					@Override
-					public void run() {
-						Script script = null;
-						frame.updateScriptControls(true);
-						try {
-							script = def.source.load(def);
-						} catch (final ServiceException e) {
-							log.severe(e.getMessage());
-						}
-						if (script != null) {
-							bot.setAccount(account);
-							bot.getScriptHandler().runScript(script);
-							frame.updateScriptControls();
-						}
-					}
-				}.start();
+				Script script = null;
+				try {
+					script = def.source.load(def);
+				} catch (final ServiceException e) {
+					log.severe(e.getMessage());
+				}
+				if (script != null) {
+					bot.setAccount(account);
+					bot.getScriptHandler().runScript(script);
+					frame.updateScriptControls();
+				}
 			}
 		});
 		if (connect.isEnabled()) {
