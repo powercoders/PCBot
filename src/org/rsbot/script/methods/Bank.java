@@ -665,45 +665,6 @@ public class Bank extends MethodProvider {
 		final int newInvCount = methods.inventory.getCount(true);
 		return newInvCount > invCount;
 	}
-	
-	/**
-	 * Tries to withdraw an item.
-	 * Uses menu option Withdraw-All but one.
-	 * 
-	 * @param itemID The ID of the item.
-	 * @return <tt>true</tt> on success.
-	 */
-	public boolean withdrawAllButOne(final int itemID) {
-		if (!methods.bank.isOpen()) {
-			return false;
-		}
-		final RSItem rsi = methods.bank.getItem(itemID);
-		if (rsi == null || rsi.getID() == -1) {
-			return false;
-		}
-		final RSComponent item = rsi.getComponent();
-		if (item == null) {
-			return false;
-		}
-		int t = 0;
-		while (item.getRelativeX() == 0 && methods.bank.getCurrentTab() != 0 && t < 5) {
-			if (methods.interfaces.getComponent(Bank.INTERFACE_BANK, Bank.INTERFACE_BANK_TAB[0]).doClick()) {
-				sleep(random(800, 1300));
-			}
-			t++;
-		}
-		if (!methods.interfaces.scrollTo(item, (Bank.INTERFACE_BANK << 16) + Bank.INTERFACE_BANK_SCROLLBAR)) {
-			return false;
-		}
-		final int invCount = methods.inventory.getCount(true);
-		item.doClick(false);
-		final String action = "Withdraw-All but one";
-		if (action != null && item.interact(action)) {
-			sleep(random(1000, 1300));
-		}
-		final int newInvCount = methods.inventory.getCount(true);
-		return newInvCount > invCount;
-	}
 
 	/**
 	 * Gets the count of all the items in the inventory with the any of the
