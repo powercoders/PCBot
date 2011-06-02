@@ -92,8 +92,15 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (Web.isLoaded() && Web.isInActive()) {
 					Web.free();
 				}
+				for (final Bot bot : bots) {
+					if (bot.getMethodContext() != null && bot.getMethodContext().web.areScriptsLoaded()) {
+						WebQueue.Start();
+						return;
+					}
+				}
+				WebQueue.Destroy();
 			}
-		}, 0, 1000 * 15);
+		}, 0, 1000 * 30);
 	}
 
 	@Override

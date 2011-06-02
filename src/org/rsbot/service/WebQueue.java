@@ -94,6 +94,16 @@ public class WebQueue {
 	}
 
 	/**
+	 * Starts the cache writer.
+	 */
+	public static void Start() {
+		if (writer.destroy) {
+			writer.destroy = false;
+			writer.start();
+		}
+	}
+
+	/**
 	 * Destroys the cache writer.
 	 */
 	public static void Destroy() {
