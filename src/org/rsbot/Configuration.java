@@ -54,7 +54,7 @@ public class Configuration {
 			public static final String ICON_SCRIPT_ADD = ROOT_IMG + "/script_add.png";
 			public static final String ICON_SCRIPT_LIVE = ROOT_IMG + "/script_lightning.png";
 			public static final String ICON_SCRIPT_GEAR = ROOT_IMG + "/script_gear.png";
-			public static final String ICON_SCRIPT_EDIT = ROOT_IMG + "/script_edit.png";
+			public static final String ICON_SCRIPT_CODE = ROOT_IMG + "/script_code.png";
 			public static final String ICON_WEBLINK = ROOT_IMG + "/world_link.png";
 			public static final String ICON_WRENCH = ROOT_IMG + "/wrench.png";
 

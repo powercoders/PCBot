@@ -5,7 +5,6 @@ import org.rsbot.script.wrappers.*;
 /**
  * Magic tab and spell related operations.
  *
- * @author Jacmob
  * @author Timer
  */
 public class Magic extends MethodProvider {
@@ -13,7 +12,6 @@ public class Magic extends MethodProvider {
     /**
      * Provides Magic Book(s) Information.
      *
-     * @author Jacmob
      */
     public static enum Book {
         MODERN(192),
@@ -144,7 +142,7 @@ public class Magic extends MethodProvider {
     public static final int SPELL_GHORROCK_TELEPORT = 47;
     public static final int SPELL_ANCIENT_HOME_TELEPORT = 48;
 
-    // Lunar spells: TODO: get new spells.
+    // Lunar spells
     public static final int SPELL_BARBARIAN_TELEPORT = 22;
     public static final int SPELL_CURE_OTHER = 23;
     public static final int SPELL_FERTILE_SOIL = 24;
@@ -154,14 +152,14 @@ public class Magic extends MethodProvider {
     public static final int SPELL_MONSTERS_EXAMINE = 28;
     public static final int SPELL_HUMIDIFY = 29;
     public static final int SPELL_HUNTER_KIT = 30;
-    public static final int SPELL_STATE_SPY = 31;
+    public static final int SPELL_STAT_SPY = 31;
     public static final int SPELL_DREAM = 32;
     public static final int SPELL_PLANK_MAKE = 33;
     public static final int SPELL_SPELLBOOK_SWAP = 34;
     public static final int SPELL_MAGIC_IMBUE = 35;
     public static final int SPELL_VENGEANCE = 36;
     public static final int SPELL_BAKE_PIE = 37;
-    public static final int SPELL_HOME_TELEPORT_LUNAR = 38;
+    public static final int SPELL_LUNAR_HOME_TELEPORT = 38;
     public static final int SPELL_FISHING_GUILD_TELEPORT = 39;
     public static final int SPELL_KHAZARD_TELEPORT = 40;
     public static final int SPELL_VENGEANCE_OTHER = 41;
@@ -171,7 +169,7 @@ public class Magic extends MethodProvider {
     public static final int SPELL_CURE_ME = 45;
     public static final int SPELL_WATERBIRTH_TELEPORT = 46;
     public static final int SPELL_SUPERGLASS_MAKE = 47;
-    public static final int SPELL_BOOTS_POTION_SHARE = 48;
+    public static final int SPELL_BOOST_POTION_SHARE = 48;
     public static final int SPELL_STAT_RESTORE_POT_SHARE = 49;
     public static final int SPELL_ICE_PLATEAU_TELEPORT = 50;
     public static final int SPELL_HEAL_OTHER = 51;
@@ -184,6 +182,15 @@ public class Magic extends MethodProvider {
     public static final int SPELL_TELE_GROUP_KHAZARD = 58;
     public static final int SPELL_TELE_GROUP_FISHING_GUILD = 59;
     public static final int SPELL_TELE_GROUP_CATHERBY = 60;
+    public static final int SPELL_TELE_GROUP_ICE_PLATEAU = 61;
+    public static final int SPELL_SOUTH_FALADOR_TELEPORT = 66;
+    public static final int SPELL_REPAIR_RUNE_POUCH = 67;
+    public static final int SPELL_NORTH_ARDOUGNE_TELEPORT = 68;
+    public static final int SPELL_REMOTE_FARM = 69;
+    public static final int SPELL_SPIRITUALISE_FOOD = 70;
+    public static final int SPELL_MAKE_LEATHER = 71;
+    public static final int SPELL_DISRUPTION_SHIELD = 72;
+    public static final int SPELL_VENGEANCE_GROUP = 73;
 
     //Dungeoneering spells
     public static final int SPELL_HOME_TELEPORT_DUNGEONEERING = 24;

@@ -5,7 +5,6 @@ import org.rsbot.script.methods.Calculations;
 import org.rsbot.script.methods.MethodContext;
 
 /**
- * @author Jacmob
  */
 class RSCharacterModel extends RSModel {
 	private final org.rsbot.client.RSCharacter c;
@@ -17,8 +16,8 @@ class RSCharacterModel extends RSModel {
 		this.c = c;
 		x_base = xPoints;
 		z_base = zPoints;
-		xPoints = new int[xPoints.length];
-		zPoints = new int[zPoints.length];
+		xPoints = new int[numVertices];
+		zPoints = new int[numVertices];
 	}
 
 	/**

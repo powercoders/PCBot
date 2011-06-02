@@ -34,7 +34,6 @@ import java.util.logging.Logger;
 
 /**
  * @author Paris
- * @author Jacmob
  */
 public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public static final int PANEL_WIDTH = 765, PANEL_HEIGHT = 503, LOG_HEIGHT = 120;
@@ -52,8 +51,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private final List<Bot> bots = new ArrayList<Bot>();
 	private TrayIcon tray = null;
 	private java.util.Timer shutdown = null;
-	private java.util.Timer clean = null;
-	private Thread webManager = null;
 
 	public BotGUI() {
 		init();
@@ -83,28 +80,27 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				System.gc();
 			}
 		});
-		clean = new java.util.Timer(true);
-		clean.schedule(new TimerTask() {
+		new java.util.Timer(true).schedule(new TimerTask() {
 			@Override
 			public void run() {
 				System.gc();
 			}
-		}, 1000 * 60 * 10, 1000 * 60 * 10);
-		webManager = new Thread() {
+		}, 1000 * 60, 1000 * 60 * 10);
+		new java.util.Timer(true).schedule(new TimerTask() {
 			@Override
 			public void run() {
-				for (; ;) {
-					if (Web.isLoaded() && Web.isInActive()) {
-						Web.free();
-					}
-					try {
-						Thread.sleep(15000);
-					} catch (InterruptedException e) {
+				if (Web.isLoaded() && Web.isInActive()) {
+					Web.free();
+				}
+				for (final Bot bot : bots) {
+					if (bot.getMethodContext() != null && bot.getMethodContext().web.areScriptsLoaded()) {
+						WebQueue.Start();
+						return;
 					}
 				}
+				WebQueue.Destroy();
 			}
-		};
-		webManager.start();
+		}, 0, 1000 * 30);
 	}
 
 	@Override
@@ -167,7 +163,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				}
 			} else if (option.equals(Messages.SAVESCREENSHOT)) {
 				final Bot current = getCurrentBot();
-				if (current != null) {
+				if (current != null && current.getMethodContext() != null) {
 					ScreenshotUtil.saveScreenshot(current, current.getMethodContext().game.isLoggedIn());
 				}
 			} else if (option.equals(Messages.HIDEBOT)) {
@@ -265,10 +261,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	public void updateScriptControls() {
-		updateScriptControls(false);
-	}
-
-	public void updateScriptControls(final boolean block) {
 		boolean idle = true, paused = false;
 		final Bot bot = getCurrentBot();
 
@@ -280,10 +272,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			} else {
 				idle = true;
 			}
-		}
-
-		if (block) {
-			idle = false;
 		}
 
 		menuBar.getMenuItem(Messages.RUNSCRIPT).setVisible(idle);
@@ -306,6 +294,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 
 		toolBar.updateInputButton();
+		repaint();
 	}
 
 	private void lessCpu(boolean on) {
@@ -612,7 +601,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 		if (doExit) {
 			Web.free();
-			webManager.interrupt();
 			setVisible(false);
 			try {
 				WebQueue.Destroy();

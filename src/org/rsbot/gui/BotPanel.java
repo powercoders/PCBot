@@ -12,7 +12,6 @@ import static org.rsbot.script.methods.Environment.INPUT_KEYBOARD;
 import static org.rsbot.script.methods.Environment.INPUT_MOUSE;
 
 /**
- * @author Jacmob
  */
 public class BotPanel extends JPanel {
 	private static final long serialVersionUID = 2269767882075468055L;

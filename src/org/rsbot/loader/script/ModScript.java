@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Jacmob
  */
 public class ModScript {
 

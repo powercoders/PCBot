@@ -6,7 +6,6 @@ import org.rsbot.loader.script.CodeReader;
 import java.util.Map;
 
 /**
- * @author Jacmob
  */
 public class InsertCodeAdapter extends ClassAdapter {
 

@@ -8,7 +8,6 @@ import org.rsbot.script.methods.MethodProvider;
 /**
  * Represents an item on a tile.
  *
- * @author Jacmob
  */
 public class RSGroundItem extends MethodProvider {
 	private final RSItem groundItem;

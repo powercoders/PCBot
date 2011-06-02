@@ -1,5 +1,6 @@
 package org.rsbot.script.randoms;
 
+import org.rsbot.Configuration;
 import org.rsbot.gui.AccountManager;
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
@@ -160,7 +161,7 @@ public class LoginBot extends Random {
 				return random(500, 2000);
 			}
 			if (returnText.contains("update")) {
-				log("Runescape has been updated, please reload RSBot.");
+				log("Game has been updated, please reload " + Configuration.NAME);
 				stopScript(false);
 			}
 			if (returnText.contains("disable")) {

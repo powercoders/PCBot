@@ -5,7 +5,6 @@ import org.rsbot.script.Script;
 import org.rsbot.script.internal.ScriptHandler;
 
 /**
- * @author Jacmob
  */
 public interface ScriptListener {
 	public void scriptStarted(ScriptHandler handler, Script script);

@@ -5,7 +5,6 @@ import org.rsbot.script.methods.MethodContext;
 import java.util.*;
 
 /**
- * @author Jacmob
  */
 public class RSLocalPath extends RSPath {
 	public static final int WALL_NORTH_WEST = 0x1;

@@ -8,7 +8,6 @@ import java.util.EnumSet;
 /**
  * A path consisting of a list of tile waypoints.
  *
- * @author Jacmob
  */
 public class RSTilePath extends RSPath {
 	protected RSTile[] tiles;

@@ -4,7 +4,6 @@ package org.rsbot.script.methods;
  * A class that provides methods that use data from the game client. For
  * internal use.
  *
- * @author Jacmob
  */
 public abstract class MethodProvider {
 	protected final MethodContext methods;

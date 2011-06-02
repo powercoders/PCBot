@@ -1,10 +1,7 @@
 package org.rsbot.script.methods;
 
 import org.rsbot.client.TileData;
-import org.rsbot.script.wrappers.RSCharacter;
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.*;
 
 import java.awt.*;
 
@@ -12,17 +9,17 @@ import java.awt.*;
  * Game world and projection calculations.
  */
 public class Calculations extends MethodProvider {
-	static class Render {
-		float absoluteX1 = 0, absoluteX2 = 0;
-		float absoluteY1 = 0, absoluteY2 = 0;
-		int xMultiplier = 512, yMultiplier = 512;
-		int zNear = 50, zFar = 3500;
+	public static class Render {
+		public float absoluteX1 = 0, absoluteX2 = 0;
+		public float absoluteY1 = 0, absoluteY2 = 0;
+		public int xMultiplier = 512, yMultiplier = 512;
+		public int zNear = 50, zFar = 3500;
 	}
 
-	static class RenderData {
-		float xOff = 0, xX = 32768, xY = 0, xZ = 0;
-		float yOff = 0, yX = 0, yY = 32768, yZ = 0;
-		float zOff = 0, zX = 0, zY = 0, zZ = 32768;
+	public static class RenderData {
+		public float xOff = 0, xX = 32768, xY = 0, xZ = 0;
+		public float yOff = 0, yX = 0, yY = 32768, yZ = 0;
+		public float zOff = 0, zX = 0, zY = 0, zZ = 32768;
 	}
 
 	public static final int[] SIN_TABLE = new int[16384];
@@ -36,8 +33,8 @@ public class Calculations extends MethodProvider {
 		}
 	}
 
-	private final Render render = new Render();
-	private final RenderData renderData = new RenderData();
+	public final Render render = new Render();
+	public final RenderData renderData = new RenderData();
 
 	Calculations(final MethodContext ctx) {
 		super(ctx);
@@ -436,7 +433,7 @@ public class Calculations extends MethodProvider {
 		return new Point(-1, -1);
 	}
 
-	/**
+    /**
 	 * @param startX   the startX (0 < startX < 104)
 	 * @param startY   the startY (0 < startY < 104)
 	 * @param destX    the destX (0 < destX < 104)

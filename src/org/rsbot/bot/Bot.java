@@ -7,8 +7,6 @@ import org.rsbot.event.EventManager;
 import org.rsbot.event.events.PaintEvent;
 import org.rsbot.event.events.TextPaintEvent;
 import org.rsbot.gui.AccountManager;
-import org.rsbot.script.background.BankMonitor;
-import org.rsbot.script.background.WebData;
 import org.rsbot.script.internal.BackgroundScriptHandler;
 import org.rsbot.script.internal.BreakHandler;
 import org.rsbot.script.internal.InputManager;
@@ -19,9 +17,7 @@ import org.rsbot.script.methods.MethodContext;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
-import java.util.EventListener;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Bot {
 	private String account;
@@ -40,7 +36,6 @@ public class Bot {
 	private final BackgroundScriptHandler bsh;
 	private final BreakHandler bh;
 	private final Map<String, EventListener> listeners;
-	private boolean killBackground = false;
 
 	/**
 	 * Whether or not user input is allowed despite a script's preference.
@@ -107,21 +102,14 @@ public class Bot {
 			final ThreadGroup tg = new ThreadGroup("RSClient-" + hashCode());
 			final Thread thread = new Thread(tg, loader, "Loader");
 			thread.start();
-			new Thread() {
+			new Timer(true).schedule(new TimerTask() {
 				@Override
 				public void run() {
-					try {
-						while (methods == null && !killBackground) {
-							Thread.sleep(50);
-						}
-					} catch (final InterruptedException ignored) {
-					}
-					if (methods != null && !killBackground) {
-						bsh.runScript(new WebData());
-						bsh.runScript(new BankMonitor());
+					if (methods.web.areScriptsLoaded() && methods.web.areScriptsInActive()) {
+						methods.web.unloadWebScripts();
 					}
 				}
-			}.start();
+			}, 1000 * 15, 1000 * 15);
 		} catch (final Exception ignored) {
 		}
 	}
@@ -132,7 +120,6 @@ public class Bot {
 		bsh.stopScript();
 		loader.stop();
 		loader.destroy();
-		killBackground = true;
 		loader = null;
 	}
 

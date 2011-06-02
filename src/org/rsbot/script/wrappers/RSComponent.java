@@ -13,7 +13,6 @@ import java.awt.*;
  * parent RSInterface.
  *
  * @author Qauters
- * @author Jacmob
  */
 public class RSComponent extends MethodProvider {
 	/**

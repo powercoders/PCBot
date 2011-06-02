@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 
 /**
  * @author Tekk
- * @author Jacmob
  * @author Aion
  * @author Timer
  * @author Paris

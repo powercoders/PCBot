@@ -4,7 +4,6 @@ import org.rsbot.loader.asm.Label;
 import org.rsbot.loader.asm.MethodVisitor;
 
 /**
- * @author Jacmob
  */
 public class CodeReader {
 

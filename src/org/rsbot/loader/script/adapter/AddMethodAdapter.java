@@ -6,7 +6,6 @@ import org.rsbot.loader.asm.MethodVisitor;
 import org.rsbot.loader.script.CodeReader;
 
 /**
- * @author Jacmob
  */
 public class AddMethodAdapter extends ClassAdapter {
 

@@ -21,7 +21,6 @@ SET imgdir=%res%\images
 SET manifest=%res%\Manifest.txt
 SET versionfile=%res%\version.txt
 FOR /F %%G IN (%versionfile%) DO SET version=%%G
-SET scripts=scripts
 CALL "%res%\FindJDK.bat"
 GOTO :eof
 
@@ -29,8 +28,6 @@ GOTO :eof
 CALL :clean 2>NUL
 ECHO Compiling bot
 CALL :Bot
-ECHO Compiling scripts
-CALL :Scripts 2>NUL
 ECHO Packing JAR
 CALL :pack
 CALL :end
@@ -43,11 +40,6 @@ IF EXIST "%out%" RMDIR /S /Q "%out%" > NUL
 MKDIR "%out%"
 "%cc%" %cflags% -d "%out%" "@%lstf%" 2>NUL
 DEL /F /Q "%lstf%"
-GOTO :eof
-
-:Scripts
-CALL :mostlyclean
-IF EXIST "%scripts%" "%cc%" %cflags% -cp "%out%" %scripts%\*.java
 GOTO :eof
 
 :pack
@@ -71,13 +63,7 @@ SET gx=%gx:\=\\%
 ECHO %gx% >> %lstf%
 GOTO :eof
 
-:mostlyclean
-IF EXIST "%scripts%" ECHO. > "%scripts%\.class"
-IF EXIST "%scripts%" DEL /F /Q %scripts%\*.class
-GOTO :eof
-
 :clean
-CALL :mostlyclean
 RMDIR /S /Q "%out%" 2>NUL
 GOTO :eof
 

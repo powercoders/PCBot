@@ -65,7 +65,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		private static final long serialVersionUID = 1L;
 		public static final ImageIcon ICON_SCRIPT_SRC = new ImageIcon(
 				Configuration
-						.getImage(Configuration.Paths.Resources.ICON_SCRIPT_EDIT));
+						.getImage(Configuration.Paths.Resources.ICON_SCRIPT_CODE));
 		public static final ImageIcon ICON_SCRIPT_PRE = new ImageIcon(
 				Configuration
 						.getImage(Configuration.Paths.Resources.ICON_SCRIPT_GEAR));
@@ -411,7 +411,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				new Thread() {
 					public void run() {
 						Script script = null;
-						frame.updateScriptControls(true);
+						frame.updateScriptControls();
 						try {
 							script = def.source.load(def);
 						} catch (final ServiceException e) {

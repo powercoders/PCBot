@@ -15,7 +15,6 @@ import java.util.List;
  * @author kyleshay
  */
 public class Trade extends MethodProvider {
-
 	public static final int INTERFACE_TRADE_MAIN = 335;
 	public static final int INTERFACE_TRADE_SECOND = 334;
 	public static final int INTERFACE_TRADE_MAIN_NAME = 15;

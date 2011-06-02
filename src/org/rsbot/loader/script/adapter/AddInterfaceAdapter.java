@@ -4,7 +4,6 @@ import org.rsbot.loader.asm.ClassAdapter;
 import org.rsbot.loader.asm.ClassVisitor;
 
 /**
- * @author Jacmob
  */
 public class AddInterfaceAdapter extends ClassAdapter {
 

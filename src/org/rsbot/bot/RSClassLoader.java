@@ -11,12 +11,15 @@ import java.security.ProtectionDomain;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.PropertyPermission;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Alex
  */
 public final class RSClassLoader extends ClassLoader {
 
+    private final Logger log = Logger.getLogger(RSClassLoader.class.getName());
 	private Map<String, byte[]> classes;
 	private ProtectionDomain domain;
 
@@ -99,7 +102,14 @@ public final class RSClassLoader extends ClassLoader {
 	public final Class<?> loadClass(final String name) throws ClassNotFoundException {
 		if (classes.containsKey(name)) {
 			final byte buffer[] = classes.remove(name);
-			return defineClass(name, buffer, 0, buffer.length, domain);
+            try{
+                return defineClass(name, buffer, 0, buffer.length, domain);
+            }
+            catch (Throwable throwable)
+            {
+                log.log(Level.SEVERE, "Error occured while loading the game client",throwable);
+            }
+
 		}
 		return super.loadClass(name);
 	}

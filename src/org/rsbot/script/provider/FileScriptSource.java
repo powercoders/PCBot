@@ -15,7 +15,6 @@ import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 /**
- * @author Jacmob
  * @author Paris
  */
 public class FileScriptSource implements ScriptSource {
