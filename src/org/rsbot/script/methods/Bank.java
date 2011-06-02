@@ -598,7 +598,7 @@ public class Bank extends MethodProvider {
 
 	/**
 	 * Tries to withdraw an item.
-	 * 0 is All. 1,5,10 use Withdraw 1,5,10 while other numbers Withdraw X.
+	 * 0 is All. -1 is All but one, 1, 5, 10 use Withdraw 1, 5, 10 while other numbers Withdraw X.
 	 *
 	 * @param itemID The ID of the item.
 	 * @param count  The number to withdraw.
@@ -608,8 +608,8 @@ public class Bank extends MethodProvider {
 		if (!isOpen()) {
 			return false;
 		}
-		if (count < 0) {
-			throw new IllegalArgumentException("count (" + count + ") < 0");
+		if (count < -1) {
+			throw new IllegalArgumentException("count (" + count + ") < -1");
 		}
 		final RSItem rsi = getItem(itemID);
 		if (rsi == null || rsi.getID() == -1) {
@@ -636,6 +636,9 @@ public class Bank extends MethodProvider {
 		switch (count) {
 			case 0:
 				action = "Withdraw-All";
+				break;
+			case -1:
+				action = "Withdraw-All but one";
 				break;
 			case 1:
 				break;
