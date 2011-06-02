@@ -92,8 +92,15 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (Web.isLoaded() && Web.isInActive()) {
 					Web.free();
 				}
+				for (final Bot bot : bots) {
+					if (bot.getMethodContext() != null && bot.getMethodContext().web.areScriptsLoaded()) {
+						WebQueue.Start();
+						return;
+					}
+				}
+				WebQueue.Destroy();
 			}
-		}, 0, 1000 * 15);
+		}, 0, 1000 * 30);
 	}
 
 	@Override
@@ -156,7 +163,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				}
 			} else if (option.equals(Messages.SAVESCREENSHOT)) {
 				final Bot current = getCurrentBot();
-				if (current != null) {
+				if (current != null && current.getMethodContext() != null) {
 					ScreenshotUtil.saveScreenshot(current, current.getMethodContext().game.isLoggedIn());
 				}
 			} else if (option.equals(Messages.HIDEBOT)) {
