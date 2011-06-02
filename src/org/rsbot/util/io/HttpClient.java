@@ -27,15 +27,15 @@ public class HttpClient {
 		final boolean x64 = System.getProperty("sun.arch.data.model").equals("64");
 		final String os;
 		switch (Configuration.getCurrentOperatingSystem()) {
-		case MAC:
-			os = "Macintosh; Intel Mac OS X 10_6_6";
-			break;
-		case LINUX:
-			os = "X11; Linux " + (x64 ? "x86_64" : "i686");
-			break;
-		default:
-			os = "Windows NT 6.1" + (x64 ? "; WOW64" : "");
-			break;
+			case MAC:
+				os = "Macintosh; Intel Mac OS X 10_6_6";
+				break;
+			case LINUX:
+				os = "X11; Linux " + (x64 ? "x86_64" : "i686");
+				break;
+			default:
+				os = "Windows NT 6.1" + (x64 ? "; WOW64" : "");
+				break;
 		}
 		final StringBuilder buf = new StringBuilder(125);
 		buf.append("Mozilla/5.0 (").append(os).append(")");

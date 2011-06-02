@@ -337,7 +337,7 @@ public class GrandExchange extends MethodProvider {
 
 	/**
 	 * Provides access to GEItem Information.
-	 *, Aut0r
+	 * , Aut0r
 	 */
 	public static class GEItem {
 

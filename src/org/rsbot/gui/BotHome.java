@@ -34,43 +34,42 @@ public class BotHome {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, width, height);
 		final int len = Math.min(bots.length, BotGUI.MAX_BOTS);
-		switch (len)
-		{
-		case 1:
-			draw(g, 0, 0, 0, width, height);
-			break;
-		case 2:
-			draw(g, 0, 0, 0, width, height / 2);
-			draw(g, 1, 0, height / 2, width, height / 2);
-			break;
-		case 3:
-			draw(g, 0, 0, 0, width / 2, height / 2);
-			draw(g, 1, width / 2, 0, width / 2, height / 2);
-			draw(g, 2, 0, height / 2, width, height / 2);
-			break;
-		case 4:
-			draw(g, 0, 0, 0, width / 2, height / 2);
-			draw(g, 1, width / 2, 0, width / 2, height / 2);
-			draw(g, 2, 0, height / 2, width / 2, height / 2);
-			draw(g, 3, width / 2, height / 2, width / 2, height / 2);
-			break;
-		case 5:
-			draw(g, 0, 0, 0, width / 3, height / 2);
-			draw(g, 1, width / 3, 0, width / 3, height / 2);
-			draw(g, 2, width * 2 / 3, 0, width / 3, height / 2);
-			draw(g, 3, 0, height / 2, width / 2, height / 2);
-			draw(g, 4, width / 2, height / 2, width / 2, height / 2);
-			break;
-		case 6:
-			draw(g, 0, 0, 0, width / 3, height / 2);
-			draw(g, 1, width / 3, 0, width / 3, height / 2);
-			draw(g, 2, width * 2 / 3, 0, width / 3, height / 2);
-			draw(g, 3, 0, height / 2, width / 3, height / 2);
-			draw(g, 4, width / 3, height / 2, width / 3, height / 2);
-			draw(g, 5, width * 2 / 3, height / 2, width / 3, height / 2);
-			break;
-		default:
-			return;
+		switch (len) {
+			case 1:
+				draw(g, 0, 0, 0, width, height);
+				break;
+			case 2:
+				draw(g, 0, 0, 0, width, height / 2);
+				draw(g, 1, 0, height / 2, width, height / 2);
+				break;
+			case 3:
+				draw(g, 0, 0, 0, width / 2, height / 2);
+				draw(g, 1, width / 2, 0, width / 2, height / 2);
+				draw(g, 2, 0, height / 2, width, height / 2);
+				break;
+			case 4:
+				draw(g, 0, 0, 0, width / 2, height / 2);
+				draw(g, 1, width / 2, 0, width / 2, height / 2);
+				draw(g, 2, 0, height / 2, width / 2, height / 2);
+				draw(g, 3, width / 2, height / 2, width / 2, height / 2);
+				break;
+			case 5:
+				draw(g, 0, 0, 0, width / 3, height / 2);
+				draw(g, 1, width / 3, 0, width / 3, height / 2);
+				draw(g, 2, width * 2 / 3, 0, width / 3, height / 2);
+				draw(g, 3, 0, height / 2, width / 2, height / 2);
+				draw(g, 4, width / 2, height / 2, width / 2, height / 2);
+				break;
+			case 6:
+				draw(g, 0, 0, 0, width / 3, height / 2);
+				draw(g, 1, width / 3, 0, width / 3, height / 2);
+				draw(g, 2, width * 2 / 3, 0, width / 3, height / 2);
+				draw(g, 3, 0, height / 2, width / 3, height / 2);
+				draw(g, 4, width / 3, height / 2, width / 3, height / 2);
+				draw(g, 5, width * 2 / 3, height / 2, width / 3, height / 2);
+				break;
+			default:
+				return;
 		}
 		final FontMetrics metrics = g.getFontMetrics(FONT);
 		g.setColor(new Color(0, 0, 0, 170));

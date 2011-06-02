@@ -26,6 +26,10 @@ public class Route {
 		return true;
 	}
 
+	public RouteStep[] getSteps() {
+		return subRoutes.toArray(new RouteStep[subRoutes.size()]);
+	}
+
 	public boolean finished() {
 		return subRoutes.size() == 0;
 	}

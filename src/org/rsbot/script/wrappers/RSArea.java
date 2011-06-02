@@ -98,12 +98,12 @@ public class RSArea {
 	}
 
 	/**
-     * @return The bounding box of the <b>RSArea</b>.
-     */
-    public Rectangle getBounds() {
-    	return new Rectangle(area.getBounds().x + 1,
-    			area.getBounds().y + 1, getWidth(), getHeight());
-    }
+	 * @return The bounding box of the <b>RSArea</b>.
+	 */
+	public Rectangle getBounds() {
+		return new Rectangle(area.getBounds().x + 1,
+				area.getBounds().y + 1, getWidth(), getHeight());
+	}
 
 	/**
 	 * @return The central <b>RSTile</b> of the <b>RSArea</b>.
@@ -144,11 +144,11 @@ public class RSArea {
 	}
 
 	/**
-     * @return The plane of the <b>RSArea</b>.
-     */
-    public int getPlane() {
-    	return plane;
-    }
+	 * @return The plane of the <b>RSArea</b>.
+	 */
+	public int getPlane() {
+		return plane;
+	}
 
 	/**
 	 * @return The <b>RSTiles</b> the <b>RSArea</b> contains.
@@ -213,7 +213,7 @@ public class RSArea {
 	public int getY() {
 		return area.getBounds().y;
 	}
-	
+
 	/**
 	 * @return An array of <b>RSTile<b>'s that make the area.
 	 */

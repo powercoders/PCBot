@@ -1,15 +1,10 @@
 package org.rsbot.log;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.util.Arrays;
+import javax.swing.*;
+import java.awt.*;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-
-import javax.swing.JLabel;
-
-import sun.font.FontManager;
 
 public class LabelLogHandler extends Handler {
 
@@ -18,11 +13,6 @@ public class LabelLogHandler extends Handler {
 
 	public LabelLogHandler() {
 		super();
-		final String pref = "Segoe UI";
-		if (Arrays.asList(FontManager.getFontNamesFromPlatform()).contains(pref)) {
-			final Font font = label.getFont();
-			label.setFont(new Font(pref, font.getStyle(), font.getSize()));
-		}
 		defaultColor = label.getForeground();
 	}
 

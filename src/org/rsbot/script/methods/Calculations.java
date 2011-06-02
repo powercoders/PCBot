@@ -1,7 +1,10 @@
 package org.rsbot.script.methods;
 
 import org.rsbot.client.TileData;
-import org.rsbot.script.wrappers.*;
+import org.rsbot.script.wrappers.RSCharacter;
+import org.rsbot.script.wrappers.RSComponent;
+import org.rsbot.script.wrappers.RSObject;
+import org.rsbot.script.wrappers.RSTile;
 
 import java.awt.*;
 
@@ -433,7 +436,7 @@ public class Calculations extends MethodProvider {
 		return new Point(-1, -1);
 	}
 
-    /**
+	/**
 	 * @param startX   the startX (0 < startX < 104)
 	 * @param startY   the startY (0 < startY < 104)
 	 * @param destX    the destX (0 < destX < 104)

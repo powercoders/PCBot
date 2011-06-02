@@ -60,27 +60,23 @@ public class ClientLoader {
 			reader.close();
 		}
 
-        if(script.getAttribute("minbotversion") != null)
-        {
-            int botVersion = Configuration.getVersion();
-            try
-            {
-                int minVersion = Integer.parseInt(script.getAttribute("minbotversion"));
-                if(botVersion < minVersion)
-                {
-                    JOptionPane.showMessageDialog(
-					null,
-					"The latest update requires you to update your bot. Please download the newst version.",
-					"Outdated bot",
-					JOptionPane.INFORMATION_MESSAGE);
-			            throw new IOException("BotVersion #" + botVersion + " < #" + minVersion);
-                }
+		if (script.getAttribute("minbotversion") != null) {
+			int botVersion = Configuration.getVersion();
+			try {
+				int minVersion = Integer.parseInt(script.getAttribute("minbotversion"));
+				if (botVersion < minVersion) {
+					JOptionPane.showMessageDialog(
+							null,
+							"The latest update requires you to update your bot. Please download the newst version.",
+							"Outdated bot",
+							JOptionPane.INFORMATION_MESSAGE);
+					throw new IOException("BotVersion #" + botVersion + " < #" + minVersion);
+				}
 
-            }catch (NumberFormatException ignored)
-            {
+			} catch (NumberFormatException ignored) {
 
-            }
-        }
+			}
+		}
 
 		if (version <= cached_version) {
 			final JarFile jar = new JarFile(cache);

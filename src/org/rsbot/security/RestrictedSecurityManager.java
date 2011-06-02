@@ -96,7 +96,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 		// ports other than HTTP (80), HTTPS (443) and unknown (-1) are automatically denied
 		if (!(port == -1 || port == 80 || port == 443)) {
-			log.warning("Connection denied on port: " + port);
 			throw new SecurityException();
 		}
 
