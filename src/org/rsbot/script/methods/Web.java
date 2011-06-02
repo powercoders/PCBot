@@ -187,6 +187,9 @@ public class Web extends MethodProvider {
 	 */
 	public RSWeb getWeb(RSTile start, final RSTile end) {
 		Route[] routes = generateRoutes(start, end, null);
+		if (routes == null) {
+			return null;
+		}
 		return new RSWeb(routes, start, end);
 	}
 
@@ -202,7 +205,6 @@ public class Web extends MethodProvider {
 
 	/**
 	 * Node class.
-	 *
 	 */
 	private static class Node {
 		public int x, y, z;
@@ -248,7 +250,7 @@ public class Web extends MethodProvider {
 	 * @return The distance.
 	 */
 	private static double Heuristic(final Node start, final Node end) {
-		double dx = start.x - end.x;
+		/*double dx = start.x - end.x;
 		double dy = start.y - end.y;
 		if (dx < 0) {
 			dx = -dx;
@@ -256,7 +258,8 @@ public class Web extends MethodProvider {
 		if (dy < 0) {
 			dy = -dy;
 		}
-		return dx < dy ? dy : dx;
+		return dx < dy ? dy : dx;*/
+		return Dist(start, end) * Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2));
 	}
 
 	/**

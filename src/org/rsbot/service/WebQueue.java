@@ -14,18 +14,15 @@ import java.util.logging.Logger;
  * @author Timer
  */
 public class WebQueue {
-	public static boolean weAreBuffering = false, speedBuffer = false;
+	public static boolean weAreBuffering = false;
 	public static int bufferingCount = 0;
-	private static final List<String> queue = new ArrayList<String>(), removeQueue = new ArrayList<String>(), removeStack = new ArrayList<String>();
+	private static final List<String> queue = new ArrayList<String>(), queueOutList = new ArrayList<String>(), removeQueue = new ArrayList<String>(), removeStack = new ArrayList<String>();
 	private static QueueWriter writer;
 	private static final Logger log = Logger.getLogger(WebQueue.class.getName());
-	private static final Object queueLock = new Object();
-	private static final Object bufferLock = new Object();
-	private static final Object removeLock = new Object();
+	private static final Object queueLock = new Object(), bufferLock = new Object(), removeLock = new Object();
 
 	static {
 		writer = new QueueWriter(Configuration.Paths.getWebDatabase());
-		writer.start();
 	}
 
 	/**
@@ -40,9 +37,7 @@ public class WebQueue {
 			@Override
 			public void run() {
 				try {
-					final HashMap<RSTile, Integer> mapData = new HashMap<RSTile, Integer>();
-					mapData.putAll(gameTiles);
-					final Map<RSTile, Integer> safeMapData = Collections.unmodifiableMap(mapData);
+					final Map<RSTile, Integer> safeMapData = Collections.unmodifiableMap(gameTiles);
 					bufferingCount = bufferingCount + count;
 					final Iterator<Map.Entry<RSTile, Integer>> safeIterator = safeMapData.entrySet().iterator();
 					while (safeIterator.hasNext()) {
@@ -57,9 +52,7 @@ public class WebQueue {
 								bufferingCount--;
 								try {
 									weAreBuffering = true;
-									if (!speedBuffer) {
-										Thread.sleep(1);
-									}
+									Thread.sleep(1);
 								} catch (final InterruptedException ignored) {
 								}
 							}
@@ -68,7 +61,6 @@ public class WebQueue {
 					if (bufferingCount < 0) {
 						bufferingCount = 0;
 					}
-					mapData.clear();
 					weAreBuffering = false;
 				} catch (final Exception e) {
 					bufferingCount = count;
@@ -97,7 +89,7 @@ public class WebQueue {
 	 * Starts the cache writer.
 	 */
 	public static void Start() {
-		if (writer.destroy) {
+		if (writer.destroy && !writer.isAlive()) {
 			writer.destroy = false;
 			writer.start();
 		}
@@ -107,7 +99,6 @@ public class WebQueue {
 	 * Destroys the cache writer.
 	 */
 	public static void Destroy() {
-		speedBuffer = true;
 		writer.destroyWriter();
 	}
 
@@ -129,13 +120,17 @@ public class WebQueue {
 		return -1;
 	}
 
+	public static boolean isEmpty() {
+		return queue.size() == 0 && queueOutList.size() == 0 && removeQueue.size() == 0 && removeStack.size() == 0;
+	}
+
 	/**
 	 * The threaded writer class.
 	 *
 	 * @author Timer
 	 */
 	private static class QueueWriter extends Thread {
-		private boolean destroy = false;
+		private boolean destroy = true;
 		private final File file, tmpFile;
 
 		public QueueWriter(final String fileName) {
@@ -160,7 +155,6 @@ public class WebQueue {
 		 */
 		@Override
 		public void run() {
-			final List<String> outList = new ArrayList<String>();
 			while ((!destroy || queue.size() > 0 || WebQueue.weAreBuffering) && file.exists() && file.canWrite()) {
 				try {
 					if (removeQueue.size() > 0) {
@@ -208,10 +202,10 @@ public class WebQueue {
 						if (queue.size() > 0) {
 							final FileWriter fileWriter = new FileWriter(file, true);
 							final BufferedWriter out = new BufferedWriter(fileWriter);
-							outList.clear();
-							outList.addAll(queue);
+							queueOutList.clear();
+							queueOutList.addAll(queue);
 							queue.clear();
-							final Iterator<String> outLines = outList.listIterator();
+							final Iterator<String> outLines = queueOutList.listIterator();
 							while (outLines.hasNext()) {
 								final String line = outLines.next();
 								out.write(line + "\n");
