@@ -187,6 +187,9 @@ public class Web extends MethodProvider {
 	 */
 	public RSWeb getWeb(RSTile start, final RSTile end) {
 		Route[] routes = generateRoutes(start, end, null);
+		if (routes == null) {
+			return null;
+		}
 		return new RSWeb(routes, start, end);
 	}
 
