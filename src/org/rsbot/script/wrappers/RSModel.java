@@ -1,6 +1,7 @@
 package org.rsbot.script.wrappers;
 
 import org.rsbot.client.Model;
+import org.rsbot.client.ModelCapture;
 import org.rsbot.script.methods.Calculations;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
@@ -40,6 +41,9 @@ public abstract class RSModel extends MethodProvider {
 	protected short[] indices2;
 	protected short[] indices3;
 
+    protected int numVertices;
+    protected int numFaces;
+
 	public RSModel(final MethodContext ctx, final Model model) {
 		super(ctx);
 		xPoints = model.getXPoints();
@@ -48,6 +52,16 @@ public abstract class RSModel extends MethodProvider {
 		indices1 = model.getIndices1();
 		indices2 = model.getIndices2();
 		indices3 = model.getIndices3();
+        if(model instanceof ModelCapture)
+        {
+            numVertices = ((ModelCapture)model).getNumVertices();
+            numFaces = ((ModelCapture)model).getNumFaces();
+        }
+        else
+        {
+            numVertices = Math.min(xPoints.length, Math.min(yPoints.length, zPoints.length));
+            numFaces = Math.min(indices1.length, Math.min(indices2.length, indices3.length));
+        }
 	}
 
 	protected abstract int getLocalX();
@@ -161,7 +175,7 @@ public abstract class RSModel extends MethodProvider {
 	 */
 	public Point getPoint() {
 		update();
-		final int len = indices1.length;
+		final int len = numFaces;
 		final int sever = random(0, len);
 		Point point = getPointInRange(sever, len);
 		if (point != null) {
@@ -274,7 +288,7 @@ public abstract class RSModel extends MethodProvider {
 		final LinkedList<Polygon> polygons = new LinkedList<Polygon>();
 		final int locX = getLocalX();
 		final int locY = getLocalY();
-		final int len = indices1.length;
+		final int len = numFaces;
 		final int height = methods.calc.tileHeight(locX, locY);
 		for (int i = 0; i < len; ++i) {
 			final Point one = methods.calc.worldToScreen(locX + xPoints[indices1[i]],
@@ -377,12 +391,6 @@ public abstract class RSModel extends MethodProvider {
         final int locX = getLocalX();
 		final int locY = getLocalY();
 
-        int numVertices = xPoints.length;
-        if(yPoints.length < numVertices)
-            numVertices = yPoints.length;
-        if(zPoints.length < numVertices)
-            numVertices = zPoints.length;
-
         int[] screenX = new int[numVertices];
         int[] screenY = new int[numVertices];
         boolean[] validVertices = new boolean[numVertices];
@@ -447,7 +455,7 @@ public abstract class RSModel extends MethodProvider {
         }
 
         // That was it for the projection part
-        for(int index = 0; index < indices1.length; index++)
+        for(int index = 0; index < numFaces; index++)
         {
             int index1 = indices1[index];
             int index2 = indices2[index];
