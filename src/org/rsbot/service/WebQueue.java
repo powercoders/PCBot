@@ -14,18 +14,15 @@ import java.util.logging.Logger;
  * @author Timer
  */
 public class WebQueue {
-	public static boolean weAreBuffering = false, speedBuffer = false;
+	public static boolean weAreBuffering = false;
 	public static int bufferingCount = 0;
 	private static final List<String> queue = new ArrayList<String>(), queueOutList = new ArrayList<String>(), removeQueue = new ArrayList<String>(), removeStack = new ArrayList<String>();
 	private static QueueWriter writer;
 	private static final Logger log = Logger.getLogger(WebQueue.class.getName());
-	private static final Object queueLock = new Object();
-	private static final Object bufferLock = new Object();
-	private static final Object removeLock = new Object();
+	private static final Object queueLock = new Object(), bufferLock = new Object(), removeLock = new Object();
 
 	static {
 		writer = new QueueWriter(Configuration.Paths.getWebDatabase());
-		writer.start();
 	}
 
 	/**
@@ -55,9 +52,7 @@ public class WebQueue {
 								bufferingCount--;
 								try {
 									weAreBuffering = true;
-									if (!speedBuffer) {
-										Thread.sleep(1);
-									}
+									Thread.sleep(1);
 								} catch (final InterruptedException ignored) {
 								}
 							}
@@ -94,9 +89,8 @@ public class WebQueue {
 	 * Starts the cache writer.
 	 */
 	public static void Start() {
-		if (writer.destroy) {
+		if (writer.destroy && !writer.isAlive()) {
 			writer.destroy = false;
-			speedBuffer = false;
 			writer.start();
 		}
 	}
@@ -105,7 +99,6 @@ public class WebQueue {
 	 * Destroys the cache writer.
 	 */
 	public static void Destroy() {
-		speedBuffer = true;
 		writer.destroyWriter();
 	}
 
@@ -137,7 +130,7 @@ public class WebQueue {
 	 * @author Timer
 	 */
 	private static class QueueWriter extends Thread {
-		private boolean destroy = false;
+		private boolean destroy = true;
 		private final File file, tmpFile;
 
 		public QueueWriter(final String fileName) {
