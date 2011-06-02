@@ -16,7 +16,7 @@ public class TWebStatus implements TextPaintListener {
 	}
 
 	public int drawLine(final Graphics render, int idx) {
-		final String[] items = {"Web Queue", "Buffering: " + WebQueue.weAreBuffering + ", " + WebQueue.bufferingCount + " nodes.", "Speed Buffering: " + WebQueue.speedBuffer,
+		final String[] items = {"Web Queue", "Buffering: " + WebQueue.weAreBuffering + ", " + WebQueue.bufferingCount + " nodes.",
 				"Cache Writer", "Queue Size: " + WebQueue.queueSize(0), "Remove queue size: " + WebQueue.queueSize(1), "Removing queue size: " + WebQueue.queueSize(2)};
 		for (final String item : items) {
 			StringUtil.drawLine(render, idx++, item);
