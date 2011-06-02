@@ -7,7 +7,6 @@ import org.rsbot.script.internal.reflection.Reflection;
 
 /**
  * For internal use to link MethodProviders.
- *
  */
 public class MethodContext {
 	/**

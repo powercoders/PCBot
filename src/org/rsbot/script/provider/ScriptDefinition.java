@@ -1,9 +1,9 @@
 package org.rsbot.script.provider;
 
+import org.rsbot.util.StringUtil;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.rsbot.util.StringUtil;
 
 
 /**

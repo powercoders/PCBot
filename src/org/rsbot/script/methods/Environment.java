@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 
 /**
  * Bot environment related operations.
- *
  */
 public class Environment extends MethodProvider {
 	public static final int INPUT_MOUSE = 1;

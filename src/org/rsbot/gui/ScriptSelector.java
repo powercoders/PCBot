@@ -20,10 +20,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -303,22 +300,22 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				final String[] selected = categories.getSelectedItems();
 				final StringBuilder s = new StringBuilder(16);
 				switch (selected.length) {
-				case 0:
-					s.append("Showing all");
-					break;
-				case 1:
-					s.append(selected[0]);
-					break;
-				case 2:
-					s.append(selected[0]);
-					s.append(" & ");
-					s.append(selected[1]);
-					break;
-				default:
-					s.append("Showing ");
-					s.append(selected.length);
-					s.append(" types");
-					break;
+					case 0:
+						s.append("Showing all");
+						break;
+					case 1:
+						s.append(selected[0]);
+						break;
+					case 2:
+						s.append(selected[0]);
+						s.append(" & ");
+						s.append(selected[1]);
+						break;
+					default:
+						s.append("Showing ");
+						s.append(selected.length);
+						s.append(" types");
+						break;
 				}
 				categories.setText(s.toString());
 				filter();
@@ -442,18 +439,18 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			if (rowIndex >= 0 && rowIndex < matches.size()) {
 				final ScriptDefinition def = matches.get(rowIndex);
 				switch (columnIndex) {
-				case 0:
-					if (def.source == SRC_SOURCES) {
-						return ICON_SCRIPT_SRC;
-					}
-					if (def.source == SRC_PRECOMPILED) {
-						return ICON_SCRIPT_PRE;
-					}
-					return ICON_SCRIPT_NET;
-				case 1:
-					return def.getName();
-				case 2:
-					return def.getDescription();
+					case 0:
+						if (def.source == SRC_SOURCES) {
+							return ICON_SCRIPT_SRC;
+						}
+						if (def.source == SRC_PRECOMPILED) {
+							return ICON_SCRIPT_PRE;
+						}
+						return ICON_SCRIPT_NET;
+					case 1:
+						return def.getName();
+					case 2:
+						return def.getDescription();
 				}
 			}
 			return null;

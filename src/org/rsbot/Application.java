@@ -1,10 +1,10 @@
 package org.rsbot;
 
-import java.awt.Dimension;
-
 import org.rsbot.bot.Bot;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.gui.LoadScreen;
+
+import java.awt.*;
 
 public class Application {
 	private static BotGUI gui;

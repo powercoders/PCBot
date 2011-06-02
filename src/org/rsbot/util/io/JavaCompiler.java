@@ -43,7 +43,7 @@ public class JavaCompiler {
 
 	private static int compileNative(final javax.tools.JavaCompiler javac, final InputStream source, final String classPath) throws FileNotFoundException {
 		final FileOutputStream[] out = new FileOutputStream[2];
-		for (int i = 0; i < 2; i ++) {
+		for (int i = 0; i < 2; i++) {
 			out[i] = new FileOutputStream(new File(Configuration.Paths.getGarbageDirectory(), "compile." + Integer.toString(i) + ".txt"));
 		}
 		return javac.run(source, out[0], out[1], JAVACARGS, "-cp", classPath);

@@ -7,7 +7,6 @@ import java.util.EventListener;
 
 /**
  * A message event.
- *
  */
 public class MessageEvent extends RSEvent {
 

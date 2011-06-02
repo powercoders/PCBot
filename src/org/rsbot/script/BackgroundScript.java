@@ -14,6 +14,7 @@ public abstract class BackgroundScript extends Methods implements EventListener,
 	protected String name = "";
 	private volatile boolean running = false;
 	private int id = -1;
+
 	public abstract boolean activateCondition();
 
 	public abstract int loop();

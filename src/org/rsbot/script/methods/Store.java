@@ -87,7 +87,7 @@ public class Store extends MethodProvider {
 		if (!isOpen()) {
 			return true;
 		}
-		if (methods.interfaces.getComponent(INTERFACE_STORE,INTERFACE_STORE_BUTTON_CLOSE).doClick()) {
+		if (methods.interfaces.getComponent(INTERFACE_STORE, INTERFACE_STORE_BUTTON_CLOSE).doClick()) {
 			sleep(random(500, 600));
 			return !isOpen();
 		} else {
@@ -151,7 +151,7 @@ public class Store extends MethodProvider {
 	 *         in the stores <tt>RSInterface</tt>.
 	 */
 	public RSItem[] getItems() {
-		if (getInterface() == null	|| getInterface().getComponent(INTERFACE_STORE_ITEMS) == null) {
+		if (getInterface() == null || getInterface().getComponent(INTERFACE_STORE_ITEMS) == null) {
 			return null;
 		}
 

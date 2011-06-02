@@ -1,8 +1,17 @@
 package org.rsbot.gui;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
+import org.rsbot.Configuration;
+import org.rsbot.log.LabelLogHandler;
+import org.rsbot.log.LogOutputStream;
+import org.rsbot.log.SystemConsoleHandler;
+import org.rsbot.script.provider.ScriptDeliveryNetwork;
+import org.rsbot.security.RestrictedSecurityManager;
+import org.rsbot.util.UpdateChecker;
+import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IOHelper;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -13,22 +22,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.UIManager;
-
-import org.rsbot.Configuration;
-import org.rsbot.log.LabelLogHandler;
-import org.rsbot.log.LogOutputStream;
-import org.rsbot.log.SystemConsoleHandler;
-import org.rsbot.script.provider.ScriptDeliveryNetwork;
-import org.rsbot.security.RestrictedSecurityManager;
-import org.rsbot.util.UpdateChecker;
-import org.rsbot.util.io.HttpClient;
-import org.rsbot.util.io.IOHelper;
 
 public class LoadScreen extends JFrame {
 	private final static Logger log = Logger.getLogger(LoadScreen.class.getName());
@@ -127,6 +120,7 @@ public class LoadScreen extends JFrame {
 		Logger.getLogger("").addHandler(new SystemConsoleHandler());
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			private final Logger log = Logger.getLogger("EXCEPTION");
+
 			public void uncaughtException(final Thread t, final Throwable e) {
 				log.logp(Level.SEVERE, "EXCEPTION", "", "Unhandled exception in thread " + t.getName() + ": ", e);
 			}

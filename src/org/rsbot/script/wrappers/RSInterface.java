@@ -69,17 +69,17 @@ public class RSInterface extends MethodProvider implements Iterable<RSComponent>
 	}
 
 	/**
-     * Gets the amount of child components.
-     *
-     * @return the amount of children, or 0 if null
-     */
-    public int getChildCount() {
-    	final org.rsbot.client.RSInterface[] children = getChildrenInternal();
-    	if (children != null) {
-    		return children.length;
-    	}
-    	return 0;
-    }
+	 * Gets the amount of child components.
+	 *
+	 * @return the amount of children, or 0 if null
+	 */
+	public int getChildCount() {
+		final org.rsbot.client.RSInterface[] children = getChildrenInternal();
+		if (children != null) {
+			return children.length;
+		}
+		return 0;
+	}
 
 	/**
 	 * Gets the child component at the given index.

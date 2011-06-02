@@ -26,12 +26,12 @@ public class RSPlayer extends RSCharacter {
 	}
 
 	public int getNPCID() {
-    	final RSPlayerComposite comp = p.get().getComposite();
-    	if (comp != null) {
-    		return comp.getNPCID();
-    	}
-    	return -1;
-    }
+		final RSPlayerComposite comp = p.get().getComposite();
+		if (comp != null) {
+			return comp.getNPCID();
+		}
+		return -1;
+	}
 
 	public int getTeam() {
 		return p.get().getTeam();
@@ -42,9 +42,9 @@ public class RSPlayer extends RSCharacter {
 	}
 
 	@Override
-    public String getName() {
-    	return p.get().getName();
-    }
+	public String getName() {
+		return p.get().getName();
+	}
 
 	@Override
 	public int getLevel() {

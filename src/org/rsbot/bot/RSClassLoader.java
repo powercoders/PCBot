@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  */
 public final class RSClassLoader extends ClassLoader {
 
-    private final Logger log = Logger.getLogger(RSClassLoader.class.getName());
+	private final Logger log = Logger.getLogger(RSClassLoader.class.getName());
 	private Map<String, byte[]> classes;
 	private ProtectionDomain domain;
 
@@ -102,13 +102,11 @@ public final class RSClassLoader extends ClassLoader {
 	public final Class<?> loadClass(final String name) throws ClassNotFoundException {
 		if (classes.containsKey(name)) {
 			final byte buffer[] = classes.remove(name);
-            try{
-                return defineClass(name, buffer, 0, buffer.length, domain);
-            }
-            catch (Throwable throwable)
-            {
-                log.log(Level.SEVERE, "Error occured while loading the game client",throwable);
-            }
+			try {
+				return defineClass(name, buffer, 0, buffer.length, domain);
+			} catch (Throwable throwable) {
+				log.log(Level.SEVERE, "Error occured while loading the game client", throwable);
+			}
 
 		}
 		return super.loadClass(name);

@@ -43,12 +43,12 @@ public class DrawModel implements PaintListener, MouseListener {
 				final RSModel model = o.getModel();
 				if (model != null) {
 					render.setColor(color_map.get(o.getType()));
-                    /*
+					/*
 					for (final Polygon polygon : model.getTriangles()) {
 						render.drawPolygon(polygon);
 					}
 					*/
-                    model.drawWireFrame(render);
+					model.drawWireFrame(render);
 					render.setColor(Color.GREEN);
 					final Point p = model.getPoint();
 					render.fillOval(p.x - 1, p.y - 1, 2, 2);
@@ -60,11 +60,11 @@ public class DrawModel implements PaintListener, MouseListener {
 				final RSModel model = c.getModel();
 				if (model != null) {
 					render.setColor(Color.RED);
-                    /*
+					/*
 					for (final Polygon polygon : model.getTriangles()) {
 						render.drawPolygon(polygon);
 					}*/
-                    model.drawWireFrame(render);
+					model.drawWireFrame(render);
 				}
 			}
 		}
@@ -73,12 +73,12 @@ public class DrawModel implements PaintListener, MouseListener {
 				final RSModel model = c.getModel();
 				if (model != null) {
 					render.setColor(Color.MAGENTA);
-                    /*
+					/*
 					for (final Polygon polygon : model.getTriangles()) {
 						render.drawPolygon(polygon);
 					}
 					*/
-                    model.drawWireFrame(render);
+					model.drawWireFrame(render);
 				}
 			}
 		}
@@ -87,12 +87,12 @@ public class DrawModel implements PaintListener, MouseListener {
 				final RSModel model = item.getModel();
 				if (model != null) {
 					render.setColor(Color.CYAN);
-                    /*
+					/*
 					for (final Polygon polygon : model.getTriangles()) {
 						render.drawPolygon(polygon);
 					}
 					*/
-                    model.drawWireFrame(render);
+					model.drawWireFrame(render);
 				}
 			}
 		}
