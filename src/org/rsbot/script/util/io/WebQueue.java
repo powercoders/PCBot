@@ -37,7 +37,8 @@ public class WebQueue {
 			@Override
 			public void run() {
 				try {
-					final Map<RSTile, Integer> safeMapData = Collections.unmodifiableMap(gameTiles);
+					final HashMap<RSTile, Integer> safeMapData = new HashMap<RSTile, Integer>();
+					safeMapData.putAll(gameTiles);
 					bufferingCount = bufferingCount + count;
 					final Iterator<Map.Entry<RSTile, Integer>> safeIterator = safeMapData.entrySet().iterator();
 					while (safeIterator.hasNext()) {
