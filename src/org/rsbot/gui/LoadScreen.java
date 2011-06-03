@@ -95,12 +95,17 @@ public class LoadScreen extends JFrame {
 
 		log.info("Checking for updates");
 
-		final String error;
+		String error = null;
 
 		if (UpdateChecker.isError()) {
 			error = "Unable to obtain latest version information";
-		} else if (Configuration.RUNNING_FROM_JAR && UpdateChecker.isDeprecatedVersion()) {
-			error = "Please update at " + Configuration.Paths.URLs.DOWNLOAD_SHORT;
+		} else if (Configuration.RUNNING_FROM_JAR) {
+			try {
+				if (UpdateChecker.isDeprecatedVersion()) {
+					error = "Please update at " + Configuration.Paths.URLs.DOWNLOAD_SHORT;
+				}
+			} catch (final IOException ignored) {
+			}
 		} else {
 			error = null;
 		}
