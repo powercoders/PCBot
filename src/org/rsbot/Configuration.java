@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
+import java.util.regex.Pattern;
 
 public class Configuration {
 	public enum OperatingSystem {
@@ -71,6 +72,7 @@ public class Configuration {
 			public static final String DOWNLOAD = BASE + "download";
 			public static final String DOWNLOAD_SHORT = HOST + "/download";
 			public static final String CLIENTPATCH = BASE + "modscript";
+			public static final String CLIENTPATCH_BETA = BASE + "modscript-beta";
 			public static final String VERSION = BASE + "version.txt";
 			public static final String VERSION_KILL = BASE + "version-kill";
 			public static final String PROJECT = BASE + "git-project";
@@ -230,6 +232,7 @@ public class Configuration {
 	}
 
 	static final URL resource;
+    public static boolean betaBuild = isBetaBuild();
 
 	static {
 		resource = Configuration.class.getClassLoader().getResource(Paths.Resources.VERSION);
@@ -340,4 +343,13 @@ public class Configuration {
 	public static String getVersionFormatted() {
 		return StringUtil.formatVersion(getVersion());
 	}
+
+    public static boolean isBetaBuild()
+    {
+        if(betaBuild)
+            return true;
+        String location = Boot.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        Pattern pattern = Pattern.compile("RSBot-([0-9]+)-beta([0-9]+).jar");
+        return pattern.matcher(location).find();
+    }
 }
