@@ -3,6 +3,8 @@ package org.rsbot;
 import org.rsbot.log.LogFormatter;
 import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.log.TextAreaLogHandler;
+import org.rsbot.util.StringUtil;
+import org.rsbot.util.io.IOHelper;
 
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
@@ -328,46 +330,16 @@ public class Configuration {
 	}
 
 	public static int getVersion() {
-		InputStreamReader is = null;
-		BufferedReader reader = null;
+		final URL src;
 		try {
-			is = new InputStreamReader(RUNNING_FROM_JAR ?
-					Configuration.class.getClassLoader().getResourceAsStream(
-							Paths.Resources.VERSION) : new FileInputStream(Paths.Resources.VERSION));
-			reader = new BufferedReader(is);
-			final String s = reader.readLine().trim();
-			return Integer.parseInt(s);
-		} catch (final Exception e) {
-		} finally {
-			try {
-				if (is != null) {
-					is.close();
-				}
-				if (reader != null) {
-					reader.close();
-				}
-			} catch (final IOException ioe) {
-			}
+			src = getResourceURL(Paths.Resources.VERSION);
+		} catch (final MalformedURLException ignored) {
+			return -1;
 		}
-		return -1;
+		return Integer.parseInt(IOHelper.readString(src).trim());
 	}
 
 	public static String getVersionFormatted() {
-		return getVersionFormatted(getVersion());
-	}
-
-	public static String getVersionFormatted(final int version) {
-		final float v = (float) version / 100;
-		String s = Float.toString(v);
-		final int z = s.indexOf('.');
-		if (z == -1) {
-			s += ".00";
-		} else {
-			final String exp = s.substring(z + 1);
-			if (exp.length() == 1) {
-				s += "0";
-			}
-		}
-		return s;
+		return StringUtil.formatVersion(getVersion());
 	}
 }

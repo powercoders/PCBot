@@ -21,6 +21,21 @@ public class StringUtil {
 		return s.replaceAll("\\<.*?\\>", "");
 	}
 
+	public static String formatVersion(final int version) {
+		final float v = (float) version / 100;
+		String s = Float.toString(v);
+		final int z = s.indexOf('.');
+		if (z == -1) {
+			s += ".00";
+		} else {
+			final String exp = s.substring(z + 1);
+			if (exp.length() == 1) {
+				s += "0";
+			}
+		}
+		return s;
+	}
+
 	public static String join(final String[] s) {
 		final int l = s.length;
 		switch (l) {

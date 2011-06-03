@@ -1,19 +1,20 @@
 package org.rsbot.util.io;
 
 import java.io.*;
+import java.net.URL;
+
+import org.rsbot.util.StringUtil;
 
 /**
  * @author Paris
  */
 public class IOHelper {
-	public static byte[] read(final File in) {
+	public static byte[] read(final InputStream is) {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		InputStream is = null;
 		try {
-			is = new FileInputStream(in);
-			final byte[] temp = new byte[(int) in.length()];
+			final byte[] temp = new byte[4096];
 			int read;
-			while ((read = is.read(temp)) > 0) {
+			while ((read = is.read(temp)) != -1) {
 				buffer.write(temp, 0, read);
 			}
 		} catch (final IOException ignored) {
@@ -31,6 +32,26 @@ public class IOHelper {
 			}
 		}
 		return buffer == null ? null : buffer.toByteArray();
+	}
+
+	public static byte[] read(final URL in) {
+		try {
+			return read(in.openStream());
+		} catch (final IOException ignored) {
+			return null;
+		}
+	}
+
+	public static byte[] read(final File in) {
+		try {
+			return read(new FileInputStream(in));
+		} catch (final FileNotFoundException ignored) {
+			return null;
+		}
+	}
+
+	public static String readString(final URL in) {
+		return StringUtil.newStringUtf8(read(in));
 	}
 
 	public static void write(final InputStream in, final File out) {
