@@ -54,6 +54,10 @@ public class IOHelper {
 		return StringUtil.newStringUtf8(read(in));
 	}
 
+	public static String readString(final File in) {
+		return StringUtil.newStringUtf8(read(in));
+	}
+
 	public static void write(final InputStream in, final File out) {
 		OutputStream outStream = null;
 		try {

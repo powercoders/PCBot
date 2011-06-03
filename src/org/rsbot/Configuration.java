@@ -205,7 +205,7 @@ public class Configuration {
 			if (cachableResources == null) {
 				cachableResources = new HashMap<String, File>(8);
 				cachableResources.put(URLs.CLIENTPATCH, new File(getCacheDirectory(), "ms.dat"));
-				cachableResources.put(URLs.VERSION, new File(getCacheDirectory(), "version.txt"));
+				cachableResources.put(URLs.VERSION, new File(getCacheDirectory(), "version-latest.txt"));
 				cachableResources.put(URLs.VERSION_KILL, new File(getCacheDirectory(), "version-kill.txt"));
 				cachableResources.put(URLs.AD_INFO, new File(getCacheDirectory(), "ads.txt"));
 				cachableResources.put(URLs.MONITORING_CONTROL, new File(getCacheDirectory(), "monitoring-control.txt"));
