@@ -23,10 +23,9 @@ public interface Messages {
 
 	public static final String ACCOUNTS = "Accounts";
 	public static final String FORCEINPUT = "Force Input";
-	public static final String DISABLEANTIRANDOMS = "Disable Anti-Randoms";
-	public static final String DISABLEAUTOLOGIN = "Disable Auto Login";
+	public static final String DISABLEANTIRANDOMS = "Disable randoms";
+	public static final String DISABLEAUTOLOGIN = "Disable login";
 	public static final String DISABLEADS = "Disable advertisements";
-	public static final String DISABLEMONITORING = "Disable monitoring";
 	public static final String DISABLECONFIRMATIONS = "Disable confirmations";
 	public static final String BINDTO = "Bind to address:";
 	public static final String USEPASSWORD = "Use password:";
@@ -50,5 +49,5 @@ public interface Messages {
 	public static final String TOGGLETRUE = TOGGLE + "T ";
 	public static final String MENUSEPERATOR = "-";
 
-	public static final String TABDEFAULTTEXT = "Game";
+	public static final String TABDEFAULTTEXT = "Bot";
 }
