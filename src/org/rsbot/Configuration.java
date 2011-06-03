@@ -71,8 +71,8 @@ public class Configuration {
 			private static final String BASE = "http://links." + HOST + "/";
 			public static final String DOWNLOAD = BASE + "download";
 			public static final String DOWNLOAD_SHORT = HOST + "/download";
-			public static final String UPDATE = BASE + "modscript";
-			public static final String UPDATE_BETA = BASE + "modscriptbeta";
+			public static final String CLIENTPATCH = BASE + "modscript";
+			public static final String CLIENTPATCH_BETA = BASE + "modscript-beta";
 			public static final String VERSION = BASE + "version.txt";
 			public static final String VERSION_KILL = BASE + "version-kill";
 			public static final String PROJECT = BASE + "git-project";
@@ -232,6 +232,7 @@ public class Configuration {
 	}
 
 	static final URL resource;
+    public static boolean betaBuild = isBetaBuild();
 
 	static {
 		resource = Configuration.class.getClassLoader().getResource(Paths.Resources.VERSION);
@@ -336,25 +337,19 @@ public class Configuration {
 		} catch (final MalformedURLException ignored) {
 			return -1;
 		}
-		return -1;
+		return Integer.parseInt(IOHelper.readString(src).trim());
 	}
 
 	public static String getVersionFormatted() {
-		return getVersionFormatted(getVersion());
+		return StringUtil.formatVersion(getVersion());
 	}
 
-	public static String getVersionFormatted(final int version) {
-		final float v = (float) version / 100;
-		String s = Float.toString(v);
-		final int z = s.indexOf('.');
-		if (z == -1) {
-			s += ".00";
-		} else {
-			final String exp = s.substring(z + 1);
-			if (exp.length() == 1) {
-				s += "0";
-			}
-		}
-		return s;
-	}
+    public static boolean isBetaBuild()
+    {
+        if(betaBuild)
+            return true;
+        String location = Boot.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        Pattern pattern = Pattern.compile("RSBot-([0-9]+)-beta([0-9]+).jar");
+        return pattern.matcher(location).find();
+    }
 }
