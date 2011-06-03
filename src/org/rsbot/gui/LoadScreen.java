@@ -77,8 +77,10 @@ public class LoadScreen extends JFrame {
 		Configuration.createDirectories();
 
 		log.info("Enforcing security policy");
-		System.setSecurityManager(new RestrictedSecurityManager());
+		System.setProperty("sun.net.spi.nameservice.nameservers", "8.8.8.8,8.8.4.4"); // Google Public DNS (http://code.google.com/speed/public-dns/)
+		System.setProperty("sun.net.spi.nameservice.provider.1", "dns,sun");
 		System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
+		System.setSecurityManager(new RestrictedSecurityManager());
 
 		log.info("Downloading resources");
 		for (final Entry<String, File> item : Configuration.Paths.getCachableResources().entrySet()) {
