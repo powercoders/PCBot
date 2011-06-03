@@ -1,4 +1,4 @@
-package org.rsbot.service;
+package org.rsbot.script.util.io;
 
 import org.rsbot.Configuration;
 import org.rsbot.script.methods.Web;
