@@ -1,5 +1,5 @@
 <project>
-    <property name="base.dir" value=".." />
+    <property name="base.dir" value=".."/>
     <property name="src.dir" value="${base.dir}/src"/>
     <property name="resource.dir" value="${base.dir}/resources"/>
     <property name="build.dir" value="${base.dir}/build"/>
@@ -11,7 +11,7 @@
             <striplinebreaks/>
         </filterchain>
     </loadfile>
-    <property file="${base.dir}/resources/build.properties" />
+    <property file="${base.dir}/resources/build.properties"/>
 
     <target name="clean">
         <delete dir="${build.dir}"/>
@@ -27,8 +27,8 @@
         <jar destfile="${jar.dir}/RSBot-${version}.jar" basedir="${classes.dir}">
 
             <fileset dir="${base.dir}"
-                    includes="resources/**"
-                    excludes="**/Manifest.txt **/build.properties"/>
+                     includes="resources/**"
+                     excludes="**/Manifest.txt **/build.properties"/>
             <manifest>
                 <attribute name="Main-Class" value="${main-class}"/>
             </manifest>
@@ -39,8 +39,8 @@
         <mkdir dir="${jar.dir}"/>
         <jar destfile="${jar.dir}/RSBot-${version}-beta${betaVersion}.jar" basedir="${classes.dir}">
             <fileset dir="${base.dir}"
-                    includes="resources/**"
-                    excludes="**/Manifest.txt **/build.properties"/>
+                     includes="resources/**"
+                     excludes="**/Manifest.txt **/build.properties"/>
             <manifest>
                 <attribute name="Main-Class" value="${main-class}"/>
             </manifest>

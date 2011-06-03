@@ -232,7 +232,7 @@ public class Configuration {
 	}
 
 	static final URL resource;
-    public static boolean betaBuild = isBetaBuild();
+	public static boolean betaBuild = isBetaBuild();
 
 	static {
 		resource = Configuration.class.getClassLoader().getResource(Paths.Resources.VERSION);
@@ -344,12 +344,12 @@ public class Configuration {
 		return StringUtil.formatVersion(getVersion());
 	}
 
-    public static boolean isBetaBuild()
-    {
-        if(betaBuild)
-            return true;
-        String location = Boot.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        Pattern pattern = Pattern.compile("RSBot-([0-9]+)-beta([0-9]+).jar");
-        return pattern.matcher(location).find();
-    }
+	public static boolean isBetaBuild() {
+		if (betaBuild) {
+			return true;
+		}
+		String location = Boot.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		Pattern pattern = Pattern.compile("RSBot-([0-9]+)-beta([0-9]+).jar");
+		return pattern.matcher(location).find();
+	}
 }

@@ -105,12 +105,11 @@ public class RSLoader extends Applet implements Runnable, Loader {
 		final File ms = new File(Configuration.Paths.getCacheDirectory(), "ms.dat");
 		try {
 			final ClientLoader cl = new ClientLoader();
-            URL scriptURL = new URL(Configuration.Paths.URLs.CLIENTPATCH);
-            if(Configuration.isBetaBuild())
-            {
-                scriptURL = new URL(Configuration.Paths.URLs.CLIENTPATCH_BETA);
-            }
-            cl.init(scriptURL, ms);
+			URL scriptURL = new URL(Configuration.Paths.URLs.CLIENTPATCH);
+			if (Configuration.isBetaBuild()) {
+				scriptURL = new URL(Configuration.Paths.URLs.CLIENTPATCH_BETA);
+			}
+			cl.init(scriptURL, ms);
 			final File client = new File(Configuration.Paths.getCacheDirectory(), "client.dat");
 			cl.load(client, new File(Configuration.Paths.getVersionCache()));
 			targetName = cl.getTargetName();

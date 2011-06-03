@@ -252,10 +252,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				keyTyped(e);
 			}
 		});
-		submit = new JButton("Start", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
-		final JButton connect = new JButton(new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_CONNECT)));
+		submit = new JButton("Start", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
+		final JButton connect = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_CONNECT)));
 		connect.setToolTipText("Show network scripts");
 		submit.setEnabled(false);
 		submit.addActionListener(new ActionListener() {
@@ -281,8 +279,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		if (connect.isEnabled()) {
 			final ActionListener listenConnect = new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
-					final String icon = connected ? Configuration.Paths.Resources.ICON_DISCONNECT :
-							Configuration.Paths.Resources.ICON_CONNECT;
+					final String icon = connected ? Configuration.Paths.Resources.ICON_DISCONNECT : Configuration.Paths.Resources.ICON_CONNECT;
 					connect.setIcon(new ImageIcon(Configuration.getImage(icon)));
 					connect.repaint();
 					connected = !connected;
@@ -384,12 +381,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	private static class ScriptTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
-		public static final ImageIcon ICON_SCRIPT_SRC = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_CODE));
-		public static final ImageIcon ICON_SCRIPT_PRE = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_GEAR));
-		public static final ImageIcon ICON_SCRIPT_NET = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_LIVE));
+		public static final ImageIcon ICON_SCRIPT_SRC = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_CODE));
+		public static final ImageIcon ICON_SCRIPT_PRE = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_GEAR));
+		public static final ImageIcon ICON_SCRIPT_NET = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_LIVE));
 		private final List<ScriptDefinition> scripts;
 		private final List<ScriptDefinition> matches;
 
