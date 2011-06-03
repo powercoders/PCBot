@@ -3,8 +3,8 @@ package org.rsbot.script.background;
 import org.rsbot.script.BackgroundScript;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Web;
+import org.rsbot.script.util.io.WebQueue;
 import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.service.WebQueue;
 
 import java.util.HashMap;
 

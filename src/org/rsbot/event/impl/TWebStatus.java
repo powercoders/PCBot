@@ -1,7 +1,7 @@
 package org.rsbot.event.impl;
 
 import org.rsbot.event.listeners.TextPaintListener;
-import org.rsbot.service.WebQueue;
+import org.rsbot.script.util.io.WebQueue;
 import org.rsbot.util.StringUtil;
 
 import java.awt.*;

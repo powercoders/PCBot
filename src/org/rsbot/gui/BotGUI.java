@@ -13,10 +13,8 @@ import org.rsbot.script.methods.Environment;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.provider.ScriptDownloader;
 import org.rsbot.script.util.WindowUtil;
-import org.rsbot.service.Monitoring;
-import org.rsbot.service.Monitoring.Type;
+import org.rsbot.script.util.io.WebQueue;
 import org.rsbot.service.TwitterUpdates;
-import org.rsbot.service.WebQueue;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.IOHelper;
 import org.rsbot.util.io.ScreenshotUtil;
@@ -69,11 +67,12 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (!prefs.hideAds) {
 					new SplashAd(BotGUI.this).display();
 				}
-				UpdateChecker.notify(BotGUI.this);
+				if (Configuration.getVersion() < UpdateChecker.getLatestVersion()) {
+					log.info("New version available - please download from " + Configuration.Paths.URLs.DOWNLOAD_SHORT);
+				}
 				if (Configuration.Twitter.ENABLED) {
 					TwitterUpdates.loadTweets(Configuration.Twitter.MESSAGES);
 				}
-				Monitoring.start();
 				addBot();
 				updateScriptControls();
 				setShutdownTimer(prefs.shutdown);
@@ -604,15 +603,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				WebQueue.Destroy();
 			} catch (NoClassDefFoundError ncdfe) {
 			}
-			try {
-				Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(!prefs.hideAds));
-			} catch (NoClassDefFoundError ncdfe) {
-			}
 			prefs.save();
-			try {
-				Monitoring.stop();
-			} catch (NoClassDefFoundError ncdfe) {
-			}
 			System.exit(0);
 		}
 		return doExit;

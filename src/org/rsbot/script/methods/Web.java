@@ -4,13 +4,13 @@ import org.rsbot.Configuration;
 import org.rsbot.script.background.BankMonitor;
 import org.rsbot.script.background.WebData;
 import org.rsbot.script.internal.BackgroundScriptHandler;
+import org.rsbot.script.util.io.WebQueue;
 import org.rsbot.script.web.PlaneHandler;
 import org.rsbot.script.web.PlaneTraverse;
 import org.rsbot.script.web.Route;
 import org.rsbot.script.web.RouteStep;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.script.wrappers.RSWeb;
-import org.rsbot.service.WebQueue;
 
 import java.io.BufferedReader;
 import java.io.File;
