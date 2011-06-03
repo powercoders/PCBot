@@ -77,7 +77,6 @@ public class Configuration {
 			public static final String SITE = BASE + "site";
 			public static final String SDN_CONTROL = BASE + "sdn-control";
 			public static final String AD_INFO = BASE + "botad-info";
-			public static final String MONITORING_CONTROL = BASE + "monitoring";
 			public static final String SERVICELOGIN = BASE + "servicelogin";
 			public static final String TRIDENT = BASE + "trident";
 			public static final String SUBSTANCE = BASE + "substance";
@@ -208,7 +207,6 @@ public class Configuration {
 				cachableResources.put(URLs.VERSION, new File(getCacheDirectory(), "version-latest.txt"));
 				cachableResources.put(URLs.VERSION_KILL, new File(getCacheDirectory(), "version-kill.txt"));
 				cachableResources.put(URLs.AD_INFO, new File(getCacheDirectory(), "ads.txt"));
-				cachableResources.put(URLs.MONITORING_CONTROL, new File(getCacheDirectory(), "monitoring-control.txt"));
 				if (SKINNED) {
 					cachableResources.put(URLs.TRIDENT, new File(getCacheDirectory(), "trident.jar"));
 					cachableResources.put(URLs.SUBSTANCE, new File(getCacheDirectory(), "substance.jar"));

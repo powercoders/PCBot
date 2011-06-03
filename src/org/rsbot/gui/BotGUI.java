@@ -14,8 +14,6 @@ import org.rsbot.script.methods.Web;
 import org.rsbot.script.provider.ScriptDownloader;
 import org.rsbot.script.util.WindowUtil;
 import org.rsbot.script.util.io.WebQueue;
-import org.rsbot.service.Monitoring;
-import org.rsbot.service.Monitoring.Type;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.IOHelper;
@@ -75,7 +73,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				if (Configuration.Twitter.ENABLED) {
 					TwitterUpdates.loadTweets(Configuration.Twitter.MESSAGES);
 				}
-				Monitoring.start();
 				addBot();
 				updateScriptControls();
 				setShutdownTimer(prefs.shutdown);
@@ -606,15 +603,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				WebQueue.Destroy();
 			} catch (NoClassDefFoundError ncdfe) {
 			}
-			try {
-				Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(!prefs.hideAds));
-			} catch (NoClassDefFoundError ncdfe) {
-			}
 			prefs.save();
-			try {
-				Monitoring.stop();
-			} catch (NoClassDefFoundError ncdfe) {
-			}
 			System.exit(0);
 		}
 		return doExit;

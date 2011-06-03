@@ -1,8 +1,6 @@
 package org.rsbot.gui;
 
 import org.rsbot.Configuration;
-import org.rsbot.service.Monitoring;
-import org.rsbot.service.Monitoring.Type;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IniParser;
 
@@ -119,7 +117,6 @@ public class SplashAd extends JDialog implements MouseListener {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				Monitoring.pushState(Type.ENVIRONMENT, "ADS", "CLICK", "false");
 				dispose();
 			}
 		}, display);
@@ -136,7 +133,6 @@ public class SplashAd extends JDialog implements MouseListener {
 	@Override
 	public void mouseReleased(final MouseEvent e) {
 		BotGUI.openURL(link);
-		Monitoring.pushState(Type.ENVIRONMENT, "ADS", "CLICK", "true");
 		dispose();
 	}
 
