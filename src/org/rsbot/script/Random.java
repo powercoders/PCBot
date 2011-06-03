@@ -3,8 +3,6 @@ package org.rsbot.script;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Methods;
-import org.rsbot.service.Monitoring;
-import org.rsbot.service.Monitoring.Type;
 
 import java.awt.*;
 import java.util.logging.Level;
@@ -99,7 +97,6 @@ public abstract class Random extends Methods implements PaintListener {
 		}
 		ctx.ctx.bot.getEventManager().addListener(this);
 		log("Random event started: " + name);
-		Monitoring.pushState(Type.RANDOM, "START", name);
 		long timeout = getTimeout();
 		if (timeout > 0) {
 			timeout *= 1000;
@@ -112,7 +109,6 @@ public abstract class Random extends Methods implements PaintListener {
 					break;
 				} else if (timeout > 0 && System.currentTimeMillis() >= timeout) {
 					log.warning("Time limit reached for " + name + ".");
-					Monitoring.pushState(Type.RANDOM, "FAIL", name);
 					ctx.stopScript();
 				} else {
 					sleep(wait);
@@ -125,7 +121,6 @@ public abstract class Random extends Methods implements PaintListener {
 		script = null;
 		onFinish();
 		log("Random event finished: " + name);
-		Monitoring.pushState(Type.RANDOM, "END", name);
 		ctx.ctx.bot.getEventManager().removeListener(this);
 		sleep(1000);
 		ctx.ctx.bot.getEventManager().addListener(ctx);

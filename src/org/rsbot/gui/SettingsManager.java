@@ -4,7 +4,6 @@ import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.gui.component.Messages;
 import org.rsbot.service.DRM;
-import org.rsbot.service.Monitoring;
 import org.rsbot.util.StringUtil;
 import org.rsbot.util.io.IniParser;
 
@@ -33,7 +32,6 @@ public class SettingsManager extends JDialog {
 		public boolean hideAds = false;
 		public String user = "";
 		public boolean confirmations = true;
-		public boolean monitoring = true;
 		public boolean shutdown = false;
 		public int shutdownTime = 10;
 		public boolean web = false;
@@ -67,9 +65,6 @@ public class SettingsManager extends JDialog {
 			if (keys.containsKey("confirmations")) {
 				confirmations = IniParser.parseBool(keys.get("confirmations"));
 			}
-			if (keys.containsKey("monitoring")) {
-				monitoring = IniParser.parseBool(keys.get("monitoring"));
-			}
 			if (keys.containsKey("shutdown")) {
 				shutdown = IniParser.parseBool(keys.get("shutdown"));
 			}
@@ -96,7 +91,6 @@ public class SettingsManager extends JDialog {
 			keys.put("user", user);
 			keys.put("hideAds", Boolean.toString(hideAds));
 			keys.put("confirmations", Boolean.toString(confirmations));
-			keys.put("monitoring", Boolean.toString(monitoring));
 			keys.put("shutdown", Boolean.toString(shutdown));
 			keys.put("shutdownTime", Integer.toString(shutdownTime));
 			keys.put("web", Boolean.toString(web));
@@ -112,10 +106,6 @@ public class SettingsManager extends JDialog {
 			} catch (final IOException ignored) {
 				log.severe("Could not save preferences");
 			}
-		}
-
-		public void commit() {
-			Monitoring.setEnabled(monitoring);
 		}
 	}
 
@@ -160,10 +150,6 @@ public class SettingsManager extends JDialog {
 		final JCheckBox checkConf = new JCheckBox(Messages.DISABLECONFIRMATIONS);
 		checkConf.setToolTipText("Supress confirmation messages");
 		checkConf.setSelected(prefs.confirmations);
-
-		final JCheckBox checkMonitor = new JCheckBox(Messages.DISABLEMONITORING);
-		checkMonitor.setToolTipText("Monitor system information to improve development");
-		checkMonitor.setSelected(prefs.monitoring);
 
 		final JPanel panelShutdown = new JPanel(new GridLayout(1, 2));
 		final JCheckBox checkShutdown = new JCheckBox(Messages.AUTOSHUTDOWN);
@@ -224,8 +210,8 @@ public class SettingsManager extends JDialog {
 
 		panelOptions.add(checkAds);
 		panelOptions.add(checkConf);
-		panelInternal.add(checkMonitor);
 		panelInternal.add(panelShutdown);
+		panelInternal.add(new JLabel());
 		panelWeb.add(panelWebOptions[0]);
 		panelWeb.add(panelWebOptions[1]);
 
@@ -243,7 +229,6 @@ public class SettingsManager extends JDialog {
 				setVisible(false);
 				prefs.hideAds = checkAds.isSelected();
 				prefs.confirmations = checkConf.isSelected();
-				prefs.monitoring = checkMonitor.isSelected();
 				prefs.shutdown = checkShutdown.isSelected();
 				prefs.shutdownTime = modelShutdown.getNumber().intValue();
 				prefs.web = checkWeb.isSelected();
@@ -254,7 +239,6 @@ public class SettingsManager extends JDialog {
 				}
 				prefs.user = webUser;
 				prefs.webPassRequire = checkWebPass.isSelected() && checkWebPass.isEnabled();
-				prefs.commit();
 				final String loginPass = new String(textLoginPass.getPassword());
 				if (!loginPass.equals(DEFAULTPASSWORD)) {
 					if (!DRM.login(prefs.user, loginPass)) {
@@ -273,7 +257,6 @@ public class SettingsManager extends JDialog {
 				setVisible(false);
 				checkAds.setSelected(prefs.hideAds);
 				checkConf.setSelected(prefs.confirmations);
-				checkMonitor.setSelected(prefs.monitoring);
 				checkShutdown.setSelected(prefs.shutdown);
 				modelShutdown.setValue(prefs.shutdownTime);
 				dispose();

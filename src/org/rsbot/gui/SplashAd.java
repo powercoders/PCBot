@@ -1,8 +1,6 @@
 package org.rsbot.gui;
 
 import org.rsbot.Configuration;
-import org.rsbot.service.Monitoring;
-import org.rsbot.service.Monitoring.Type;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IniParser;
 
@@ -78,11 +76,9 @@ public class SplashAd extends JDialog implements MouseListener {
 		HashMap<String, String> keys = null;
 
 		try {
-			final URL source = new URL(Configuration.Paths.URLs.AD_INFO);
-			final File cache = new File(Configuration.Paths.getCacheDirectory(), "ads.txt");
-			HttpClient.download(source, cache);
+			final File cache = Configuration.Paths.getCachableResources().get(Configuration.Paths.URLs.AD_INFO);
 			keys = IniParser.deserialise(cache).get(IniParser.emptySection);
-		} catch (final IOException e) {
+		} catch (final IOException ignored) {
 			return false;
 		}
 
@@ -121,7 +117,6 @@ public class SplashAd extends JDialog implements MouseListener {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				Monitoring.pushState(Type.ENVIRONMENT, "ADS", "CLICK", "false");
 				dispose();
 			}
 		}, display);
@@ -138,7 +133,6 @@ public class SplashAd extends JDialog implements MouseListener {
 	@Override
 	public void mouseReleased(final MouseEvent e) {
 		BotGUI.openURL(link);
-		Monitoring.pushState(Type.ENVIRONMENT, "ADS", "CLICK", "true");
 		dispose();
 	}
 

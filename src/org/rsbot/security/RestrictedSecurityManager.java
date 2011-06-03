@@ -22,6 +22,7 @@ import java.util.logging.Logger;
  */
 public class RestrictedSecurityManager extends SecurityManager {
 	private static Logger log = Logger.getLogger("Security");
+	private static int PORT_HTTP = 80, PORT_HTTPS = 443, PORT_DNS = 53;
 
 	private String getCallingClass() {
 		final String prefix = Application.class.getPackage().getName() + ".";
@@ -85,7 +86,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkAccept(final String host, final int port) {
-		throw new SecurityException();
+		if (port != PORT_DNS) {
+			throw new SecurityException();
+		}
 	}
 
 	@Override
@@ -94,8 +97,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 			throw new SecurityException();
 		}
 
-		// ports other than HTTP (80), HTTPS (443) and unknown (-1) are automatically denied
-		if (!(port == -1 || port == 80 || port == 443)) {
+		// ports other than HTTP (80), HTTPS (443), DNS (53) and unknown (-1) are automatically denied
+		if (!(port == -1 || port == PORT_HTTP || port == PORT_HTTPS || port == PORT_DNS)) {
 			throw new SecurityException();
 		}
 
@@ -191,7 +194,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkListen(final int port) {
-		throw new SecurityException();
+		if (port != 0) {
+			throw new SecurityException();
+		}
 	}
 
 	@Override
