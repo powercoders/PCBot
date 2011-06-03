@@ -123,6 +123,7 @@ public class Web extends MethodProvider {
 	 *
 	 * @param start The start tile.
 	 * @param end   The ending tile.
+	 * @param lastRoute The last plane route.
 	 * @return The generated route.
 	 */
 	private Route[] generateRoutes(final RSTile start, final RSTile end, final Route lastRoute) {
@@ -466,7 +467,7 @@ public class Web extends MethodProvider {
 										mapData.put(tile, tileFlag);
 									}
 								}
-							} catch (final Exception e) {
+							} catch (final Exception ignored) {
 							}
 						} else {
 							synchronized (lock) {

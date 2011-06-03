@@ -60,8 +60,7 @@ public class BotToolBar extends JToolBar {
 
 		this.listener = listener;
 
-		screenshotButton = new JButton("Screenshot", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_PHOTO)));
+		screenshotButton = new JButton("Screenshot", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PHOTO)));
 		screenshotButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				menu.doClick(Messages.SAVESCREENSHOT);
@@ -71,8 +70,7 @@ public class BotToolBar extends JToolBar {
 		screenshotButton.setToolTipText(screenshotButton.getText());
 		screenshotButton.setText("");
 
-		stopScriptButton = new JButton("Stop", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_DELETE)));
+		stopScriptButton = new JButton("Stop", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_DELETE)));
 		stopScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				menu.doClick(Messages.STOPSCRIPT);
@@ -92,8 +90,7 @@ public class BotToolBar extends JToolBar {
 		userInputButton.setToolTipText(userInputButton.getText());
 		userInputButton.setText("");
 
-		runScriptButton = new JButton("Run", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
+		runScriptButton = new JButton("Run", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
 		runScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switch (getScriptButton()) {
@@ -253,23 +250,22 @@ public class BotToolBar extends JToolBar {
 	}
 
 	private static Image getTransparentImage(final URL url, final float transparency) {
-		BufferedImage loaded = null;
+		BufferedImage parentImage = null;
 		try {
-			loaded = ImageIO.read(url);
+			parentImage = ImageIO.read(url);
 		} catch (final IOException e) {
 		}
-		final BufferedImage aimg = new BufferedImage(loaded.getWidth(), loaded.getHeight(), Transparency.TRANSLUCENT);
-		final Graphics2D g = aimg.createGraphics();
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
-		g.drawImage(loaded, null, 0, 0);
-		g.dispose();
-		return aimg;
+		final BufferedImage bufferedImage = new BufferedImage(parentImage.getWidth(), parentImage.getHeight(), Transparency.TRANSLUCENT);
+		final Graphics2D graphics = bufferedImage.createGraphics();
+		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+		graphics.drawImage(parentImage, null, 0, 0);
+		graphics.dispose();
+		return bufferedImage;
 	}
 
 	/**
 	 */
 	private class HomeButton extends JPanel {
-
 		private static final long serialVersionUID = 938456324328L;
 
 		private final Image image;
@@ -305,8 +301,7 @@ public class BotToolBar extends JToolBar {
 		@Override
 		public void paintComponent(final Graphics g) {
 			super.paintComponent(g);
-			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
+			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			if (getComponentIndex(this) == idx) {
 				g.setColor(new Color(255, 255, 255, 200));
 				g.fillRoundRect(0, 0, getWidth() - 2, getHeight() - 1, 4, 4);
@@ -327,7 +322,6 @@ public class BotToolBar extends JToolBar {
 	 * @author Tekk
 	 */
 	private class BotButton extends JPanel {
-
 		private static final long serialVersionUID = 329845763420L;
 
 		private final JLabel nameLabel;
@@ -398,7 +392,6 @@ public class BotToolBar extends JToolBar {
 	}
 
 	private static class AddButton extends JComponent {
-
 		private static final long serialVersionUID = 1L;
 
 		private static Image ICON;
@@ -464,5 +457,4 @@ public class BotToolBar extends JToolBar {
 		}
 
 	}
-
 }

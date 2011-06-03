@@ -71,16 +71,7 @@ public class GrandExchange extends MethodProvider {
 	public boolean checkSlotIsEmpty(final int slot) {
 		try {
 			final int slotComponent = GRAND_EXCHANGE_OFFER_BOXES[slot];
-			if (isOpen()) {
-				if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW, slotComponent).getComponent(
-						10).containsText("Empty")) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return false;
-			}
+			return isOpen() && methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW, slotComponent).getComponent(10).containsText("Empty");
 		} catch (final Exception e) {
 			return false;
 		}
@@ -160,12 +151,7 @@ public class GrandExchange extends MethodProvider {
 		if (!checkSlotIsEmpty(slot)) {
 			if (slot != 0) {
 				final int slotComponent = GRAND_EXCHANGE_OFFER_BOXES[slot];
-				if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW, slotComponent).containsAction(
-						"Abort Offer")) {
-					return false;
-				} else {
-					return true;
-				}
+				return !methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW, slotComponent).containsAction("Abort Offer");
 			}
 		}
 		return false;

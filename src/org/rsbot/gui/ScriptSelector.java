@@ -295,7 +295,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		accounts.setPreferredSize(new Dimension(125, 20));
 		categories.setPreferredSize(new Dimension(150, 20));
 		categories.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent arg0) {
 				final String[] selected = categories.getSelectedItems();
 				final StringBuilder s = new StringBuilder(16);

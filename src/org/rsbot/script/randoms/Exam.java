@@ -69,8 +69,7 @@ public class Exam extends Random {
 			objects[2] = interfaces.get(nextObjectInterface).getComponent(12).getComponentID();
 			objects[3] = interfaces.get(nextObjectInterface).getComponent(13).getComponentID();
 			interfaces.get(nextObjectInterface).getComponent(random(10, 13)).doClick();
-			return;
-		}
+			}
 
 		public int[] returnAnswer() {
 			final int[] count = new int[items.length];

@@ -24,6 +24,7 @@ public class BankCache {
 	 *
 	 * @param name  The name of the character.
 	 * @param items The array of items in the bank.
+	 * @throws java.lang.Exception
 	 */
 	public static void Save(final String name, final RSItem[] items) throws Exception {
 		synchronized (lock) {
@@ -96,7 +97,7 @@ public class BankCache {
 					final HashMap<String, String> userData = data.get(name);
 					return userData.containsKey(o) || userData.containsValue(o);
 				}
-			} catch (final Exception e) {
+			} catch (final Exception ignored) {
 			}
 			return false;
 		}

@@ -400,7 +400,6 @@ public class Game extends MethodProvider {
 					|| random.getClass().equals(new TeleotherCloser())
 					|| random.getClass().equals(new CloseAllInterface())
 					|| random.getClass().equals(new ImprovedRewardsBox())) {
-				continue;
 			} else {
 				if (random.activateCondition()) {
 					return true;
@@ -499,7 +498,7 @@ public class Game extends MethodProvider {
 			while (randomTab == currentTab.index()) {
 				randomTab = random(1, 6);
 			}
-			if (methods.game.openTab(randomTab)) {
+			if (methods.game.openTab(Game.Tab.values()[randomTab])) {
 				sleep(random(400, 800));
 			}
 		}
@@ -593,7 +592,8 @@ public class Game extends MethodProvider {
 	/**
 	 * Opens the specified tab at the specified index.
 	 *
-	 * @param tab The tab to open, functionKey if wanting to use function keys to switch.
+	 * @param tab         The tab to open, functionKey if wanting to use function keys to switch.
+	 * @param functionKey Use function keys to open the tab or not.
 	 * @return <tt>true</tt> if tab successfully selected; otherwise <tt>false</tt>.
 	 * @see #openTab(Tab tab, boolean functionKey)
 	 */
@@ -605,7 +605,8 @@ public class Game extends MethodProvider {
 	/**
 	 * Opens the specified game tab.
 	 *
-	 * @param tab The tab to open, functionKey if wanting to use function keys to switch.
+	 * @param tab         The tab to open, functionKey if wanting to use function keys to switch.
+	 * @param functionKey Use function keys to open the tab or not.
 	 * @return <tt>true</tt> if tab successfully selected; otherwise <tt>false</tt>.
 	 */
 	public boolean openTab(final Tab tab, final boolean functionKey) {
@@ -686,6 +687,7 @@ public class Game extends MethodProvider {
 	 * Switches to a given world.
 	 *
 	 * @param world the world to switch to, must be valid.
+	 * @return If worlds were switched.
 	 */
 	public boolean switchWorld(final int world) {
 		methods.env.disableRandom("Login");
@@ -720,13 +722,13 @@ public class Game extends MethodProvider {
 	/**
 	 * Gets Current World
 	 *
-	 * @returns current or selected world
+	 * @return current or selected world
 	 */
 	public int getCurrentWorld() {
 		int world = 0;
 		if (methods.game.isLoggedIn()) {
-			if (methods.game.getCurrentTab() != 9) {
-				methods.game.openTab(9);
+			if (methods.game.getTab() != Game.Tab.FRIENDS) {
+				methods.game.openTab(Game.Tab.FRIENDS);
 			}
 			world = Integer.parseInt(methods.interfaces.getComponent(550, 19).getText().replaceAll("Friends List<br>RuneScape ", ""));
 		} else if (methods.game.getClientState() == Game.INDEX_LOBBY_SCREEN) {
@@ -738,6 +740,9 @@ public class Game extends MethodProvider {
 	/**
 	 * Fetch the chat button at the provided index for deprecated methods.
 	 * For internal use only.
+	 *
+	 * @param idx The chat buttons' index.
+	 * @return Returns the current chat button.
 	 */
 	private ChatButton getButton(final int idx) {
 		for (ChatButton b : ChatButton.values()) {
@@ -750,6 +755,9 @@ public class Game extends MethodProvider {
 
 	/**
 	 * Fetch the game tab at the provided index. For internal use only.
+	 *
+	 * @param idx The game tab at the provided index.
+	 * @return The tab at the index issued.
 	 */
 	private Tab getTab(final int idx) {
 		for (Tab t : Tab.values()) {

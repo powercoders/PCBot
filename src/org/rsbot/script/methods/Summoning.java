@@ -194,6 +194,7 @@ public class Summoning extends MethodProvider {
 	/**
 	 * Does a action in the summoning skill bubble.
 	 *
+	 * @param act The action to perform.
 	 * @return <tt>true</tt> if action is performed.
 	 */
 	public boolean doAction(final String act) {
@@ -253,7 +254,6 @@ public class Summoning extends MethodProvider {
 	 * Dismisses the familiar from the summoning tab.
 	 *
 	 * @return <tt>true</tt> if the familiar was dismissed.
-	 * @author Dunnkers
 	 */
 	public boolean doDismiss() {
 		RSComponent confirmInterface = methods.interfaces.getComponent(228, 2);

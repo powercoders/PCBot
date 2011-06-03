@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Methods for lobby interface
  *
- * @Author Debauchery
+ * @author Debauchery
  */
 @SuppressWarnings("unused")
 public class Lobby extends MethodProvider {
@@ -162,8 +162,8 @@ public class Lobby extends MethodProvider {
 	/**
 	 * Checks if the chosen world is open.
 	 *
-	 * @param world
-	 * @param includeFull
+	 * @param world       The world to check.
+	 * @param includeFull Return even if it's full?
 	 * @return <tt>true</tt> is available, else <tt>false</tt>
 	 */
 	public boolean isAvailable(final int world, final boolean includeFull) {
@@ -178,7 +178,7 @@ public class Lobby extends MethodProvider {
 	/**
 	 * Enters a world from the lobby.
 	 *
-	 * @param world
+	 * @param world      The world to switch to.
 	 * @return <tt>true</tt> If correctly entered the world else <tt>false</tt>
 	 * @see org.rsbot.script.methods.Game switchWorld(int world)
 	 */
@@ -212,7 +212,7 @@ public class Lobby extends MethodProvider {
 	/**
 	 * Gets the component of any world on the lobby interface
 	 *
-	 * @param world
+	 * @param world The world to get the component of.
 	 * @return The component corresponding to the world.
 	 */
 	public RSComponent getWorldComponent(final int world) {
