@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
+import java.util.regex.Pattern;
 
 public class Configuration {
 	public enum OperatingSystem {
@@ -67,6 +68,7 @@ public class Configuration {
 			public static final String DOWNLOAD = BASE + "download";
 			public static final String DOWNLOAD_SHORT = HOST + "/download";
 			public static final String UPDATE = BASE + "modscript";
+			public static final String UPDATE_BETA = BASE + "modscriptbeta";
 			public static final String VERSION = BASE + "version.txt";
 			public static final String VERSION_KILL = BASE + "version-kill";
 			public static final String PROJECT = BASE + "git-project";
@@ -210,6 +212,7 @@ public class Configuration {
 	private static final OperatingSystem CURRENT_OS;
 	public static boolean RUNNING_FROM_JAR = false;
 	public static final boolean SKINNED = false;
+    public static boolean betaBuild = isBetaBuild();
 
 	public static class Twitter {
 		public static final boolean ENABLED = true;
@@ -359,4 +362,13 @@ public class Configuration {
 		}
 		return s;
 	}
+
+    public static boolean isBetaBuild()
+    {
+        if(betaBuild)
+            return true;
+        String location = Boot.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        Pattern pattern = Pattern.compile("RSBot-([0-9]+)-beta([0-9]+).jar");
+        return pattern.matcher(location).find();
+    }
 }
