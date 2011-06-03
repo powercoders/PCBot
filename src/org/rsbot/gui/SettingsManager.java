@@ -2,6 +2,7 @@ package org.rsbot.gui;
 
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
+import org.rsbot.bot.RSLoader;
 import org.rsbot.gui.component.Messages;
 import org.rsbot.service.DRM;
 import org.rsbot.util.StringUtil;
@@ -38,6 +39,7 @@ public class SettingsManager extends JDialog {
 		public String webBind = "localhost:9500";
 		public boolean webPassRequire = false;
 		public String webPass = "";
+		public boolean runBetaPatch = false;
 
 		public Preferences(final File store) {
 			this.store = store;
@@ -86,10 +88,14 @@ public class SettingsManager extends JDialog {
 			if (keys.containsKey("webPass")) {
 				webPass = keys.get("webPass");
 			}
+			if (keys.containsKey("runBetaPatch")) {
+				runBetaPatch = IniParser.parseBool(keys.get("runBetaPatch"));
+				RSLoader.runBeta = Configuration.RUNNING_FROM_JAR ? false : runBetaPatch;
+			}
 		}
 
 		public void save() {
-			final HashMap<String, String> keys = new HashMap<String, String>(5);
+			final HashMap<String, String> keys = new HashMap<String, String>(10);
 			keys.put("user", user);
 			keys.put("hideAds", Boolean.toString(hideAds));
 			keys.put("confirmations", Boolean.toString(confirmations));
@@ -99,6 +105,7 @@ public class SettingsManager extends JDialog {
 			keys.put("webBind", webBind);
 			keys.put("webPassRequire", Boolean.toString(webPassRequire));
 			keys.put("webPass", webPass);
+			keys.put("runBetaPatch", Boolean.toString(runBetaPatch));
 			final HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>(1);
 			data.put(IniParser.emptySection, keys);
 			try {
@@ -124,6 +131,8 @@ public class SettingsManager extends JDialog {
 
 		final JPanel panelLogin = new JPanel(new GridLayout(2, 1));
 		panelLogin.setBorder(BorderFactory.createTitledBorder("Service Login"));
+		final JPanel panelBot = new JPanel(new GridLayout(0, 1));
+		panelBot.setBorder(BorderFactory.createTitledBorder("Bot"));
 		final JPanel panelOptions = new JPanel(new GridLayout(0, 1));
 		panelOptions.setBorder(BorderFactory.createTitledBorder("Display"));
 		final JPanel panelInternal = new JPanel(new GridLayout(0, 1));
@@ -144,6 +153,10 @@ public class SettingsManager extends JDialog {
 		panelLoginOptions[1].add(textLoginPass);
 		panelLogin.add(panelLoginOptions[0]);
 		panelLogin.add(panelLoginOptions[1]);
+
+		final JCheckBox runBetaPatch = new JCheckBox(Messages.BETAPATCH);
+		runBetaPatch.setToolTipText("Use the beta client patching script");
+		runBetaPatch.setSelected(preferences.runBetaPatch);
 
 		final JCheckBox checkAds = new JCheckBox(Messages.DISABLEADS);
 		checkAds.setToolTipText("Show advertisement on startup");
@@ -210,6 +223,8 @@ public class SettingsManager extends JDialog {
 			action.actionPerformed(null);
 		}
 
+		panelBot.add(runBetaPatch);
+		panelBot.add(new JLabel());
 		panelOptions.add(checkAds);
 		panelOptions.add(checkConfirmations);
 		panelInternal.add(panelShutdown);
@@ -247,6 +262,8 @@ public class SettingsManager extends JDialog {
 						preferences.user = "";
 					}
 				}
+				preferences.runBetaPatch = runBetaPatch.isSelected();
+				RSLoader.runBeta = Configuration.RUNNING_FROM_JAR ? false : preferences.runBetaPatch;
 				preferences.save();
 				textLoginPass.setText(DEFAULT_PASSWORD);
 				textWebPass.setText(DEFAULT_PASSWORD);
@@ -257,6 +274,7 @@ public class SettingsManager extends JDialog {
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
+				runBetaPatch.setSelected(preferences.runBetaPatch);
 				checkAds.setSelected(preferences.hideAds);
 				checkConfirmations.setSelected(preferences.confirmations);
 				checkShutdown.setSelected(preferences.shutdown);
@@ -275,6 +293,7 @@ public class SettingsManager extends JDialog {
 		panel.add(panelInternal);
 
 		if (!Configuration.RUNNING_FROM_JAR) {
+			panel.add(panelBot); //hide beta-modscript from non-dev builds.
 			panel.add(panelWeb); // hide web options from non-development builds for now
 		}
 

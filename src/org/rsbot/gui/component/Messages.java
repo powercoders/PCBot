@@ -32,6 +32,7 @@ public interface Messages {
 	public static final String LESSCPU = "Less CPU";
 	public static final String EXTDVIEWS = "Extended views";
 	public static final String AUTOSHUTDOWN = "Shutdown (mins):";
+	public static final String BETAPATCH = "Use beta client patch";
 
 	public static final String HIDETOOLBAR = "Hide Toolbar";
 	public static final String HIDELOGPANE = "Hide Log Pane";
