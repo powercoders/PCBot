@@ -54,7 +54,7 @@ public class Quests extends MethodProvider {
 	 */
 	public boolean isFiltered(final String name) {
 		return getComponent(name) != null && getComponent(name).getTextColor() == 2236962;
-		}
+	}
 
 	/**
 	 * Checks if a Quest is finished. Only works if not hidden.
@@ -64,7 +64,7 @@ public class Quests extends MethodProvider {
 	 */
 	public boolean isCompleted(final String name) {
 		return !isFiltered(name) && getProgress(name).equals(State.FINISHED);
-		}
+	}
 
 	/**
 	 * Returns a Quest.Progress object to reflect completion status of quest.

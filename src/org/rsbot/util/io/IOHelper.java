@@ -1,9 +1,9 @@
 package org.rsbot.util.io;
 
+import org.rsbot.util.StringUtil;
+
 import java.io.*;
 import java.net.URL;
-
-import org.rsbot.util.StringUtil;
 
 /**
  * @author Paris

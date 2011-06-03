@@ -1,10 +1,10 @@
 package org.rsbot.util;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.rsbot.Configuration;
 import org.rsbot.util.io.IOHelper;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Paris

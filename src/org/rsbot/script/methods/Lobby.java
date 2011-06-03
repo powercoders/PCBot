@@ -178,7 +178,7 @@ public class Lobby extends MethodProvider {
 	/**
 	 * Enters a world from the lobby.
 	 *
-	 * @param world      The world to switch to.
+	 * @param world The world to switch to.
 	 * @return <tt>true</tt> If correctly entered the world else <tt>false</tt>
 	 * @see org.rsbot.script.methods.Game switchWorld(int world)
 	 */

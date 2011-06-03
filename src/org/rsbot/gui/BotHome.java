@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * @author Paris
  */
-public class BotHome {
+class BotHome {
 	private static final Font FONT = new Font("Helvetica", 1, 13);
 	private int width;
 	private int height;
@@ -78,7 +78,7 @@ public class BotHome {
 		g.drawString("Spectating " + (bots.length == 1 ? "1 bot." : bots.length + " bots."), 5, height + metrics.getDescent() - 14);
 	}
 
-	public void draw(final Graphics g, final int idx, final int x, final int y, final int width, final int height) {
+	void draw(final Graphics g, final int idx, final int x, final int y, final int width, final int height) {
 		final BufferedImage img = bots[idx].getImage();
 		if (img != null && img.getWidth() > 0) {
 			final int w_img = img.getWidth(), h_img = img.getHeight();

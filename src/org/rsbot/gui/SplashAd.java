@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * @author Paris
  */
 public class SplashAd extends JDialog implements MouseListener {
-	private static Logger log = Logger.getLogger(SplashAd.class.getName());
+	private static final Logger log = Logger.getLogger(SplashAd.class.getName());
 
 	private static final long serialVersionUID = 1L;
 

@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class JComboCheckBox extends JComboBox implements ActionListener {
 	private static final long serialVersionUID = -3388586151789454096L;
-	private ComboCheckRenderer renderer;
+	private final ComboCheckRenderer renderer;
 
 	public JComboCheckBox() {
 		super.addActionListener(this);
@@ -84,7 +84,7 @@ public class JComboCheckBox extends JComboBox implements ActionListener {
 	}
 
 	class StatefulItem {
-		public String id;
+		public final String id;
 		public boolean state;
 
 		public StatefulItem(final String id, final boolean state) {

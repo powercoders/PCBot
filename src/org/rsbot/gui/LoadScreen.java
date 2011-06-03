@@ -135,7 +135,7 @@ public class LoadScreen extends JFrame {
 		System.setErr(new PrintStream(new LogOutputStream(Logger.getLogger("STDERR"), Level.SEVERE), true));
 	}
 
-	public static void extractResources() {
+	private static void extractResources() {
 		final ArrayList<String> extract = new ArrayList<String>(2);
 		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.WINDOWS) {
 			extract.add(Configuration.Paths.COMPILE_SCRIPTS_BAT);

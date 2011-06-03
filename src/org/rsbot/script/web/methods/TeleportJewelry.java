@@ -114,6 +114,7 @@ public class TeleportJewelry extends TeleportItem {
 	 * Pharaoh's sceptre
 	 * Grand seed pod
 	 * Ring of Life</p>
+	 *
 	 * @return If you're in the wilderness or not.
 	 */
 	private boolean deepWilderness() {

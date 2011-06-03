@@ -33,7 +33,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private static final String[] COLUMN_NAMES = new String[]{"", "Name", "Description"};
 
 	private static final ScriptSource SRC_SOURCES;
-	private static final ScriptSource SRC_PRECOMPILED;
+	private static final ScriptSource SRC_PRE_COMPILED;
 	private static final ScriptSource SRC_NETWORK;
 	private final BotGUI frame;
 	private final Bot bot;
@@ -48,7 +48,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	static {
 		SRC_SOURCES = new FileScriptSource(new File(Configuration.Paths.getScriptsSourcesDirectory()));
-		SRC_PRECOMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
+		SRC_PRE_COMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
 		SRC_NETWORK = ScriptDeliveryNetwork.getInstance();
 	}
 
@@ -67,7 +67,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		setVisible(true);
 	}
 
-	public void update() {
+	void update() {
 		final boolean available = bot.getScriptHandler().getRunningScripts().size() == 0;
 		submit.setEnabled(available && table.getSelectedRow() != -1);
 		table.setEnabled(available);
@@ -84,7 +84,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				scripts.addAll(net);
 			}
 		}
-		scripts.addAll(SRC_PRECOMPILED.list());
+		scripts.addAll(SRC_PRE_COMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
 		Collections.sort(scripts);
 
@@ -442,7 +442,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						if (def.source == SRC_SOURCES) {
 							return ICON_SCRIPT_SRC;
 						}
-						if (def.source == SRC_PRECOMPILED) {
+						if (def.source == SRC_PRE_COMPILED) {
 							return ICON_SCRIPT_PRE;
 						}
 						return ICON_SCRIPT_NET;

@@ -513,7 +513,7 @@ public class FriendChat extends MethodProvider {
 				for (Friend friend : getFriends()) {
 					if (name.equalsIgnoreCase(friend.getName())) {
 						friends.add(friend);
-						}
+					}
 				}
 			}
 			return friends.toArray(new Friend[friends.size()]);
