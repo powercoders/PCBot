@@ -78,11 +78,9 @@ public class SplashAd extends JDialog implements MouseListener {
 		HashMap<String, String> keys = null;
 
 		try {
-			final URL source = new URL(Configuration.Paths.URLs.AD_INFO);
-			final File cache = new File(Configuration.Paths.getCacheDirectory(), "ads.txt");
-			HttpClient.download(source, cache);
+			final File cache = Configuration.Paths.getCachableResources().get(Configuration.Paths.URLs.AD_INFO);
 			keys = IniParser.deserialise(cache).get(IniParser.emptySection);
-		} catch (final IOException e) {
+		} catch (final IOException ignored) {
 			return false;
 		}
 

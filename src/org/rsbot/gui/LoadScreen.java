@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,12 +81,11 @@ public class LoadScreen extends JFrame {
 		System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
 
 		log.info("Downloading resources");
-		try {
-			if (Configuration.SKINNED) {
-				HttpClient.download(new URL(Configuration.Paths.URLs.TRIDENT), new File(Configuration.Paths.getTrident()));
-				HttpClient.download(new URL(Configuration.Paths.URLs.SUBSTANCE), new File(Configuration.Paths.getSubstance()));
+		for (final Entry<String, File> item : Configuration.Paths.getCachableResources().entrySet()) {
+			try {
+				HttpClient.download(new URL(item.getKey()), item.getValue());
+			} catch (final IOException ignored) {
 			}
-		} catch (final IOException ignored) {
 		}
 
 		log.info("Downloading network scripts");

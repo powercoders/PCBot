@@ -40,9 +40,7 @@ public class Monitoring {
 		HashMap<String, String> keys;
 
 		try {
-			final URL source = new URL(Configuration.Paths.URLs.MONITORING_CONTROL);
-			final File cache = new File(Configuration.Paths.getCacheDirectory(), "monitoring-control.txt");
-			HttpClient.download(source, cache);
+			final File cache = Configuration.Paths.getCachableResources().get(Configuration.Paths.URLs.MONITORING_CONTROL);
 			keys = IniParser.deserialise(cache).get(IniParser.emptySection);
 		} catch (final IOException ignored) {
 			return;

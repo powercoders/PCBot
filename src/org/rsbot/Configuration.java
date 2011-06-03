@@ -11,6 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
@@ -66,7 +68,7 @@ public class Configuration {
 			private static final String BASE = "http://links." + HOST + "/";
 			public static final String DOWNLOAD = BASE + "download";
 			public static final String DOWNLOAD_SHORT = HOST + "/download";
-			public static final String UPDATE = BASE + "modscript";
+			public static final String CLIENTPATCH = BASE + "modscript";
 			public static final String VERSION = BASE + "version.txt";
 			public static final String VERSION_KILL = BASE + "version-kill";
 			public static final String PROJECT = BASE + "git-project";
@@ -161,14 +163,6 @@ public class Configuration {
 			return Paths.getSettingsDirectory() + File.separator + "service.key";
 		}
 
-		public static String getTrident() {
-			return Paths.getCacheDirectory() + File.separator + "trident.jar";
-		}
-
-		public static String getSubstance() {
-			return Paths.getCacheDirectory() + File.separator + "substance.jar";
-		}
-
 		public static String getSettingsDirectory() {
 			return Paths.getHomeDirectory() + File.separator + "Settings";
 		}
@@ -201,6 +195,24 @@ public class Configuration {
 		public static String getUnixHome() {
 			final String home = System.getProperty("user.home");
 			return home == null ? "~" : home;
+		}
+
+		private static Map<String, File> cachableResources;
+
+		public static Map<String, File> getCachableResources() {
+			if (cachableResources == null) {
+				cachableResources = new HashMap<String, File>(8);
+				cachableResources.put(URLs.CLIENTPATCH, new File(getCacheDirectory(), "ms.dat"));
+				cachableResources.put(URLs.VERSION, new File(getCacheDirectory(), "version.txt"));
+				cachableResources.put(URLs.VERSION_KILL, new File(getCacheDirectory(), "version-kill.txt"));
+				cachableResources.put(URLs.AD_INFO, new File(getCacheDirectory(), "ads.txt"));
+				cachableResources.put(URLs.MONITORING_CONTROL, new File(getCacheDirectory(), "monitoring-control.txt"));
+				if (SKINNED) {
+					cachableResources.put(URLs.TRIDENT, new File(getCacheDirectory(), "trident.jar"));
+					cachableResources.put(URLs.SUBSTANCE, new File(getCacheDirectory(), "substance.jar"));
+				}
+			}
+			return cachableResources;
 		}
 	}
 
