@@ -293,7 +293,7 @@ public class SettingsManager extends JDialog {
 		panel.add(panelInternal);
 
 		if (!Configuration.RUNNING_FROM_JAR) {
-			panel.add(panelBot); //hide beta-modscript from non-dev builds.
+			panel.add(panelBot); // hide beta client patch from non-development builds
 			panel.add(panelWeb); // hide web options from non-development builds for now
 		}
 
