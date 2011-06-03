@@ -73,7 +73,7 @@ public class SplashAd extends JDialog implements MouseListener {
 	}
 
 	private boolean sync() {
-		HashMap<String, String> keys = null;
+		HashMap<String, String> keys;
 
 		try {
 			final File cache = Configuration.Paths.getCachableResources().get(Configuration.Paths.URLs.AD_INFO);
@@ -122,26 +122,20 @@ public class SplashAd extends JDialog implements MouseListener {
 		}, display);
 	}
 
-	@Override
 	public void mouseClicked(final MouseEvent e) {
 	}
 
-	@Override
 	public void mousePressed(final MouseEvent e) {
 	}
 
-	@Override
 	public void mouseReleased(final MouseEvent e) {
 		BotGUI.openURL(link);
 		dispose();
 	}
 
-	@Override
 	public void mouseEntered(final MouseEvent e) {
 	}
 
-	@Override
 	public void mouseExited(final MouseEvent e) {
 	}
-
 }
