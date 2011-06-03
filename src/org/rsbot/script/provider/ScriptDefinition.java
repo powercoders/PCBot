@@ -1,5 +1,6 @@
 package org.rsbot.script.provider;
 
+import org.rsbot.script.ScriptManifest.Tags;
 import org.rsbot.util.StringUtil;
 
 import java.util.ArrayList;
@@ -31,15 +32,30 @@ public class ScriptDefinition implements Comparable<ScriptDefinition> {
 	}
 
 	public List<String> getKeywords() {
-		final ArrayList<String> list = new ArrayList<String>(keywords.length);
-		if (keywords == null) {
-			return list;
+		final ArrayList<String> list;
+		if (tags!= null) {
+			list = new ArrayList<String>(keywords.length + tags.length);
+		} else {
+			list = new ArrayList<String>(keywords.length);
 		}
-		for (int i = 0; i < keywords.length; i++) {
-			for (String sub : keywords[i].split("&|,|;|\\s")) {
-				sub = sub.trim().toLowerCase();
-				if (sub.length() != 0) {
-					list.add(sub);
+		
+		if (keywords != null) {
+			for (int i = 0; i < keywords.length; i++) {
+				for (String sub : keywords[i].split("&|,|;|\\s")) {
+					sub = sub.trim().toLowerCase();
+					if (sub.length() != 0) {
+						list.add(sub);
+					}
+				}
+			}
+		}
+		if (tags != null) {
+			for (int i = 0; i < tags.length; i++) {
+				for (String sub : tags[i].tag().split("&|,|;|\\s")) {
+					sub = sub.trim().toLowerCase();
+					if (sub.length() != 0) {
+						list.add(sub);
+					}
 				}
 			}
 		}
@@ -57,6 +73,8 @@ public class ScriptDefinition implements Comparable<ScriptDefinition> {
 	public String[] authors;
 
 	public String[] keywords;
+	
+	public Tags[] tags;
 
 	public String website;
 

@@ -4,6 +4,7 @@ import org.rsbot.Configuration;
 import org.rsbot.bot.Bot;
 import org.rsbot.gui.component.JComboCheckBox;
 import org.rsbot.script.Script;
+import org.rsbot.script.ScriptManifest.Tags;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
 import org.rsbot.script.provider.FileScriptSource;
@@ -405,9 +406,19 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				if (find.length() != 0 && !def.name.toLowerCase().contains(find)) {
 					continue;
 				}
-				final ArrayList<String> list = new ArrayList<String>(def.keywords.length);
+				final ArrayList<String> list;
+				if (def.tags!= null) {
+					list = new ArrayList<String>(def.keywords.length + def.tags.length);
+				} else {
+					list = new ArrayList<String>(def.keywords.length);
+				}
 				for (final String key : def.keywords) {
 					list.add(key.toLowerCase());
+				}
+				if (def.tags!= null) {
+					for (final Tags tag : def.tags) {
+						list.add(tag.tag().toLowerCase());
+					}
 				}
 				boolean hit = true;
 				for (final String key : keys) {
