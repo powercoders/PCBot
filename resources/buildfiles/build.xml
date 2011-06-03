@@ -1,5 +1,5 @@
 <project>
-    <property name="base.dir" value=".."/>
+    <property name="base.dir" value="../.."/>
     <property name="src.dir" value="${base.dir}/src"/>
     <property name="resource.dir" value="${base.dir}/resources"/>
     <property name="build.dir" value="${base.dir}/build"/>
