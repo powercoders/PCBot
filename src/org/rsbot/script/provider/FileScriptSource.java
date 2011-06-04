@@ -139,7 +139,6 @@ public class FileScriptSource implements ScriptSource {
 			def.authors = manifest.authors();
 			def.version = manifest.version();
 			def.keywords = manifest.keywords();
-			def.tags = manifest.tags();
 			def.description = manifest.description();
 			def.website = manifest.website();
 			def.clazz = clazz;
