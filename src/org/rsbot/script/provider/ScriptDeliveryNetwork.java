@@ -17,11 +17,13 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import static org.rsbot.script.Script.Category.valueOf;
+
 /**
  * @author Paris
  */
 public class ScriptDeliveryNetwork implements ScriptSource {
-	private static final Logger log = Logger.getLogger("ScriptDelivery");
+	private static final Logger log = Logger.getLogger("Script Delivery");
 	private static ScriptDeliveryNetwork instance;
 	private URL base;
 	final File manifest;
@@ -41,6 +43,10 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 		return new File(Configuration.Paths.getCacheDirectory(), "sdn-" + name + ".txt");
 	}
 
+	private static Script.Category getCategory(final String category) {
+		return valueOf(category);
+	}
+
 	private static void parseManifests(final HashMap<String, HashMap<String, String>> entries, final List<ScriptDefinition> defs) {
 		for (final Entry<String, HashMap<String, String>> entry : entries.entrySet()) {
 			final ScriptDefinition def = new ScriptDefinition();
@@ -53,6 +59,9 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 			def.authors = values.get("authors").split(ScriptList.DELIMITER);
 			def.keywords = values.get("keywords").split(ScriptList.DELIMITER);
 			def.website = values.get("website");
+			if (values.get("category") != null) {
+			def.category = getCategory(values.get("category"));
+			}
 			defs.add(def);
 		}
 	}
@@ -75,7 +84,6 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 		}
 	}
 
-	@Override
 	public List<ScriptDefinition> list() {
 		final ArrayList<ScriptDefinition> defs = new ArrayList<ScriptDefinition>();
 		refresh(false);
@@ -105,7 +113,6 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 		return store;
 	}
 
-	@Override
 	public Script load(ScriptDefinition def) throws ServiceException {
 		final File store = getCacheDirectory();
 		final File file = new File(store, def.path);

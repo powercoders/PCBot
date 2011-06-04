@@ -25,63 +25,96 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 	private int id = -1;
 	private long lastNotice;
 
-	/**
-	 * Called before loop() is first called, after this script has
-	 * been initialized with all method providers. Override to
-	 * perform any initialization or prevent script start.
-	 *
-	 * @return <tt>true</tt> if the script can start.
-	 */
-	public boolean onStart() {
-		return true;
+	public enum Category {
+		AGILITY("Agility"), COMBAT("Combat"), CONSTRUCTION("Construction"), COOKING("Cooking"), CRAFTING("Crafting"),
+		FARMING("Farming"), FIREMAKING("Firemaiking"), FISHING("Fishing"), FLETCHING("Fletching"), HERBLORE("Herblore"),
+		HUNTER("Hunter"), MAGIC("Magic"), MINING("Mining"), PRAYER("Prayer"), RANGING("Ranging"), RUNECRAFTING("Runecrafting"),
+		SLAYER("Slayer"), SMITHING("Smithing"), SUMMONING("Summoning"), THEIVING("Theiving"), WOODCUTTING("Woodcutting"),
+		MONEY_MAKING("Money Making"), MINIGAMES("Mini Games"), OTHER("Other");
+
+		final String name;
+
+		Category(final String name) {
+			this.name = name;
+		}
+
+		public String description() {
+			return name;
+		}
+	}
+
+	private void blockEvents(final boolean paint) {
+		for (final Script s : delegates) {
+			ctx.bot.getEventManager().removeListener(s);
+			if (paint && s instanceof PaintListener) {
+				ctx.bot.getEventManager().addListener(s, EventMulticaster.PAINT_EVENT);
+			}
+		}
+		ctx.bot.getEventManager().removeListener(this);
+		if (paint && this instanceof PaintListener) {
+			ctx.bot.getEventManager().addListener(this, EventMulticaster.PAINT_EVENT);
+		}
+	}
+
+	private boolean checkForRandoms() {
+		if (ctx.bot.disableRandoms) {
+			return false;
+		}
+		for (final Random random : ctx.bot.getScriptHandler().getRandoms()) {
+			if (random.isEnabled() && !(ctx.bot.disableAutoLogin && random instanceof LoginBot)) {
+				if (random.activateCondition()) {
+					this.random = true;
+					blockEvents(false);
+					random.run(this);
+					unblockEvents();
+					this.random = false;
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
-	 * Called when a break is initiated, before the logout.
-	 * Override it to implement in your script.
+	 * For internal use only. Deactivates this script if the appropriate id is
+	 * provided.
 	 *
-	 * @return <tt>true</tt> if a break can be initiated.
+	 * @param id The id from ScriptHandler.
 	 */
-	public boolean onBreakStart() {
-		return true;
+	public final void deactivate(final int id) {
+		if (id != this.id) {
+			throw new IllegalStateException("Invalid id!");
+		}
+		running = false;
 	}
 
 	/**
-	 * Called when a break is initiated, before the login.
-	 * Override it to implement in your script.
+	 * Initializes the provided script with this script's method context and
+	 * adds the delegate as a listener to the event manager, allowing it to
+	 * receive client events. The script will be stored as a delegate of this
+	 * script and removed from the event manager when this script is stopped.
+	 * The onStart(), loop() and onFinish() methods are not automatically called
+	 * on the delegate.
+	 *
+	 * @param script The script to delegate to.
 	 */
-	public void onBreakFinish() {
-
+	public final void delegateTo(final Script script) {
+		script.init(ctx);
+		ctx.bot.getEventManager().addListener(script);
+		delegates.add(script);
 	}
 
 	/**
-	 * The main loop. Called if you return true from onStart, then continuously until
-	 * a negative integer is returned or the script stopped externally. When this script
-	 * is paused this method will not be called until the script is resumed. Avoid causing
-	 * execution to pause using sleep() within this method in favor of returning the number
-	 * of milliseconds to sleep. This ensures that pausing and anti-randoms perform normally.
+	 * Get an accessible and isolated directory for reading and writing files.
 	 *
-	 * @return The number of milliseconds that the manager should sleep before
-	 *         calling it again. Returning a negative number will deactivate the script.
+	 * @return A unique per-script directory path with file IO permissions.
 	 */
-	public abstract int loop();
-
-	/**
-	 * Override to perform any clean up on script stopScript.
-	 */
-	public void onFinish() {
-
-	}
-
-	/**
-	 * Initializes this script with another script's
-	 * context.
-	 *
-	 * @param script The context providing Script.
-	 * @see #delegateTo(Script)
-	 */
-	public final void init(final Script script) {
-		init(script.ctx);
+	public File getCacheDirectory() {
+		final File dir = new File(Configuration.Paths.getScriptCacheDirectory(), getClass().getName());
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		return dir;
 	}
 
 	/**
@@ -96,62 +129,23 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 	}
 
 	/**
-	 * Initializes the provided script with this script's
-	 * method context and adds the delegate as a listener
-	 * to the event manager, allowing it to receive client
-	 * events. The script will be stored as a delegate of
-	 * this script and removed from the event manager when
-	 * this script is stopped. The onStart(), loop() and
-	 * onFinish() methods are not automatically called on
-	 * the delegate.
+	 * Initializes this script with another script's context.
 	 *
-	 * @param script The script to delegate to.
+	 * @param script The context providing Script.
+	 * @see #delegateTo(Script)
 	 */
-	public final void delegateTo(final Script script) {
-		script.init(ctx);
-		ctx.bot.getEventManager().addListener(script);
-		delegates.add(script);
+	public final void init(final Script script) {
+		init(script.ctx);
 	}
 
 	/**
-	 * For internal use only. Deactivates this script if
-	 * the appropriate id is provided.
+	 * Returns whether or not the loop of this script is able to receive control
+	 * (i.e. not paused, stopped or in random).
 	 *
-	 * @param id The id from ScriptHandler.
+	 * @return <tt>true</tt> if active; otherwise <tt>false</tt>.
 	 */
-	public final void deactivate(final int id) {
-		if (id != this.id) {
-			throw new IllegalStateException("Invalid id!");
-		}
-		running = false;
-	}
-
-	/**
-	 * For internal use only. Sets the pool id of this script.
-	 *
-	 * @param id The id from ScriptHandler.
-	 */
-	public final void setID(final int id) {
-		if (this.id != -1) {
-			throw new IllegalStateException("Already added to pool!");
-		}
-		this.id = id;
-	}
-
-	/**
-	 * Pauses/resumes this script.
-	 *
-	 * @param paused <tt>true</tt> to pause; <tt>false</tt> to resume.
-	 */
-	public final void setPaused(final boolean paused) {
-		if (running && !random) {
-			if (paused) {
-				blockEvents(true);
-			} else {
-				unblockEvents();
-			}
-		}
-		this.paused = paused;
+	public final boolean isActive() {
+		return running && !paused && !random;
 	}
 
 	/**
@@ -173,40 +167,53 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 	}
 
 	/**
-	 * Returns whether or not the loop of this script is able to
-	 * receive control (i.e. not paused, stopped or in random).
+	 * The main loop. Called if you return true from onStart, then continuously
+	 * until a negative integer is returned or the script stopped externally.
+	 * When this script is paused this method will not be called until the
+	 * script is resumed. Avoid causing execution to pause using sleep() within
+	 * this method in favor of returning the number of milliseconds to sleep.
+	 * This ensures that pausing and anti-randoms perform normally.
 	 *
-	 * @return <tt>true</tt> if active; otherwise <tt>false</tt>.
+	 * @return The number of milliseconds that the manager should sleep before
+	 *         calling it again. Returning a negative number will deactivate the
+	 *         script.
 	 */
-	public final boolean isActive() {
-		return running && !paused && !random;
+	public abstract int loop();
+
+	/**
+	 * Called when a break is initiated, before the login. Override it to
+	 * implement in your script.
+	 */
+	public void onBreakFinish() {
+
 	}
 
 	/**
-	 * Stops the current script without logging out.
+	 * Called when a break is initiated, before the logout. Override it to
+	 * implement in your script.
+	 *
+	 * @return <tt>true</tt> if a break can be initiated.
 	 */
-	public void stopScript() {
-		stopScript(false);
+	public boolean onBreakStart() {
+		return true;
 	}
 
 	/**
-	 * Stops the current script; player can be logged out before
-	 * the script is stopped.
-	 *
-	 * @param logout <tt>true</tt> if the player should be logged
-	 *               out before the script is stopped.
+	 * Override to perform any clean up on script stopScript.
 	 */
-	public void stopScript(final boolean logout) {
-		log.info("Script stopping...");
-		if (logout) {
-			if (bank.isOpen()) {
-				bank.close();
-			}
-			if (game.isLoggedIn()) {
-				game.logout(false);
-			}
-		}
-		running = false;
+	public void onFinish() {
+
+	}
+
+	/**
+	 * Called before loop() is first called, after this script has been
+	 * initialized with all method providers. Override to perform any
+	 * initialization or prevent script start.
+	 *
+	 * @return <tt>true</tt> if the script can start.
+	 */
+	public boolean onStart() {
+		return true;
 	}
 
 	public void run() {
@@ -295,36 +302,59 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 		id = -1;
 	}
 
-	private boolean checkForRandoms() {
-		if (ctx.bot.disableRandoms) {
-			return false;
+	/**
+	 * For internal use only. Sets the pool id of this script.
+	 *
+	 * @param id The id from ScriptHandler.
+	 */
+	public final void setID(final int id) {
+		if (this.id != -1) {
+			throw new IllegalStateException("Already added to pool!");
 		}
-		for (final Random random : ctx.bot.getScriptHandler().getRandoms()) {
-			if (random.isEnabled() && !(ctx.bot.disableAutoLogin && random instanceof LoginBot)) {
-				if (random.activateCondition()) {
-					this.random = true;
-					blockEvents(false);
-					random.run(this);
-					unblockEvents();
-					this.random = false;
-					return true;
-				}
-			}
-		}
-		return false;
+		this.id = id;
 	}
 
-	private void blockEvents(final boolean paint) {
-		for (final Script s : delegates) {
-			ctx.bot.getEventManager().removeListener(s);
-			if (paint && s instanceof PaintListener) {
-				ctx.bot.getEventManager().addListener(s, EventMulticaster.PAINT_EVENT);
+	/**
+	 * Pauses/resumes this script.
+	 *
+	 * @param paused <tt>true</tt> to pause; <tt>false</tt> to resume.
+	 */
+	public final void setPaused(final boolean paused) {
+		if (running && !random) {
+			if (paused) {
+				blockEvents(true);
+			} else {
+				unblockEvents();
 			}
 		}
-		ctx.bot.getEventManager().removeListener(this);
-		if (paint && this instanceof PaintListener) {
-			ctx.bot.getEventManager().addListener(this, EventMulticaster.PAINT_EVENT);
+		this.paused = paused;
+	}
+
+	/**
+	 * Stops the current script without logging out.
+	 */
+	public void stopScript() {
+		stopScript(false);
+	}
+
+	/**
+	 * Stops the current script; player can be logged out before the script is
+	 * stopped.
+	 *
+	 * @param logout <tt>true</tt> if the player should be logged out before the
+	 *               script is stopped.
+	 */
+	public void stopScript(final boolean logout) {
+		log.info("Script stopping...");
+		if (logout) {
+			if (bank.isOpen()) {
+				bank.close();
+			}
+			if (game.isLoggedIn()) {
+				game.logout(false);
+			}
 		}
+		running = false;
 	}
 
 	private void unblockEvents() {
@@ -334,18 +364,5 @@ public abstract class Script extends Methods implements EventListener, Runnable 
 		}
 		ctx.bot.getEventManager().removeListener(this);
 		ctx.bot.getEventManager().addListener(this);
-	}
-
-	/**
-	 * Get an accessible and isolated directory for reading and writing files.
-	 *
-	 * @return A unique per-script directory path with file IO permissions.
-	 */
-	public File getCacheDirectory() {
-		final File dir = new File(Configuration.Paths.getScriptCacheDirectory(), getClass().getName());
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-		return dir;
 	}
 }

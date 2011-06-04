@@ -25,6 +25,7 @@ public class ScriptList {
 			printValue(out, "authors", item.authors);
 			printValue(out, "keywords", item.keywords);
 			printValue(out, "website", item.website);
+			printValue(out, "category", item.category.description());
 		}
 	}
 

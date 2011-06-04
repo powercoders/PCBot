@@ -129,7 +129,7 @@ public class LoadScreen extends JFrame {
 			private final Logger log = Logger.getLogger("EXCEPTION");
 
 			public void uncaughtException(final Thread t, final Throwable e) {
-				log.logp(Level.SEVERE, "EXCEPTION", "", "Unhandled exception in thread " + t.getName() + ": ", e);
+				log.log(Level.SEVERE, "Unhandled exception in thread " + t.getName() + ": " + e.getMessage());
 			}
 		});
 		System.setErr(new PrintStream(new LogOutputStream(Logger.getLogger("STDERR"), Level.SEVERE), true));

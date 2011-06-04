@@ -1,56 +1,23 @@
 package org.rsbot.script.provider;
 
+import org.rsbot.script.Script;
 import org.rsbot.util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.List;
-
+import java.util.Collections;
 
 /**
  * @author Paris
  */
 public class ScriptDefinition implements Comparable<ScriptDefinition> {
 
-	public String getName() {
-		return StringUtil.stripHtml(name);
-	}
-
-	public String getDescription() {
-		return StringUtil.stripHtml(description);
-	}
-
-	public String getAuthors() {
-		final StringBuilder s = new StringBuilder(16);
-		for (int i = 0; i < authors.length; i++) {
-			if (i > 0) {
-				s.append(i == authors.length - 1 ? " and " : ", ");
-			}
-			s.append(authors[i]);
-		}
-		return StringUtil.stripHtml(s.toString());
-	}
-
-	public List<String> getKeywords() {
-		final ArrayList<String> list = new ArrayList<String>(keywords.length);
-		if (keywords == null) {
-			return list;
-		}
-		for (String keyword : keywords) {
-			for (String sub : keyword.split("&|,|;|\\s")) {
-				sub = sub.trim().toLowerCase();
-				if (sub.length() != 0) {
-					list.add(sub);
-				}
-			}
-		}
-		return list;
-	}
-
 	public int id;
 
 	public String name;
 
 	public double version;
+
+	public Script.Category category;
 
 	public String description;
 
@@ -69,6 +36,42 @@ public class ScriptDefinition implements Comparable<ScriptDefinition> {
 		return c == 0 ? Double.compare(version, def.version) : c;
 	}
 
+	public String getAuthors() {
+		final StringBuilder s = new StringBuilder(16);
+		for (int i = 0; i < authors.length; i++) {
+			if (i > 0) {
+				s.append(i == authors.length - 1 ? " and " : ", ");
+			}
+			s.append(authors[i]);
+		}
+		return StringUtil.stripHtml(s.toString());
+	}
+
+	public String getDescription() {
+		return StringUtil.stripHtml(description);
+	}
+
+	public String getName() {
+		return StringUtil.stripHtml(name);
+	}
+
+	public String[] getKeywords() {
+		final ArrayList<String> s = new ArrayList<String>(keywords.length);
+		if (keywords == null) {
+			return new String[]{""};
+		}
+		for (String keyword : keywords) {
+			for (String sub : keyword.split("&|,|;|\\s")) {
+				sub = sub.trim().toLowerCase();
+				if (sub.length() != 0) {
+					s.add(sub);
+				}
+			}
+		}
+		Collections.sort(s);
+		return s.toArray(new String[0]);
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder s = new StringBuilder(46);
@@ -77,6 +80,8 @@ public class ScriptDefinition implements Comparable<ScriptDefinition> {
 		s.append(version);
 		s.append(" by ");
 		s.append(getAuthors());
+		s.append(" Category: ");
+		s.append(category.description());
 		return s.toString();
 	}
 }

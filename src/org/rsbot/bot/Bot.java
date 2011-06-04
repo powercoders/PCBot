@@ -198,7 +198,14 @@ public class Bot {
 		}
 		return backBuffer.getGraphics();
 	}
-
+	
+	public Graphics2D get2DGraphics() {
+		if (backBuffer.getGraphics() == null) {
+			return (Graphics2D) image.getGraphics();
+		}
+		return (Graphics2D) backBuffer.getGraphics();
+	}
+	
 	public BufferedImage getImage() {
 		return image;
 	}
