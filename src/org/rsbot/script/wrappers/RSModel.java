@@ -71,7 +71,7 @@ public abstract class RSModel extends MethodProvider {
 	 * @return true of the point is within the bounds of the model
 	 */
 	private boolean contains(final Point p) {
-        // TODO do triangular collision detection as the client does it. Much faster
+		// TODO do triangular collision detection as the client does it. Much faster
 		final Polygon[] triangles = getTriangles();
 		for (final Polygon poly : triangles) {
 			if (poly.contains(p)) {
@@ -189,12 +189,12 @@ public abstract class RSModel extends MethodProvider {
 	 */
 	public Point[] getPoints() {
 		final ArrayList<Point> out = new ArrayList<Point>(numVertices); // Assume every vertex is on screen
-        final int[][] points = projectVertices();
-        for(int index = 0; index < numVertices; index++)
-        {
-            if(points[index][2] == 1)
-                out.add(new Point(points[index][0], points[index][1]));
-        }
+		final int[][] points = projectVertices();
+		for (int index = 0; index < numVertices; index++) {
+			if (points[index][2] == 1) {
+				out.add(new Point(points[index][0], points[index][1]));
+			}
+		}
 		return out.toArray(new Point[out.size()]);
 	}
 
@@ -206,22 +206,19 @@ public abstract class RSModel extends MethodProvider {
 	 */
 	public Point getPointOnScreen() {
 		final int[][] points = projectVertices();
-        Point point = new Point();
-        for(int index = 0; index < numVertices; index++)
-        {
-            if(points[index][2] == 1)
-            {
-                point.x = points[index][0];
-                point.y = points[index][1];
-                if(methods.calc.pointOnScreen(point))
-                {
-                    return point;
-                }
-            }
-        }
-        int index = random(0, numVertices);
-        point.x = points[index][0];
-        point.y = points[index][1];
+		Point point = new Point();
+		for (int index = 0; index < numVertices; index++) {
+			if (points[index][2] == 1) {
+				point.x = points[index][0];
+				point.y = points[index][1];
+				if (methods.calc.pointOnScreen(point)) {
+					return point;
+				}
+			}
+		}
+		int index = random(0, numVertices);
+		point.x = points[index][0];
+		point.y = points[index][1];
 		return point;
 	}
 
@@ -236,9 +233,9 @@ public abstract class RSModel extends MethodProvider {
 		try {
 			/* Add X and Y of all points, to get a rough central point */
 			int x = 0, y = 0, total = 0;
-            int[][] points = projectVertices();
+			int[][] points = projectVertices();
 			for (int index = 0; index < numVertices; index++) {
-				if(points[index][2] == 1) {
+				if (points[index][2] == 1) {
 					x += points[index][0];
 					y += points[index][1];
 					total++;
@@ -254,9 +251,9 @@ public abstract class RSModel extends MethodProvider {
 			double dist = 20000;
 
 			for (int index = 0; index < numVertices; index++) {
-				if(points[index][2] == 1) {
-					point.x= points[index][0];
-					point.y= points[index][1];
+				if (points[index][2] == 1) {
+					point.x = points[index][0];
+					point.y = points[index][1];
 					if (!methods.calc.pointOnScreen(point)) {
 						continue;
 					}
@@ -281,14 +278,14 @@ public abstract class RSModel extends MethodProvider {
 	 */
 	public Polygon[] getTriangles() {
 		int[][] points = projectVertices();
-        ArrayList<Polygon> polys = new ArrayList<Polygon>(numFaces);
-        for (int index = 0; index < numFaces; index++) {
+		ArrayList<Polygon> polys = new ArrayList<Polygon>(numFaces);
+		for (int index = 0; index < numFaces; index++) {
 			int index1 = indices1[index];
 			int index2 = indices2[index];
 			int index3 = indices3[index];
 
-            int xPoints[] = new int[3];
-            int yPoints[] = new int[3];
+			int xPoints[] = new int[3];
+			int yPoints[] = new int[3];
 
 			xPoints[0] = points[index1][0];
 			yPoints[0] = points[index1][1];
@@ -297,7 +294,7 @@ public abstract class RSModel extends MethodProvider {
 			xPoints[2] = points[index3][0];
 			yPoints[2] = points[index3][1];
 
-			if (points[index1][2]+points[index2][2]+points[index3][2] == 3) {
+			if (points[index1][2] + points[index2][2] + points[index3][2] == 3) {
 				polys.add(new Polygon(xPoints, yPoints, 3));
 			}
 		}
@@ -380,7 +377,7 @@ public abstract class RSModel extends MethodProvider {
 	 * @param graphics the graphics object to render on.
 	 */
 	public void drawWireFrame(Graphics graphics) {
-        int[][] screen = projectVertices();
+		int[][] screen = projectVertices();
 
 		// That was it for the projection part
 		for (int index = 0; index < numFaces; index++) {
@@ -395,7 +392,7 @@ public abstract class RSModel extends MethodProvider {
 			int point3X = screen[index3][0];
 			int point3Y = screen[index3][1];
 
-			if (screen[index1][2]+screen[index2][2]+screen[index3][2] == 3) {
+			if (screen[index1][2] + screen[index2][2] + screen[index3][2] == 3) {
 				graphics.drawLine(point1X, point1Y, point2X, point2Y);
 				graphics.drawLine(point2X, point2Y, point3X, point3Y);
 				graphics.drawLine(point3X, point3Y, point1X, point1Y);
@@ -403,78 +400,78 @@ public abstract class RSModel extends MethodProvider {
 		}
 	}
 
-    /**
-     * This projects all the models vertices to screen space.
-     *
-     * @return two dimensional array. The data format is
-     * posX = result[vertexIndex][0]
-     * posY = result[vertexIndex][1]
-     * visibleOnScreen = (result[vertexIndex][2] == 1);
-     */
-    private int[][] projectVertices() {
-        Calculations.RenderData renderData = methods.calc.renderData;
-        Calculations.Render render = methods.calc.render;
+	/**
+	 * This projects all the models vertices to screen space.
+	 *
+	 * @return two dimensional array. The data format is
+	 *         posX = result[vertexIndex][0]
+	 *         posY = result[vertexIndex][1]
+	 *         visibleOnScreen = (result[vertexIndex][2] == 1);
+	 */
+	private int[][] projectVertices() {
+		Calculations.RenderData renderData = methods.calc.renderData;
+		Calculations.Render render = methods.calc.render;
 
-        update();
+		update();
 
-        final int locX = getLocalX();
-        final int locY = getLocalY();
+		final int locX = getLocalX();
+		final int locY = getLocalY();
 
-        int[][] screen = new int[numVertices][3];
+		int[][] screen = new int[numVertices][3];
 
-        float xOff = renderData.xOff;
-        float yOff = renderData.yOff;
-        float zOff = renderData.zOff;
+		float xOff = renderData.xOff;
+		float yOff = renderData.yOff;
+		float zOff = renderData.zOff;
 
-        float xX = renderData.xX;
-        float xY = renderData.xY;
-        float xZ = renderData.xZ;
-        float yX = renderData.yX;
-        float yY = renderData.yY;
-        float yZ = renderData.yZ;
-        float zX = renderData.zX;
-        float zY = renderData.zY;
-        float zZ = renderData.zZ;
+		float xX = renderData.xX;
+		float xY = renderData.xY;
+		float xZ = renderData.xZ;
+		float yX = renderData.yX;
+		float yY = renderData.yY;
+		float yZ = renderData.yZ;
+		float zX = renderData.zX;
+		float zY = renderData.zY;
+		float zZ = renderData.zZ;
 
-        int xFactor = render.xMultiplier;
-        int yFactor = render.yMultiplier;
+		int xFactor = render.xMultiplier;
+		int yFactor = render.yMultiplier;
 
-        boolean isFixed = methods.game.isFixed();
+		boolean isFixed = methods.game.isFixed();
 
-        int height = methods.calc.tileHeight(locX, locY);
-        for (int index = 0; index < numVertices; index++) {
-            int vertexX = xPoints[index] + locX;
-            int vertexY = yPoints[index] + height;
-            int vertexZ = zPoints[index] + locY;
+		int height = methods.calc.tileHeight(locX, locY);
+		for (int index = 0; index < numVertices; index++) {
+			int vertexX = xPoints[index] + locX;
+			int vertexY = yPoints[index] + height;
+			int vertexZ = zPoints[index] + locY;
 
-            final float _z = zOff + (int) (zX * vertexX + zY * vertexY + zZ * vertexZ);
-            if (_z >= render.zNear && _z <= render.zFar) {
-                final int _x = (int) (xFactor * ((int) xOff + (int) (xX * vertexX + xY
-                        * vertexY + xZ * vertexZ)) / _z);
-                final int _y = (int) (yFactor * ((int) yOff + (int) (yX * vertexX + yY
-                        * vertexY + yZ * vertexZ)) / _z);
-                if (_x >= render.absoluteX1 && _x <= render.absoluteX2 && _y >= render.absoluteY1 && _y <=
-                        render.absoluteY2) {
-                    if (isFixed) {
-                        screen[index][0] = (int) (_x - render.absoluteX1) + 4;
-                        screen[index][1] = (int) (_y - render.absoluteY1) + 4;
-                        screen[index][2] = 1;
-                    } else {
-                        screen[index][0] = (int) (_x - render.absoluteX1);
-                        screen[index][1] = (int) (_y - render.absoluteY1);
-                        screen[index][2] = 1;
-                    }
-                } else {
-                    screen[index][0] = -1;
-                    screen[index][1] = -1;
-                    screen[index][2] = 0;
-                }
-            } else {
-                screen[index][0] = -1;
-                screen[index][1] = -1;
-                screen[index][2] = 0;
-            }
-        }
-        return screen;
-    }
+			final float _z = zOff + (int) (zX * vertexX + zY * vertexY + zZ * vertexZ);
+			if (_z >= render.zNear && _z <= render.zFar) {
+				final int _x = (int) (xFactor * ((int) xOff + (int) (xX * vertexX + xY
+						* vertexY + xZ * vertexZ)) / _z);
+				final int _y = (int) (yFactor * ((int) yOff + (int) (yX * vertexX + yY
+						* vertexY + yZ * vertexZ)) / _z);
+				if (_x >= render.absoluteX1 && _x <= render.absoluteX2 && _y >= render.absoluteY1 && _y <=
+						render.absoluteY2) {
+					if (isFixed) {
+						screen[index][0] = (int) (_x - render.absoluteX1) + 4;
+						screen[index][1] = (int) (_y - render.absoluteY1) + 4;
+						screen[index][2] = 1;
+					} else {
+						screen[index][0] = (int) (_x - render.absoluteX1);
+						screen[index][1] = (int) (_y - render.absoluteY1);
+						screen[index][2] = 1;
+					}
+				} else {
+					screen[index][0] = -1;
+					screen[index][1] = -1;
+					screen[index][2] = 0;
+				}
+			} else {
+				screen[index][0] = -1;
+				screen[index][1] = -1;
+				screen[index][2] = 0;
+			}
+		}
+		return screen;
+	}
 }

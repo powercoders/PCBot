@@ -9,9 +9,10 @@ public class Account extends MethodProvider {
 	public Account(final MethodContext ctx) {
 		super(ctx);
 	}
-   public boolean setAccount(final String name) {
-	  return methods.bot.setAccount(name);
-}
+
+	public boolean setAccount(final String name) {
+		return methods.bot.setAccount(name);
+	}
 
 	/**
 	 * The account name.
