@@ -10,6 +10,10 @@ public class Account extends MethodProvider {
 		super(ctx);
 	}
 
+	public boolean setAccount(final String name) {
+		return methods.bot.setAccount(name);
+	}
+
 	/**
 	 * The account name.
 	 *

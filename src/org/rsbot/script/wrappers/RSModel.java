@@ -10,7 +10,6 @@ import org.rsbot.script.util.Filter;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 /**
  * A screen space model.
@@ -72,10 +71,7 @@ public abstract class RSModel extends MethodProvider {
 	 * @return true of the point is within the bounds of the model
 	 */
 	private boolean contains(final Point p) {
-		if (this == null) {
-			return false;
-		}
-
+		// TODO do triangular collision detection as the client does it. Much faster
 		final Polygon[] triangles = getTriangles();
 		for (final Polygon poly : triangles) {
 			if (poly.contains(p)) {
@@ -192,18 +188,14 @@ public abstract class RSModel extends MethodProvider {
 	 *         screen it will return null.
 	 */
 	public Point[] getPoints() {
-		if (this == null) {
-			return null;
-		}
-		final Polygon[] polys = getTriangles();
-		final Point[] points = new Point[polys.length * 3];
-		int index = 0;
-		for (final Polygon poly : polys) {
-			for (int i = 0; i < 3; i++) {
-				points[index++] = new Point(poly.xpoints[i], poly.ypoints[i]);
+		final ArrayList<Point> out = new ArrayList<Point>(numVertices); // Assume every vertex is on screen
+		final int[][] points = projectVertices();
+		for (int index = 0; index < numVertices; index++) {
+			if (points[index][2] == 1) {
+				out.add(new Point(points[index][0], points[index][1]));
 			}
 		}
-		return points;
+		return out.toArray(new Point[out.size()]);
 	}
 
 	/**
@@ -213,22 +205,21 @@ public abstract class RSModel extends MethodProvider {
 	 *         of an object.
 	 */
 	public Point getPointOnScreen() {
-		final ArrayList<Point> list = new ArrayList<Point>();
-		try {
-			final Polygon[] tris = getTriangles();
-			for (final Polygon p : tris) {
-				for (int j = 0; j < p.xpoints.length; j++) {
-					final Point firstPoint = new Point(p.xpoints[j], p.ypoints[j]);
-					if (methods.calc.pointOnScreen(firstPoint)) {
-						return firstPoint;
-					} else {
-						list.add(firstPoint);
-					}
+		final int[][] points = projectVertices();
+		Point point = new Point();
+		for (int index = 0; index < numVertices; index++) {
+			if (points[index][2] == 1) {
+				point.x = points[index][0];
+				point.y = points[index][1];
+				if (methods.calc.pointOnScreen(point)) {
+					return point;
 				}
 			}
-		} catch (final Exception ignored) {
 		}
-		return list.size() > 0 ? list.get(random(0, list.size())) : null;
+		int index = random(0, numVertices);
+		point.x = points[index][0];
+		point.y = points[index][1];
+		return point;
 	}
 
 	/**
@@ -242,29 +233,34 @@ public abstract class RSModel extends MethodProvider {
 		try {
 			/* Add X and Y of all points, to get a rough central point */
 			int x = 0, y = 0, total = 0;
-			for (final Polygon poly : getTriangles()) {
-				for (int i = 0; i < poly.npoints; i++) {
-					x += poly.xpoints[i];
-					y += poly.ypoints[i];
+			int[][] points = projectVertices();
+			for (int index = 0; index < numVertices; index++) {
+				if (points[index][2] == 1) {
+					x += points[index][0];
+					y += points[index][1];
 					total++;
 				}
 			}
 			final Point central = new Point(x / total, y / total);
+			final Point point = new Point();
 			/*
 			 * Find a real point on the character that is closest to the central
 			 * point
 			 */
-			Point curCentral = null;
+			Point curCentral = new Point();
 			double dist = 20000;
-			for (final Polygon poly : getTriangles()) {
-				for (int i = 0; i < poly.npoints; i++) {
-					final Point p = new Point(poly.xpoints[i], poly.ypoints[i]);
-					if (!methods.calc.pointOnScreen(p)) {
+
+			for (int index = 0; index < numVertices; index++) {
+				if (points[index][2] == 1) {
+					point.x = points[index][0];
+					point.y = points[index][1];
+					if (!methods.calc.pointOnScreen(point)) {
 						continue;
 					}
-					final double dist2 = methods.calc.distanceBetween(central, p);
-					if (curCentral == null || dist2 < dist) {
-						curCentral = p;
+					final double dist2 = methods.calc.distanceBetween(central, point);
+					if (dist2 < dist) {
+						curCentral.x = point.x;
+						curCentral.y = point.y;
 						dist = dist2;
 					}
 				}
@@ -281,27 +277,28 @@ public abstract class RSModel extends MethodProvider {
 	 * @return The on screen triangles of this model.
 	 */
 	public Polygon[] getTriangles() {
-		update();
-		final LinkedList<Polygon> polygons = new LinkedList<Polygon>();
-		final int locX = getLocalX();
-		final int locY = getLocalY();
-		final int len = numFaces;
-		final int height = methods.calc.tileHeight(locX, locY);
-		for (int i = 0; i < len; ++i) {
-			final Point one = methods.calc.worldToScreen(locX + xPoints[indices1[i]],
-					locY + zPoints[indices1[i]], height + yPoints[indices1[i]]);
-			final Point two = methods.calc.worldToScreen(locX + xPoints[indices2[i]],
-					locY + zPoints[indices2[i]], height + yPoints[indices2[i]]);
-			final Point three = methods.calc.worldToScreen(locX
-					+ xPoints[indices3[i]], locY + zPoints[indices3[i]], height
-					+ yPoints[indices3[i]]);
+		int[][] points = projectVertices();
+		ArrayList<Polygon> polys = new ArrayList<Polygon>(numFaces);
+		for (int index = 0; index < numFaces; index++) {
+			int index1 = indices1[index];
+			int index2 = indices2[index];
+			int index3 = indices3[index];
 
-			if (one.x >= 0 && two.x >= 0 && three.x >= 0) {
-				polygons.add(new Polygon(new int[]{one.x, two.x, three.x},
-						new int[]{one.y, two.y, three.y}, 3));
+			int xPoints[] = new int[3];
+			int yPoints[] = new int[3];
+
+			xPoints[0] = points[index1][0];
+			yPoints[0] = points[index1][1];
+			xPoints[1] = points[index2][0];
+			yPoints[1] = points[index2][1];
+			xPoints[2] = points[index3][0];
+			yPoints[2] = points[index3][1];
+
+			if (points[index1][2] + points[index2][2] + points[index3][2] == 3) {
+				polys.add(new Polygon(xPoints, yPoints, 3));
 			}
 		}
-		return polygons.toArray(new Polygon[polygons.size()]);
+		return polys.toArray(new Polygon[polys.size()]);
 	}
 
 	/**
@@ -380,6 +377,38 @@ public abstract class RSModel extends MethodProvider {
 	 * @param graphics the graphics object to render on.
 	 */
 	public void drawWireFrame(Graphics graphics) {
+		int[][] screen = projectVertices();
+
+		// That was it for the projection part
+		for (int index = 0; index < numFaces; index++) {
+			int index1 = indices1[index];
+			int index2 = indices2[index];
+			int index3 = indices3[index];
+
+			int point1X = screen[index1][0];
+			int point1Y = screen[index1][1];
+			int point2X = screen[index2][0];
+			int point2Y = screen[index2][1];
+			int point3X = screen[index3][0];
+			int point3Y = screen[index3][1];
+
+			if (screen[index1][2] + screen[index2][2] + screen[index3][2] == 3) {
+				graphics.drawLine(point1X, point1Y, point2X, point2Y);
+				graphics.drawLine(point2X, point2Y, point3X, point3Y);
+				graphics.drawLine(point3X, point3Y, point1X, point1Y);
+			}
+		}
+	}
+
+	/**
+	 * This projects all the models vertices to screen space.
+	 *
+	 * @return two dimensional array. The data format is
+	 *         posX = result[vertexIndex][0]
+	 *         posY = result[vertexIndex][1]
+	 *         visibleOnScreen = (result[vertexIndex][2] == 1);
+	 */
+	private int[][] projectVertices() {
 		Calculations.RenderData renderData = methods.calc.renderData;
 		Calculations.Render render = methods.calc.render;
 
@@ -388,9 +417,7 @@ public abstract class RSModel extends MethodProvider {
 		final int locX = getLocalX();
 		final int locY = getLocalY();
 
-		int[] screenX = new int[numVertices];
-		int[] screenY = new int[numVertices];
-		boolean[] validVertices = new boolean[numVertices];
+		int[][] screen = new int[numVertices][3];
 
 		float xOff = renderData.xOff;
 		float yOff = renderData.yOff;
@@ -426,44 +453,25 @@ public abstract class RSModel extends MethodProvider {
 				if (_x >= render.absoluteX1 && _x <= render.absoluteX2 && _y >= render.absoluteY1 && _y <=
 						render.absoluteY2) {
 					if (isFixed) {
-						screenX[index] = (int) (_x - render.absoluteX1) + 4;
-						screenY[index] = (int) (_y - render.absoluteY1) + 4;
-						validVertices[index] = true;
+						screen[index][0] = (int) (_x - render.absoluteX1) + 4;
+						screen[index][1] = (int) (_y - render.absoluteY1) + 4;
+						screen[index][2] = 1;
 					} else {
-						screenX[index] = (int) (_x - render.absoluteX1);
-						screenY[index] = (int) (_y - render.absoluteY1);
-						validVertices[index] = true;
+						screen[index][0] = (int) (_x - render.absoluteX1);
+						screen[index][1] = (int) (_y - render.absoluteY1);
+						screen[index][2] = 1;
 					}
 				} else {
-					screenX[index] = -1;
-					screenY[index] = -1;
-					validVertices[index] = false;
+					screen[index][0] = -1;
+					screen[index][1] = -1;
+					screen[index][2] = 0;
 				}
 			} else {
-				screenX[index] = -1;
-				screenY[index] = -1;
-				validVertices[index] = false;
+				screen[index][0] = -1;
+				screen[index][1] = -1;
+				screen[index][2] = 0;
 			}
 		}
-
-		// That was it for the projection part
-		for (int index = 0; index < numFaces; index++) {
-			int index1 = indices1[index];
-			int index2 = indices2[index];
-			int index3 = indices3[index];
-
-			int point1X = screenX[index1];
-			int point1Y = screenY[index1];
-			int point2X = screenX[index2];
-			int point2Y = screenY[index2];
-			int point3X = screenX[index3];
-			int point3Y = screenY[index3];
-
-			if (validVertices[index1] && validVertices[index2] && validVertices[index3]) {
-				graphics.drawLine(point1X, point1Y, point2X, point2Y);
-				graphics.drawLine(point2X, point2Y, point3X, point3Y);
-				graphics.drawLine(point3X, point3Y, point1X, point1Y);
-			}
-		}
+		return screen;
 	}
 }
