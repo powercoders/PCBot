@@ -4,23 +4,20 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-
 public @interface ScriptManifest {
-
-	String[] authors();
-	
-	Script.Category category() default Script.Category.OTHER;
-
-	String description() default "";
-
-	String[] keywords() default {};
 
 	String name();
 
-	int requiresVersion() default 200;
-
 	double version() default 1.0;
 
+	String description() default "";
+
+	String[] authors();
+
+	String[] keywords() default {};
+
 	String website() default "";
+
+	int requiresVersion() default 200;
 
 }

@@ -4,7 +4,6 @@ import org.rsbot.bot.Bot;
 import org.rsbot.client.Client;
 import org.rsbot.script.internal.InputManager;
 import org.rsbot.script.internal.reflection.Reflection;
-import org.rsbot.script.paint.Paint;
 
 /**
  * For internal use to link MethodProviders.
@@ -184,11 +183,6 @@ public class MethodContext {
 	 * The singleton of Lobby
 	 */
 	public final Lobby lobby = new Lobby(this);
-	
-	/**
-	 * The singleton of Paint
-	 */
-	public final Paint paint = new Paint(this);
 
 	/**
 	 * The Bot's input manager

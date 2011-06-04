@@ -2,12 +2,10 @@ package org.rsbot.script.methods;
 
 import org.rsbot.Configuration;
 import org.rsbot.script.internal.reflection.Reflection;
-import org.rsbot.script.paint.Paint;
 import org.rsbot.script.wrappers.*;
 
 import javax.imageio.ImageIO;
-
-import java.awt.Color;
+import java.awt.*;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -156,10 +154,6 @@ public class Methods {
 	 */
 	protected Trade trade;
 	/**
-	 * The singleton of Utility
-	 */
-	protected Paint paint;
-	/**
 	 * The singleton of Web
 	 */
 	protected Web web;
@@ -215,7 +209,6 @@ public class Methods {
 		trade = ctx.trade;
 		web = ctx.web;
 		reflection = ctx.reflection;
-		paint = ctx.paint;
 	}
 
 	/**
