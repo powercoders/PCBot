@@ -150,9 +150,9 @@ public class Web extends MethodProvider {
 		PlaneTraverse finalTraverse = null;
 		for (PlaneTraverse traverse : traverses) {
 			if (traverse.destPlane() == end.getZ() && traverse.applicable()) {
-				final double travDist = traverse.getRoute().getDistance();
-				if (travDist < dist) {
-					dist = travDist;
+				final double tempDist = traverse.getRoute().getDistance();
+				if (tempDist < dist) {
+					dist = tempDist;
 					finalTraverse = traverse;
 				}
 			}
