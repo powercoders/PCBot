@@ -7,6 +7,7 @@ import org.rsbot.script.methods.MethodProvider;
 import org.rsbot.script.randoms.LoginBot;
 import org.rsbot.script.wrappers.RSPath;
 import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.RSWebTile;
 
 import java.util.Collections;
 
@@ -15,9 +16,10 @@ public class RouteStep extends MethodProvider {
 	private RSTile[] path = null;
 	private RSPath rspath = null;
 	private Teleport teleport = null;
+	private RSWebTile specialInteraction = null;
 
 	public static enum Type {
-		PATH, TELEPORT
+		PATH, TELEPORT, INTERACTION
 	}
 
 	public RouteStep(final MethodContext ctx, final Object step) {
@@ -25,6 +27,9 @@ public class RouteStep extends MethodProvider {
 		if (step instanceof Teleport) {
 			this.type = Type.TELEPORT;
 			this.teleport = (Teleport) step;
+		} else if (step instanceof RSWebTile) {
+			this.type = Type.INTERACTION;
+			this.specialInteraction = (RSWebTile) step;
 		} else if (step instanceof RSTile[]) {
 			this.type = Type.PATH;
 			this.path = (RSTile[]) step;
@@ -51,6 +56,8 @@ public class RouteStep extends MethodProvider {
 				return false;
 			}
 			switch (type) {
+				case INTERACTION:
+					return specialInteraction.perform();
 				case PATH:
 					if (path == null || inSomeRandom()) {//Recalculation says path is a no-go (or in a random).
 						return false;

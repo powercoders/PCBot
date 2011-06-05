@@ -146,12 +146,21 @@ public class Web extends MethodProvider {
 		}
 		PlaneHandler planeHandler = new PlaneHandler(methods);
 		PlaneTraverse[] traverses = planeHandler.get(methods.game.getPlane());
+		double dist = Double.MAX_VALUE;
+		PlaneTraverse finalTraverse = null;
 		for (PlaneTraverse traverse : traverses) {
-			if (traverse.destPlane() == end.getZ()) {//TODO more complex method--prevent infinite loops once made.
-				final Route route = planeRoute(start, end, traverse);
-				route.parent = lastRoute;
-				return generateRoutes(traverse.dest(), end, route);
+			if (traverse.destPlane() == end.getZ() && traverse.applicable()) {
+				final double travDist = traverse.getRoute().getDistance();
+				if (travDist < dist) {
+					dist = travDist;
+					finalTraverse = traverse;
+				}
 			}
+		}
+		if (finalTraverse != null) {
+			final Route route = planeRoute(start, end, finalTraverse);
+			route.parent = lastRoute;
+			return generateRoutes(finalTraverse.dest(), end, route);
 		}
 		return null;//No applicable plane transfers.
 	}
@@ -166,13 +175,11 @@ public class Web extends MethodProvider {
 			if (walkRoute == null) {
 				return null;
 			}
-			//TODO START
-			/* code interaction with plane transfer to add to web route */
+			walkRoute.add(new RouteStep(methods, transfer.getInteractionTile()));
 			return walkRoute;
-			//TODO END
 		}
-		//TODO Path generation.
-		RSTile[] path = generateTilePath(start, end);    //TODO add teleports object etc
+		//TODO Special path generation (teleports, npcs, objects).
+		RSTile[] path = generateTilePath(start, end);
 		if (path == null) {
 			return null;
 		}
