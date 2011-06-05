@@ -44,9 +44,25 @@ public class Web extends MethodProvider {
 	public RSTile getNearestBank(final RSTile tile) {
 		double dist = -1.0D;
 		RSTile finalTile = null;
-		final RSTile[] BANKS = {new RSTile(3093, 3243, 0), new RSTile(3209, 3219, 2), new RSTile(3270, 3167, 0),
-				new RSTile(3253, 3421, 0), new RSTile(3188, 3437, 0), new RSTile(3094, 3491, 0),
-				new RSTile(3097, 3496, 0), new RSTile(2946, 3369, 0), new RSTile(3012, 3356, 0)};
+		final RSTile[] BANKS = {
+				new RSTile(2330, 3688), new RSTile(2337, 3807),
+				new RSTile(2416, 3801), new RSTile(2100, 3919),
+				new RSTile(2620, 3895), new RSTile(2725, 3492),
+				new RSTile(2842, 3539), new RSTile(3093, 3494),
+				new RSTile(3163, 3486), new RSTile(3254, 3420),
+				new RSTile(3187, 3437), new RSTile(3511, 3478),
+				new RSTile(3689, 3467), new RSTile(3495, 3212),
+				new RSTile(3382, 3270), new RSTile(3269, 3167),
+				new RSTile(3305, 3123), new RSTile(3427, 2892),
+				new RSTile(3091, 3243), new RSTile(3013, 3355),
+				new RSTile(2946, 3367), new RSTile(2809, 3441),
+				new RSTile(2617, 3334), new RSTile(2655, 3283),
+				new RSTile(2351, 3167), new RSTile(2443, 3085),
+				new RSTile(2611, 3093), new RSTile(2403, 2841),
+				new RSTile(2554, 2839), new RSTile(2851, 2955),
+				new RSTile(3680, 2982), new RSTile(3448, 3720),
+				new RSTile(2584, 3421), new RSTile(3209, 3219, 2)
+		};
 		for (RSTile bank : BANKS) {
 			double cdist = methods.calc.distanceBetween(tile, bank);
 			if ((dist > cdist || dist == -1.0D) && (tile.getZ() == bank.getZ())) {
