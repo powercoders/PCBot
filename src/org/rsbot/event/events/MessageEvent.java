@@ -15,10 +15,11 @@ public class MessageEvent extends RSEvent {
 	public static final int MESSAGE_PRIVATE_IN = 3;
 	public static final int MESSAGE_PRIVATE_INFO = 5;
 	public static final int MESSAGE_PRIVATE_OUT = 6;
-	public static final int MESSAGE_CLAN_CHAT = 9;
+	public static final int MESSAGE_FRIENDS_CHAT = 9;
 	public static final int MESSAGE_CLIENT = 11;
 	public static final int MESSAGE_EXAMINE_NPC = 28;
 	public static final int MESSAGE_EXAMINE_OBJECT = 29;
+	public static final int MESSAGE_CLAN_CHAT = 41;
 	public static final int MESSAGE_TRADE_REQ = 100;
 	public static final int MESSAGE_ASSIST_REQ = 102;
 	public static final int MESSAGE_TRADE_INFO = 103;
