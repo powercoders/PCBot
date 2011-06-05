@@ -108,12 +108,14 @@ public class TeleportJewelry extends TeleportItem {
 	/**
 	 * Jewelry restriction for wilderness is > 30 instead of 20.
 	 * confirmed for:
-	 * Amulet of glory
+	 * <p>Amulet of glory
 	 * Combat bracelet
 	 * Skills necklace
 	 * Pharaoh's sceptre
 	 * Grand seed pod
-	 * Ring of Life
+	 * Ring of Life</p>
+	 *
+	 * @return If you're in the wilderness or not.
 	 */
 	private boolean deepWilderness() {
 		return methods.combat.getWildernessLevel() > 30;

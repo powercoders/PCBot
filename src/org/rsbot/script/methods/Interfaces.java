@@ -146,9 +146,9 @@ public class Interfaces extends MethodProvider {
 	 * Performs the given action on this RSInterfaceChild if it is showing
 	 * (valid).
 	 *
+	 * @param c      The component to interact with.
 	 * @param action The menu action to click.
-	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>
-	 *         .
+	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>.
 	 */
 	public boolean clickComponent(final RSComponent c, final String action) {
 		if (!c.isValid()) {

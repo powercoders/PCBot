@@ -242,12 +242,9 @@ public class AccountManager extends JDialog implements ActionListener {
 		final JToolBar bar = new JToolBar();
 		bar.setMargin(new Insets(1, 1, 1, 1));
 		bar.setFloatable(false);
-		removeButton = new JButton("Remove", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE)));
-		final JButton newButton = new JButton("Add", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_ADD)));
-		final JButton doneButton = new JButton("Save", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_REPORT_DISK)));
+		removeButton = new JButton("Remove", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE)));
+		final JButton newButton = new JButton("Add", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_ADD)));
+		final JButton doneButton = new JButton("Save", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REPORT_DISK)));
 		setTitle("Account Manager");
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(new TableSelectionListener());
@@ -296,8 +293,7 @@ public class AccountManager extends JDialog implements ActionListener {
 			final List<String> theList = new ArrayList<String>();
 			final Collection<AccountStore.Account> accountCollection = AccountManager.accountStore.list();
 			for (final AccountStore.Account anAccountCollection : accountCollection) {
-				final AccountStore.Account account = anAccountCollection;
-				theList.add(account.getUsername());
+				theList.add(anAccountCollection.getUsername());
 			}
 			return theList.toArray(new String[theList.size()]);
 		} catch (final Exception e) {
@@ -415,4 +411,22 @@ public class AccountManager extends JDialog implements ActionListener {
 		return false;
 	}
 
+	public static void addNewAccount(final String username, final String password) {
+		AccountStore.Account account = new AccountStore.Account(username);
+		account.setPassword(password);
+		accountStore.add(account);
+		try {
+			accountStore.save();
+		} catch (IOException ignored) {
+		}
+	}
+
+	public static void setAttribute(final String username, final String attribute, final String value) {
+		try {
+			accountStore.get(username).setAttribute(attribute, value);
+			accountStore.save();
+		} catch (IOException ignored) {
+		} catch (NullPointerException ignored) {
+		}
+	}
 }

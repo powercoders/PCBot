@@ -25,15 +25,15 @@ public class BotToolBar extends JToolBar {
 	public static final int PAUSE_SCRIPT = 1;
 	public static final int RESUME_SCRIPT = 2;
 
-	public static final ImageIcon ICON_HOME;
-	public static final ImageIcon ICON_BOT;
+	private static final ImageIcon ICON_HOME;
+	private static final ImageIcon ICON_BOT;
 
-	public static Image IMAGE_CLOSE;
-	public static final Image IMAGE_CLOSE_OVER;
+	private static Image IMAGE_CLOSE;
+	private static final Image IMAGE_CLOSE_OVER;
 
-	private static final int TABINDEX = 1;
-	private static final int BUTTONCOUNT = 6;
-	private static final int OPTIONBUTTONS = 4;
+	private static final int TAB_INDEX = 1;
+	private static final int BUTTON_COUNT = 6;
+	private static final int OPTION_BUTTONS = 4;
 
 	static {
 		ICON_HOME = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_HOME));
@@ -55,13 +55,12 @@ public class BotToolBar extends JToolBar {
 	public BotToolBar(final ActionListener listener, final BotMenuBar menu) {
 		try {
 			IMAGE_CLOSE = getTransparentImage(Configuration.getResourceURL(Configuration.Paths.Resources.ICON_CLOSE), 0.5f);
-		} catch (final MalformedURLException e) {
+		} catch (final MalformedURLException ignored) {
 		}
 
 		this.listener = listener;
 
-		screenshotButton = new JButton("Screenshot", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_PHOTO)));
+		screenshotButton = new JButton("Screenshot", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PHOTO)));
 		screenshotButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				menu.doClick(Messages.SAVESCREENSHOT);
@@ -71,8 +70,7 @@ public class BotToolBar extends JToolBar {
 		screenshotButton.setToolTipText(screenshotButton.getText());
 		screenshotButton.setText("");
 
-		stopScriptButton = new JButton("Stop", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_DELETE)));
+		stopScriptButton = new JButton("Stop", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_DELETE)));
 		stopScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				menu.doClick(Messages.STOPSCRIPT);
@@ -92,8 +90,7 @@ public class BotToolBar extends JToolBar {
 		userInputButton.setToolTipText(userInputButton.getText());
 		userInputButton.setText("");
 
-		runScriptButton = new JButton("Run", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
+		runScriptButton = new JButton("Run", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
 		runScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switch (getScriptButton()) {
@@ -134,16 +131,16 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void addTab() {
-		final int idx = getComponentCount() - BUTTONCOUNT - TABINDEX + 1;
+		final int idx = getComponentCount() - BUTTON_COUNT - TAB_INDEX + 1;
 		add(new BotButton(Messages.TABDEFAULTTEXT, ICON_BOT), idx);
 		validate();
 		setSelection(idx);
 	}
 
 	public void removeTab(int idx) {
-		final int current = getCurrentTab() + TABINDEX;
-		final int select = idx == current ? idx - TABINDEX : current;
-		idx += TABINDEX;
+		final int current = getCurrentTab() + TAB_INDEX;
+		final int select = idx == current ? idx - TAB_INDEX : current;
+		idx += TAB_INDEX;
 		remove(idx);
 		revalidate();
 		repaint();
@@ -155,18 +152,18 @@ public class BotToolBar extends JToolBar {
 	}
 
 	public void setTabLabel(final int idx, final String label) {
-		((BotButton) getComponentAtIndex(idx + TABINDEX)).setText(label);
+		((BotButton) getComponentAtIndex(idx + TAB_INDEX)).setText(label);
 	}
 
 	public int getCurrentTab() {
-		if (idx > -1 && idx < getComponentCount() - OPTIONBUTTONS) {
-			return idx - TABINDEX;
+		if (idx > -1 && idx < getComponentCount() - OPTION_BUTTONS) {
+			return idx - TAB_INDEX;
 		} else {
 			return -1;
 		}
 	}
 
-	public int getScriptButton() {
+	int getScriptButton() {
 		final String label = runScriptButton.getToolTipText();
 		if (label.equals("Run")) {
 			return RUN_SCRIPT;
@@ -233,7 +230,7 @@ public class BotToolBar extends JToolBar {
 	}
 
 	private void updateSelection(final boolean enabled) {
-		final int idx = getCurrentTab() + TABINDEX;
+		final int idx = getCurrentTab() + TAB_INDEX;
 		if (idx >= 0) {
 			getComponent(idx).setEnabled(enabled);
 			getComponent(idx).repaint();
@@ -253,23 +250,26 @@ public class BotToolBar extends JToolBar {
 	}
 
 	private static Image getTransparentImage(final URL url, final float transparency) {
-		BufferedImage loaded = null;
+		BufferedImage parentImage = null;
 		try {
-			loaded = ImageIO.read(url);
-		} catch (final IOException e) {
+			parentImage = ImageIO.read(url);
+		} catch (final IOException ignored) {
 		}
-		final BufferedImage aimg = new BufferedImage(loaded.getWidth(), loaded.getHeight(), Transparency.TRANSLUCENT);
-		final Graphics2D g = aimg.createGraphics();
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
-		g.drawImage(loaded, null, 0, 0);
-		g.dispose();
-		return aimg;
+		try {
+			final BufferedImage bufferedImage = new BufferedImage(parentImage.getWidth(), parentImage.getHeight(), Transparency.TRANSLUCENT);
+			final Graphics2D graphics = bufferedImage.createGraphics();
+			graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+			graphics.drawImage(parentImage, null, 0, 0);
+			graphics.dispose();
+			return bufferedImage;
+		} catch (NullPointerException ignored) {
+			return null;
+		}
 	}
 
 	/**
 	 */
 	private class HomeButton extends JPanel {
-
 		private static final long serialVersionUID = 938456324328L;
 
 		private final Image image;
@@ -305,8 +305,7 @@ public class BotToolBar extends JToolBar {
 		@Override
 		public void paintComponent(final Graphics g) {
 			super.paintComponent(g);
-			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
+			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			if (getComponentIndex(this) == idx) {
 				g.setColor(new Color(255, 255, 255, 200));
 				g.fillRoundRect(0, 0, getWidth() - 2, getHeight() - 1, 4, 4);
@@ -327,7 +326,6 @@ public class BotToolBar extends JToolBar {
 	 * @author Tekk
 	 */
 	private class BotButton extends JPanel {
-
 		private static final long serialVersionUID = 329845763420L;
 
 		private final JLabel nameLabel;
@@ -350,7 +348,7 @@ public class BotToolBar extends JToolBar {
 				@Override
 				public void mouseReleased(final MouseEvent e) {
 					if (hovered && close) {
-						final int idx = getComponentIndex(BotButton.this) - TABINDEX;
+						final int idx = getComponentIndex(BotButton.this) - TAB_INDEX;
 						listener.actionPerformed(new ActionEvent(this,
 								ActionEvent.ACTION_PERFORMED, Messages.CLOSEBOT + "." + idx));
 					} else {
@@ -386,8 +384,7 @@ public class BotToolBar extends JToolBar {
 		@Override
 		public void paintComponent(final Graphics g) {
 			super.paintComponent(g);
-			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
+			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			final int RGB = getComponentIndex(this) == idx ? 255 : hovered ? 230 : 215;
 			g.setColor(new Color(RGB, RGB, RGB, 200));
 			g.fillRoundRect(0, 0, getWidth() - 2, getHeight() - 1, 4, 4);
@@ -398,7 +395,6 @@ public class BotToolBar extends JToolBar {
 	}
 
 	private static class AddButton extends JComponent {
-
 		private static final long serialVersionUID = 1L;
 
 		private static Image ICON;
@@ -415,7 +411,7 @@ public class BotToolBar extends JToolBar {
 			URL src = null;
 			try {
 				src = Configuration.getResourceURL(Configuration.Paths.Resources.ICON_ADD);
-			} catch (final MalformedURLException e) {
+			} catch (final MalformedURLException ignored) {
 			}
 			ICON = getTransparentImage(src, 0.3f);
 			ICON_OVER = getTransparentImage(src, 0.7f);
@@ -464,5 +460,4 @@ public class BotToolBar extends JToolBar {
 		}
 
 	}
-
 }

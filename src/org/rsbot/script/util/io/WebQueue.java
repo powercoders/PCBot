@@ -1,4 +1,4 @@
-package org.rsbot.service;
+package org.rsbot.script.util.io;
 
 import org.rsbot.Configuration;
 import org.rsbot.script.methods.Web;
@@ -37,11 +37,11 @@ public class WebQueue {
 			@Override
 			public void run() {
 				try {
-					final Map<RSTile, Integer> safeMapData = Collections.unmodifiableMap(gameTiles);
+					final HashMap<RSTile, Integer> safeMapData = new HashMap<RSTile, Integer>();
+					safeMapData.putAll(gameTiles);
 					bufferingCount = bufferingCount + count;
-					final Iterator<Map.Entry<RSTile, Integer>> safeIterator = safeMapData.entrySet().iterator();
-					while (safeIterator.hasNext()) {
-						final Map.Entry<RSTile, Integer> tileData = safeIterator.next();
+					for (Map.Entry<RSTile, Integer> rsTileIntegerEntry : safeMapData.entrySet()) {
+						final Map.Entry<RSTile, Integer> tileData = rsTileIntegerEntry;
 						final RSTile tile = tileData.getKey();
 						final int key = tileData.getValue();
 						if (tileData != null) {

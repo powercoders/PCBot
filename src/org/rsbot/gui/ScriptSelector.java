@@ -33,7 +33,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private static final String[] COLUMN_NAMES = new String[]{"", "Name", "Description"};
 
 	private static final ScriptSource SRC_SOURCES;
-	private static final ScriptSource SRC_PRECOMPILED;
+	private static final ScriptSource SRC_PRE_COMPILED;
 	private static final ScriptSource SRC_NETWORK;
 	private final BotGUI frame;
 	private final Bot bot;
@@ -48,7 +48,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	static {
 		SRC_SOURCES = new FileScriptSource(new File(Configuration.Paths.getScriptsSourcesDirectory()));
-		SRC_PRECOMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
+		SRC_PRE_COMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
 		SRC_NETWORK = ScriptDeliveryNetwork.getInstance();
 	}
 
@@ -67,7 +67,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		setVisible(true);
 	}
 
-	public void update() {
+	void update() {
 		final boolean available = bot.getScriptHandler().getRunningScripts().size() == 0;
 		submit.setEnabled(available && table.getSelectedRow() != -1);
 		table.setEnabled(available);
@@ -84,7 +84,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				scripts.addAll(net);
 			}
 		}
-		scripts.addAll(SRC_PRECOMPILED.list());
+		scripts.addAll(SRC_PRE_COMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
 		Collections.sort(scripts);
 
@@ -252,10 +252,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				keyTyped(e);
 			}
 		});
-		submit = new JButton("Start", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
-		final JButton connect = new JButton(new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_CONNECT)));
+		submit = new JButton("Start", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
+		final JButton connect = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_CONNECT)));
 		connect.setToolTipText("Show network scripts");
 		submit.setEnabled(false);
 		submit.addActionListener(new ActionListener() {
@@ -281,8 +279,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		if (connect.isEnabled()) {
 			final ActionListener listenConnect = new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
-					final String icon = connected ? Configuration.Paths.Resources.ICON_DISCONNECT :
-							Configuration.Paths.Resources.ICON_CONNECT;
+					final String icon = connected ? Configuration.Paths.Resources.ICON_DISCONNECT : Configuration.Paths.Resources.ICON_CONNECT;
 					connect.setIcon(new ImageIcon(Configuration.getImage(icon)));
 					connect.repaint();
 					connected = !connected;
@@ -295,7 +292,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		accounts.setPreferredSize(new Dimension(125, 20));
 		categories.setPreferredSize(new Dimension(150, 20));
 		categories.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent arg0) {
 				final String[] selected = categories.getSelectedItems();
 				final StringBuilder s = new StringBuilder(16);
@@ -385,12 +381,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	private static class ScriptTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
-		public static final ImageIcon ICON_SCRIPT_SRC = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_CODE));
-		public static final ImageIcon ICON_SCRIPT_PRE = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_GEAR));
-		public static final ImageIcon ICON_SCRIPT_NET = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_LIVE));
+		public static final ImageIcon ICON_SCRIPT_SRC = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_CODE));
+		public static final ImageIcon ICON_SCRIPT_PRE = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_GEAR));
+		public static final ImageIcon ICON_SCRIPT_NET = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_LIVE));
 		private final List<ScriptDefinition> scripts;
 		private final List<ScriptDefinition> matches;
 
@@ -443,7 +436,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						if (def.source == SRC_SOURCES) {
 							return ICON_SCRIPT_SRC;
 						}
-						if (def.source == SRC_PRECOMPILED) {
+						if (def.source == SRC_PRE_COMPILED) {
 							return ICON_SCRIPT_PRE;
 						}
 						return ICON_SCRIPT_NET;

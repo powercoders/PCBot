@@ -1,8 +1,6 @@
 package org.rsbot.gui;
 
 import org.rsbot.Configuration;
-import org.rsbot.service.Monitoring;
-import org.rsbot.service.Monitoring.Type;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IniParser;
 
@@ -25,7 +23,7 @@ import java.util.logging.Logger;
  * @author Paris
  */
 public class SplashAd extends JDialog implements MouseListener {
-	private static Logger log = Logger.getLogger(SplashAd.class.getName());
+	private static final Logger log = Logger.getLogger(SplashAd.class.getName());
 
 	private static final long serialVersionUID = 1L;
 
@@ -75,14 +73,12 @@ public class SplashAd extends JDialog implements MouseListener {
 	}
 
 	private boolean sync() {
-		HashMap<String, String> keys = null;
+		HashMap<String, String> keys;
 
 		try {
-			final URL source = new URL(Configuration.Paths.URLs.AD_INFO);
-			final File cache = new File(Configuration.Paths.getCacheDirectory(), "ads.txt");
-			HttpClient.download(source, cache);
+			final File cache = Configuration.Paths.getCachableResources().get(Configuration.Paths.URLs.AD_INFO);
 			keys = IniParser.deserialise(cache).get(IniParser.emptySection);
-		} catch (final IOException e) {
+		} catch (final IOException ignored) {
 			return false;
 		}
 
@@ -121,33 +117,25 @@ public class SplashAd extends JDialog implements MouseListener {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				Monitoring.pushState(Type.ENVIRONMENT, "ADS", "CLICK", "false");
 				dispose();
 			}
 		}, display);
 	}
 
-	@Override
 	public void mouseClicked(final MouseEvent e) {
 	}
 
-	@Override
 	public void mousePressed(final MouseEvent e) {
 	}
 
-	@Override
 	public void mouseReleased(final MouseEvent e) {
 		BotGUI.openURL(link);
-		Monitoring.pushState(Type.ENVIRONMENT, "ADS", "CLICK", "true");
 		dispose();
 	}
 
-	@Override
 	public void mouseEntered(final MouseEvent e) {
 	}
 
-	@Override
 	public void mouseExited(final MouseEvent e) {
 	}
-
 }

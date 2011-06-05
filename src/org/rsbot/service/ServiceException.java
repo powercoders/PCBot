@@ -1,9 +1,6 @@
 package org.rsbot.service;
 
-/**
- */
 public class ServiceException extends Exception {
-
 	/**
 	 * Exception message
 	 */
@@ -12,5 +9,4 @@ public class ServiceException extends Exception {
 	public ServiceException(final String message) {
 		super(message);
 	}
-
 }

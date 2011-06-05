@@ -17,7 +17,7 @@ public class PlaneHandler extends MethodProvider {
 	}
 
 	private class Traverse {
-		public final PlaneTraverse example = new PlaneTraverse(0, null, null, methods);
+		public final PlaneTraverse example = new PlaneTraverse(0, null, null, null, methods);
 	}
 
 	public PlaneTraverse[] get(final int plane) {

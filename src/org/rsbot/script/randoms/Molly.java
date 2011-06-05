@@ -78,7 +78,7 @@ public class Molly extends Random {
 			}
 		}
 		controlPanel = objects.getNearest(Molly.CONTROL_PANEL_ID);
-		while (getMyPlayer().isMoving() || getMyPlayer().getAnimation() != -1) {
+		if (getMyPlayer().isMoving() || getMyPlayer().getAnimation() != -1) {
 			return random(800, 1300);
 		}
 		if (interfaces.canContinue()) {

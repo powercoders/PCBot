@@ -19,7 +19,6 @@ import java.util.logging.Logger;
  */
 public class RSLoader extends Applet implements Runnable, Loader {
 	private final Logger log = Logger.getLogger(RSLoader.class.getName());
-
 	private static final long serialVersionUID = 6288499508495040201L;
 
 	/**
@@ -28,11 +27,9 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	private Applet client;
 
 	private Runnable loadedCallback;
-
 	private String targetName;
-
+	public static boolean runBeta = false;
 	private Dimension size = Application.getPanelSize();
-
 	/**
 	 * The game class loader
 	 */
@@ -102,10 +99,10 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	}
 
 	public void load() {
-		final File ms = new File(Configuration.Paths.getCacheDirectory(), "ms.dat");
+		final File ms = Configuration.Paths.getCachableResources().get(Configuration.Paths.URLs.CLIENTPATCH);
 		try {
 			final ClientLoader cl = new ClientLoader();
-			cl.init(new URL(Configuration.Paths.URLs.UPDATE), ms);
+			cl.init(runBeta ? new URL(Configuration.Paths.URLs.CLIENTPATCH_BETA) : new URL(Configuration.Paths.URLs.CLIENTPATCH), ms);
 			final File client = new File(Configuration.Paths.getCacheDirectory(), "client.dat");
 			cl.load(client, new File(Configuration.Paths.getVersionCache()));
 			targetName = cl.getTargetName();

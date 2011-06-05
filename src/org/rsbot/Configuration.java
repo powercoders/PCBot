@@ -3,6 +3,8 @@ package org.rsbot;
 import org.rsbot.log.LogFormatter;
 import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.log.TextAreaLogHandler;
+import org.rsbot.util.StringUtil;
+import org.rsbot.util.io.IOHelper;
 
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
@@ -11,6 +13,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
@@ -66,15 +70,14 @@ public class Configuration {
 			private static final String BASE = "http://links." + HOST + "/";
 			public static final String DOWNLOAD = BASE + "download";
 			public static final String DOWNLOAD_SHORT = HOST + "/download";
-			public static final String UPDATE = BASE + "modscript";
+			public static final String CLIENTPATCH = BASE + "modscript";
+			public static final String CLIENTPATCH_BETA = BASE + "modscript-beta";
 			public static final String VERSION = BASE + "version.txt";
 			public static final String VERSION_KILL = BASE + "version-kill";
 			public static final String PROJECT = BASE + "git-project";
 			public static final String SITE = BASE + "site";
 			public static final String SDN_CONTROL = BASE + "sdn-control";
 			public static final String AD_INFO = BASE + "botad-info";
-			public static final String MONITORING_CONTROL = BASE + "monitoring";
-			public static final String WEBCOMPILER = BASE + "webcompile";
 			public static final String SERVICELOGIN = BASE + "servicelogin";
 			public static final String TRIDENT = BASE + "trident";
 			public static final String SUBSTANCE = BASE + "substance";
@@ -162,14 +165,6 @@ public class Configuration {
 			return Paths.getSettingsDirectory() + File.separator + "service.key";
 		}
 
-		public static String getTrident() {
-			return Paths.getCacheDirectory() + File.separator + "trident.jar";
-		}
-
-		public static String getSubstance() {
-			return Paths.getCacheDirectory() + File.separator + "substance.jar";
-		}
-
 		public static String getSettingsDirectory() {
 			return Paths.getHomeDirectory() + File.separator + "Settings";
 		}
@@ -202,6 +197,23 @@ public class Configuration {
 		public static String getUnixHome() {
 			final String home = System.getProperty("user.home");
 			return home == null ? "~" : home;
+		}
+
+		private static Map<String, File> cachableResources;
+
+		public static Map<String, File> getCachableResources() {
+			if (cachableResources == null) {
+				cachableResources = new HashMap<String, File>(8);
+				cachableResources.put(URLs.CLIENTPATCH, new File(getCacheDirectory(), "ms.dat"));
+				cachableResources.put(URLs.VERSION, new File(getCacheDirectory(), "version-latest.txt"));
+				cachableResources.put(URLs.VERSION_KILL, new File(getCacheDirectory(), "version-kill.txt"));
+				cachableResources.put(URLs.AD_INFO, new File(getCacheDirectory(), "ads.txt"));
+				if (SKINNED) {
+					cachableResources.put(URLs.TRIDENT, new File(getCacheDirectory(), "trident.jar"));
+					cachableResources.put(URLs.SUBSTANCE, new File(getCacheDirectory(), "substance.jar"));
+				}
+			}
+			return cachableResources;
 		}
 	}
 
@@ -317,46 +329,16 @@ public class Configuration {
 	}
 
 	public static int getVersion() {
-		InputStreamReader is = null;
-		BufferedReader reader = null;
+		final URL src;
 		try {
-			is = new InputStreamReader(RUNNING_FROM_JAR ?
-					Configuration.class.getClassLoader().getResourceAsStream(
-							Paths.Resources.VERSION) : new FileInputStream(Paths.Resources.VERSION));
-			reader = new BufferedReader(is);
-			final String s = reader.readLine().trim();
-			return Integer.parseInt(s);
-		} catch (final Exception e) {
-		} finally {
-			try {
-				if (is != null) {
-					is.close();
-				}
-				if (reader != null) {
-					reader.close();
-				}
-			} catch (final IOException ioe) {
-			}
+			src = getResourceURL(Paths.Resources.VERSION);
+		} catch (final MalformedURLException ignored) {
+			return -1;
 		}
-		return -1;
+		return Integer.parseInt(IOHelper.readString(src).trim());
 	}
 
 	public static String getVersionFormatted() {
-		return getVersionFormatted(getVersion());
-	}
-
-	public static String getVersionFormatted(final int version) {
-		final float v = (float) version / 100;
-		String s = Float.toString(v);
-		final int z = s.indexOf('.');
-		if (z == -1) {
-			s += ".00";
-		} else {
-			final String exp = s.substring(z + 1);
-			if (exp.length() == 1) {
-				s += "0";
-			}
-		}
-		return s;
+		return StringUtil.formatVersion(getVersion());
 	}
 }

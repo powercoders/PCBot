@@ -20,9 +20,7 @@ import java.util.TreeMap;
  * @author Timer
  */
 public class AccountStore {
-
 	public static class Account {
-
 		private final String username;
 		private String password;
 		private final Map<String, String> attributes = new TreeMap<String, String>();
@@ -55,7 +53,6 @@ public class AccountStore {
 		public String toString() {
 			return "Account[" + username + "]";
 		}
-
 	}
 
 	public static final String KEY_ALGORITHM = "DESede";
@@ -248,6 +245,5 @@ public class AccountStore {
 		}
 		return name;
 	}
-
 }
 

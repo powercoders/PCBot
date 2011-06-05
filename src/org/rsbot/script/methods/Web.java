@@ -4,13 +4,13 @@ import org.rsbot.Configuration;
 import org.rsbot.script.background.BankMonitor;
 import org.rsbot.script.background.WebData;
 import org.rsbot.script.internal.BackgroundScriptHandler;
+import org.rsbot.script.util.io.WebQueue;
 import org.rsbot.script.web.PlaneHandler;
 import org.rsbot.script.web.PlaneTraverse;
 import org.rsbot.script.web.Route;
 import org.rsbot.script.web.RouteStep;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.script.wrappers.RSWeb;
-import org.rsbot.service.WebQueue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -121,8 +121,9 @@ public class Web extends MethodProvider {
 	/**
 	 * Generates routes between two tiles.
 	 *
-	 * @param start The start tile.
-	 * @param end   The ending tile.
+	 * @param start     The start tile.
+	 * @param end       The ending tile.
+	 * @param lastRoute The last plane route.
 	 * @return The generated route.
 	 */
 	private Route[] generateRoutes(final RSTile start, final RSTile end, final Route lastRoute) {
@@ -145,12 +146,21 @@ public class Web extends MethodProvider {
 		}
 		PlaneHandler planeHandler = new PlaneHandler(methods);
 		PlaneTraverse[] traverses = planeHandler.get(methods.game.getPlane());
+		double dist = Double.MAX_VALUE;
+		PlaneTraverse finalTraverse = null;
 		for (PlaneTraverse traverse : traverses) {
-			if (traverse.destPlane() == end.getZ()) {//TODO more complex method--prevent infinite loops once made.
-				final Route route = planeRoute(start, end, traverse);
-				route.parent = lastRoute;
-				return generateRoutes(traverse.dest(), end, route);
+			if (traverse.destPlane() == end.getZ() && traverse.applicable()) {
+				final double tempDist = traverse.getRoute().getDistance();
+				if (tempDist < dist) {
+					dist = tempDist;
+					finalTraverse = traverse;
+				}
 			}
+		}
+		if (finalTraverse != null) {
+			final Route route = planeRoute(start, end, finalTraverse);
+			route.parent = lastRoute;
+			return generateRoutes(finalTraverse.dest(), end, route);
 		}
 		return null;//No applicable plane transfers.
 	}
@@ -165,13 +175,11 @@ public class Web extends MethodProvider {
 			if (walkRoute == null) {
 				return null;
 			}
-			//TODO START
-			/* code interaction with plane transfer to add to web route */
+			walkRoute.add(new RouteStep(methods, transfer.getInteractionTile()));
 			return walkRoute;
-			//TODO END
 		}
-		//TODO Path generation.
-		RSTile[] path = generateTilePath(start, end);    //TODO add teleports object etc
+		//TODO Special path generation (teleports, npcs, objects).
+		RSTile[] path = generateTilePath(start, end);
 		if (path == null) {
 			return null;
 		}
@@ -466,7 +474,7 @@ public class Web extends MethodProvider {
 										mapData.put(tile, tileFlag);
 									}
 								}
-							} catch (final Exception e) {
+							} catch (final Exception ignored) {
 							}
 						} else {
 							synchronized (lock) {

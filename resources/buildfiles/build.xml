@@ -1,0 +1,49 @@
+<project>
+    <property name="base.dir" value="../.."/>
+    <property name="src.dir" value="${base.dir}/src"/>
+    <property name="resource.dir" value="${base.dir}/resources"/>
+    <property name="build.dir" value="${base.dir}/build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir" value="${build.dir}/jar"/>
+    <property name="main-class" value="org.rsbot.Boot"/>
+    <loadfile property="version" srcfile="${resource.dir}/version.txt">
+        <filterchain>
+            <striplinebreaks/>
+        </filterchain>
+    </loadfile>
+    <property file="${base.dir}/resources/build.properties"/>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}"/>
+    </target>
+
+    <target name="build-production" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/RSBot-${version}.jar" basedir="${classes.dir}">
+
+            <fileset dir="${base.dir}"
+                     includes="resources/**"
+                     excludes="**/Manifest.txt **/build.properties"/>
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="build-beta" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/RSBot-${version}-beta${betaVersion}.jar" basedir="${classes.dir}">
+            <fileset dir="${base.dir}"
+                     includes="resources/**"
+                     excludes="**/Manifest.txt **/build.properties"/>
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        </jar>
+    </target>
+</project>

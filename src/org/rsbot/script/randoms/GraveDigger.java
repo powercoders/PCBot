@@ -105,10 +105,7 @@ public class GraveDigger extends Random {
 
 	@Override
 	public boolean activateCondition() {
-		if (settings.getSetting(696) != 0 && objects.getNearest(12731) != null) {
-			return true;
-		}
-		return false;
+		return settings.getSetting(696) != 0 && objects.getNearest(12731) != null;
 	}
 
 	@Override

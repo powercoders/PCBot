@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,16 +77,17 @@ public class LoadScreen extends JFrame {
 		Configuration.createDirectories();
 
 		log.info("Enforcing security policy");
-		System.setSecurityManager(new RestrictedSecurityManager());
+		System.setProperty("sun.net.spi.nameservice.nameservers", "8.8.8.8,8.8.4.4"); // Google Public DNS (http://code.google.com/speed/public-dns/)
+		System.setProperty("sun.net.spi.nameservice.provider.1", "dns,sun");
 		System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
+		System.setSecurityManager(new RestrictedSecurityManager());
 
 		log.info("Downloading resources");
-		try {
-			if (Configuration.SKINNED) {
-				HttpClient.download(new URL(Configuration.Paths.URLs.TRIDENT), new File(Configuration.Paths.getTrident()));
-				HttpClient.download(new URL(Configuration.Paths.URLs.SUBSTANCE), new File(Configuration.Paths.getSubstance()));
+		for (final Entry<String, File> item : Configuration.Paths.getCachableResources().entrySet()) {
+			try {
+				HttpClient.download(new URL(item.getKey()), item.getValue());
+			} catch (final IOException ignored) {
 			}
-		} catch (final IOException ignored) {
 		}
 
 		log.info("Downloading network scripts");
@@ -93,12 +95,17 @@ public class LoadScreen extends JFrame {
 
 		log.info("Checking for updates");
 
-		final String error;
+		String error = null;
 
 		if (UpdateChecker.isError()) {
 			error = "Unable to obtain latest version information";
-		} else if (Configuration.RUNNING_FROM_JAR && UpdateChecker.isDeprecatedVersion()) {
-			error = "Please update at " + Configuration.Paths.URLs.DOWNLOAD_SHORT;
+		} else if (Configuration.RUNNING_FROM_JAR) {
+			try {
+				if (UpdateChecker.isDeprecatedVersion()) {
+					error = "Please update at " + Configuration.Paths.URLs.DOWNLOAD_SHORT;
+				}
+			} catch (final IOException ignored) {
+			}
 		} else {
 			error = null;
 		}
@@ -128,7 +135,7 @@ public class LoadScreen extends JFrame {
 		System.setErr(new PrintStream(new LogOutputStream(Logger.getLogger("STDERR"), Level.SEVERE), true));
 	}
 
-	public static void extractResources() {
+	private static void extractResources() {
 		final ArrayList<String> extract = new ArrayList<String>(2);
 		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.WINDOWS) {
 			extract.add(Configuration.Paths.COMPILE_SCRIPTS_BAT);

@@ -21,11 +21,11 @@ import java.util.Map.Entry;
 public class BotMenuBar extends JMenuBar {
 	private static final long serialVersionUID = 971579975301998332L;
 	public static final Map<String, Class<?>> DEBUG_MAP = new LinkedHashMap<String, Class<?>>();
-	public static final String[] TITLES;
-	public static final String[][] ELEMENTS;
+	private static final String[] TITLES;
+	private static final String[][] ELEMENTS;
 
-	private static final boolean EXTD_VIEW_INITIAL = !Configuration.RUNNING_FROM_JAR;
-	private static final String[] EXTD_VIEW_ITEMS = {"Game State", "Current Tab", "Camera", "Floor Height",
+	private static final boolean EXTENDED_VIEW_INITIAL = !Configuration.RUNNING_FROM_JAR;
+	private static final String[] EXTENDED_VIEW_ITEMS = {"Game State", "Current Tab", "Camera", "Floor Height",
 			"Mouse Position", "User Input Allowed", "Menu", "Menu Actions", "Cache", "Models", "Calc Test", "Settings"};
 
 	static {
@@ -69,7 +69,7 @@ public class BotMenuBar extends JMenuBar {
 				{Messages.ACCOUNTS, Messages.MENUSEPERATOR,
 						Messages.TOGGLEFALSE + Messages.FORCEINPUT,
 						Messages.TOGGLEFALSE + Messages.LESSCPU,
-						(EXTD_VIEW_INITIAL ? Messages.TOGGLETRUE : Messages.TOGGLEFALSE) + Messages.EXTDVIEWS,
+						(EXTENDED_VIEW_INITIAL ? Messages.TOGGLETRUE : Messages.TOGGLEFALSE) + Messages.EXTDVIEWS,
 						Messages.MENUSEPERATOR,
 						Messages.TOGGLEFALSE + Messages.DISABLEANTIRANDOMS,
 						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN},
@@ -143,16 +143,16 @@ public class BotMenuBar extends JMenuBar {
 		this.listener = listener;
 		for (int i = 0; i < TITLES.length; i++) {
 			final String title = TITLES[i];
-			final String[] elems = ELEMENTS[i];
-			add(constructMenu(title, elems));
+			final String[] elements = ELEMENTS[i];
+			add(constructMenu(title, elements));
 		}
 		constructItemIcons();
 		commandMenuItem.get(Messages.HIDEBOT).setVisible(SystemTray.isSupported());
-		setExtendedView(EXTD_VIEW_INITIAL);
+		setExtendedView(EXTENDED_VIEW_INITIAL);
 	}
 
 	public void setExtendedView(final boolean show) {
-		for (String disableFeature : EXTD_VIEW_ITEMS) {
+		for (String disableFeature : EXTENDED_VIEW_ITEMS) {
 			if (commandCheckMap.containsKey(disableFeature)) {
 				commandCheckMap.get(disableFeature).setVisible(show);
 			}
@@ -222,7 +222,7 @@ public class BotMenuBar extends JMenuBar {
 		}
 	}
 
-	public void enable(final String item, final boolean selected) {
+	void enable(final String item, final boolean selected) {
 		commandCheckMap.get(item).setSelected(selected);
 		commandCheckMap.get(item).setEnabled(true);
 	}
@@ -243,9 +243,9 @@ public class BotMenuBar extends JMenuBar {
 		return commandCheckMap.get(item).isSelected();
 	}
 
-	private JMenu constructMenu(final String title, final String[] elems) {
+	private JMenu constructMenu(final String title, final String[] elements) {
 		final JMenu menu = new JMenu(title);
-		for (String e : elems) {
+		for (String e : elements) {
 			if (e.equals(Messages.MENUSEPERATOR)) {
 				menu.add(new JSeparator());
 			} else {

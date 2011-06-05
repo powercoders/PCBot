@@ -13,10 +13,8 @@ import org.rsbot.script.methods.Environment;
 import org.rsbot.script.methods.Web;
 import org.rsbot.script.provider.ScriptDownloader;
 import org.rsbot.script.util.WindowUtil;
-import org.rsbot.service.Monitoring;
-import org.rsbot.service.Monitoring.Type;
+import org.rsbot.script.util.io.WebQueue;
 import org.rsbot.service.TwitterUpdates;
-import org.rsbot.service.WebQueue;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.IOHelper;
 import org.rsbot.util.io.ScreenshotUtil;
@@ -40,10 +38,9 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	public static final int MAX_BOTS = 6;
 	private static final long serialVersionUID = -5411033752001988794L;
 	private static final Logger log = Logger.getLogger(BotGUI.class.getName());
-	private SettingsManager settings;
-	private SettingsManager.Preferences prefs;
+	private final SettingsManager settings;
+	private final SettingsManager.Preferences preferences;
 	private BotPanel panel;
-	private JScrollPane scrollableBotPanel;
 	private BotToolBar toolBar;
 	private BotMenuBar menuBar;
 	private JScrollPane textScroll;
@@ -60,23 +57,24 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		setMinimumSize(new Dimension((int) (getSize().width * .8), (int) (getSize().height * .8)));
 		setResizable(true);
 		settings = new SettingsManager(this, new File(Configuration.Paths.getSettingsDirectory(), "preferences.ini"));
-		prefs = settings.getPreferences();
-		prefs.load();
+		preferences = settings.getPreferences();
+		preferences.load();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 				ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
-				if (!prefs.hideAds) {
+				if (!preferences.hideAds) {
 					new SplashAd(BotGUI.this).display();
 				}
-				UpdateChecker.notify(BotGUI.this);
+				if (Configuration.getVersion() < UpdateChecker.getLatestVersion()) {
+					log.info("New version available - please download from " + Configuration.Paths.URLs.DOWNLOAD_SHORT);
+				}
 				if (Configuration.Twitter.ENABLED) {
 					TwitterUpdates.loadTweets(Configuration.Twitter.MESSAGES);
 				}
-				Monitoring.start();
 				addBot();
 				updateScriptControls();
-				setShutdownTimer(prefs.shutdown);
+				setShutdownTimer(preferences.shutdown);
 				System.gc();
 			}
 		});
@@ -176,8 +174,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 				final Bot current = getCurrentBot();
 				if (current != null) {
 					if (option.equals(Messages.FORCEINPUT)) {
-						final boolean selected = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
-						current.overrideInput = selected;
+						current.overrideInput = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 						updateScriptControls();
 					} else if (option.equals(Messages.LESSCPU)) {
 						lessCpu(((JCheckBoxMenuItem) evt.getSource()).isSelected());
@@ -445,7 +442,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		textScroll.setBorder(null);
 		textScroll.setPreferredSize(new Dimension(PANEL_WIDTH, LOG_HEIGHT));
 		textScroll.setVisible(true);
-		scrollableBotPanel = new JScrollPane(panel);
+		JScrollPane scrollableBotPanel = new JScrollPane(panel);
 		add(toolBar, BorderLayout.NORTH);
 		add(scrollableBotPanel, BorderLayout.CENTER);
 		add(textScroll, BorderLayout.SOUTH);
@@ -525,7 +522,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	private boolean confirmRemoveBot() {
-		if (!prefs.confirmations) {
+		if (!preferences.confirmations) {
 			final int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to close this bot?", Messages.CLOSEBOT, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 			return result == JOptionPane.OK_OPTION;
 		} else {
@@ -541,7 +538,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			}
 			shutdown = null;
 		} else {
-			final long interval = prefs.shutdownTime * 60 * 1000;
+			final long interval = preferences.shutdownTime * 60 * 1000;
 			shutdown = new java.util.Timer(true);
 			shutdown.schedule(new TimerTask() {
 				@Override
@@ -561,7 +558,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 					mouse[1] = MouseInfo.getPointerInfo().getLocation();
 					if (mouse[0].x != mouse[1].x || mouse[0].y != mouse[1].y) {
 						log.info("Mouse activity detected, delaying shutdown");
-					} else if (!prefs.shutdown) {
+					} else if (!preferences.shutdown) {
 						log.info("Shutdown cancelled");
 					} else if (Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
 						try {
@@ -578,19 +575,19 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 
 	public boolean cleanExit(final boolean silent) {
 		if (silent) {
-			prefs.confirmations = true;
+			preferences.confirmations = true;
 		}
-		if (!prefs.confirmations) {
-			prefs.confirmations = true;
+		if (!preferences.confirmations) {
+			preferences.confirmations = true;
 			for (final Bot bot : bots) {
 				if (bot.getAccountName() != null) {
-					prefs.confirmations = true;
+					preferences.confirmations = true;
 					break;
 				}
 			}
 		}
 		boolean doExit = true;
-		if (!prefs.confirmations) {
+		if (!preferences.confirmations) {
 			final String message = "Are you sure you want to exit?";
 			final int result = JOptionPane.showConfirmDialog(this, message, Messages.EXIT, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (result != JOptionPane.OK_OPTION) {
@@ -602,17 +599,9 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			setVisible(false);
 			try {
 				WebQueue.Destroy();
-			} catch (NoClassDefFoundError ncdfe) {
+			} catch (NoClassDefFoundError ignored) {
 			}
-			try {
-				Monitoring.pushState(Type.ENVIRONMENT, "ADS", "SHOW", Boolean.toString(!prefs.hideAds));
-			} catch (NoClassDefFoundError ncdfe) {
-			}
-			prefs.save();
-			try {
-				Monitoring.stop();
-			} catch (NoClassDefFoundError ncdfe) {
-			}
+			preferences.save();
 			System.exit(0);
 		}
 		return doExit;

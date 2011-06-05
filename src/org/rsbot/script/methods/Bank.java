@@ -38,7 +38,7 @@ public class Bank extends MethodProvider {
 	};
 
 	public static final Filter<RSNPC> NPC_BANKERS = new Filter<RSNPC>() {
-		private final String[] bankerNames = {"Banker"};
+		private final String[] bankerNames = {"Banker", "Fremennik banker"};
 
 		public boolean accept(final RSNPC rsNPC) {
 			final String name = rsNPC != null ? rsNPC.getName() : null;
@@ -714,7 +714,6 @@ public class Bank extends MethodProvider {
 	 * Gets the equipment items from the bank interface.
 	 *
 	 * @return All equipment items that are being worn.
-	 * @author LastCoder
 	 */
 	public RSItem[] getEquipmentItems() {
 		if (methods.interfaces.get(INTERFACE_EQUIPMENT).getComponent(INTERFACE_EQUIPMENT_COMPONENT).isValid()) {
