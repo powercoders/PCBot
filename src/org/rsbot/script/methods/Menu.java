@@ -25,7 +25,6 @@ public class Menu extends MethodProvider {
 	private String[] menuActionsCache = new String[0];
 
 	private boolean menuListenerStarted = false;
-	private static boolean menusReversed = false;
 
 	Menu(final MethodContext ctx) {
 		super(ctx);
@@ -255,8 +254,7 @@ public class Menu extends MethodProvider {
 			}
 		}
 
-		if (menusReversed || (output.size() > 1 && output.get(0).equals("Cancel"))) {
-			menusReversed = true;
+		if (output.size() > 1 && output.get(0).equals("Cancel")) {
 			Collections.reverse(output);
 		}
 
@@ -277,18 +275,25 @@ public class Menu extends MethodProvider {
 
 	private String[] getMenuItemPart(final boolean firstPart) {
 		final LinkedList<String> itemsList = new LinkedList<String>();
+		String action = null;
 		if (isCollapsed()) {
 			final Queue<MenuGroupNode> menu = new Queue<MenuGroupNode>(methods.client.getCollapsedMenuItems());
 			for (MenuGroupNode mgn = menu.getHead(); mgn != null; mgn = menu.getNext()) {
 				final Queue<MenuItemNode> submenu = new Queue<MenuItemNode>(mgn.getItems());
 				for (MenuItemNode min = submenu.getHead(); min != null; min = submenu.getNext()) {
 					itemsList.add(firstPart ? min.getAction() : min.getOption());
+					if (action == null) {
+						action = min.getAction();
+					}
 				}
 			}
 		} else {
 			final Deque<MenuItemNode> menu = new Deque<MenuItemNode>(methods.client.getMenuItems());
 			for (MenuItemNode min = menu.getHead(); min != null; min = menu.getNext()) {
 				itemsList.add(firstPart ? min.getAction() : min.getOption());
+				if (action == null) {
+					action = min.getAction();
+				}
 			}
 		}
 		final String[] items = itemsList.toArray(new String[itemsList.size()]);
@@ -303,8 +308,8 @@ public class Menu extends MethodProvider {
 				output.add(item == null ? "" : stripFormatting(item));
 			}
 		}
-		if (menusReversed || (output.size() > 1 && output.get(0).equals("Cancel"))) {
-			menusReversed = true;
+		action = action == null ? "" : stripFormatting(action);
+		if (output.size() > 1 && action != null && action.equals("Cancel")) {
 			Collections.reverse(output);
 		}
 		return output.toArray(new String[output.size()]);
