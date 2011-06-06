@@ -38,7 +38,7 @@ public class Bank extends MethodProvider {
 	};
 
 	public static final Filter<RSNPC> NPC_BANKERS = new Filter<RSNPC>() {
-		private final String[] bankerNames = {"Banker", "Fremennik banker"};
+		private final String[] bankerNames = {"Banker", "Fremennik banker", "Emerald Benedict"};
 
 		public boolean accept(final RSNPC rsNPC) {
 			final String name = rsNPC != null ? rsNPC.getName() : null;
@@ -427,7 +427,7 @@ public class Bank extends MethodProvider {
 				if (bankBooth != null) {
 					didAction = bankBooth.interact("Use-quickly") || bankBooth.interact("Open Shantay chest") || bankBooth.interact("Use Bank chest");
 				} else if (banker != null) {
-					didAction = banker.interact("Bank Banker");
+					didAction = banker.interact("Bank Banker") || banker.interact("Bank Emerald Benedict");
 				}
 				if (didAction) {
 					int count = 0;
