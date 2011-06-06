@@ -439,8 +439,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				if (find.length() != 0 && !def.name.toLowerCase().contains(find)) {
 					continue;
 				}
-				final ArrayList<String> list = new ArrayList<String>(def.keywords.length);
-				for (final String key : def.keywords) {
+				final List<String> keywords = def.getKeywords();
+				final ArrayList<String> list = new ArrayList<String>(keywords.size());
+				for (final String key : keywords) {
 					list.add(key.toLowerCase());
 				}
 				boolean hit = true;
