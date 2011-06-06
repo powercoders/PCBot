@@ -26,7 +26,7 @@ public class JComboCheckBox extends JComboBox implements ActionListener {
 	}
 
 	public void actionPerformed(final ActionEvent e) {
-		if (e.getModifiers() == 0) {
+		if (e.getModifiers() == 0 || getItemCount() < 2) {
 			return;
 		}
 		final JComboBox cb = (JComboBox) e.getSource();
