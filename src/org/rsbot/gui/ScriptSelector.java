@@ -11,6 +11,7 @@ import org.rsbot.script.provider.ScriptDefinition;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.script.provider.ScriptLikes;
 import org.rsbot.script.provider.ScriptSource;
+import org.rsbot.service.Preferences;
 import org.rsbot.service.ServiceException;
 
 import javax.swing.*;
@@ -61,6 +62,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		this.frame = frame;
 		this.bot = bot;
 		scripts = new ArrayList<ScriptDefinition>();
+		connected = Preferences.getInstance().sdnShow;
 		model = new ScriptTableModel(scripts);
 		ScriptLikes.load();
 	}
@@ -89,6 +91,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				scripts.addAll(net);
 			}
 		}
+		Preferences.getInstance().sdnShow = connected;
 		scripts.addAll(SRC_PRE_COMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
 		Collections.sort(scripts);
@@ -245,6 +248,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				contextMenu.show(table, e.getX(), e.getY());
 			}
 		});
+		//table.setAutoCreateRowSorter(true);
 		table.setRowHeight(20);
 		table.setIntercellSpacing(new Dimension(1, 1));
 		table.setShowGrid(false);
@@ -290,7 +294,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			}
 		});
 		submit = new JButton("Start", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
-		final JButton connect = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_CONNECT)));
+		final JButton connect = new JButton(new ImageIcon(Configuration.getImage(connected ? Configuration.Paths.Resources.ICON_CONNECT : Configuration.Paths.Resources.ICON_DISCONNECT)));
 		connect.setToolTipText("Show network scripts");
 		submit.setEnabled(false);
 		submit.addActionListener(new ActionListener() {
