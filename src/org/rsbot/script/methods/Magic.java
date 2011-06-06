@@ -28,6 +28,145 @@ public class Magic extends MethodProvider {
 			return id;
 		}
 	}
+	
+	/**
+	 * Provides information for magic spells.
+	 * 
+	 * @author Dunnkers
+	 */
+	public static enum Spell {
+		/*MODERN*/
+		LUMBRIDGE_HOME_TELEPORT(Book.MODERN, 24, 0, 0),
+		WIND_RUSH(Book.MODERN, 98, 1, 2.7),
+		WIND_STRIKE(Book.MODERN, 25, 1, 5.5),
+		CONFUSE(Book.MODERN, 26, 3, 13),
+		ENCHANT_CROSSBOW_BOLT_OPAL(Book.MODERN, 27, 4, 9),
+		WATER_STRIKE(Book.MODERN, 28, 5, 7.5),
+		ENCHANT_LEVEL_1_JEWELLERY(Book.MODERN, 29, 7, 17.5),
+		ENCHANT_CROSSBOW_BOLT_SAPPHIRE(Book.MODERN, 27, 7, 17),
+		EARTH_STRIKE(Book.MODERN, 30, 9, 9.5),
+		MOBILISING_ARMIES_TELEPORT(Book.MODERN, 37, 10, 19),
+		WEAKEN(Book.MODERN, 31, 11, 21),
+		FIRE_STRIKE(Book.MODERN, 32, 13, 11.5),
+		ENCHANT_CROSSBOW_BOLT_JADE(Book.MODERN, 27, 14, 19),
+		BONES_TO_BANANAS(Book.MODERN, 33, 15, 25),
+		WIND_BOLT(Book.MODERN, 34, 17, 13.5),
+		CURSE(Book.MODERN, 35, 19, 29),
+		BIND(Book.MODERN, 36, 20, 30),
+		LOW_LEVEL_ALCHEMY(Book.MODERN, 38, 21, 31),
+		WATER_BOLT(Book.MODERN, 39, 23, 16.5),
+		ENCHANT_CROSSBOW_BOLT_PEARL(Book.MODERN, 27, 24, 29),
+		VARROCK_TELEPORT(Book.MODERN, 40, 25, 35),
+		ENCHANT_LEVEL_2_JEWELLERY(Book.MODERN, 41, 27, 37),
+		ENCHANT_CROSSBOW_BOLT_EMERALD(Book.MODERN, 27, 27, 37),
+		EARTH_BOLT(Book.MODERN, 42, 29, 19.5),
+		ENCHANT_CROSSBOW_BOLT_RED_TOPAZ(Book.MODERN, 27, 29, 33),
+		LUMBRIDGE_TELEPORT(Book.MODERN, 43, 31, 41),
+		TELEKINETIC_GRAB(Book.MODERN, 44, 33, 43),
+		FIRE_BOLT(Book.MODERN, 45, 35, 22.5),
+		FALADOR_TELEPORT(Book.MODERN, 46, 37, 47),
+		CRUMBLE_UNDEAD(Book.MODERN, 47, 39, 24.5),
+		TELEPORT_TO_HOUSE(Book.MODERN, 48, 40, 30),
+		WIND_BLAST(Book.MODERN, 49, 41, 25.5),
+		SUPERHEAT_ITEM(Book.MODERN, 50, 43, 53),
+		CAMELOT_TELEPORT(Book.MODERN, 51, 45, 34),
+		WATER_BLAST(Book.MODERN, 52, 47, 28.5),
+		ENCHANT_LEVEL_3_JEWELLERY(Book.MODERN, 53, 49, 59),
+		ENCHANT_CROSSBOW_BOLT_RUBY(Book.MODERN, 27, 49, 59),
+		IBAN_BLAST(Book.MODERN, 54, 50, 61),
+		SNARE(Book.MODERN, 55, 50, 60),
+		MAGIC_DART(Book.MODERN, 56, 50, 61),
+		ARDOUGNE_TELEPORT(Book.MODERN, 57, 51, 61),
+		EARTH_BLAST(Book.MODERN, 58, 53, 31.5),
+		HIGH_LEVEL_ALCHEMY(Book.MODERN, 59, 55, 65),
+		CHARGE_WATER_ORB(Book.MODERN, 60, 56, 56),
+		ENCHANT_LEVEL_4_JEWELLERY(Book.MODERN, 61, 57, 67),
+		ENCHANT_CROSSBOW_BOLT_DIAMOND(Book.MODERN, 27, 57, 67),
+		WATCHTOWER_TELEPORT(Book.MODERN, 62, 58, 68),
+		FIRE_BLAST(Book.MODERN, 63, 59, 34.5),
+		CHARGE_EARTH_ORB(Book.MODERN, 64, 60, 70),
+		BONES_TO_PEACHES(Book.MODERN, 65, 60, 65),
+		SARADOMIN_STRIKE(Book.MODERN, 66, 60, 61),
+		CLAWS_OF_GUTHIX(Book.MODERN, 67, 60, 61),
+		FLAMES_OF_ZAMORAK(Book.MODERN, 68, 60, 61),
+		TROLLHEIM_TELEPORT(Book.MODERN, 69, 61, 68),
+		WIND_WAVE(Book.MODERN, 70, 62, 36),
+		CHARGE_FIRE_ORB(Book.MODERN, 71, 63, 73),
+		TELEPORT_TO_APE_ATOLL(Book.MODERN, 72, 64, 74),
+		WATER_WAVE(Book.MODERN, 73, 65, 37.5),
+		CHARGE_AIR_ORB(Book.MODERN, 74, 66, 76),
+		VULNERABILITY(Book.MODERN, 75, 66, 76),
+		ENCHANT_LEVEL_5_JEWELLERY(Book.MODERN, 76, 68, 78),
+		ENCHANT_CROSSBOW_BOLT_DRAGONSTONE(Book.MODERN, 27, 68, 78),
+		EARTH_WAVE(Book.MODERN, 77, 70, 40),
+		ENFEEBLE(Book.MODERN, 78, 73, 83),
+		TELEOTHER_LUMBRIDGE(Book.MODERN, 79, 74, 84),
+		FIRE_WAVE(Book.MODERN, 80, 75, 42.5),
+		ENTANGLE(Book.MODERN, 81, 79, 89),
+		STUN(Book.MODERN, 82, 80, 90),
+		CHARGE(Book.MODERN, 83, 80, 180),
+		WIND_SURGE(Book.MODERN, 84, 81, 75),
+		TELEOTHER_FALADOR(Book.MODERN, 85, 82, 92),
+		TELEPORT_BLOCK(Book.MODERN, 86, 85, 80),
+		WATER_SURGE(Book.MODERN, 87, 85, 80),
+		ENCHANT_LEVEL_6_JEWELLERY(Book.MODERN, 88, 87, 97),
+		ENCHANT_CROSSBOW_BOLT_ONYX(Book.MODERN, 27, 87, 97),
+		EARTH_SURGE(Book.MODERN, 90, 90, 85),
+		TELEOTHER_CAMELOT(Book.MODERN, 89, 90, 100),
+		FIRE_SURGE(Book.MODERN, 91, 95, 90),
+		
+		/*LUNAR*/
+		//TODO Add the Lunar spells
+		
+		/*ANCIENT*/
+		//TODO Add the Ancient spells
+		;
+		
+		private final Book book;
+		private final int component;
+		private final int level;
+		private final double experience;
+		
+		Spell(Book book, int component, int level, double experience) {
+			this.book = book;
+			this.component = component;
+			this.level = level;
+			this.experience = experience;
+		}
+		
+		/**
+		 * Gets the name of this spell.
+		 * <p>
+		 * <i>Example: "Lumbridge Home Teleport"</i>
+		 * 
+		 * @return The name of this spell.
+		 */
+		public String getName() {
+			StringBuilder name = new StringBuilder(name().toLowerCase().replaceAll("_ ", " "));
+			int i = 0;
+			do {
+				name.replace(i, i + 1, name.substring(i, i + 1).toUpperCase());
+				i = name.indexOf(" ", i) + 1;
+			} while (i > 0 && i < name.length());
+			return name.toString();
+		}
+
+		public Book getBook() {
+			return book;
+		}
+
+		public int getComponent() {
+			return component;
+		}
+
+		public int getLevel() {
+			return level;
+		}
+
+		public double getExperience() {
+			return experience;
+		}
+	}
 
 	// Buttons
 	public static final int INTERFACE_DEFENSIVE_STANCE = 2;
@@ -366,5 +505,68 @@ public class Magic extends MethodProvider {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Checks if we are on the correct spell book and if we have the required
+	 * level.
+	 * 
+	 * @param spell The spell to check.
+	 * @return <tt>True</tt> if we can cast this spell, otherwise <tt>False</
+	 */
+	public boolean canCastSpell(Spell spell) {
+		if (!getCurrentSpellBook().equals(spell.getBook())) {
+			return false;
+		}
+		if (!(methods.skills.getRealLevel(Skills.MAGIC) >= spell.level)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Clicks a specified spell, opens magic tab if not open and uses interface
+	 * of the spell to click it, so it works if the spells are layout in any
+	 * sway.
+	 *
+	 * @param spell The spell to cast.
+	 * @return <tt>true</tt> if the spell was clicked; otherwise <tt>false</tt>.
+	 */
+	public boolean castSpell(final Spell spell) {
+		return castSpell(spell.getComponent());
+	}
+
+	/**
+	 * Hovers a specified spell, opens magic tab if not open and uses interface
+	 * of the spell to hover it, so it works if the spells are layout in any
+	 * sway.
+	 *
+	 * @param spell The spell to hover.
+	 * @return <tt>true</tt> if the spell was clicked; otherwise <tt>false</tt>.
+	 */
+	public boolean hoverSpell(final Spell spell) {
+		return hoverSpell(spell.getComponent());
+	}
+
+	/**
+	 * Auto-casts a spell via the magic tab.
+	 *
+	 * @param spell The spell to auto-cast.
+	 * @return <tt>true</tt> if the "Auto-cast" interface option was clicked;
+	 *         otherwise <tt>false</tt>.
+	 */
+	public boolean autoCastSpell(final Spell spell) {
+		return autoCastSpell(spell.getComponent());
+	}
+
+	/**
+	 * Casts a spell on a Player/NPC/Object/Ground Item.
+	 *
+	 * @param entity A Character or Animable.
+	 * @param spell  The spell to cast.
+	 * @return <tt>true</tt> if casted; otherwise <tt>false</tt>.
+	 */
+	public boolean castSpellOn(final Object entity, final Spell spell) {
+		return castSpellOn(entity, spell.getComponent());
 	}
 }
