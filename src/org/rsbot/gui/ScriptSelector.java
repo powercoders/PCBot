@@ -42,6 +42,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private final Bot bot;
 	private JTable table;
 	private JTextField search;
+	private final static Color searchAltColor = Color.GRAY;
 	private JComboBox accounts;
 	private final JComboCheckBox categories = new JComboCheckBox();
 	private final ScriptTableModel model;
@@ -127,7 +128,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				dispose();
 			}
 		});
-		final Color searchAltColor = Color.GRAY;
 		final JButton refresh = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
 		refresh.setToolTipText("Refresh");
 		refresh.addActionListener(new ActionListener() {
@@ -256,7 +256,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		toolBar.setFloatable(false);
 		search = new JTextField();
 		final Color searchDefaultColor = search.getForeground();
-		final String searchDefaultText = "Type to filter...\0";
+		final String searchDefaultText = "Search";
 		search.setText(searchDefaultText);
 		search.setForeground(searchAltColor);
 		search.addFocusListener(new FocusAdapter() {
@@ -380,7 +380,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	private void filter() {
-		model.search((search == null || search.getText().contains("\0")) ? "" : search.getText(), categories.getSelectedItems());
+		model.search((search == null || search.getForeground() == searchAltColor) ? "" : search.getText(), categories.getSelectedItems());
 	}
 
 	private void setColumnWidths(final JTable table, final int... widths) {
