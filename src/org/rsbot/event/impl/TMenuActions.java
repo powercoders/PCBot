@@ -15,7 +15,6 @@ public class TMenuActions implements TextPaintListener {
 		menu = bot.getMethodContext().menu;
 	}
 
-	@Override
 	public int drawLine(final Graphics render, int idx) {
 		final String[] items = menu.getItems();
 		int i = 0;
