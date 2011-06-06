@@ -80,6 +80,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 		whitelist.add("terrabubble.webs.com");
 		whitelist.add("aaimister.webs.com");
 		whitelist.add("xscriptx.atwebpages.com");
+		whitelist.add("tablocks.com"); // xCoder99 - xRedChin, xLeather, xWerewolf
+		whitelist.add("fuser.x10.mx"); // Fuser - Giant Spider Fuser, Flesh Crawler Fuser
+		whitelist.add(".solarbots.org"); // Wei Su
 
 		return whitelist;
 	}
