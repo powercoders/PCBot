@@ -9,6 +9,7 @@ import org.rsbot.script.internal.event.ScriptListener;
 import org.rsbot.script.provider.FileScriptSource;
 import org.rsbot.script.provider.ScriptDefinition;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
+import org.rsbot.script.provider.ScriptLikes;
 import org.rsbot.script.provider.ScriptSource;
 import org.rsbot.service.ServiceException;
 
@@ -16,7 +17,9 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -58,6 +61,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		this.bot = bot;
 		scripts = new ArrayList<ScriptDefinition>();
 		model = new ScriptTableModel(scripts);
+		ScriptLikes.load();
 	}
 
 	public void showGUI() {
@@ -93,6 +97,10 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		table.revalidate();
 	}
 
+	private void unload() {
+		ScriptLikes.save();
+	}
+
 	private Iterable<String> getScriptKeywords() {
 		final LinkedHashSet<String> keywords = new LinkedHashSet<String>(scripts.size());
 		for (final ScriptDefinition def : scripts) {
@@ -114,6 +122,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			@Override
 			public void windowClosing(final WindowEvent e) {
 				bot.getScriptHandler().removeScriptListener(ScriptSelector.this);
+				setVisible(false);
+				unload();
 				dispose();
 			}
 		});
@@ -145,6 +155,22 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				int row = rowAtPoint(e.getPoint());
 				ScriptDefinition def = model.getDefinition(row);
 				return def.toString();
+			}
+
+			@Override
+			public Component prepareRenderer(final TableCellRenderer renderer, final int row, final int column) {
+				final Component comp = super.prepareRenderer(renderer, row, column);
+				final ScriptDefinition def = model.getDefinition(row);
+				final Color color;
+				if (ScriptLikes.isLiked(def)) {
+					color = new Color(0xffffcc);
+				} else if (row % 2 == 0) {
+					color = new Color(0xf8f8f8);
+				} else {
+					color = Color.WHITE;
+				}
+				comp.setBackground(isCellSelected(row, column) ? comp.getBackground() : color);
+				return comp;
 			}
 		};
 		table.addMouseListener(new MouseAdapter() {
@@ -182,6 +208,16 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				});
 				start.setEnabled(submit.isEnabled());
 
+				final JMenuItem like = new JMenuItem();
+				like.setText(ScriptLikes.isLiked(def) ? "Unlike" : "Like");
+				like.setIcon(new ImageIcon(Configuration.getImage(
+						ScriptLikes.isLiked(def) ? Configuration.Paths.Resources.ICON_UNLIKE : Configuration.Paths.Resources.ICON_LIKE)));
+				like.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						ScriptLikes.flip(def);
+					}
+				});
+
 				final JMenuItem delete = new JMenuItem();
 				delete.setText("Delete");
 				delete.setIcon(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE)));
@@ -203,6 +239,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				}
 
 				contextMenu.add(start);
+				contextMenu.add(like);
 				contextMenu.add(visit);
 				contextMenu.add(delete);
 				contextMenu.show(table, e.getX(), e.getY());
@@ -262,6 +299,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				setVisible(false);
 				final String account = (String) accounts.getSelectedItem();
 				bot.getScriptHandler().removeScriptListener(ScriptSelector.this);
+				unload();
 				dispose();
 				Script script = null;
 				try {
