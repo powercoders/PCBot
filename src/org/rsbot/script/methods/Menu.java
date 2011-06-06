@@ -25,6 +25,7 @@ public class Menu extends MethodProvider {
 	private String[] menuActionsCache = new String[0];
 
 	private boolean menuListenerStarted = false;
+	private static boolean menusReversed = false;
 
 	Menu(final MethodContext ctx) {
 		super(ctx);
@@ -254,7 +255,8 @@ public class Menu extends MethodProvider {
 			}
 		}
 
-		if (output.size() > 1 && output.get(0).equals("Cancel")) {
+		if (menusReversed || (output.size() > 1 && output.get(0).equals("Cancel"))) {
+			menusReversed = true;
 			Collections.reverse(output);
 		}
 
@@ -274,28 +276,23 @@ public class Menu extends MethodProvider {
 	}
 
 	private String[] getMenuItemPart(final boolean firstPart) {
-		final LinkedList<String> actionsList = new LinkedList<String>();
-		final LinkedList<String> optionsList = new LinkedList<String>();
+		final LinkedList<String> itemsList = new LinkedList<String>();
 		if (isCollapsed()) {
 			final Queue<MenuGroupNode> menu = new Queue<MenuGroupNode>(methods.client.getCollapsedMenuItems());
 			for (MenuGroupNode mgn = menu.getHead(); mgn != null; mgn = menu.getNext()) {
 				final Queue<MenuItemNode> submenu = new Queue<MenuItemNode>(mgn.getItems());
 				for (MenuItemNode min = submenu.getHead(); min != null; min = submenu.getNext()) {
-					actionsList.add(min.getAction());
-					optionsList.add(min.getOption());
+					itemsList.add(firstPart ? min.getAction() : min.getOption());
 				}
 			}
 		} else {
 			final Deque<MenuItemNode> menu = new Deque<MenuItemNode>(methods.client.getMenuItems());
 			for (MenuItemNode min = menu.getHead(); min != null; min = menu.getNext()) {
-				actionsList.add(min.getAction());
-				optionsList.add(min.getOption());
+				itemsList.add(firstPart ? min.getAction() : min.getOption());
 			}
 		}
-		final String[] items = firstPart ? actionsList.toArray(new String[actionsList.size()]) : optionsList.toArray(new String[optionsList.size()]);
-		final String[] actionItems = actionsList.toArray(new String[actionsList.size()]);
+		final String[] items = itemsList.toArray(new String[itemsList.size()]);
 		final LinkedList<String> output = new LinkedList<String>();
-		final LinkedList<String> actionsOutput = new LinkedList<String>();
 		if (isCollapsed()) {
 			for (final String item : items) {
 				output.add(item == null ? "" : stripFormatting(item));
@@ -306,19 +303,8 @@ public class Menu extends MethodProvider {
 				output.add(item == null ? "" : stripFormatting(item));
 			}
 		}
-		if (!firstPart) {
-			if (isCollapsed()) {
-				for (final String item : actionItems) {
-					actionsOutput.add(item == null ? "" : stripFormatting(item));
-				}
-			} else {
-				for (int i = actionItems.length - 1; i >= 0; i--) {
-					final String item = actionItems[i];
-					actionsOutput.add(item == null ? "" : stripFormatting(item));
-				}
-			}
-		}
-		if ((firstPart ? output.size() : actionsOutput.size()) > 1 && (firstPart ? output.get(0) : actionsOutput.get(0)).equals("Cancel")) {
+		if (menusReversed || (output.size() > 1 && output.get(0).equals("Cancel"))) {
+			menusReversed = true;
 			Collections.reverse(output);
 		}
 		return output.toArray(new String[output.size()]);
