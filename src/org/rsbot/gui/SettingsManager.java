@@ -40,6 +40,7 @@ public class SettingsManager extends JDialog {
 		public boolean webPassRequire = false;
 		public String webPass = "";
 		public boolean runBetaPatch = false;
+		public boolean sdnShow = true;
 
 		public Preferences(final File store) {
 			this.store = store;
@@ -92,6 +93,9 @@ public class SettingsManager extends JDialog {
 				runBetaPatch = IniParser.parseBool(keys.get("runBetaPatch"));
 				RSLoader.runBeta = Configuration.RUNNING_FROM_JAR ? false : runBetaPatch;
 			}
+			if (keys.containsKey("sdnShow")) {
+				sdnShow = IniParser.parseBool(keys.get("sdnShow"));
+			}
 		}
 
 		public void save() {
@@ -106,6 +110,7 @@ public class SettingsManager extends JDialog {
 			keys.put("webPassRequire", Boolean.toString(webPassRequire));
 			keys.put("webPass", webPass);
 			keys.put("runBetaPatch", Boolean.toString(runBetaPatch));
+			keys.put("sdnShow", Boolean.toString(sdnShow));
 			final HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>(1);
 			data.put(IniParser.emptySection, keys);
 			try {
