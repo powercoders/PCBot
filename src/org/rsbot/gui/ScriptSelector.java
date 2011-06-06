@@ -96,7 +96,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		scripts.addAll(SRC_SOURCES.list());
 		Collections.sort(scripts);
 
-		categories.populate(getScriptKeywords(), false);
+		populateCategories();
 		filter();
 		table.revalidate();
 	}
@@ -105,7 +105,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		ScriptLikes.save();
 	}
 
-	private Iterable<String> getScriptKeywords() {
+	private void populateCategories() {
 		final LinkedHashSet<String> keywords = new LinkedHashSet<String>(scripts.size());
 		for (final ScriptDefinition def : scripts) {
 			keywords.addAll(def.getKeywords());
@@ -114,7 +114,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		keywords.toArray(array);
 		final List<String> list = Arrays.asList(array);
 		Collections.sort(list);
-		return list;
+		categories.populate(list, false);
+		categories.setEnabled(list.size() != 0);
 	}
 
 	private void init() {
@@ -318,18 +319,16 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				}
 			}
 		});
-		if (connect.isEnabled()) {
-			final ActionListener listenConnect = new ActionListener() {
-				public void actionPerformed(final ActionEvent e) {
-					final String icon = connected ? Configuration.Paths.Resources.ICON_DISCONNECT : Configuration.Paths.Resources.ICON_CONNECT;
-					connect.setIcon(new ImageIcon(Configuration.getImage(icon)));
-					connect.repaint();
-					connected = !connected;
-					load();
-				}
-			};
-			connect.addActionListener(listenConnect);
-		}
+		connect.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent arg0) {
+				final String icon = connected ? Configuration.Paths.Resources.ICON_DISCONNECT : Configuration.Paths.Resources.ICON_CONNECT;
+				connect.setIcon(new ImageIcon(Configuration.getImage(icon)));
+				connect.repaint();
+				connected = !connected;
+				load();
+			}
+		});
 		accounts = new JComboBox(AccountManager.getAccountNames());
 		accounts.setPreferredSize(new Dimension(125, 20));
 		categories.setPreferredSize(new Dimension(150, 20));
