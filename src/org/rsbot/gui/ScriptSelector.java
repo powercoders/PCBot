@@ -58,7 +58,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	public ScriptSelector(final BotGUI frame, final Bot bot) {
-		super(frame, "Script Selector", true);
+		super(frame, "Scripts", true);
 		this.frame = frame;
 		this.bot = bot;
 		scripts = new ArrayList<ScriptDefinition>();
