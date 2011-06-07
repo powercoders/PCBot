@@ -29,6 +29,7 @@ public class Configuration {
 			public static final String ROOT = "resources";
 			public static final String SCRIPTS = Paths.SCRIPTS_NAME_SRC + "/";
 			public static final String ROOT_IMG = ROOT + "/images";
+			public static final String SPLASH = ROOT_IMG + "/splash.png";
 			public static final String ICON = ROOT_IMG + "/icon.png";
 			public static final String ICON_APPADD = ROOT_IMG + "/application_add.png";
 			public static final String ICON_APPDELETE = ROOT_IMG + "/application_delete.png";
