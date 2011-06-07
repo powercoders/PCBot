@@ -2,11 +2,8 @@ package org.rsbot.gui;
 
 import org.rsbot.Configuration;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,12 +24,12 @@ public class Splash extends JDialog {
 		setUndecorated(true);
 		setTitle(Configuration.NAME);
 
-		final File file = new File(Configuration.Paths.Resources.SPLASH);
+		final Image image = Configuration.getImage(Configuration.Paths.Resources.SPLASH);
 
 		try {
-			final BufferedImage img = ImageIO.read(file);
-			setSize(img.getWidth(), img.getHeight());
-			final JLabel label = new JLabel(new ImageIcon(img));
+			Icon icon = new ImageIcon(image);
+			setSize(icon.getIconWidth(), icon.getIconHeight());
+			final JLabel label = new JLabel(icon);
 			label.setOpaque(true);
 			label.setBackground(Color.BLACK);
 			add(label);
