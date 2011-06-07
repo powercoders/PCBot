@@ -38,7 +38,7 @@ public class Bank extends MethodProvider {
 	};
 
 	public static final Filter<RSNPC> NPC_BANKERS = new Filter<RSNPC>() {
-		private final String[] bankerNames = {"Banker", "Fremennik banker"};
+		private final String[] bankerNames = {"Banker", "Fremennik banker", "Emerald Benedict"};
 
 		public boolean accept(final RSNPC rsNPC) {
 			final String name = rsNPC != null ? rsNPC.getName() : null;

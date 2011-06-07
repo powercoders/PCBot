@@ -219,7 +219,7 @@ public class Menu extends MethodProvider {
 		option = option.toLowerCase();
 		final String[] actions = getActions();
 		final String[] options = getOptions();
-		/* Throw exception if lenghts unequal? */
+		/* Throw exception if lengths unequal? */
 		for (int i = 0; i < Math.min(actions.length, options.length); i++) {
 			if (actions[i].toLowerCase().contains(action) && options[i].toLowerCase().contains(option)) {
 				return i;
@@ -275,18 +275,25 @@ public class Menu extends MethodProvider {
 
 	private String[] getMenuItemPart(final boolean firstPart) {
 		final LinkedList<String> itemsList = new LinkedList<String>();
+		String action = null;
 		if (isCollapsed()) {
 			final Queue<MenuGroupNode> menu = new Queue<MenuGroupNode>(methods.client.getCollapsedMenuItems());
 			for (MenuGroupNode mgn = menu.getHead(); mgn != null; mgn = menu.getNext()) {
 				final Queue<MenuItemNode> submenu = new Queue<MenuItemNode>(mgn.getItems());
 				for (MenuItemNode min = submenu.getHead(); min != null; min = submenu.getNext()) {
 					itemsList.add(firstPart ? min.getAction() : min.getOption());
+					if (action == null) {
+						action = min.getAction();
+					}
 				}
 			}
 		} else {
 			final Deque<MenuItemNode> menu = new Deque<MenuItemNode>(methods.client.getMenuItems());
 			for (MenuItemNode min = menu.getHead(); min != null; min = menu.getNext()) {
 				itemsList.add(firstPart ? min.getAction() : min.getOption());
+				if (action == null) {
+					action = min.getAction();
+				}
 			}
 		}
 		final String[] items = itemsList.toArray(new String[itemsList.size()]);
@@ -300,6 +307,10 @@ public class Menu extends MethodProvider {
 				final String item = items[i];
 				output.add(item == null ? "" : stripFormatting(item));
 			}
+		}
+		action = action == null ? "" : stripFormatting(action);
+		if (output.size() > 1 && action != null && action.equals("Cancel")) {
+			Collections.reverse(output);
 		}
 		return output.toArray(new String[output.size()]);
 	}

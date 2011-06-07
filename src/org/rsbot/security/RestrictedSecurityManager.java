@@ -13,8 +13,9 @@ import sun.font.FontManager;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.Permission;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.logging.Logger;
 
 /**
@@ -22,7 +23,9 @@ import java.util.logging.Logger;
  */
 public class RestrictedSecurityManager extends SecurityManager {
 	private static Logger log = Logger.getLogger("Security");
-	private static int PORT_HTTP = 80, PORT_HTTPS = 443, PORT_DNS = 53;
+	private final static int PORT_UNKNOWN = -1, PORT_HTTP = 80, PORT_HTTPS = 443, PORT_DNS = 53;
+	public final static String DNSA = "8.8.8.8", DNSB = "8.8.4.4"; // Google Public DNS (http://code.google.com/speed/public-dns/)
+	private static HashSet<String> resolved = new HashSet<String>();
 
 	private String getCallingClass() {
 		final String prefix = Application.class.getPackage().getName() + ".";
@@ -39,93 +42,116 @@ public class RestrictedSecurityManager extends SecurityManager {
 		return Thread.currentThread().getName().startsWith("Script-") || getCallingClass().startsWith("org.rsbot.script.Script");
 	}
 
-	public ArrayList<String> getAllowedHosts() {
-		final ArrayList<String> whitelist = new ArrayList<String>(32);
-
+	public static boolean isHostAllowed(final String host) {
 		// NOTE: if whitelist item starts with a dot "." then it is checked at the end of the host
-		whitelist.add(".imageshack.us");
-		whitelist.add(".tinypic.com");
-		whitelist.add(".photobucket.com");
-		whitelist.add(".imgur.com");
-		whitelist.add(".deviantart.net");
-		whitelist.add(".powerbot.org");
-		whitelist.add(".runescape.com");
-		whitelist.add(".ipcounter.de");
+		final String[] WHITELIST = {
+			".runescape.com",
+			".powerbot.org",
+			".imageshack.us",
+			".tinypic.com",
+			".photobucket.com",
+			".imgur.com",
+			".deviantart.com",
+			".twitter.com",
+			".ipcounter.de",
+			".wikia.com",
+			".wikia.nocookie.net",
 
-		whitelist.add("shadowscripting.org"); // iDungeon
-		whitelist.add("shadowscripting.wordpress.com"); // iDungeon
-		whitelist.add(".glorb.nl"); // SXForce - Swamp Lizzy Paid, Snake Killah
-		whitelist.add("scripts.johnkeech.com"); // MrSneaky - SneakyFarmerPro
-		whitelist.add("myrsdatabase.x10.mx"); // gravemindx - BPestControl, GhoulKiller
-		whitelist.add("thedealer.site11.com"); // XscripterzX - PiratePlanker, DealerTanner
-		whitelist.add("elyzianpirate.web44.net"); // XscripterzX (see above)
-		whitelist.add(".wikia.com"); // common assets and images
-		whitelist.add("jtryba.com"); // jtryba - autoCook, monkR8per
-		whitelist.add("tehgamer.info"); // TehGamer - iMiner
-		whitelist.add("www.universalscripts.org"); // Fletch To 99 - UFletch
-		whitelist.add("www.dunkscripts.freeiz.com"); // Dunnkers
-		whitelist.add("www.dlolpics.com"); // DlolPics
-		whitelist.add(".logikmedia.co"); // countvidal
-		whitelist.add("letthesmokeout.com"); // MrByte
-		whitelist.add("zaszmedia.com"); // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
-		whitelist.add("pumyscript.orgfree.com"); // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
-		whitelist.add("noneevr2.r00t.la"); // noneevr2 - TakeBury
-		whitelist.add("testscriptsecurity.host22.com");//Marneus901 - Runite miner
-		whitelist.add("massacrescripting.net");//ShizZznit - Aviansie Massacre.
-		whitelist.add(".ownagebots.com"); //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
-		whitelist.add("vassdascripts.comuf.com");//Dandan Boy - ?
-		whitelist.add("doout.net84.net");
-		whitelist.add("doout5.webs.com");
-		whitelist.add("terrabubble.netai.net");
-		whitelist.add("terrabubble.webs.com");
-		whitelist.add("aaimister.webs.com");
-		whitelist.add("xscriptx.atwebpages.com");
+			"shadowscripting.org", // iDungeon
+			"shadowscripting.wordpress.com", // iDungeon
+			".glorb.nl", // SXForce - Swamp Lizzy Paid, Snake Killah
+			"scripts.johnkeech.com", // MrSneaky - SneakyFarmerPro
+			"myrsdatabase.x10.mx", // gravemindx - BPestControl, GhoulKiller
+			"thedealer.site11.com", // XscripterzX - PiratePlanker, DealerTanner
+			"elyzianpirate.web44.net", // XscripterzX (see above)
+			"jtryba.com", // jtryba - autoCook, monkR8per
+			"tehgamer.info", // TehGamer - iMiner
+			"www.universalscripts.org", // Fletch To 99 - UFletch
+			"www.dunkscripts.freeiz.com", // Dunnkers
+			"www.dlolpics.com", // DlolPics
+			".logikmedia.co", // countvidal
+			"letthesmokeout.com", // MrByte
+			"zaszmedia.com", // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
+			"pumyscript.orgfree.com", // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
+			"noneevr2.r00t.la", // noneevr2 - TakeBury
+			"testscriptsecurity.host22.com",//Marneus901 - Runite miner
+			"massacrescripting.net",//ShizZznit - Aviansie Massacre.
+			".ownagebots.com", //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
+			"vassdascripts.comuf.com",//Dandan Boy - ?
+			"doout.net84.net",
+			"doout5.webs.com",
+			"terrabubble.netai.net",
+			"terrabubble.webs.com",
+			"aaimister.webs.com",
+			"xscriptx.atwebpages.com",
+			"tablocks.com", // xCoder99 - xRedChin, xLeather, xWerewolf
+			"fuser.x10.mx", // Fuser - Giant Spider Fuser, Flesh Crawler Fuser
+			".solarbots.org", // Wei Su
+		};
 
-		return whitelist;
+		for (final String check : WHITELIST) {
+			if (check.startsWith(".")) {
+				if (host.endsWith(check) || check.equals("." + host)) {
+					return true;
+				}
+			} else if (host.equals(check)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override
 	public void checkAccept(final String host, final int port) {
-		if (port != PORT_DNS) {
+		if (port == PORT_DNS) {
+			checkConnectDNS(host);
+		} else {
+			throw new SecurityException();
+		}
+	}
+
+	private void checkConnectDNS(final String host) {
+		if (!(host.equals(DNSA) || host.equals(DNSB))) {
+			log.warning("DNS lookup denied: " + host);
 			throw new SecurityException();
 		}
 	}
 
 	@Override
 	public void checkConnect(final String host, final int port) {
-		if (host.equalsIgnoreCase("localhost") || host.startsWith("127.") || host.startsWith("192.168.") || host.startsWith("10.")) {
+		if (host.equalsIgnoreCase("localhost") || host.startsWith("127.") || host.startsWith("192.168.") || host.startsWith("10.") || host.endsWith("::1")) {
 			throw new SecurityException();
 		}
 
-		// ports other than HTTP (80), HTTPS (443), DNS (53) and unknown (-1) are automatically denied
-		if (!(port == -1 || port == PORT_HTTP || port == PORT_HTTPS || port == PORT_DNS)) {
-			throw new SecurityException();
-		}
-
-		if (isCallerScript()) {
+		switch (port) {
+		case PORT_UNKNOWN:
+			break;
+		case PORT_DNS:
+			checkConnectDNS(host);
+			break;
+		case PORT_HTTP:
+		case PORT_HTTPS:
 			boolean allowed = false;
 			if (isIpAddress(host)) {
-				// NOTE: loophole in whitelist - temporarily allowed for round robin DNS without reverse host set
-				allowed = true;
+				allowed = resolved.contains(host);
 			} else {
-				for (final String check : getAllowedHosts()) {
-					if (check.startsWith(".")) {
-						if (host.endsWith(check) || check.equals("." + host)) {
-							allowed = true;
-						}
-					} else if (host.equals(check)) {
-						allowed = true;
-					}
-					if (allowed == true) {
-						break;
-					}
-				}
+				allowed = isHostAllowed(host);
 			}
-
 			if (!allowed) {
 				log.warning("Connection denied: " + host);
 				throw new SecurityException();
+			} else {
+				try {
+					for (final InetAddress a : InetAddress.getAllByName(host)) {
+						resolved.add(a.getHostAddress());
+					}
+				} catch (final UnknownHostException ignored) {
+				}
 			}
+			break;
+		default:
+			throw new SecurityException("Connection denied: " + host + ":" + port);
 		}
 
 		super.checkConnect(host, port);

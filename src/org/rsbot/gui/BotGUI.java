@@ -14,6 +14,7 @@ import org.rsbot.script.methods.Web;
 import org.rsbot.script.provider.ScriptDownloader;
 import org.rsbot.script.util.WindowUtil;
 import org.rsbot.script.util.io.WebQueue;
+import org.rsbot.service.Preferences;
 import org.rsbot.service.TwitterUpdates;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.IOHelper;
@@ -39,7 +40,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	private static final long serialVersionUID = -5411033752001988794L;
 	private static final Logger log = Logger.getLogger(BotGUI.class.getName());
 	private final SettingsManager settings;
-	private final SettingsManager.Preferences preferences;
+	private final Preferences preferences;
 	private BotPanel panel;
 	private BotToolBar toolBar;
 	private BotMenuBar menuBar;
@@ -56,7 +57,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		setLocationRelativeTo(getOwner());
 		setMinimumSize(new Dimension((int) (getSize().width * .8), (int) (getSize().height * .8)));
 		setResizable(true);
-		settings = new SettingsManager(this, new File(Configuration.Paths.getSettingsDirectory(), "preferences.ini"));
+		settings = new SettingsManager(this);
 		preferences = settings.getPreferences();
 		preferences.load();
 		SwingUtilities.invokeLater(new Runnable() {
