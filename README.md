@@ -6,7 +6,7 @@ PCBot is an immensely popular and successful bot for a Java MMORPG. The program 
 
 Download the latest source code with:
 
-    git clone git://github.com/powerbot/PCBot.git
+    git clone git://github.com/powercoders/PCBot.git
 	
 Keep your source up to date with:
 
@@ -14,7 +14,7 @@ Keep your source up to date with:
 
 Subversion is also supported:
 
-    svn checkout http://svn.github.com/powerbot/PCBot.git
+    svn checkout http://svn.github.com/powercoders/PCBot.git
 
 ### Dependencies
 
