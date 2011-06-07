@@ -55,8 +55,10 @@ public class RestrictedSecurityManager extends SecurityManager {
 			".twitter.com",
 			".ipcounter.de",
 			".wikia.com",
+			".wikia.nocookie.net",
 
-			"shadowscripting.org", // iDungeon			"shadowscripting.wordpress.com", // iDungeon
+			"shadowscripting.org", // iDungeon
+			"shadowscripting.wordpress.com", // iDungeon
 			".glorb.nl", // SXForce - Swamp Lizzy Paid, Snake Killah
 			"scripts.johnkeech.com", // MrSneaky - SneakyFarmerPro
 			"myrsdatabase.x10.mx", // gravemindx - BPestControl, GhoulKiller
