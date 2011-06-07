@@ -13,6 +13,7 @@ import sun.font.FontManager;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.Permission;
 import java.util.HashSet;
@@ -134,7 +135,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 		case PORT_HTTPS:
 			boolean allowed = false;
 			if (isIpAddress(host)) {
-				allowed = resolved.contains(host);
+				allowed = resolved.contains(host) || (getClassContext()[1].getName().equals(Socket.class.getName()) && !isCallerScript());
 			} else {
 				allowed = isHostAllowed(host);
 			}
