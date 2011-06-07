@@ -234,6 +234,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 							log.warning("Could not delete " + def.name);
 						}
 						scripts.remove(def);
+						if (ScriptLikes.isLiked(def)) {
+							ScriptLikes.flip(def);
+						}
 						load();
 					}
 				});
