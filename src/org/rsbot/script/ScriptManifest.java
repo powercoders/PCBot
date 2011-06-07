@@ -18,6 +18,6 @@ public @interface ScriptManifest {
 
 	String website() default "";
 
-	int requiresVersion() default 200;
+	int requiresVersion() default 101;
 
 }
