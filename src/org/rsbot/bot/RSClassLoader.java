@@ -18,7 +18,6 @@ import java.util.logging.Logger;
  * @author Alex
  */
 public final class RSClassLoader extends ClassLoader {
-
 	private final Logger log = Logger.getLogger(RSClassLoader.class.getName());
 	private Map<String, byte[]> classes;
 	private ProtectionDomain domain;
@@ -111,5 +110,4 @@ public final class RSClassLoader extends ClassLoader {
 		}
 		return super.loadClass(name);
 	}
-
 }

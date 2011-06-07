@@ -8,7 +8,6 @@ import org.rsbot.event.events.MessageEvent;
 import org.rsbot.script.methods.MethodContext;
 
 public class CallbackImpl implements Callback {
-
 	private final Bot bot;
 
 	public CallbackImpl(final Bot bot) {

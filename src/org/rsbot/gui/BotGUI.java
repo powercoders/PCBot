@@ -15,7 +15,6 @@ import org.rsbot.script.provider.ScriptDownloader;
 import org.rsbot.script.util.WindowUtil;
 import org.rsbot.script.util.io.WebQueue;
 import org.rsbot.service.Preferences;
-import org.rsbot.service.TwitterUpdates;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.IOHelper;
 import org.rsbot.util.io.ScreenshotUtil;
@@ -64,14 +63,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 			public void run() {
 				JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 				ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
-				if (!preferences.hideAds) {
-					new SplashAd(BotGUI.this).display();
-				}
 				if (Configuration.getVersion() < UpdateChecker.getLatestVersion()) {
-					log.info("New version available - please download from " + Configuration.Paths.URLs.DOWNLOAD_SHORT);
-				}
-				if (Configuration.Twitter.ENABLED) {
-					TwitterUpdates.loadTweets(Configuration.Twitter.MESSAGES);
+					log.info("New version available - please download from " + Configuration.Paths.URLs.DOWNLOAD);
 				}
 				addBot();
 				updateScriptControls();

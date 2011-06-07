@@ -8,7 +8,7 @@ CALL :%cmd%
 GOTO :eof
 
 :setvars
-SET name=RSBot
+SET name=PCBot
 SET cc=javac
 SET cflags=-g:none -Xlint:deprecation
 SET src=src

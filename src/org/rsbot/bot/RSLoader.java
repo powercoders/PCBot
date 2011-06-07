@@ -28,7 +28,7 @@ public class RSLoader extends Applet implements Runnable, Loader {
 
 	private Runnable loadedCallback;
 	private String targetName;
-	public static boolean runBeta = false;
+
 	private Dimension size = Application.getPanelSize();
 	/**
 	 * The game class loader
@@ -102,7 +102,7 @@ public class RSLoader extends Applet implements Runnable, Loader {
 		final File ms = Configuration.Paths.getCachableResources().get(Configuration.Paths.URLs.CLIENTPATCH);
 		try {
 			final ClientLoader cl = new ClientLoader();
-			cl.init(runBeta ? new URL(Configuration.Paths.URLs.CLIENTPATCH_BETA) : new URL(Configuration.Paths.URLs.CLIENTPATCH), ms);
+			cl.init(new URL(Configuration.Paths.URLs.CLIENTPATCH), ms);
 			final File client = new File(Configuration.Paths.getCacheDirectory(), "client.dat");
 			cl.load(client, new File(Configuration.Paths.getVersionCache()));
 			targetName = cl.getTargetName();

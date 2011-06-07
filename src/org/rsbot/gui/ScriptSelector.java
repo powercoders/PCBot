@@ -8,10 +8,8 @@ import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
 import org.rsbot.script.provider.FileScriptSource;
 import org.rsbot.script.provider.ScriptDefinition;
-import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.script.provider.ScriptLikes;
 import org.rsbot.script.provider.ScriptSource;
-import org.rsbot.service.Preferences;
 import org.rsbot.service.ServiceException;
 
 import javax.swing.*;
@@ -20,7 +18,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -38,7 +35,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	private static final ScriptSource SRC_SOURCES;
 	private static final ScriptSource SRC_PRE_COMPILED;
-	private static final ScriptSource SRC_NETWORK;
 	private final BotGUI frame;
 	private final Bot bot;
 	private JTable table;
@@ -49,12 +45,10 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private final ScriptTableModel model;
 	private final List<ScriptDefinition> scripts;
 	private JButton submit;
-	private boolean connected = true;
 
 	static {
 		SRC_SOURCES = new FileScriptSource(new File(Configuration.Paths.getScriptsSourcesDirectory()));
 		SRC_PRE_COMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
-		SRC_NETWORK = ScriptDeliveryNetwork.getInstance();
 	}
 
 	public ScriptSelector(final BotGUI frame, final Bot bot) {
@@ -62,7 +56,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		this.frame = frame;
 		this.bot = bot;
 		scripts = new ArrayList<ScriptDefinition>();
-		connected = Preferences.getInstance().sdnShow;
 		model = new ScriptTableModel(scripts);
 		ScriptLikes.load();
 	}
@@ -85,13 +78,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	private void load() {
 		scripts.clear();
-		if (connected) {
-			final List<ScriptDefinition> net = SRC_NETWORK.list();
-			if (net != null) {
-				scripts.addAll(net);
-			}
-		}
-		Preferences.getInstance().sdnShow = connected;
 		scripts.addAll(SRC_PRE_COMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
 		Collections.sort(scripts);
@@ -142,7 +128,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						new Thread() {
 							@Override
 							public void run() {
-								ScriptDeliveryNetwork.getInstance().refresh(true);
 								load();
 								refresh.setEnabled(true);
 							}
@@ -295,8 +280,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			}
 		});
 		submit = new JButton("Start", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
-		final JButton connect = new JButton(new ImageIcon(Configuration.getImage(connected ? Configuration.Paths.Resources.ICON_CONNECT : Configuration.Paths.Resources.ICON_DISCONNECT)));
-		connect.setToolTipText("Show network scripts");
 		submit.setEnabled(false);
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent evt) {
@@ -317,16 +300,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					bot.getScriptHandler().runScript(script);
 					frame.updateScriptControls();
 				}
-			}
-		});
-		connect.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent arg0) {
-				final String icon = connected ? Configuration.Paths.Resources.ICON_DISCONNECT : Configuration.Paths.Resources.ICON_CONNECT;
-				connect.setIcon(new ImageIcon(Configuration.getImage(icon)));
-				connect.repaint();
-				connected = !connected;
-				load();
 			}
 		});
 		accounts = new JComboBox(AccountManager.getAccountNames());
@@ -366,7 +339,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(refresh);
 		toolBar.add(Box.createHorizontalStrut(5));
-		toolBar.add(connect);
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(submit);
 		final JPanel center = new JPanel();

@@ -4,8 +4,6 @@ import org.rsbot.Configuration;
 import org.rsbot.log.LabelLogHandler;
 import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
-import org.rsbot.script.provider.ScriptDeliveryNetwork;
-import org.rsbot.security.RestrictedSecurityManager;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IOHelper;
@@ -67,20 +65,11 @@ public class LoadScreen extends JFrame {
 		log.info("Registering logs");
 		bootstrap();
 
-		log.info("Scanning hosts file for malicious content");
-		RestrictedSecurityManager.fixHosts();
-
 		log.info("Extracting resources");
 		extractResources();
 
 		log.info("Creating directories");
 		Configuration.createDirectories();
-
-		log.info("Enforcing security policy");
-		System.setProperty("sun.net.spi.nameservice.nameservers", RestrictedSecurityManager.DNSA + "," + RestrictedSecurityManager.DNSB);
-		System.setProperty("sun.net.spi.nameservice.provider.1", "dns,sun");
-		System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
-		System.setSecurityManager(new RestrictedSecurityManager());
 
 		log.info("Downloading resources");
 		for (final Entry<String, File> item : Configuration.Paths.getCachableResources().entrySet()) {
@@ -89,9 +78,6 @@ public class LoadScreen extends JFrame {
 			} catch (final IOException ignored) {
 			}
 		}
-
-		log.info("Downloading network scripts");
-		ScriptDeliveryNetwork.getInstance().list();
 
 		log.info("Checking for updates");
 
@@ -102,7 +88,7 @@ public class LoadScreen extends JFrame {
 		} else if (Configuration.RUNNING_FROM_JAR) {
 			try {
 				if (UpdateChecker.isDeprecatedVersion()) {
-					error = "Please update at " + Configuration.Paths.URLs.DOWNLOAD_SHORT;
+					error = "Please update at " + Configuration.Paths.URLs.DOWNLOAD;
 				}
 			} catch (final IOException ignored) {
 			}

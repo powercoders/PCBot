@@ -49,10 +49,7 @@ public class Configuration {
 			public static final String ICON_REPORTKEY = ROOT_IMG + "/report_key.png";
 			public static final String ICON_REPORT_DISK = ROOT_IMG + "/report_disk.png";
 			public static final String ICON_INFO = ROOT_IMG + "/information.png";
-			public static final String ICON_KEY = ROOT_IMG + "/key.png";
 			public static final String ICON_KEYBOARD = ROOT_IMG + "/keyboard.png";
-			public static final String ICON_CONNECT = ROOT_IMG + "/connect.png";
-			public static final String ICON_DISCONNECT = ROOT_IMG + "/disconnect.png";
 			public static final String ICON_START = ROOT_IMG + "/control_play.png";
 			public static final String ICON_SCRIPT = ROOT_IMG + "/script.png";
 			public static final String ICON_SCRIPT_ADD = ROOT_IMG + "/script_add.png";
@@ -68,21 +65,14 @@ public class Configuration {
 		}
 
 		public static class URLs {
-			public static final String HOST = "powerbot.org";
+			public static final String HOST = "powercoders.org";
 			private static final String BASE = "http://links." + HOST + "/";
 			public static final String DOWNLOAD = BASE + "download";
-			public static final String DOWNLOAD_SHORT = HOST + "/download";
 			public static final String CLIENTPATCH = BASE + "modscript";
-			public static final String CLIENTPATCH_BETA = BASE + "modscript-beta";
-			public static final String VERSION = BASE + "version.txt";
+			public static final String VERSION = BASE + "version";
 			public static final String VERSION_KILL = BASE + "version-kill";
 			public static final String PROJECT = BASE + "git-project";
 			public static final String SITE = BASE + "site";
-			public static final String SDN_CONTROL = BASE + "sdn-control";
-			public static final String AD_INFO = BASE + "botad-info";
-			public static final String SERVICELOGIN = BASE + "servicelogin";
-			public static final String TRIDENT = BASE + "trident";
-			public static final String SUBSTANCE = BASE + "substance";
 		}
 
 		public static final String ROOT = new File(".").getAbsolutePath();
@@ -205,32 +195,19 @@ public class Configuration {
 
 		public static Map<String, File> getCachableResources() {
 			if (cachableResources == null) {
-				cachableResources = new HashMap<String, File>(8);
+				cachableResources = new HashMap<String, File>(3);
 				cachableResources.put(URLs.CLIENTPATCH, new File(getCacheDirectory(), "ms.dat"));
 				cachableResources.put(URLs.VERSION, new File(getCacheDirectory(), "version-latest.txt"));
 				cachableResources.put(URLs.VERSION_KILL, new File(getCacheDirectory(), "version-kill.txt"));
-				cachableResources.put(URLs.AD_INFO, new File(getCacheDirectory(), "ads.txt"));
-				if (SKINNED) {
-					cachableResources.put(URLs.TRIDENT, new File(getCacheDirectory(), "trident.jar"));
-					cachableResources.put(URLs.SUBSTANCE, new File(getCacheDirectory(), "substance.jar"));
-				}
 			}
 			return cachableResources;
 		}
 	}
 
-	public static final String NAME = "RSBot";
+	public static final String NAME = "PCBot";
 	public static final String NAME_LOWERCASE = NAME.toLowerCase();
 	private static final OperatingSystem CURRENT_OS;
 	public static boolean RUNNING_FROM_JAR = false;
-	public static final boolean SKINNED = false;
-
-	public static class Twitter {
-		public static final boolean ENABLED = true;
-		public static final String NAME = "rsbotorg";
-		public static final String HASHTAG = "#" + NAME_LOWERCASE;
-		public static final int MESSAGES = 3;
-	}
 
 	static final URL resource;
 
