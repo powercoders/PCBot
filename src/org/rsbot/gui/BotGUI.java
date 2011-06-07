@@ -179,6 +179,8 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 						updateScriptControls();
 					} else if (option.equals(Messages.LESSCPU)) {
 						lessCpu(((JCheckBoxMenuItem) evt.getSource()).isSelected());
+					} else if (option.equals(Messages.DISABLECANVAS)) {
+						disableCanvas(((JCheckBoxMenuItem) evt.getSource()).isSelected());
 					} else if (option.equals(Messages.EXTDVIEWS)) {
 						menuBar.setExtendedView(((JCheckBoxMenuItem) evt.getSource()).isSelected());
 					} else if (option.equals(Messages.DISABLEANTIRANDOMS)) {
@@ -294,12 +296,16 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	private void lessCpu(boolean on) {
-		disableRendering(on || menuBar.isTicked(Messages.LESSCPU));
+		final Bot bot = getCurrentBot();
+		if (bot != null) {
+			bot.disableRendering = on;
+		}
 	}
 
-	public void disableRendering(final boolean mode) {
-		for (final Bot bot : bots) {
-			bot.disableRendering = mode;
+	private void disableCanvas(boolean on) {
+		final Bot bot = getCurrentBot();
+		if (bot != null) {
+			bot.disableGraphics = on;
 		}
 	}
 
