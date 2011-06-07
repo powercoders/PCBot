@@ -2,7 +2,6 @@ package org.rsbot.script.randoms;
 
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.wrappers.RSNPC;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSTile;
 
@@ -10,11 +9,11 @@ import org.rsbot.script.wrappers.RSTile;
 public class FirstTimeDeath extends Random {
 	private int step;
 	private boolean exit;
-	private RSNPC reaper;
+	private RSObject reaperChair;
 
 	@Override
 	public boolean activateCondition() {
-		return (reaper = npcs.getNearest(8869)) != null || (reaper = npcs.getNearest(8870)) != null;
+		return (reaperChair = objects.getNearest(45802)) != null || (reaperChair = objects.getNearest(45802)) != null;
 	}
 
 	@Override
@@ -28,23 +27,21 @@ public class FirstTimeDeath extends Random {
 				step++;
 				exit = true;
 				return random(200, 400);
-			} else if (interfaces.getComponent(242, 5).getText()
-					.contains("Enjoy!")) {
+			} else if (interfaces.getComponent(242, 5).getText().contains("Enjoy")) {
 				step++;
 				exit = true;
+			} else if (interfaces.getComponent(236, 2).getText().contains("No")) {
+				interfaces.getComponent(236, 2).doClick();
 			}
 			interfaces.clickContinue();
 			return random(200, 400);
 		}
 		switch (step) {
 			case 0:
-				final RSObject reaperChair = objects.getNearest(45802);
 				reaperChair.interact("Talk-to");
 				sleep(random(1000, 1200));
 				if (!interfaces.canContinue()) {
-					walking.walkTileOnScreen(new RSTile(
-							reaper.getLocation().getX() + 2, reaper.getLocation()
-									.getY() + 1));
+					walking.walkTileOnScreen(new RSTile(reaperChair.getLocation().getX() + 2, reaperChair.getLocation().getY() + 1));
 					camera.turnTo(reaperChair);
 				}
 				break;
@@ -70,6 +67,6 @@ public class FirstTimeDeath extends Random {
 	public void onFinish() {
 		step = -1;
 		exit = false;
-		reaper = null;
+		reaperChair = null;
 	}
 }
