@@ -197,7 +197,7 @@ public class AccountManager extends JDialog implements ActionListener {
 	private JButton removeButton;
 
 	private AccountManager() {
-		super(Frame.getFrames()[0], "Account Manager", true);
+		super(Frame.getFrames()[0], "Accounts", true);
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_REPORTKEY));
 	}
 
@@ -244,7 +244,6 @@ public class AccountManager extends JDialog implements ActionListener {
 		removeButton = new JButton("Remove", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE)));
 		final JButton newButton = new JButton("Add", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_ADD)));
 		final JButton doneButton = new JButton("Save", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REPORT_DISK)));
-		setTitle("Account Manager");
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getSelectionModel().addListSelectionListener(new TableSelectionListener());
 		table.setShowGrid(false);

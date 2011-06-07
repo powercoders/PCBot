@@ -52,7 +52,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	public ScriptSelector(final BotGUI frame, final Bot bot) {
-		super(frame, "Script Selector", true);
+		super(frame, "Scripts", true);
 		this.frame = frame;
 		this.bot = bot;
 		scripts = new ArrayList<ScriptDefinition>();
@@ -219,6 +219,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 							log.warning("Could not delete " + def.name);
 						}
 						scripts.remove(def);
+						if (ScriptLikes.isLiked(def)) {
+							ScriptLikes.flip(def);
+						}
 						load();
 					}
 				});
