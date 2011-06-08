@@ -1,10 +1,14 @@
 package org.rsbot.util;
 
 import org.rsbot.Configuration;
+import org.rsbot.gui.BotGUI;
+import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IOHelper;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Logger;
 
 /**
  * @author Paris
@@ -12,6 +16,7 @@ import java.io.IOException;
 public final class UpdateChecker {
 	private static int latest = -1;
 	public static boolean error = false;
+	private static final Logger log = Logger.getLogger(UpdateChecker.class.getName());
 
 	public static boolean isError() {
 		getLatestVersion();
@@ -35,5 +40,14 @@ public final class UpdateChecker {
 			error = true;
 		}
 		return latest;
+	}
+
+	public static void update(final BotGUI instance) throws IOException {
+		log.info("Downloading update...");
+		final File jarNew = new File(Configuration.NAME + "-" + getLatestVersion() + ".jar");
+		HttpClient.download(new URL(Configuration.Paths.URLs.DOWNLOAD), jarNew);
+		final String jarOld = Configuration.Paths.getRunningJarPath();
+		Runtime.getRuntime().exec("java -jar \"" + jarNew + "\" --delete \"" + jarOld + "\"");
+		instance.cleanExit(true);
 	}
 }
