@@ -221,9 +221,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					public void actionPerformed(ActionEvent e) {
 						final File path = def.path == null || def.path.isEmpty() ? null : new File(def.path);
 						if (path != null && path.exists() && path.delete()) {
-							log.info("Deleted script " + def.name + " (" + def.path + ")");
+							log.info("Removed script " + def.getName());
 						} else {
-							log.warning("Could not delete " + def.name);
+							log.warning("Could not remove " + def.getName());
 						}
 						scripts.remove(def);
 						if (ScriptLikes.isLiked(def)) {
