@@ -47,6 +47,7 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 			def.path = entry.getKey();
 			final HashMap<String, String> values = entry.getValue();
 			def.id = Integer.parseInt(values.get("id"));
+			def.crc32 = values.containsKey("crc32") ? Long.parseLong(values.get("crc32")) : 0;
 			def.name = values.get("name");
 			def.version = Double.parseDouble(values.get("version"));
 			def.description = values.get("description");
