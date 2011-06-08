@@ -35,7 +35,7 @@ public class ClientLoader {
 			fis = new FileInputStream(cache);
 			data = load(fis);
 		} catch (final IOException ioe) {
-			log.severe("Could not load ModScript data");
+			log.severe("Could not load client patch");
 		} finally {
 			try {
 				if (fis != null) {
