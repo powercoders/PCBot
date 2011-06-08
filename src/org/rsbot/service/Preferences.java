@@ -1,15 +1,15 @@
 package org.rsbot.service;
 
+import org.rsbot.Configuration;
+import org.rsbot.bot.RSLoader;
+import org.rsbot.util.io.IniParser;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Logger;
-
-import org.rsbot.Configuration;
-import org.rsbot.bot.RSLoader;
-import org.rsbot.util.io.IniParser;
 
 public class Preferences {
 	private final Logger log = Logger.getLogger(Preferences.class.getName());

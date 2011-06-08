@@ -28,10 +28,10 @@ public class Magic extends MethodProvider {
 			return id;
 		}
 	}
-	
+
 	/**
 	 * Provides information for magic spells.
-	 * 
+	 *
 	 * @author Dunnkers
 	 */
 	public static enum Spell {
@@ -114,31 +114,31 @@ public class Magic extends MethodProvider {
 		EARTH_SURGE(Book.MODERN, 90, 90, 85),
 		TELEOTHER_CAMELOT(Book.MODERN, 89, 90, 100),
 		FIRE_SURGE(Book.MODERN, 91, 95, 90),
-		
+
 		/*LUNAR*/
 		//TODO Add the Lunar spells
-		
+
 		/*ANCIENT*/
 		//TODO Add the Ancient spells
 		;
-		
+
 		private final Book book;
 		private final int component;
 		private final int level;
 		private final double experience;
-		
+
 		Spell(Book book, int component, int level, double experience) {
 			this.book = book;
 			this.component = component;
 			this.level = level;
 			this.experience = experience;
 		}
-		
+
 		/**
 		 * Gets the name of this spell.
-		 * <p>
+		 * <p/>
 		 * <i>Example: "Lumbridge Home Teleport"</i>
-		 * 
+		 *
 		 * @return The name of this spell.
 		 */
 		public String getName() {
@@ -506,11 +506,11 @@ public class Magic extends MethodProvider {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Checks if we are on the correct spell book and if we have the required
 	 * level.
-	 * 
+	 *
 	 * @param spell The spell to check.
 	 * @return <tt>True</tt> if we can cast this spell, otherwise <tt>False</
 	 */
