@@ -18,6 +18,13 @@ public class PaintEvent extends RSEvent {
 
 	@Override
 	public void dispatch(final EventListener el) {
+		if (graphics == null) {
+			try {
+				((PaintListener) el).onRepaint(null);
+			} catch (NullPointerException ignored) {
+			}
+			return;
+		}
 		final Graphics2D g2d = (Graphics2D) graphics;
 
 		// Store settings

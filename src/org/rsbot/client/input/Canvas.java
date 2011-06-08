@@ -21,15 +21,6 @@ public class Canvas extends java.awt.Canvas {
 	private boolean visible;
 	private boolean focused;
 
-	public Canvas() {
-		init();
-	}
-
-	public Canvas(final GraphicsConfiguration c) {
-		super(c);
-		init();
-	}
-
 	@Override
 	public final Graphics getGraphics() {
 		if (bot == null) {
@@ -41,7 +32,7 @@ public class Canvas extends java.awt.Canvas {
 			}
 		}
 		try {
-			Thread.sleep(bot.disableRendering ? SLOW_GRAPHICS_DELAY : GRAPHICS_DELAY);
+			Thread.sleep(bot.disableRendering || bot.disableGraphics ? SLOW_GRAPHICS_DELAY : GRAPHICS_DELAY);
 		} catch (final InterruptedException ignored) {
 		}
 		return bot.getBufferGraphics();
@@ -117,7 +108,6 @@ public class Canvas extends java.awt.Canvas {
 
 	private void init() {
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				setFocused(true);
 			}

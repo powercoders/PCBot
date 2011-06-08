@@ -21,6 +21,13 @@ public class TextPaintEvent extends RSEvent {
 
 	@Override
 	public void dispatch(final EventListener el) {
+		if (graphics == null) {
+			try {
+				idx = ((TextPaintListener) el).drawLine(null, 0);
+			} catch (NullPointerException ignored) {
+			}
+			return;
+		}
 		final Graphics2D g2d = (Graphics2D) graphics;
 
 		// Backup settings
@@ -53,7 +60,8 @@ public class TextPaintEvent extends RSEvent {
 	}
 
 	@Override
-	public long getMask() {
+	public long getMask
+			() {
 		return EventMulticaster.TEXT_PAINT_EVENT;
 	}
 
