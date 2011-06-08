@@ -18,6 +18,7 @@
 /scripts/*.class
 /temp/*
 /scripts/
+/devscripts/
 /temp.txt
 /build.xml
 /manifest.mf
