@@ -70,8 +70,8 @@ public class ClientLoader {
 		if (script.getAttribute("minbotversion") != null) {
 			int botVersion = Configuration.getVersion();
 			int minVersion = Integer.parseInt(script.getAttribute("minbotversion"));
-			if (botVersion < minVersion || true) {
-				throw new IOException("Client patch requires newer application version");
+			if (botVersion < minVersion) {
+				throw new IOException("Client patch requires newer version (" + botVersion + " < " + minVersion + ")");
 			}
 		}
 
