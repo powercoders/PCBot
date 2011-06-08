@@ -4,6 +4,8 @@ import org.rsbot.util.StringUtil;
 
 import java.io.*;
 import java.net.URL;
+import java.util.zip.CRC32;
+import java.util.zip.CheckedInputStream;
 
 /**
  * @author Paris
@@ -94,6 +96,22 @@ public class IOHelper {
 		}
 		if (deleteParent) {
 			path.delete();
+		}
+	}
+
+	public static long crc32(final InputStream in) throws IOException {
+		final CheckedInputStream cis = new CheckedInputStream(in, new CRC32());
+		final byte[] buf = new byte[128];
+		while (cis.read(buf) > -1) {
+		}
+		return cis.getChecksum().getValue();
+	}
+
+	public static long crc32(final File path) {
+		try {
+			return crc32(new FileInputStream(path));
+		} catch (final IOException ignored) {
+			return 0;
 		}
 	}
 }
