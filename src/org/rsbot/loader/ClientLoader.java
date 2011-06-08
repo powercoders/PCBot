@@ -62,19 +62,9 @@ public class ClientLoader {
 
 		if (script.getAttribute("minbotversion") != null) {
 			int botVersion = Configuration.getVersion();
-			try {
-				int minVersion = Integer.parseInt(script.getAttribute("minbotversion"));
-				if (botVersion < minVersion) {
-					JOptionPane.showMessageDialog(
-							null,
-							"The latest update requires you to update your bot. Please download the newst version.",
-							"Outdated bot",
-							JOptionPane.INFORMATION_MESSAGE);
-					throw new IOException("BotVersion #" + botVersion + " < #" + minVersion);
-				}
-
-			} catch (NumberFormatException ignored) {
-
+			int minVersion = Integer.parseInt(script.getAttribute("minbotversion"));
+			if (botVersion < minVersion || true) {
+				throw new IOException("Client patch requires newer application version");
 			}
 		}
 
