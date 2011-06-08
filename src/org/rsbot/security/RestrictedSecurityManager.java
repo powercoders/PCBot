@@ -139,9 +139,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 				} else {
 					allowed = isHostAllowed(host);
 				}
-				if (host.contains(":")) {
-					allowed = true; // temporarily allow IPv6 IP addresses
-				}
 				if (!allowed) {
 					log.warning("Connection denied: " + host);
 					throw new SecurityException();
@@ -162,6 +159,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	private boolean isIpAddress(final String check) {
+		if (check.contains(":")) {
+			return true; // IPv6
+		}
 		final int l = check.length();
 		if (l < 7 || l > 15) {
 			return false;
