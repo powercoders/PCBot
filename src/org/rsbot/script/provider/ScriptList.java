@@ -13,11 +13,11 @@ public class ScriptList {
 			return;
 		}
 		final PrintStream out = System.out;
-		final File file = new File(args[0]);
-		final FileScriptSource source = new FileScriptSource(file);
+		final FileScriptSource source = new FileScriptSource(new File(args[0]));
 		for (final ScriptDefinition item : source.list()) {
 			out.print("[");
-			out.print(new File(item.path).getName());
+			final File file = new File(item.path);
+			out.print(file.getName());
 			out.println("]");
 			out.print("id=");
 			out.println(Integer.toString(item.id));
