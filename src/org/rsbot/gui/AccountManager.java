@@ -414,10 +414,14 @@ public class AccountManager extends JDialog implements ActionListener {
 		AccountStore.Account account = new AccountStore.Account(username);
 		account.setPassword(password);
 		accountStore.add(account);
-		try {
-			accountStore.save();
-		} catch (IOException ignored) {
-		}
+		new Thread() {
+			public void run() {
+				try {
+					accountStore.save();
+				} catch (IOException ignored) {
+				}
+			}
+		}.start();
 	}
 
 	public static void setAttribute(final String username, final String attribute, final String value) {
