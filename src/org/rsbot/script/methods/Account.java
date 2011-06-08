@@ -24,6 +24,15 @@ public class Account extends MethodProvider {
 	}
 
 	/**
+	 * The account display name.
+	 *
+	 * @return The currently selected account's display name.
+	 */
+	public String getDisplayName() {
+		return AccountManager.getDisplayName(getName());
+	}
+
+	/**
 	 * The account password.
 	 *
 	 * @return The currently selected account's password.
