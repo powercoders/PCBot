@@ -6,11 +6,7 @@ import org.rsbot.gui.component.JComboCheckBox;
 import org.rsbot.script.Script;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
-import org.rsbot.script.provider.FileScriptSource;
-import org.rsbot.script.provider.ScriptDefinition;
-import org.rsbot.script.provider.ScriptDeliveryNetwork;
-import org.rsbot.script.provider.ScriptLikes;
-import org.rsbot.script.provider.ScriptSource;
+import org.rsbot.script.provider.*;
 import org.rsbot.service.Preferences;
 import org.rsbot.service.ServiceException;
 
@@ -20,7 +16,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -58,7 +53,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	public ScriptSelector(final BotGUI frame, final Bot bot) {
-		super(frame, "Script Selector", true);
+		super(frame, "Scripts", true);
 		this.frame = frame;
 		this.bot = bot;
 		scripts = new ArrayList<ScriptDefinition>();
@@ -229,11 +224,14 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					public void actionPerformed(ActionEvent e) {
 						final File path = def.path == null || def.path.isEmpty() ? null : new File(def.path);
 						if (path != null && path.exists() && path.delete()) {
-							log.info("Deleted script " + def.name + " (" + def.path + ")");
+							log.info("Removed script " + def.getName());
 						} else {
-							log.warning("Could not delete " + def.name);
+							log.warning("Could not remove " + def.getName());
 						}
 						scripts.remove(def);
+						if (ScriptLikes.isLiked(def)) {
+							ScriptLikes.flip(def);
+						}
 						load();
 					}
 				});
@@ -320,7 +318,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			}
 		});
 		connect.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent arg0) {
 				final String icon = connected ? Configuration.Paths.Resources.ICON_DISCONNECT : Configuration.Paths.Resources.ICON_CONNECT;
 				connect.setIcon(new ImageIcon(Configuration.getImage(icon)));

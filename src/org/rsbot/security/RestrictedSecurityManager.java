@@ -13,6 +13,7 @@ import sun.font.FontManager;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.Permission;
 import java.util.HashSet;
@@ -45,46 +46,48 @@ public class RestrictedSecurityManager extends SecurityManager {
 	public static boolean isHostAllowed(final String host) {
 		// NOTE: if whitelist item starts with a dot "." then it is checked at the end of the host
 		final String[] WHITELIST = {
-			".runescape.com",
-			".powerbot.org",
-			".imageshack.us",
-			".tinypic.com",
-			".photobucket.com",
-			".imgur.com",
-			".deviantart.com",
-			".twitter.com",
-			".ipcounter.de",
-			".wikia.com",
+				".runescape.com",
+				".powerbot.org",
+				".imageshack.us",
+				".tinypic.com",
+				".photobucket.com",
+				".imgur.com",
+				".deviantart.com",
+				".twitter.com",
+				".ipcounter.de",
+				".wikia.com",
+				".wikia.nocookie.net",
 
-			"shadowscripting.org", // iDungeon			"shadowscripting.wordpress.com", // iDungeon
-			".glorb.nl", // SXForce - Swamp Lizzy Paid, Snake Killah
-			"scripts.johnkeech.com", // MrSneaky - SneakyFarmerPro
-			"myrsdatabase.x10.mx", // gravemindx - BPestControl, GhoulKiller
-			"thedealer.site11.com", // XscripterzX - PiratePlanker, DealerTanner
-			"elyzianpirate.web44.net", // XscripterzX (see above)
-			"jtryba.com", // jtryba - autoCook, monkR8per
-			"tehgamer.info", // TehGamer - iMiner
-			"www.universalscripts.org", // Fletch To 99 - UFletch
-			"www.dunkscripts.freeiz.com", // Dunnkers
-			"www.dlolpics.com", // DlolPics
-			".logikmedia.co", // countvidal
-			"letthesmokeout.com", // MrByte
-			"zaszmedia.com", // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
-			"pumyscript.orgfree.com", // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
-			"noneevr2.r00t.la", // noneevr2 - TakeBury
-			"testscriptsecurity.host22.com",//Marneus901 - Runite miner
-			"massacrescripting.net",//ShizZznit - Aviansie Massacre.
-			".ownagebots.com", //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
-			"vassdascripts.comuf.com",//Dandan Boy - ?
-			"doout.net84.net",
-			"doout5.webs.com",
-			"terrabubble.netai.net",
-			"terrabubble.webs.com",
-			"aaimister.webs.com",
-			"xscriptx.atwebpages.com",
-			"tablocks.com", // xCoder99 - xRedChin, xLeather, xWerewolf
-			"fuser.x10.mx", // Fuser - Giant Spider Fuser, Flesh Crawler Fuser
-			".solarbots.org", // Wei Su
+				"shadowscripting.org", // iDungeon
+				"shadowscripting.wordpress.com", // iDungeon
+				".glorb.nl", // SXForce - Swamp Lizzy Paid, Snake Killah
+				"scripts.johnkeech.com", // MrSneaky - SneakyFarmerPro
+				"myrsdatabase.x10.mx", // gravemindx - BPestControl, GhoulKiller
+				"thedealer.site11.com", // XscripterzX - PiratePlanker, DealerTanner
+				"elyzianpirate.web44.net", // XscripterzX (see above)
+				"jtryba.com", // jtryba - autoCook, monkR8per
+				"tehgamer.info", // TehGamer - iMiner
+				"www.universalscripts.org", // Fletch To 99 - UFletch
+				"www.dunkscripts.freeiz.com", // Dunnkers
+				"www.dlolpics.com", // DlolPics
+				".logikmedia.co", // countvidal
+				"letthesmokeout.com", // MrByte
+				"zaszmedia.com", // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
+				"pumyscript.orgfree.com", // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
+				"noneevr2.r00t.la", // noneevr2 - TakeBury
+				"testscriptsecurity.host22.com",//Marneus901 - Runite miner
+				"massacrescripting.net",//ShizZznit - Aviansie Massacre.
+				".ownagebots.com", //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
+				"vassdascripts.comuf.com",//Dandan Boy - ?
+				"doout.net84.net",
+				"doout5.webs.com",
+				"terrabubble.netai.net",
+				"terrabubble.webs.com",
+				"aaimister.webs.com",
+				"xscriptx.atwebpages.com",
+				"tablocks.com", // xCoder99 - xRedChin, xLeather, xWerewolf
+				"fuser.x10.mx", // Fuser - Giant Spider Fuser, Flesh Crawler Fuser
+				".solarbots.org", // Wei Su
 		};
 
 		for (final String check : WHITELIST) {
@@ -123,39 +126,42 @@ public class RestrictedSecurityManager extends SecurityManager {
 		}
 
 		switch (port) {
-		case PORT_UNKNOWN:
-			break;
-		case PORT_DNS:
-			checkConnectDNS(host);
-			break;
-		case PORT_HTTP:
-		case PORT_HTTPS:
-			boolean allowed = false;
-			if (isIpAddress(host)) {
-				allowed = resolved.contains(host);
-			} else {
-				allowed = isHostAllowed(host);
-			}
-			if (!allowed) {
-				log.warning("Connection denied: " + host);
-				throw new SecurityException();
-			} else {
-				try {
-					for (final InetAddress a : InetAddress.getAllByName(host)) {
-						resolved.add(a.getHostAddress());
-					}
-				} catch (final UnknownHostException ignored) {
+			case PORT_UNKNOWN:
+				break;
+			case PORT_DNS:
+				checkConnectDNS(host);
+				break;
+			case PORT_HTTP:
+			case PORT_HTTPS:
+				boolean allowed = false;
+				if (isIpAddress(host)) {
+					allowed = resolved.contains(host) || (getClassContext()[1].getName().equals(Socket.class.getName()) && !isCallerScript());
+				} else {
+					allowed = isHostAllowed(host);
 				}
-			}
-			break;
-		default:
-			throw new SecurityException("Connection denied: " + host + ":" + port);
+				if (!allowed) {
+					log.warning("Connection denied: " + host);
+					throw new SecurityException();
+				} else {
+					try {
+						for (final InetAddress a : InetAddress.getAllByName(host)) {
+							resolved.add(a.getHostAddress());
+						}
+					} catch (final UnknownHostException ignored) {
+					}
+				}
+				break;
+			default:
+				throw new SecurityException("Connection denied: " + host + ":" + port);
 		}
 
 		super.checkConnect(host, port);
 	}
 
 	private boolean isIpAddress(final String check) {
+		if (check.contains(":")) {
+			return true; // IPv6
+		}
 		final int l = check.length();
 		if (l < 7 || l > 15) {
 			return false;

@@ -3,6 +3,8 @@ package org.rsbot.script.provider;
 import java.io.File;
 import java.io.PrintStream;
 
+import org.rsbot.util.io.IOHelper;
+
 public class ScriptList {
 	public static final String DELIMITER = ",";
 
@@ -14,10 +16,13 @@ public class ScriptList {
 		final FileScriptSource source = new FileScriptSource(new File(args[0]));
 		for (final ScriptDefinition item : source.list()) {
 			out.print("[");
-			out.print(new File(item.path).getName());
+			final File file = new File(item.path);
+			out.print(file.getName());
 			out.println("]");
 			out.print("id=");
 			out.println(Integer.toString(item.id));
+			out.print("crc32=");
+			out.println(Long.toString(IOHelper.crc32(file)));
 			printValue(out, "name", item.name);
 			out.print("version=");
 			out.println(Double.toString(item.version));

@@ -48,6 +48,8 @@ public class ScriptDefinition implements Comparable<ScriptDefinition> {
 
 	public int id;
 
+	public long crc32;
+
 	public String name;
 
 	public double version;

@@ -77,8 +77,10 @@ public class LoadScreen extends JFrame {
 		Configuration.createDirectories();
 
 		log.info("Enforcing security policy");
-		System.setProperty("sun.net.spi.nameservice.nameservers", RestrictedSecurityManager.DNSA + "," + RestrictedSecurityManager.DNSB);
-		System.setProperty("sun.net.spi.nameservice.provider.1", "dns,sun");
+		if (Configuration.GOOGLEDNS) {
+			System.setProperty("sun.net.spi.nameservice.nameservers", RestrictedSecurityManager.DNSA + "," + RestrictedSecurityManager.DNSB);
+			System.setProperty("sun.net.spi.nameservice.provider.1", "dns,sun");
+		}
 		System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
 		System.setSecurityManager(new RestrictedSecurityManager());
 
@@ -91,7 +93,7 @@ public class LoadScreen extends JFrame {
 		}
 
 		log.info("Downloading network scripts");
-		ScriptDeliveryNetwork.getInstance().list();
+		ScriptDeliveryNetwork.getInstance().sync();
 
 		log.info("Checking for updates");
 
