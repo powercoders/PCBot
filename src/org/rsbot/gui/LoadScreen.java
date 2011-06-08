@@ -7,6 +7,7 @@ import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IOHelper;
+import org.rsbot.util.io.ScriptProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -129,6 +130,8 @@ public class LoadScreen extends JFrame {
 		} else {
 			extract.add(Configuration.Paths.COMPILE_SCRIPTS_SH);
 		}
+		ScriptProvider scriptProvider = new ScriptProvider();
+		scriptProvider.extract();
 		for (final String item : extract) {
 			final String path = Configuration.Paths.Resources.ROOT + "/" + item;
 			final InputStream in;

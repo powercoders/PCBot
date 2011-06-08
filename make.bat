@@ -15,6 +15,7 @@ SET src=src
 SET lib=lib
 SET res=resources
 SET out=bin
+SET scripts=scripts
 SET dist=%name%.jar
 SET lstf=temp.txt
 SET imgdir=%res%\images
@@ -28,6 +29,8 @@ GOTO :eof
 CALL :clean 2>NUL
 ECHO Compiling bot
 CALL :Bot
+ECHO Compiling scripts
+CALL :Scripts 2>NUL
 ECHO Packing JAR
 CALL :pack
 CALL :end
@@ -42,14 +45,24 @@ MKDIR "%out%"
 DEL /F /Q "%lstf%"
 GOTO :eof
 
+:Scripts
+CALL :mostlyclean
+IF EXIST "%scripts%" "%cc%" %cflags% -cp "%out%" %scripts%\*.java
+GOTO :eof
+
 :pack
 IF EXIST "%dist%" DEL /F /Q "%dist%"
 IF EXIST "%lstf%" DEL /F /Q "%lstf%"
 COPY "%manifest%" "%lstf%" > NUL
 ECHO Specification-Version: "%version%" >> "%lstf%"
 ECHO Implementation-Version: "%version%" >> "%lstf%"
-jar cfm "%dist%" "%lstf%" -C "%out%" . %versionfile% %imgdir%\* %res%\*.bat %res%\*.sh
+jar cfm "%dist%" "%lstf%" -C "%out%" . %versionfile% %imgdir%\* %scripts%\*.class %res%\*.bat %res%\*.sh
 DEL /F /Q "%lstf%"
+GOTO :eof
+
+:mostlyclean
+IF EXIST "%scriptdir%" ECHO. > "%scripts%\.class"
+IF EXIST "%scriptdir%" DEL /F /Q %scripts%\*.class
 GOTO :eof
 
 :end
@@ -64,6 +77,7 @@ ECHO %gx% >> %lstf%
 GOTO :eof
 
 :clean
+CALL :mostlyclean
 RMDIR /S /Q "%out%" 2>NUL
 GOTO :eof
 

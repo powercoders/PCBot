@@ -27,7 +27,6 @@ public class Configuration {
 	public static class Paths {
 		public static class Resources {
 			public static final String ROOT = "resources";
-			public static final String SCRIPTS = Paths.SCRIPTS_NAME_SRC + "/";
 			public static final String ROOT_IMG = ROOT + "/images";
 			public static final String SPLASH = ROOT_IMG + "/splash.png";
 			public static final String ICON = ROOT_IMG + "/icon.png";
@@ -140,6 +139,10 @@ public class Configuration {
 
 		public static String getCacheDirectory() {
 			return Paths.getHomeDirectory() + File.separator + "Cache";
+		}
+
+		public static String getScriptsExtractedCache() {
+			return Paths.getCacheDirectory() + File.separator + "script.dat";
 		}
 
 		public static String getScriptCacheDirectory() {

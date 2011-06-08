@@ -35,6 +35,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	private static final ScriptSource SRC_SOURCES;
 	private static final ScriptSource SRC_PRE_COMPILED;
+	private static final ScriptSource SRC_BUNDLED;
 	private final BotGUI frame;
 	private final Bot bot;
 	private JTable table;
@@ -49,6 +50,11 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	static {
 		SRC_SOURCES = new FileScriptSource(new File(Configuration.Paths.getScriptsSourcesDirectory()));
 		SRC_PRE_COMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
+		if (Configuration.RUNNING_FROM_JAR) {
+			SRC_BUNDLED = new FileScriptSource(new File(Configuration.Paths.getScriptsExtractedCache()));
+		} else {
+			SRC_BUNDLED = new FileScriptSource(new File("." + File.separator + Configuration.Paths.SCRIPTS_NAME_SRC));
+		}
 	}
 
 	public ScriptSelector(final BotGUI frame, final Bot bot) {
@@ -80,6 +86,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		scripts.clear();
 		scripts.addAll(SRC_PRE_COMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
+		scripts.addAll(SRC_BUNDLED.list());
 		Collections.sort(scripts);
 
 		populateCategories();
@@ -399,7 +406,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		private static final long serialVersionUID = 1L;
 		public static final ImageIcon ICON_SCRIPT_SRC = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_CODE));
 		public static final ImageIcon ICON_SCRIPT_PRE = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_GEAR));
-		public static final ImageIcon ICON_SCRIPT_NET = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_LIVE));
+		public static final ImageIcon ICON_SCRIPT_BDL = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_LIVE));
 		private final List<ScriptDefinition> scripts;
 		private final List<ScriptDefinition> matches;
 
@@ -456,7 +463,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						if (def.source == SRC_PRE_COMPILED) {
 							return ICON_SCRIPT_PRE;
 						}
-						return ICON_SCRIPT_NET;
+						return ICON_SCRIPT_BDL;
 					case 1:
 						return def.getName();
 					case 2:
