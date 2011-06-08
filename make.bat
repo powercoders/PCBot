@@ -61,8 +61,8 @@ DEL /F /Q "%lstf%"
 GOTO :eof
 
 :mostlyclean
-IF EXIST "%scriptdir%" ECHO. > "%scripts%\.class"
-IF EXIST "%scriptdir%" DEL /F /Q %scripts%\*.class
+IF EXIST "%scripts%" ECHO. > "%scripts%\.class"
+IF EXIST "%scripts%" DEL /F /Q %scripts%\*.class
 GOTO :eof
 
 :end
