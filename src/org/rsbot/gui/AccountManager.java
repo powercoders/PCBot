@@ -320,6 +320,21 @@ public class AccountManager extends JDialog implements ActionListener {
 	}
 
 	/**
+	 * Access the account display name of the given string
+	 *
+	 * @param name The name of the account
+	 * @return Display name or an empty string
+	 */
+	public static String getDisplayName(final String name) {
+		final AccountStore.Account values = AccountManager.accountStore.get(name);
+		String displayname = values.getAttribute("displayname");
+		if (displayname == null) {
+			displayname = "";
+		}
+		return displayname;
+	}
+
+	/**
 	 * Access the account pin of the given string
 	 *
 	 * @param name The name of the account
@@ -413,17 +428,27 @@ public class AccountManager extends JDialog implements ActionListener {
 		AccountStore.Account account = new AccountStore.Account(username);
 		account.setPassword(password);
 		accountStore.add(account);
-		try {
-			accountStore.save();
-		} catch (IOException ignored) {
-		}
+		new Thread() {
+			public void run() {
+				try {
+					accountStore.save();
+				} catch (IOException ignored) {
+				}
+			}
+		}.start();
 	}
 
 	public static void setAttribute(final String username, final String attribute, final String value) {
 		try {
 			accountStore.get(username).setAttribute(attribute, value);
-			accountStore.save();
-		} catch (IOException ignored) {
+			new Thread() {
+				public void run() {
+					try {
+						accountStore.save();
+					} catch (IOException ignored) {
+					}
+				}
+			}.start();
 		} catch (NullPointerException ignored) {
 		}
 	}
