@@ -1,14 +1,17 @@
 // <editor-fold defaultstate="collapsed" desc="Imports">
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
+import org.rsbot.event.events.MessageEvent;
+import org.rsbot.event.listeners.MessageListener;
+import org.rsbot.event.listeners.PaintListener;
+import org.rsbot.script.Script;
+import org.rsbot.script.ScriptManifest;
+import org.rsbot.script.methods.*;
+import org.rsbot.script.util.Filter;
+import org.rsbot.script.util.Timer;
+import org.rsbot.script.wrappers.*;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -18,33 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-
-import org.rsbot.event.events.MessageEvent;
-import org.rsbot.event.listeners.MessageListener;
-import org.rsbot.event.listeners.PaintListener;
-import org.rsbot.script.Script;
-import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.methods.Bank;
-import org.rsbot.script.methods.Equipment;
-import org.rsbot.script.methods.FriendChat;
-import org.rsbot.script.methods.Game;
-import org.rsbot.script.methods.Methods;
-import org.rsbot.script.methods.Skills;
-import org.rsbot.script.util.Filter;
-import org.rsbot.script.util.Timer;
-import org.rsbot.script.wrappers.RSArea;
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSGroundItem;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSModel;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSPath;
-import org.rsbot.script.wrappers.RSPlayer;
-import org.rsbot.script.wrappers.RSTile;
-
-@ScriptManifest(authors = { "Debauchery" }, name = "DebaucherySoulWars", version = 0.51, description = "Start the script in soulwars lobby", website = "http://www.powerbot.org/vb/showthread.php?t=560367")
+@ScriptManifest(authors = {"Debauchery"}, name = "DebaucherySoulWars", version = 0.51, description = "Start the script in soulwars lobby", website = "http://www.powerbot.org/vb/showthread.php?t=560367")
 public class DebaucherySoulWars extends Script implements MouseListener,
 		MessageListener, PaintListener {
 
@@ -115,7 +92,7 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 							Thread.sleep(1);
 							breakHandlerStatus = "Taking break in:  "
 									+ Timer.format(ranFor + takingBreakIn
-											- System.currentTimeMillis());
+									- System.currentTimeMillis());
 						}
 						takingBreak = true;
 						while (!startedBreak && !stop) {
@@ -129,7 +106,7 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 							Thread.sleep(1);
 							breakHandlerStatus = "Taking break for:  "
 									+ Timer.format((breakingFor
-											+ takingBreakFor - System.currentTimeMillis()));
+									+ takingBreakFor - System.currentTimeMillis()));
 						}
 						takingBreak = false;
 						while (!stoppedBreak && !stop) {
@@ -515,16 +492,16 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 			jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14));
 			jLabel4.setText("Choose team:");
 
-			ChooseTeam.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+			ChooseTeam.setModel(new javax.swing.DefaultComboBoxModel(new String[]{
 					"Random", "Red", "Blue", "Last Won", "Last Lost",
-					"Clan Chat" }));
+					"Clan Chat"}));
 
 			jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 			jLabel5.setText("Choose Activity: ");
 
-			ChooseActivity.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+			ChooseActivity.setModel(new javax.swing.DefaultComboBoxModel(new String[]{
 					"Random", "Attack Players", "Attack Pyres",
-					"Attack Jellies", "Pure Mode" }));
+					"Attack Jellies", "Pure Mode"}));
 
 			AttackAvatar.setText("Attack Avatar");
 
@@ -599,14 +576,14 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 
 			jLabel13.setText("Reward");
 
-			jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+			jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[]{
 					"Attack", "Defence", "Strenght", "Magic", "Range",
-					"Health", "Prayer", "Slayer" }));
+					"Health", "Prayer", "Slayer"}));
 
 			jLabel14.setText("Amount");
 
-			jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-					"Every Game", "10", "20", "50", "100", "150" }));
+			jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[]{
+					"Every Game", "10", "20", "50", "100", "150"}));
 
 			jButton1.setText("Add >");
 
@@ -667,96 +644,96 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 
 			pack();
 		}// </editor-fold>
-			// <editor-fold defaultstate="collapsed" desc="GUI Actions">
+		// <editor-fold defaultstate="collapsed" desc="GUI Actions">
 
 		private void StartActionPerformed(final java.awt.event.ActionEvent evt) {
 			startScript = true;
 			switch (ChooseTeam.getSelectedIndex()) {
-			case 0:
-				randomTeam = true;
-				redTeam = false;
-				blueTeam = false;
-				lastWonTeam = false;
-				lastLostTeam = false;
-				clanChatTeam = false;
-				break;
-			case 1:
-				randomTeam = false;
-				redTeam = true;
-				blueTeam = false;
-				lastWonTeam = false;
-				lastLostTeam = false;
-				clanChatTeam = false;
-				break;
-			case 2:
-				randomTeam = false;
-				redTeam = false;
-				blueTeam = true;
-				lastWonTeam = false;
-				lastLostTeam = false;
-				clanChatTeam = false;
-				break;
-			case 3:
-				randomTeam = false;
-				redTeam = false;
-				blueTeam = false;
-				lastWonTeam = true;
-				lastLostTeam = false;
-				clanChatTeam = false;
-				break;
-			case 4:
-				randomTeam = false;
-				redTeam = false;
-				blueTeam = false;
-				lastWonTeam = false;
-				lastLostTeam = true;
-				clanChatTeam = false;
-				break;
-			case 5:
-				randomTeam = false;
-				redTeam = false;
-				blueTeam = false;
-				lastWonTeam = false;
-				lastLostTeam = false;
-				clanChatTeam = true;
-				break;
+				case 0:
+					randomTeam = true;
+					redTeam = false;
+					blueTeam = false;
+					lastWonTeam = false;
+					lastLostTeam = false;
+					clanChatTeam = false;
+					break;
+				case 1:
+					randomTeam = false;
+					redTeam = true;
+					blueTeam = false;
+					lastWonTeam = false;
+					lastLostTeam = false;
+					clanChatTeam = false;
+					break;
+				case 2:
+					randomTeam = false;
+					redTeam = false;
+					blueTeam = true;
+					lastWonTeam = false;
+					lastLostTeam = false;
+					clanChatTeam = false;
+					break;
+				case 3:
+					randomTeam = false;
+					redTeam = false;
+					blueTeam = false;
+					lastWonTeam = true;
+					lastLostTeam = false;
+					clanChatTeam = false;
+					break;
+				case 4:
+					randomTeam = false;
+					redTeam = false;
+					blueTeam = false;
+					lastWonTeam = false;
+					lastLostTeam = true;
+					clanChatTeam = false;
+					break;
+				case 5:
+					randomTeam = false;
+					redTeam = false;
+					blueTeam = false;
+					lastWonTeam = false;
+					lastLostTeam = false;
+					clanChatTeam = true;
+					break;
 			}
 			switch (ChooseActivity.getSelectedIndex()) {
-			case 0:
-				randomStrat = true;
-				attackPlayers = false;
-				attackPyres = false;
-				attackJellies = false;
-				pureMode = false;
-				break;
-			case 1:
-				randomStrat = false;
-				attackPlayers = true;
-				attackPyres = false;
-				attackJellies = false;
-				pureMode = false;
-				break;
-			case 2:
-				randomStrat = false;
-				attackPlayers = false;
-				attackPyres = true;
-				attackJellies = false;
-				pureMode = false;
-				break;
-			case 3:
-				randomStrat = false;
-				attackPlayers = false;
-				attackPyres = false;
-				attackJellies = true;
-				pureMode = false;
-				break;
-			case 4:
-				randomStrat = false;
-				attackPlayers = false;
-				attackPyres = false;
-				attackJellies = false;
-				pureMode = true;
-				break;
+				case 0:
+					randomStrat = true;
+					attackPlayers = false;
+					attackPyres = false;
+					attackJellies = false;
+					pureMode = false;
+					break;
+				case 1:
+					randomStrat = false;
+					attackPlayers = true;
+					attackPyres = false;
+					attackJellies = false;
+					pureMode = false;
+					break;
+				case 2:
+					randomStrat = false;
+					attackPlayers = false;
+					attackPyres = true;
+					attackJellies = false;
+					pureMode = false;
+					break;
+				case 3:
+					randomStrat = false;
+					attackPlayers = false;
+					attackPyres = false;
+					attackJellies = true;
+					pureMode = false;
+					break;
+				case 4:
+					randomStrat = false;
+					attackPlayers = false;
+					attackPyres = false;
+					attackJellies = false;
+					pureMode = true;
+					break;
 			}
 			startScript = true;
 			maxiumTimeForBreak = Integer.parseInt(MaxiumTimeForBreak.getText());
@@ -789,11 +766,11 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 			maxiumTimeForBreak, maxiumTimeUntillBreak, minimiumTimeForBreak,
 			minimiumTimeUntillBreak, specUsage, lowActivity = 250,
 			EasternGraveyard = 0, WesternGraveyard = 0;
-	private final int[] BarrierID = { 42013, 42014, 42015, 42016, 42017, 42018 },
-			bandageTableID = { 42023, 42024 },
-			barricadeID = { 8600 },
-			blueAvatarID = { 8597 }, redAvatarID = { 8596 }, fragmentID = {
-					14646, 15792 }, arrowsID = { 9242, 13280, 9142, 864, 863 };
+	private final int[] BarrierID = {42013, 42014, 42015, 42016, 42017, 42018},
+			bandageTableID = {42023, 42024},
+			barricadeID = {8600},
+			blueAvatarID = {8597}, redAvatarID = {8596}, fragmentID = {
+			14646, 15792}, arrowsID = {9242, 13280, 9142, 864, 863};
 	private String result, task, breakHandlerStatus;
 	@SuppressWarnings("unused")
 	private boolean randomTeam, lastWonTeam, lastLostTeam, redTeam, blueTeam,
@@ -862,23 +839,23 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 			if (opp != null && Location.OBELISK.containsTile(opp.getLocation())) {
 				if (getMyPlayer().getInteracting() == null) {
 					switch (Methods.random(1, 3)) {
-					case 1:
-						if (opp != null) {
-							final RSModel model = opp.getModel();
-							if (model != null) {
-								final Point p = model.getPoint();
-								if (p != null) {
-									mouse.hop(p);
-									mouse.click(true);
-									Methods.sleep(3000, 5000);
+						case 1:
+							if (opp != null) {
+								final RSModel model = opp.getModel();
+								if (model != null) {
+									final Point p = model.getPoint();
+									if (p != null) {
+										mouse.hop(p);
+										mouse.click(true);
+										Methods.sleep(3000, 5000);
+									}
 								}
 							}
-						}
-						break;
-					case 2:
-						opp.doAction("Attack");
-						Methods.sleep(3000, 5000);
-						break;
+							break;
+						case 2:
+							opp.doAction("Attack");
+							Methods.sleep(3000, 5000);
+							break;
 					}
 				}
 			} else {
@@ -1257,35 +1234,35 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 	private Strategies getStrategies() {
 		if (randomStrat) {
 			switch (Methods.random(0, 5)) {
-			case 0:
-				if (pickUpBones) {
-					return Strategies.PICKUP_BONES;
-				}
-			case 1:
-				if (healOthers) {
-					return Strategies.HEAL_PLAYERS;
-				}
-			case 2:
-				if (skills.getCurrentLevel(Skills.SLAYER) >= 30) {
-					return Strategies.ATTACK_PYRES;
-				}
-			case 3:
-				if (skills.getCurrentLevel(Skills.SLAYER) >= 52) {
-					return Strategies.ATTACK_JELLIES;
-				}
-			case 4:
-				return Strategies.ATTACK_PLAYERS;
-			default:
-				return Strategies.ATTACK_PLAYERS;
+				case 0:
+					if (pickUpBones) {
+						return Strategies.PICKUP_BONES;
+					}
+				case 1:
+					if (healOthers) {
+						return Strategies.HEAL_PLAYERS;
+					}
+				case 2:
+					if (skills.getCurrentLevel(Skills.SLAYER) >= 30) {
+						return Strategies.ATTACK_PYRES;
+					}
+				case 3:
+					if (skills.getCurrentLevel(Skills.SLAYER) >= 52) {
+						return Strategies.ATTACK_JELLIES;
+					}
+				case 4:
+					return Strategies.ATTACK_PLAYERS;
+				default:
+					return Strategies.ATTACK_PLAYERS;
 			}
 		}
 		if (pureMode) {
 			if (pickUpBones && healOthers) {
 				switch (Methods.random(0, 2)) {
-				case 0:
-					return Strategies.PICKUP_BONES;
-				case 1:
-					return Strategies.HEAL_PLAYERS;
+					case 0:
+						return Strategies.PICKUP_BONES;
+					case 1:
+						return Strategies.HEAL_PLAYERS;
 				}
 			}
 			if (pickUpBones) {
@@ -1298,10 +1275,10 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 		if (getActivityBarPercent() < 700) {
 			if (pickUpBones && healOthers) {
 				switch (Methods.random(0, 2)) {
-				case 0:
-					return Strategies.PICKUP_BONES;
-				case 1:
-					return Strategies.HEAL_PLAYERS;
+					case 0:
+						return Strategies.PICKUP_BONES;
+					case 1:
+						return Strategies.HEAL_PLAYERS;
 				}
 			}
 			if (pickUpBones) {
@@ -1389,23 +1366,23 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 				}
 			} else {
 				switch (Methods.random(1, 5)) {
-				case 1:
-					if (teamMate() != null) {
-						final RSModel model = teamMate().getModel();
-						if (model != null) {
-							final Point p = model.getPoint();
-							if (p != null) {
-								mouse.hop(p);
-								mouse.click(true);
-								Methods.sleep(3000, 5000);
+					case 1:
+						if (teamMate() != null) {
+							final RSModel model = teamMate().getModel();
+							if (model != null) {
+								final Point p = model.getPoint();
+								if (p != null) {
+									mouse.hop(p);
+									mouse.click(true);
+									Methods.sleep(3000, 5000);
+								}
 							}
 						}
-					}
-					break;
-				default:
-					opponent().doAction("Heal " + teamMate().getName());
-					Methods.sleep(3000, 5000);
-					break;
+						break;
+					default:
+						opponent().doAction("Heal " + teamMate().getName());
+						Methods.sleep(3000, 5000);
+						break;
 				}
 			}
 		} catch (final Exception e) {
@@ -1437,12 +1414,12 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 
 	private String intToStringTeam(final int team) {
 		switch (team) {
-		case 0:
-			return "Unowned";
-		case 1:
-			return "Blue";
-		case 2:
-			return "Red";
+			case 0:
+				return "Unowned";
+			case 1:
+				return "Blue";
+			case 2:
+				return "Red";
 		}
 		return "";
 	}
@@ -1481,134 +1458,134 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 			Methods.sleep(500, 800);
 		} else {
 			switch (chooseTeam()) {
-			case 0:
-				// random
-				final RSObject randomTeam = objects.getNearest(randomTeamID);
-				if (randomTeam != null) {
-					final RSTile randomTeamTile = randomTeam.getLocation();
-					if (randomTeamTile != null) {
-						if (randomTeam.isOnScreen()) {
-							switch (Methods.random(0, 2)) {
-							case 0:
-								if (getMyLocation().equals(Location.OUTSIDE)) {
-									if (randomTeam.doAction("Join-team")) {
-										Methods.sleep(500, 800);
-									}
-								}
-								break;
-							// Join-team
-							case 1:
-								final RSModel mod = randomTeam.getModel();
-								if (mod != null) {
-									final Point p = mod.getPoint();
-									if (p != null) {
-										mouse.hop(p);
+				case 0:
+					// random
+					final RSObject randomTeam = objects.getNearest(randomTeamID);
+					if (randomTeam != null) {
+						final RSTile randomTeamTile = randomTeam.getLocation();
+						if (randomTeamTile != null) {
+							if (randomTeam.isOnScreen()) {
+								switch (Methods.random(0, 2)) {
+									case 0:
 										if (getMyLocation().equals(Location.OUTSIDE)) {
-											mouse.click(true);
-											Methods.sleep(500, 800);
+											if (randomTeam.doAction("Join-team")) {
+												Methods.sleep(500, 800);
+											}
 										}
-									}
+										break;
+									// Join-team
+									case 1:
+										final RSModel mod = randomTeam.getModel();
+										if (mod != null) {
+											final Point p = mod.getPoint();
+											if (p != null) {
+												mouse.hop(p);
+												if (getMyLocation().equals(Location.OUTSIDE)) {
+													mouse.click(true);
+													Methods.sleep(500, 800);
+												}
+											}
+										}
+										break;
 								}
-								break;
-							}
-						} else if (!randomTeam.isOnScreen()
-								&& calc.distanceTo(randomTeamTile) <= 4) {
-							camera.getObjectAngle(randomTeam);
-						} else {
-							final RSTile closestTileToRandomTeam = walking.getClosestTileOnMap(randomTeamTile);
-							if (closestTileToRandomTeam != null) {
-								walking.walkTileMM(closestTileToRandomTeam);
-								Methods.sleep(400, 800);
+							} else if (!randomTeam.isOnScreen()
+									&& calc.distanceTo(randomTeamTile) <= 4) {
+								camera.getObjectAngle(randomTeam);
+							} else {
+								final RSTile closestTileToRandomTeam = walking.getClosestTileOnMap(randomTeamTile);
+								if (closestTileToRandomTeam != null) {
+									walking.walkTileMM(closestTileToRandomTeam);
+									Methods.sleep(400, 800);
+								}
 							}
 						}
 					}
-				}
-				break;
-			case 1:
-				// blue
-				final RSObject blueBarrier = objects.getNearest(blueBarrierID);
-				if (blueBarrier != null) {
-					final RSTile blueBarrierTile = blueBarrier.getLocation();
-					if (blueBarrierTile != null) {
-						if (blueBarrier.isOnScreen()) {
-							switch (Methods.random(0, 2)) {
-							case 0:
-								final RSModel mod = blueBarrier.getModel();
-								if (mod != null) {
-									final Point p = mod.getPoint();
-									if (p != null) {
-										mouse.hop(p);
-										if (getMyLocation().equals(Location.OUTSIDE)) {
-											mouse.click(true);
-											Methods.sleep(500, 800);
+					break;
+				case 1:
+					// blue
+					final RSObject blueBarrier = objects.getNearest(blueBarrierID);
+					if (blueBarrier != null) {
+						final RSTile blueBarrierTile = blueBarrier.getLocation();
+						if (blueBarrierTile != null) {
+							if (blueBarrier.isOnScreen()) {
+								switch (Methods.random(0, 2)) {
+									case 0:
+										final RSModel mod = blueBarrier.getModel();
+										if (mod != null) {
+											final Point p = mod.getPoint();
+											if (p != null) {
+												mouse.hop(p);
+												if (getMyLocation().equals(Location.OUTSIDE)) {
+													mouse.click(true);
+													Methods.sleep(500, 800);
+												}
+											}
 										}
-									}
+										break;
+									case 1:
+										if (getMyLocation().equals(Location.OUTSIDE)) {
+											blueBarrier.doAction("Pass");
+										}
+										Methods.sleep(500, 800);
+										break;
 								}
-								break;
-							case 1:
-								if (getMyLocation().equals(Location.OUTSIDE)) {
-									blueBarrier.doAction("Pass");
+							} else if (!blueBarrier.isOnScreen()
+									&& calc.distanceTo(blueBarrierTile) <= 4) {
+								camera.getObjectAngle(blueBarrier);
+								camera.setPitch(true);
+							} else {
+								final RSTile closestTileToBlueBarrier = walking.getClosestTileOnMap(blueBarrierTile);
+								if (closestTileToBlueBarrier != null) {
+									walking.walkTileMM(closestTileToBlueBarrier);
+									Methods.sleep(500, 800);
 								}
-								Methods.sleep(500, 800);
-								break;
-							}
-						} else if (!blueBarrier.isOnScreen()
-								&& calc.distanceTo(blueBarrierTile) <= 4) {
-							camera.getObjectAngle(blueBarrier);
-							camera.setPitch(true);
-						} else {
-							final RSTile closestTileToBlueBarrier = walking.getClosestTileOnMap(blueBarrierTile);
-							if (closestTileToBlueBarrier != null) {
-								walking.walkTileMM(closestTileToBlueBarrier);
-								Methods.sleep(500, 800);
 							}
 						}
 					}
-				}
-				break;
-			case 2:
-				// red
-				final RSObject redBarrier = objects.getNearest(redBarrierID);
-				if (redBarrier != null) {
-					final RSTile redBarrierTile = redBarrier.getLocation();
-					if (redBarrierTile != null) {
-						if (redBarrier.isOnScreen()) {
-							switch (Methods.random(0, 2)) {
-							case 0:
-								final RSModel mod = redBarrier.getModel();
-								if (mod != null) {
-									final Point p = mod.getPoint();
-									if (p != null) {
-										mouse.hop(p);
-										if (getMyLocation().equals(Location.OUTSIDE)) {
-											mouse.click(true);
+					break;
+				case 2:
+					// red
+					final RSObject redBarrier = objects.getNearest(redBarrierID);
+					if (redBarrier != null) {
+						final RSTile redBarrierTile = redBarrier.getLocation();
+						if (redBarrierTile != null) {
+							if (redBarrier.isOnScreen()) {
+								switch (Methods.random(0, 2)) {
+									case 0:
+										final RSModel mod = redBarrier.getModel();
+										if (mod != null) {
+											final Point p = mod.getPoint();
+											if (p != null) {
+												mouse.hop(p);
+												if (getMyLocation().equals(Location.OUTSIDE)) {
+													mouse.click(true);
+												}
+												Methods.sleep(500, 800);
+											}
 										}
-										Methods.sleep(500, 800);
-									}
+										break;
+									case 1:
+										if (getMyLocation().equals(Location.OUTSIDE)) {
+											if (redBarrier.doAction("Pass")) {
+												Methods.sleep(500, 800);
+											}
+										}
+										break;
 								}
-								break;
-							case 1:
-								if (getMyLocation().equals(Location.OUTSIDE)) {
-									if (redBarrier.doAction("Pass")) {
-										Methods.sleep(500, 800);
-									}
+							} else if (!redBarrier.isOnScreen()
+									&& calc.distanceTo(redBarrierTile) <= 4) {
+								camera.getObjectAngle(redBarrier);
+								camera.setPitch(true);
+							} else {
+								final RSTile closestTileToRedBarrier = walking.getClosestTileOnMap(redBarrierTile);
+								if (closestTileToRedBarrier != null) {
+									walking.walkTileMM(closestTileToRedBarrier);
+									Methods.sleep(500, 800);
 								}
-								break;
-							}
-						} else if (!redBarrier.isOnScreen()
-								&& calc.distanceTo(redBarrierTile) <= 4) {
-							camera.getObjectAngle(redBarrier);
-							camera.setPitch(true);
-						} else {
-							final RSTile closestTileToRedBarrier = walking.getClosestTileOnMap(redBarrierTile);
-							if (closestTileToRedBarrier != null) {
-								walking.walkTileMM(closestTileToRedBarrier);
-								Methods.sleep(500, 800);
 							}
 						}
 					}
-				}
-				break;
+					break;
 			}
 		}
 
@@ -1651,28 +1628,28 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 						camera.turnTo(Barrier);
 						Methods.sleep(2000, 4000);
 						switch (Methods.random(0, 5)) {
-						case 2:
-							if (mod != null) {
-								final Point p = mod.getPoint();
-								if (p != null) {
-									if (getMyLocation().equals(Location.RED_SPAWN)
-											|| getMyLocation().equals(Location.BLUE_SPAWN)
-											|| getMyLocation().equals(Location.EAST_GRAVE)
-											|| getMyLocation().equals(Location.WEST_GRAVE)) {
-										mouse.hop(p);
-										mouse.click(true);
+							case 2:
+								if (mod != null) {
+									final Point p = mod.getPoint();
+									if (p != null) {
+										if (getMyLocation().equals(Location.RED_SPAWN)
+												|| getMyLocation().equals(Location.BLUE_SPAWN)
+												|| getMyLocation().equals(Location.EAST_GRAVE)
+												|| getMyLocation().equals(Location.WEST_GRAVE)) {
+											mouse.hop(p);
+											mouse.click(true);
+										}
 									}
 								}
-							}
-							break;
-						default:
-							if (getMyLocation().equals(Location.RED_SPAWN)
-									|| getMyLocation().equals(Location.BLUE_SPAWN)
-									|| getMyLocation().equals(Location.EAST_GRAVE)
-									|| getMyLocation().equals(Location.WEST_GRAVE)) {
-								Barrier.doAction("Pass");
-							}
-							break;
+								break;
+							default:
+								if (getMyLocation().equals(Location.RED_SPAWN)
+										|| getMyLocation().equals(Location.BLUE_SPAWN)
+										|| getMyLocation().equals(Location.EAST_GRAVE)
+										|| getMyLocation().equals(Location.WEST_GRAVE)) {
+									Barrier.doAction("Pass");
+								}
+								break;
 						}
 					}
 				}
@@ -1690,8 +1667,8 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 			return time == null
 					|| time != null
 					&& (time.equals("7 mins") || time.equals("6 mins")
-							|| time.equals("5 mins") || time.equals("4 mins")
-							|| time.equals("3 mins") || time.equals("2 mins") || time.equals("1 min"));
+					|| time.equals("5 mins") || time.equals("4 mins")
+					|| time.equals("3 mins") || time.equals("2 mins") || time.equals("1 min"));
 		}
 	}
 
@@ -1832,62 +1809,62 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 						current = getStrategies();
 					} else {
 						switch (current) {
-						case PICKUP_BONES:
-							task = "Picking up bones.";
-							bonesStrat();
-							break;
-						case HEAL_PLAYERS:
-							task = "Healing others.";
-							healPlayersStrat();
-							break;
-						case ATTACK_AVATAR:
-							if (getActivityBarPercent() < lowActivity) {
-								if (pickUpBones) {
-									task = "Picking Bones(Low activity).";
-									bonesStrat();
-									break;
+							case PICKUP_BONES:
+								task = "Picking up bones.";
+								bonesStrat();
+								break;
+							case HEAL_PLAYERS:
+								task = "Healing others.";
+								healPlayersStrat();
+								break;
+							case ATTACK_AVATAR:
+								if (getActivityBarPercent() < lowActivity) {
+									if (pickUpBones) {
+										task = "Picking Bones(Low activity).";
+										bonesStrat();
+										break;
+									}
+								} else {
+									task = "Attack avatar.";
+									avatarStrat();
 								}
-							} else {
-								task = "Attack avatar.";
-								avatarStrat();
-							}
-							break;
-						case ATTACK_PYRES:
-							if (getActivityBarPercent() < lowActivity) {
-								if (pickUpBones) {
-									task = "Picking Bones(Low activity).";
-									bonesStrat();
-									break;
+								break;
+							case ATTACK_PYRES:
+								if (getActivityBarPercent() < lowActivity) {
+									if (pickUpBones) {
+										task = "Picking Bones(Low activity).";
+										bonesStrat();
+										break;
+									}
+								} else {
+									task = "Attacking Pyres.";
+									pyresStrat();
 								}
-							} else {
-								task = "Attacking Pyres.";
-								pyresStrat();
-							}
-							break;
-						case ATTACK_JELLIES:
-							if (getActivityBarPercent() < lowActivity) {
-								if (pickUpBones) {
-									task = "Picking Bones(Low activity).";
-									bonesStrat();
-									break;
+								break;
+							case ATTACK_JELLIES:
+								if (getActivityBarPercent() < lowActivity) {
+									if (pickUpBones) {
+										task = "Picking Bones(Low activity).";
+										bonesStrat();
+										break;
+									}
+								} else {
+									task = "Attacking Jellies.";
+									jelliesStrat();
 								}
-							} else {
-								task = "Attacking Jellies.";
-								jelliesStrat();
-							}
-							break;
-						case ATTACK_PLAYERS:
-							if (getActivityBarPercent() < lowActivity) {
-								if (pickUpBones) {
-									task = "Picking Bones(Low activity).";
-									bonesStrat();
-									break;
+								break;
+							case ATTACK_PLAYERS:
+								if (getActivityBarPercent() < lowActivity) {
+									if (pickUpBones) {
+										task = "Picking Bones(Low activity).";
+										bonesStrat();
+										break;
+									}
+								} else {
+									task = "Attacking Players.";
+									playersStrat();
 								}
-							} else {
-								task = "Attacking Players.";
-								playersStrat();
-							}
-							break;
+								break;
 						}
 					}
 				}
@@ -2282,25 +2259,25 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 	}
 
 	private int specialUsage() {
-		final int[] amountUsage = { 10, 25, 33, 35, 45, 50, 55, 60, 80, 85, 100 };
+		final int[] amountUsage = {10, 25, 33, 35, 45, 50, 55, 60, 80, 85, 100};
 		final String[][] weapons = {
-				{ "Rune thrownaxe", "Rod of ivandis" },
-				{ "Dragon Dagger", "Dragon dagger (p)", "Dragon dagger (p+)",
+				{"Rune thrownaxe", "Rod of ivandis"},
+				{"Dragon Dagger", "Dragon dagger (p)", "Dragon dagger (p+)",
 						"Dragon dagger (p++)", "Dragon Mace", "Dragon Spear",
-						"Dragon longsword", "Rune claws" },
-				{ "Dragon Halberd" },
-				{ "Magic Longbow" },
-				{ "Magic Composite Bow" },
-				{ "Dragon Claws", "Abyssal Whip", "Granite Maul", "Darklight",
-						"Barrelchest Anchor", "Armadyl Godsword" },
-				{ "Magic Shortbow" },
-				{ "Dragon Scimitar", "Dragon 2H Sword", "Zamorak Godsword",
-						"Korasi's sword" },
-				{ "Dorgeshuun Crossbow", "Bone Dagger" },
-				{ "Brine Sabre" },
-				{ "Bandos Godsword", "Dragon Battleaxe", "Dragon Hatchet",
+						"Dragon longsword", "Rune claws"},
+				{"Dragon Halberd"},
+				{"Magic Longbow"},
+				{"Magic Composite Bow"},
+				{"Dragon Claws", "Abyssal Whip", "Granite Maul", "Darklight",
+						"Barrelchest Anchor", "Armadyl Godsword"},
+				{"Magic Shortbow"},
+				{"Dragon Scimitar", "Dragon 2H Sword", "Zamorak Godsword",
+						"Korasi's sword"},
+				{"Dorgeshuun Crossbow", "Bone Dagger"},
+				{"Brine Sabre"},
+				{"Bandos Godsword", "Dragon Battleaxe", "Dragon Hatchet",
 						"Seercull Bow", "Excalibur", "Enhanced excalibur",
-						"Ancient Mace", "Saradomin sword" } };
+						"Ancient Mace", "Saradomin sword"}};
 		String str = equipment.getItem(Equipment.WEAPON).getName();
 		str = str.substring(str.indexOf(">") + 1);
 		for (int i = 0; i < weapons.length; i++) {
@@ -2328,38 +2305,38 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 
 	private void waitingAntiban() {
 		switch (Methods.random(0, 7)) {
-		case 0:
-			Methods.sleep(600, 700);
-			break;
-		case 1:
-			mouse.moveRandomly(200);
-			break;
-		case 2:
-			camera.moveRandomly(Methods.random(1000, 1200));
-			break;
-		case 3:
-			mouse.moveOffScreen();
-			Methods.sleep(1200, 2000);
-			break;
-		case 4:
-			Methods.sleep(800, 1000);
-			break;
-		case 5:
-			if (getMyLocation().equals(Location.RED_WAITING)) {
-				final RSTile center = Location.RED_WAITING.getRSArea().getCentralTile();
-				if (center != null && calc.distanceTo(center) > 2) {
-					walking.walkTileMM(center, 2, 2);
+			case 0:
+				Methods.sleep(600, 700);
+				break;
+			case 1:
+				mouse.moveRandomly(200);
+				break;
+			case 2:
+				camera.moveRandomly(Methods.random(1000, 1200));
+				break;
+			case 3:
+				mouse.moveOffScreen();
+				Methods.sleep(1200, 2000);
+				break;
+			case 4:
+				Methods.sleep(800, 1000);
+				break;
+			case 5:
+				if (getMyLocation().equals(Location.RED_WAITING)) {
+					final RSTile center = Location.RED_WAITING.getRSArea().getCentralTile();
+					if (center != null && calc.distanceTo(center) > 2) {
+						walking.walkTileMM(center, 2, 2);
+					}
+				} else if (getMyLocation().equals(Location.BLUE_WAITING)) {
+					final RSTile center = Location.BLUE_WAITING.getRSArea().getCentralTile();
+					if (center != null && calc.distanceTo(center) > 2) {
+						walking.walkTileMM(center, 2, 2);
+					}
 				}
-			} else if (getMyLocation().equals(Location.BLUE_WAITING)) {
-				final RSTile center = Location.BLUE_WAITING.getRSArea().getCentralTile();
-				if (center != null && calc.distanceTo(center) > 2) {
-					walking.walkTileMM(center, 2, 2);
-				}
-			}
-			break;
-		case 6:
-			Methods.sleep(200);
-			break;
+				break;
+			case 6:
+				Methods.sleep(200);
+				break;
 		}
 	}
 
@@ -2407,12 +2384,12 @@ public class DebaucherySoulWars extends Script implements MouseListener,
 						&& settings.getSetting(300) >= specUsage * 10) {
 					if (game.getCurrentTab() != Game.TAB_ATTACK) {
 						switch (Methods.random(1, 3)) {
-						case 1:
-							game.openTab(Game.TAB_ATTACK);
-							break;
-						case 2:
-							game.openTab(zeal, true);
-							break;
+							case 1:
+								game.openTab(Game.TAB_ATTACK);
+								break;
+							case 2:
+								game.openTab(zeal, true);
+								break;
 						}
 						Methods.sleep(Methods.random(300, 900));
 					}

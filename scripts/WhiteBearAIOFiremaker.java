@@ -4,75 +4,31 @@
  * 			No one except White Bear has the right to modify this script!
  */
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.geom.Rectangle2D;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
-
 import org.rsbot.Configuration;
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.methods.Bank;
-import org.rsbot.script.methods.Game;
+import org.rsbot.script.methods.*;
 import org.rsbot.script.methods.GrandExchange.GEItem;
-import org.rsbot.script.methods.Players;
-import org.rsbot.script.methods.Skills;
-import org.rsbot.script.methods.Walking;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSPlayer;
 import org.rsbot.script.wrappers.RSTile;
 
-@ScriptManifest(authors = { "WhiteBear" }, keywords = "Burner Firemaker Logs Global Universal", name = "White Bear AIO Firemaker", version = 1.13, description = "Fast and Flawless All-in-One Firemaker", website = "http://whitebearrs.orgfree.com")
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.Rectangle2D;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+@ScriptManifest(authors = {"WhiteBear"}, keywords = "Burner Firemaker Logs Global Universal", name = "White Bear AIO Firemaker", version = 1.13, description = "Fast and Flawless All-in-One Firemaker", website = "http://whitebearrs.orgfree.com")
 public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 		MessageListener, MouseListener, MouseMotionListener {
 
@@ -343,10 +299,10 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 		}
 
 		private void turnCamera() {
-			final char[] LR = new char[] { KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT };
-			final char[] UD = new char[] { KeyEvent.VK_DOWN, KeyEvent.VK_UP };
-			final char[] LRUD = new char[] { KeyEvent.VK_LEFT,
-					KeyEvent.VK_RIGHT, KeyEvent.VK_UP, KeyEvent.VK_UP };
+			final char[] LR = new char[]{KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT};
+			final char[] UD = new char[]{KeyEvent.VK_DOWN, KeyEvent.VK_UP};
+			final char[] LRUD = new char[]{KeyEvent.VK_LEFT,
+					KeyEvent.VK_RIGHT, KeyEvent.VK_UP, KeyEvent.VK_UP};
 			final int randomLR = random(0, 2);
 			final int randomUD = random(0, 2);
 			final int randomAll = random(0, 4);
@@ -375,7 +331,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 		int minX, minY, maxX, maxY;
 
 		public Area(final int minX, final int minY, final int maxX,
-				final int maxY) {
+		            final int maxY) {
 			this.minX = minX;
 			this.minY = minY;
 			this.maxX = maxX;
@@ -624,17 +580,17 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 		boolean run = true, doLevelRes = false, doCustomRes = false;
 		boolean typing = false; // read by antiban (true = suppress antiban)
 		boolean wait = false; // written by antiban (true = chat responder will
-								// wait)
+		// wait)
 		boolean pause = false; // true if look away from screen is active
 
 		// Chat Responder Customization
-		String[] tradeRes = { "No thanks", "No thx", "Nope", "Im fine" },
-				greetingRes = { "hi!", "hi.", "hi", "hello", "hello!",
+		String[] tradeRes = {"No thanks", "No thx", "Nope", "Im fine"},
+				greetingRes = {"hi!", "hi.", "hi", "hello", "hello!",
 						"hello.", "hello..", "yo", "yo!", "yes?", "what",
-						"what?", "hey!" }, botterRes = { "huh", "zzz", "...",
-						"???", "?????", "what", "what?", "no", "nop", "nope" },
-				levelRes = { "yay", "haha", ":)", "yay!", "yay!!!",
-						"finally..." }, customDetect = {}, customRes = {};
+						"what?", "hey!"}, botterRes = {"huh", "zzz", "...",
+				"???", "?????", "what", "what?", "no", "nop", "nope"},
+				levelRes = {"yay", "haha", ":)", "yay!", "yay!!!",
+						"finally..."}, customDetect = {}, customRes = {};
 		double customTO = 160000, customTOR = 30000;
 
 		private boolean findText(final String t, final String[] check) {
@@ -685,9 +641,9 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 				level = skills.getCurrentLevel(Skills.FIREMAKING);
 			}
 			if (System.currentTimeMillis() - 150000 >= lastSaidLevel) {
-				if (findText(m, new String[] { "fm", "firemak", "fremak" })
-						&& findText(m, new String[] { "level", "levl", "lvel",
-								"lvl" })) {
+				if (findText(m, new String[]{"fm", "firemak", "fremak"})
+						&& findText(m, new String[]{"level", "levl", "lvel",
+						"lvl"})) {
 					lastSaidLevel = System.currentTimeMillis();
 					resCount++;
 					sleepNE(random(600, 2000));
@@ -723,9 +679,9 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 					return;
 				}
 			}
-			if (findText(m, new String[] { "bottin", "botin", "botttin",
+			if (findText(m, new String[]{"bottin", "botin", "botttin",
 					"botter", "bottter", "boter", "bootin", "boottin",
-					"booter", "bootter" })) {
+					"booter", "bootter"})) {
 				if (m.contains("?")
 						|| m.contains(getMyPlayer().getName().toLowerCase())
 						|| m.contains("!")) {
@@ -743,8 +699,8 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 					}
 				}
 			}
-			if (findText(m, new String[] { "hi ", "hello", "hi<", "hey", "hi!",
-					"hi.", "yo!", "yo.", "yo<" })) {
+			if (findText(m, new String[]{"hi ", "hello", "hi<", "hey", "hi!",
+					"hi.", "yo!", "yo.", "yo<"})) {
 				if (System.currentTimeMillis() - 130000 >= lastSaidHi) {
 					lastSaidHi = System.currentTimeMillis();
 					resCount++;
@@ -796,7 +752,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 						if (m != null
 								&& !m.equals(lastMessage)
 								&& m.contains(getMyPlayer().getName().toLowerCase()
-										+ ": <") != true) {
+								+ ": <") != true) {
 							if (useChatRes) {
 								response(m);
 							} else {
@@ -1545,7 +1501,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 		RSComponent hovering;
 
 		public FireLane(final int y, final int startX, final int endX,
-				final int cost) {
+		                final int cost) {
 			this.y = y;
 			this.startX = startX;
 			this.endX = endX;
@@ -1579,8 +1535,8 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 				final Point py = calc.tileToScreen(t, 0, 1, 0);
 				final Point pxy = calc.tileToScreen(t, 1, 1, 0);
 				if (py.x != -1 && pxy.x != -1 && px.x != -1 && pn.x != -1) {
-					g.fillPolygon(new int[] { py.x, pxy.x, px.x, pn.x }, new int[] {
-							py.y, pxy.y, px.y, pn.y }, 4);
+					g.fillPolygon(new int[]{py.x, pxy.x, px.x, pn.x}, new int[]{
+							py.y, pxy.y, px.y, pn.y}, 4);
 				}
 			}
 		}
@@ -1961,11 +1917,11 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 							logCombo.setForeground(new Color(51, 51, 51));
 							logCombo.setBorder(null);
 							logCombo.setFont(new Font("Century Gothic", Font.BOLD, 12));
-							logCombo.setModel(new DefaultComboBoxModel(new String[] {
+							logCombo.setModel(new DefaultComboBoxModel(new String[]{
 									"Normal Logs", "Oak Logs", "Willow Logs",
 									"Teak Logs", "Maple Logs", "Mahogany Logs",
 									"Arctic Pine Logs", "Eucalyptus Logs",
-									"Yew Logs", "Magic Logs" }));
+									"Yew Logs", "Magic Logs"}));
 							logCombo.setSelectedIndex(0);
 							logCombo.setMaximumRowCount(10);
 							panel6.add(logCombo);
@@ -2046,9 +2002,9 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 							clrSelected.setForeground(new Color(51, 51, 51));
 							clrSelected.setBorder(null);
 							clrSelected.setFont(new Font("Century Gothic", Font.BOLD, 12));
-							clrSelected.setModel(new DefaultComboBoxModel(new String[] {
+							clrSelected.setModel(new DefaultComboBoxModel(new String[]{
 									"Black", "Blue", "Green", "Red", "Purple",
-									"Brown" }));
+									"Brown"}));
 							clrSelected.setSelectedIndex(0);
 							panel2.add(clrSelected);
 							clrSelected.setBounds(118, 13, 110, 25);
@@ -2717,7 +2673,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 		}
 
 		public void drawString(final Graphics g, final String str,
-				final Rectangle rect, final int offset) {
+		                       final Rectangle rect, final int offset) {
 			final FontMetrics font = g.getFontMetrics();
 			final Rectangle2D bounds = font.getStringBounds(str, g);
 			final int width = (int) bounds.getWidth();
@@ -2726,7 +2682,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 		}
 
 		public void drawStringEnd(final Graphics g, final String str,
-				final Rectangle rect, final int xOffset, final int yOffset) {
+		                          final Rectangle rect, final int xOffset, final int yOffset) {
 			final FontMetrics font = g.getFontMetrics();
 			final Rectangle2D bounds = font.getStringBounds(str, g);
 			final int width = (int) bounds.getWidth();
@@ -2735,8 +2691,8 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 		}
 
 		public void drawStringMain(final Graphics g, final String str,
-				final String val, final Rectangle rect, final int xOffset,
-				final int yOffset, final int index, final boolean leftSide) {
+		                           final String val, final Rectangle rect, final int xOffset,
+		                           final int yOffset, final int index, final boolean leftSide) {
 			final FontMetrics font = g.getFontMetrics();
 			final Rectangle2D bounds = font.getStringBounds(val, g);
 			final int indexMult = 17;
@@ -2819,162 +2775,162 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 			}
 
 			switch (currentTab) {
-			case -1: // PAINT OFF
-				g.setColor(hiddenPaint);
-				g.fillRect(r1.x, r1.y, r1.width, r1.height);
-				g.setColor(fonts);
-				drawString(g, "O", r1, 5);
-				break;
-			case 0: // DEFAULT TAB - MAIN
-				drawPaint(g, r2c);
-				g.setColor(lines);
-				g.drawLine(r.x + 204, r.y + 22, r.x + 204, r.y + 109);
-				g.setColor(fonts);
-				g.setFont(new Font(font, Font.BOLD, 14));
-				drawString(g, properties.name(), r, -40);
-				g.setFont(new Font(font, Font.PLAIN, 12));
-				drawStringMain(g, "Runtime: ", totalTime, r, 20, 35, 0, true);
-				if (isActive()) {
-					drawStringMain(g, "", status, r, 20, 35, 0, false);
-				} else {
-					drawStringMain(g, "", "Script Paused", r, 20, 35, 0, false);
-				}
-				int firePerHour = 0;
-				int moneyPerHour = 0;
-				if (runTime / 1000 > 0) {
-					firePerHour = (int) (3600000.0 / (double) runTime * totalFires);
-					moneyPerHour = (int) (3600000.0 / (double) runTime * totalMoney);
-				}
-				drawStringMain(g, "Fires Made: ", formatter.format((long) totalFires), r, 20, 35, 2, true);
-				drawStringMain(g, "Fires / Hour: ", formatter.format((long) firePerHour), r, 20, 35, 3, true);
-
-				drawStringMain(g, "Money Lost: ", formatter.format((long) totalMoney), r, 20, 35, 2, false);
-				drawStringMain(g, "Money / Hour: ", formatter.format((long) moneyPerHour), r, 20, 35, 3, false);
-				break;
-			case 1: // INFO
-				drawPaint(g, r3c);
-				g.setColor(lines);
-				g.drawLine(r.x + 204, r.y + 22, r.x + 204, r.y + 109);
-				g.setColor(fonts);
-				g.setFont(new Font(font, Font.BOLD, 14));
-				drawString(g, properties.name(), r, -40);
-				g.setFont(new Font(font, Font.PLAIN, 12));
-				drawStringMain(g, "Version: ", Double.toString(properties.version()), r, 20, 35, 0, true);
-				if (foundType == true) {
-					drawStringMain(g, "Amt of " + name[logId] + " in Bank:", "", r, 20, 35, 2, true);
-					drawStringMain(g, "", formatter.format((long) bankCount), r, 20, 35, 3, true);
-					drawStringMain(g, name[logId] + " Prices", "", r, 20, 35, 0, false);
-					drawStringMain(g, "Price Guide:", Integer.toString(priceGuide)
-							+ " coins", r, 20, 35, 2, false);
-					drawStringMain(g, "Worth:", formatter.format((long) (bankCount * priceGuide)), r, 20, 35, 4, true);
-				} else {
-					drawStringMain(g, "Log prices not loaded!", "", r, 20, 35, 0, false);
-				}
-				break;
-			case 2: // STATS
-				drawPaint(g, r4c);
-				g.setColor(lines);
-				g.drawLine(r.x + 204, r.y + 43, r.x + 204, r.y + 109);
-				drawStats(g);
-				g.setColor(fonts);
-				g.setFont(new Font(font, Font.BOLD, 14));
-				drawString(g, properties.name(), r, -40);
-				g.setFont(new Font(font, Font.PLAIN, 12));
-				final int xpTL = skills.getExpToNextLevel(Skills.FIREMAKING);
-				final int xpHour = (int) (3600000.0 / (double) runTime * gained_exp);
-				final int TTL = (int) ((double) xpTL / (double) xpHour * 3600000);
-				drawStringMain(g, "Current Level:", skills.getCurrentLevel(Skills.FIREMAKING)
-						+ "", r, 20, 35, 2, true);
-				drawStringMain(g, "Level Gained:", gained_lvl + " lvl", r, 20, 35, 3, true);
-				drawStringMain(g, "Time to Lvl:", formatTime(TTL), r, 20, 35, 4, true);
-
-				drawStringMain(g, "XP Gained:", formatter.format((long) gained_exp)
-						+ "xp", r, 20, 35, 2, false);
-				drawStringMain(g, "XP / Hour:", formatter.format((long) xpHour)
-						+ "xp", r, 20, 35, 3, false);
-				drawStringMain(g, "XP to Lvl:", formatter.format((long) xpTL)
-						+ "xp", r, 20, 35, 4, false);
-				break;
-			case 3: // ETC
-				drawPaint(g, r5c);
-				g.setColor(lines);
-				g.drawLine(r.x + 204, r.y + 22, r.x + 204, r.y + 109);
-				g.setColor(fonts);
-				g.setFont(new Font(font, Font.BOLD, 14));
-				drawString(g, properties.name(), r, -40);
-				g.setFont(new Font(font, Font.PLAIN, 12));
-				if (useBreaking == true) {
-					if (randomBreaking == true) {
-						drawStringMain(g, "Break Distance:", "Random", r, 20, 35, 0, true);
-						drawStringMain(g, "Break Length:", "Random", r, 20, 35, 1, true);
+				case -1: // PAINT OFF
+					g.setColor(hiddenPaint);
+					g.fillRect(r1.x, r1.y, r1.width, r1.height);
+					g.setColor(fonts);
+					drawString(g, "O", r1, 5);
+					break;
+				case 0: // DEFAULT TAB - MAIN
+					drawPaint(g, r2c);
+					g.setColor(lines);
+					g.drawLine(r.x + 204, r.y + 22, r.x + 204, r.y + 109);
+					g.setColor(fonts);
+					g.setFont(new Font(font, Font.BOLD, 14));
+					drawString(g, properties.name(), r, -40);
+					g.setFont(new Font(font, Font.PLAIN, 12));
+					drawStringMain(g, "Runtime: ", totalTime, r, 20, 35, 0, true);
+					if (isActive()) {
+						drawStringMain(g, "", status, r, 20, 35, 0, false);
 					} else {
-						drawStringMain(g, "Break Distance:", Integer.toString(midTime)
-								+ " ±" + Integer.toString(randTime), r, 20, 35, 0, true);
-						drawStringMain(g, "Break Length:", Integer.toString(midLength)
-								+ " ±" + Integer.toString(randLength), r, 20, 35, 1, true);
+						drawStringMain(g, "", "Script Paused", r, 20, 35, 0, false);
 					}
-					drawStringMain(g, "Next Break:", (String) formatTime((int) (nextBreak - System.currentTimeMillis())), r, 20, 35, 3, true);
-					drawStringMain(g, "Break Length:", (String) formatTime((int) nextLength), r, 20, 35, 4, true);
-				} else {
-					drawStringMain(g, "Breaking is disabled!", "", r, 20, 35, 0, true);
-				}
-				drawStringMain(g, "Camera Turns:", Integer.toString(camTurned), r, 20, 35, 0, false);
-				if (useChatRes) {
-					drawStringMain(g, "Chat Response:", Integer.toString(resCount), r, 20, 35, 3, false);
-				} else {
-					drawStringMain(g, "Chat Responder is disabled!", "", r, 20, 35, 3, false);
-				}
-				if (useRemote) {
-					drawStringMain(g, "Remote Control:", "Enabled", r, 20, 35, 4, false);
-				} else {
-					drawStringMain(g, "Remote Control is disabled!", "", r, 20, 35, 4, false);
-				}
-				break;
-			case 4:
-				drawPaint(g, r6c);
-				g.setColor(lines);
-				g.drawLine(r.x + 204, r.y + 22, r.x + 204, r.y + 109);
-				g.setColor(fonts);
-				g.setFont(new Font(font, Font.BOLD, 14));
-				drawString(g, properties.name(), r, -40);
-				g.setFont(new Font(font, Font.PLAIN, 12));
-				g.setColor(Color.WHITE);
-				g.drawString("Settings", paintX + 15, paintY + 31);
-				if (useChatRes == true) {
-					g.setColor(Color.GREEN);
-					g.drawString("Chat Responder ON", cr1.x + 19, cr1.y + 13);
-				} else {
-					g.setColor(Color.RED);
-					g.drawString("Chat Responder OFF", cr1.x + 19, cr1.y + 13);
-				}
-				g.setColor(new Color(0, 0, 0, 190));
-				g.fillRect(clr1.x, clr1.y, clr1.width, clr1.height);
-				g.fillRect(cr1.x, cr1.y, cr1.width, cr1.height);
-				g.setColor(new Color(0, 0, 70, 190));
-				g.fillRect(clr2.x, clr2.y, clr2.width, clr2.height);
-				g.setColor(new Color(0, 70, 0, 190));
-				g.fillRect(clr3.x, clr3.y, clr3.width, clr3.height);
-				g.setColor(new Color(65, 0, 0, 190));
-				g.fillRect(clr4.x, clr4.y, clr4.width, clr4.height);
-				g.setColor(new Color(65, 0, 65, 190));
-				g.fillRect(clr5.x, clr5.y, clr5.width, clr5.height);
-				g.setColor(new Color(82, 41, 0, 190));
-				g.fillRect(clr6.x, clr6.y, clr6.width, clr6.height);
-				g.setColor(Color.WHITE);
-				g.drawString("T", cr1.x + 4, cr1.y + 12);
-				if (exitStage == 0) {
-					g.setColor(new Color(0, 0, 0, 160));
-					g.fillRect(logOut.x, logOut.y, logOut.width, logOut.height);
-					g.setColor(Color.YELLOW);
-					g.drawString("Log Out", logOut.x + 6, logOut.y + 12);
-				}
-				if (counter < 1) {
-					g.setColor(new Color(0, 0, 0, 160));
-					g.fillRect(logOut.x + 125, logOut.y, logOut.width + 53, logOut.height);
-					g.setColor(Color.YELLOW);
-					g.drawString("Take Screenshot", logOut.x + 131, logOut.y + 12);
-				}
-				break;
+					int firePerHour = 0;
+					int moneyPerHour = 0;
+					if (runTime / 1000 > 0) {
+						firePerHour = (int) (3600000.0 / (double) runTime * totalFires);
+						moneyPerHour = (int) (3600000.0 / (double) runTime * totalMoney);
+					}
+					drawStringMain(g, "Fires Made: ", formatter.format((long) totalFires), r, 20, 35, 2, true);
+					drawStringMain(g, "Fires / Hour: ", formatter.format((long) firePerHour), r, 20, 35, 3, true);
+
+					drawStringMain(g, "Money Lost: ", formatter.format((long) totalMoney), r, 20, 35, 2, false);
+					drawStringMain(g, "Money / Hour: ", formatter.format((long) moneyPerHour), r, 20, 35, 3, false);
+					break;
+				case 1: // INFO
+					drawPaint(g, r3c);
+					g.setColor(lines);
+					g.drawLine(r.x + 204, r.y + 22, r.x + 204, r.y + 109);
+					g.setColor(fonts);
+					g.setFont(new Font(font, Font.BOLD, 14));
+					drawString(g, properties.name(), r, -40);
+					g.setFont(new Font(font, Font.PLAIN, 12));
+					drawStringMain(g, "Version: ", Double.toString(properties.version()), r, 20, 35, 0, true);
+					if (foundType == true) {
+						drawStringMain(g, "Amt of " + name[logId] + " in Bank:", "", r, 20, 35, 2, true);
+						drawStringMain(g, "", formatter.format((long) bankCount), r, 20, 35, 3, true);
+						drawStringMain(g, name[logId] + " Prices", "", r, 20, 35, 0, false);
+						drawStringMain(g, "Price Guide:", Integer.toString(priceGuide)
+								+ " coins", r, 20, 35, 2, false);
+						drawStringMain(g, "Worth:", formatter.format((long) (bankCount * priceGuide)), r, 20, 35, 4, true);
+					} else {
+						drawStringMain(g, "Log prices not loaded!", "", r, 20, 35, 0, false);
+					}
+					break;
+				case 2: // STATS
+					drawPaint(g, r4c);
+					g.setColor(lines);
+					g.drawLine(r.x + 204, r.y + 43, r.x + 204, r.y + 109);
+					drawStats(g);
+					g.setColor(fonts);
+					g.setFont(new Font(font, Font.BOLD, 14));
+					drawString(g, properties.name(), r, -40);
+					g.setFont(new Font(font, Font.PLAIN, 12));
+					final int xpTL = skills.getExpToNextLevel(Skills.FIREMAKING);
+					final int xpHour = (int) (3600000.0 / (double) runTime * gained_exp);
+					final int TTL = (int) ((double) xpTL / (double) xpHour * 3600000);
+					drawStringMain(g, "Current Level:", skills.getCurrentLevel(Skills.FIREMAKING)
+							+ "", r, 20, 35, 2, true);
+					drawStringMain(g, "Level Gained:", gained_lvl + " lvl", r, 20, 35, 3, true);
+					drawStringMain(g, "Time to Lvl:", formatTime(TTL), r, 20, 35, 4, true);
+
+					drawStringMain(g, "XP Gained:", formatter.format((long) gained_exp)
+							+ "xp", r, 20, 35, 2, false);
+					drawStringMain(g, "XP / Hour:", formatter.format((long) xpHour)
+							+ "xp", r, 20, 35, 3, false);
+					drawStringMain(g, "XP to Lvl:", formatter.format((long) xpTL)
+							+ "xp", r, 20, 35, 4, false);
+					break;
+				case 3: // ETC
+					drawPaint(g, r5c);
+					g.setColor(lines);
+					g.drawLine(r.x + 204, r.y + 22, r.x + 204, r.y + 109);
+					g.setColor(fonts);
+					g.setFont(new Font(font, Font.BOLD, 14));
+					drawString(g, properties.name(), r, -40);
+					g.setFont(new Font(font, Font.PLAIN, 12));
+					if (useBreaking == true) {
+						if (randomBreaking == true) {
+							drawStringMain(g, "Break Distance:", "Random", r, 20, 35, 0, true);
+							drawStringMain(g, "Break Length:", "Random", r, 20, 35, 1, true);
+						} else {
+							drawStringMain(g, "Break Distance:", Integer.toString(midTime)
+									+ " ï¿½" + Integer.toString(randTime), r, 20, 35, 0, true);
+							drawStringMain(g, "Break Length:", Integer.toString(midLength)
+									+ " ï¿½" + Integer.toString(randLength), r, 20, 35, 1, true);
+						}
+						drawStringMain(g, "Next Break:", (String) formatTime((int) (nextBreak - System.currentTimeMillis())), r, 20, 35, 3, true);
+						drawStringMain(g, "Break Length:", (String) formatTime((int) nextLength), r, 20, 35, 4, true);
+					} else {
+						drawStringMain(g, "Breaking is disabled!", "", r, 20, 35, 0, true);
+					}
+					drawStringMain(g, "Camera Turns:", Integer.toString(camTurned), r, 20, 35, 0, false);
+					if (useChatRes) {
+						drawStringMain(g, "Chat Response:", Integer.toString(resCount), r, 20, 35, 3, false);
+					} else {
+						drawStringMain(g, "Chat Responder is disabled!", "", r, 20, 35, 3, false);
+					}
+					if (useRemote) {
+						drawStringMain(g, "Remote Control:", "Enabled", r, 20, 35, 4, false);
+					} else {
+						drawStringMain(g, "Remote Control is disabled!", "", r, 20, 35, 4, false);
+					}
+					break;
+				case 4:
+					drawPaint(g, r6c);
+					g.setColor(lines);
+					g.drawLine(r.x + 204, r.y + 22, r.x + 204, r.y + 109);
+					g.setColor(fonts);
+					g.setFont(new Font(font, Font.BOLD, 14));
+					drawString(g, properties.name(), r, -40);
+					g.setFont(new Font(font, Font.PLAIN, 12));
+					g.setColor(Color.WHITE);
+					g.drawString("Settings", paintX + 15, paintY + 31);
+					if (useChatRes == true) {
+						g.setColor(Color.GREEN);
+						g.drawString("Chat Responder ON", cr1.x + 19, cr1.y + 13);
+					} else {
+						g.setColor(Color.RED);
+						g.drawString("Chat Responder OFF", cr1.x + 19, cr1.y + 13);
+					}
+					g.setColor(new Color(0, 0, 0, 190));
+					g.fillRect(clr1.x, clr1.y, clr1.width, clr1.height);
+					g.fillRect(cr1.x, cr1.y, cr1.width, cr1.height);
+					g.setColor(new Color(0, 0, 70, 190));
+					g.fillRect(clr2.x, clr2.y, clr2.width, clr2.height);
+					g.setColor(new Color(0, 70, 0, 190));
+					g.fillRect(clr3.x, clr3.y, clr3.width, clr3.height);
+					g.setColor(new Color(65, 0, 0, 190));
+					g.fillRect(clr4.x, clr4.y, clr4.width, clr4.height);
+					g.setColor(new Color(65, 0, 65, 190));
+					g.fillRect(clr5.x, clr5.y, clr5.width, clr5.height);
+					g.setColor(new Color(82, 41, 0, 190));
+					g.fillRect(clr6.x, clr6.y, clr6.width, clr6.height);
+					g.setColor(Color.WHITE);
+					g.drawString("T", cr1.x + 4, cr1.y + 12);
+					if (exitStage == 0) {
+						g.setColor(new Color(0, 0, 0, 160));
+						g.fillRect(logOut.x, logOut.y, logOut.width, logOut.height);
+						g.setColor(Color.YELLOW);
+						g.drawString("Log Out", logOut.x + 6, logOut.y + 12);
+					}
+					if (counter < 1) {
+						g.setColor(new Color(0, 0, 0, 160));
+						g.fillRect(logOut.x + 125, logOut.y, logOut.width + 53, logOut.height);
+						g.setColor(Color.YELLOW);
+						g.drawString("Take Screenshot", logOut.x + 131, logOut.y + 12);
+					}
+					break;
 			}
 			if (counter > 1) {
 				proggiePaint(g);
@@ -3165,15 +3121,15 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 	private boolean logOutR = false, reloaded = false;
 	private String totalTime = "00:00:00", status = "Loading...", colour,
 			lastMessage = null;
-	private static double[] exp = { 40, 60, 90, 105, 135, 157.5, 125, 193.5,
-			202.5, 303.8 };
+	private static double[] exp = {40, 60, 90, 105, 135, 157.5, 125, 193.5,
+			202.5, 303.8};
 
-	private static int[] logs = { 1511, 1521, 1519, 6333, 1517, 6332, 10810,
-			12581, 1515, 1513 };
+	private static int[] logs = {1511, 1521, 1519, 6333, 1517, 6332, 10810,
+			12581, 1515, 1513};
 
-	private static String[] name = { "Logs", "Oak logs", "Willow logs",
+	private static String[] name = {"Logs", "Oak logs", "Willow logs",
 			"Teak logs", "Maple logs", "Mahogany logs", "Arctic Pine logs",
-			"Eucalyptus logs", "Yew logs", "Magic logs" };
+			"Eucalyptus logs", "Yew logs", "Magic logs"};
 
 	private int logId = 0;
 
@@ -3230,7 +3186,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 				}
 			} catch (final Throwable e) {
 				log.info("Error occurred when downloading Disallowed Tiles data.");
-				final String data[] = { "3163,3487,grand_exchange_start",
+				final String data[] = {"3163,3487,grand_exchange_start",
 						"3164,3487", "3165,3487", "3166,3487", "3167,3488",
 						"3167,3489", "3167,3490", "3167,3491", "3166,3492",
 						"3165,3492", "3164,3492", "3163,3492", "3162,3491",
@@ -3256,7 +3212,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 						"3109,3490,3113,3491", "3108,3488,3111,3489",
 						"3107,3487,3110,3487", "3106,3485,3109,3486",
 						"3106,3484,3108,3484,edgeville_water(end)",
-						"3172,3447,var_west_block" };
+						"3172,3447,var_west_block"};
 				try {
 					out = new BufferedWriter(new FileWriter(Configuration.Paths.getScriptCacheDirectory()
 							+ File.separator + "sDisallowed.txt"));
@@ -3320,7 +3276,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 
 	/**
 	 * Checks if there are any objects on the next firemaking tile.
-	 * 
+	 *
 	 * @return if there is object on next firemaking tile
 	 */
 	private boolean canFiremake() {
@@ -3434,245 +3390,245 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 
 	private int doAction() {
 		switch (getState()) {
-		case Generate:
-			laneActive = false;
-			makeFire = false;
-			use = null;
-			for (final FireLane fl : lanes) {
-				fl.scan();
-			}
-			final int min = inventory.getCount(logs[logId]);
-			FireLane toUse = null;
-			int uCost = 999,
-			tCost = 999;
-			for (final FireLane l : lanes) {
-				if (toUse == null) {
-					toUse = l;
-					uCost = l.cost;
-					continue;
+			case Generate:
+				laneActive = false;
+				makeFire = false;
+				use = null;
+				for (final FireLane fl : lanes) {
+					fl.scan();
 				}
-				tCost = l.cost;
-				if (l.uLength >= min) { // length is greater than amt of logs in
-										// inventory
-					if (tCost < uCost) { // new tile costs less
-						uCost = tCost;
+				final int min = inventory.getCount(logs[logId]);
+				FireLane toUse = null;
+				int uCost = 999,
+						tCost = 999;
+				for (final FireLane l : lanes) {
+					if (toUse == null) {
 						toUse = l;
-					} else if (toUse.length() >= min) {
-						// ignore
-					} else { // current tile costs less
-						final int costDiff = uCost - tCost; // how much is the
-															// toUse more cheap
-						final int lengthDiff = l.uLength - toUse.uLength; // how
-																			// much
-																			// longer
-																			// is
-																			// l
-						if (lengthDiff > costDiff) {
-							uCost = tCost;
-							toUse = l;
-						}
+						uCost = l.cost;
+						continue;
 					}
-				} else {
-					if (l.uLength > toUse.uLength) { // new length is longer
-						final int lengthDiff = l.uLength - toUse.uLength;
-						final int costDiff = tCost - uCost;
-						if (lengthDiff >= costDiff) {
+					tCost = l.cost;
+					if (l.uLength >= min) { // length is greater than amt of logs in
+						// inventory
+						if (tCost < uCost) { // new tile costs less
 							uCost = tCost;
 							toUse = l;
-						}
-					} else { // current length is longer
-						if (l.uLength > 3) {
-							final int lengthDiff = toUse.uLength - l.uLength;
-							final int costDiff = tCost - uCost;
-							if (costDiff > lengthDiff + 1) {
+						} else if (toUse.length() >= min) {
+							// ignore
+						} else { // current tile costs less
+							final int costDiff = uCost - tCost; // how much is the
+							// toUse more cheap
+							final int lengthDiff = l.uLength - toUse.uLength; // how
+							// much
+							// longer
+							// is
+							// l
+							if (lengthDiff > costDiff) {
 								uCost = tCost;
 								toUse = l;
 							}
 						}
-					}
-				}
-			}
-			if (toUse != null) {
-				if (toUse.uLength - 1 > min) {
-					final int reduceable = (toUse.uLength - min) / 2;
-					final RSTile test = new RSTile(toUse.uStart - reduceable, toUse.y);
-					final int testDiff = test.getX() - startLoc.getX();
-					final int startDiff = toUse.uStart - startLoc.getX();
-					if (startDiff >= 0) {
-						if (testDiff < startDiff && calc.canReach(test, false)) {
-							toUse.uStart -= reduceable;
+					} else {
+						if (l.uLength > toUse.uLength) { // new length is longer
+							final int lengthDiff = l.uLength - toUse.uLength;
+							final int costDiff = tCost - uCost;
+							if (lengthDiff >= costDiff) {
+								uCost = tCost;
+								toUse = l;
+							}
+						} else { // current length is longer
+							if (l.uLength > 3) {
+								final int lengthDiff = toUse.uLength - l.uLength;
+								final int costDiff = tCost - uCost;
+								if (costDiff > lengthDiff + 1) {
+									uCost = tCost;
+									toUse = l;
+								}
+							}
 						}
 					}
 				}
-				use = toUse;
-			}
-			return 10;
-		case Move:
-			makeFire = false;
-			if (!onTile(new RSTile(use.uStart, use.y), "Walk here", 0.5, 0.5, 0)) {
-				if (!walking.walkTileMM(new RSTile(use.uStart, use.y), 1, 1)) {
-					walking.walkTo(new RSTile(use.uStart, use.y));
-				}
-			}
-			sleep(random(1000, 1200));
-			while (valid() && getMyPlayer().isMoving()) {
-				sleep(random(45, 70));
-				if (random(0, 2) == 0) {
-					antiban.main(false);
-				}
-			}
-			return 10;
-		case Firemake:
-			makeFire = false;
-			if (interfaces.get(740).isValid()) {
-				interfaces.get(740).getComponent(3).doClick();
-				sleep(random(550, 700));
-				return 200;
-			}
-			if (getMyPlayer().getAnimation() != -1) {
-				return random(100, 300);
-			}
-			if (objects.getTopAt(getMyPlayer().getLocation(), 1) != null) {
-				sleep(random(100, 160));
-			}
-			if (objects.getTopAt(getMyPlayer().getLocation(), 1) != null) {
-				sleep(random(130, 200));
-			}
-			if (!laneActive) {
-				laneActive = true;
-			}
-			final RSComponent next = getNextLog();
-			if (use.isHovering()) {
-				if (use.hovering.getComponentID() == logs[logId]) {
-					mouse.click(true);
-				} else {
-					inventory.getItem(logs[logId]).getComponent().doClick();
-				}
-				sleep(random(150, 250));
-				use.hovering = null;
-			} else {
-				use.hovering = null;
-				if (inventory.getSelectedItem() != null
-						&& inventory.getSelectedItem().getID() == logs[logId]) {
-					if (!inventory.getItem(590).doAction("Use " + name[logId])) {
-						return 100;
-					}
-					sleep(random(100, 200));
-				} else {
-					if (inventory.getSelectedItem() == null
-							|| inventory.getSelectedItem().getID() != 590) {
-						if (!inventory.getItem(590).doAction("Use Tinderbox")) {
-							return 100;
-						}
-						sleep(random(90, 150));
-					}
-					if (inventory.getSelectedItem() == null
-							|| inventory.getSelectedItem().getID() != logs[logId]) {
-						if (!inventory.getItem(logs[logId]).doAction("Use")) {
-							return 100;
-						}
-						sleep(random(300, 500));
-					}
-				}
-			}
-			c = 0;
-			// Wait until player stops moving
-			while (valid() && c < 21) {
-				c++;
-				sleep(50);
-				if (!getMyPlayer().isMoving()) {
-					break;
-				}
-				if (interfaces.get(740).isValid()) {
-					return 10;
-				}
-				if (objects.getTopAt(getMyPlayer().getLocation(), 1) != null) {
-					break;
-				}
-				if (disallow + 2000 > System.currentTimeMillis()) {
-					disallow = 0;
-					use = null;
-					makeFire = false;
-					return 100;
-				}
-			}
-			if (use.hasNext()) {
-				// Hovering
-				if (inventory.getSelectedItem() == null) {
-					if (next != null) {
-						if (inventory.getItem(590).doAction("Use Tinderbox")) {
-							sleep(random(100, 200));
-							next.doHover();
-							use.hovering = next;
+				if (toUse != null) {
+					if (toUse.uLength - 1 > min) {
+						final int reduceable = (toUse.uLength - min) / 2;
+						final RSTile test = new RSTile(toUse.uStart - reduceable, toUse.y);
+						final int testDiff = test.getX() - startLoc.getX();
+						final int startDiff = toUse.uStart - startLoc.getX();
+						if (startDiff >= 0) {
+							if (testDiff < startDiff && calc.canReach(test, false)) {
+								toUse.uStart -= reduceable;
+							}
 						}
 					}
+					use = toUse;
 				}
-			}
-			c = 0;
-			// Wait until player finish firemaking (check for movement)
-			while (valid() && c < 121) {
-				if (!makeFire) {
-					makeFire = true;
+				return 10;
+			case Move:
+				makeFire = false;
+				if (!onTile(new RSTile(use.uStart, use.y), "Walk here", 0.5, 0.5, 0)) {
+					if (!walking.walkTileMM(new RSTile(use.uStart, use.y), 1, 1)) {
+						walking.walkTo(new RSTile(use.uStart, use.y));
+					}
 				}
-				c++;
-				sleep(50);
-				if (getMyPlayer().isMoving()) {
-					break;
-				}
-				if (interfaces.get(740).isValid()) {
-					return 10;
-				}
-				if (objects.getTopAt(getMyPlayer().getLocation(), 1) != null) {
-					break;
-				}
-				if (disallow + 2000 > System.currentTimeMillis()) {
-					disallow = 0;
-					use = null;
-					makeFire = false;
-					return 100;
-				}
-			}
-			if (makeFire && inventory.contains(logId)
-					&& getMyPlayer().isMoving()
-					|| objects.getTopAt(getMyPlayer().getLocation(), 1) == null) {
-				return 1;
-			}
-			if (getMyPlayer().isMoving()) {
-				sleep(random(250, 400));
-			}
-			if (!inventory.contains(logs[logId])) {
-				if (random(0, 3) == 0) {
-					antiban.main(true);
-				}
-			}
-			return random(100, 200);
-		case Bank:
-			laneActive = false;
-			makeFire = false;
-			use = null;
-			doBank();
-			return random(100, 200);
-		case GoBank:
-			laneActive = false;
-			makeFire = false;
-			if (!onTile(startLoc, "Walk here", 0.5, 0.5, 0)) {
-				if (!walking.walkTileMM(startLoc)) {
-					walking.walkTo(startLoc);
-				}
-			}
-			sleep(random(1000, 1200));
-			while (valid() && getMyPlayer().isMoving()) {
-				sleep(random(45, 70));
-				if (random(0, 2) == 0) {
-					if (!antiban.lookAway()) {
+				sleep(random(1000, 1200));
+				while (valid() && getMyPlayer().isMoving()) {
+					sleep(random(45, 70));
+					if (random(0, 2) == 0) {
 						antiban.main(false);
 					}
 				}
-			}
-			return 10;
-		case Antiban:
-			antiban.main(false);
-			return random(45, 75);
+				return 10;
+			case Firemake:
+				makeFire = false;
+				if (interfaces.get(740).isValid()) {
+					interfaces.get(740).getComponent(3).doClick();
+					sleep(random(550, 700));
+					return 200;
+				}
+				if (getMyPlayer().getAnimation() != -1) {
+					return random(100, 300);
+				}
+				if (objects.getTopAt(getMyPlayer().getLocation(), 1) != null) {
+					sleep(random(100, 160));
+				}
+				if (objects.getTopAt(getMyPlayer().getLocation(), 1) != null) {
+					sleep(random(130, 200));
+				}
+				if (!laneActive) {
+					laneActive = true;
+				}
+				final RSComponent next = getNextLog();
+				if (use.isHovering()) {
+					if (use.hovering.getComponentID() == logs[logId]) {
+						mouse.click(true);
+					} else {
+						inventory.getItem(logs[logId]).getComponent().doClick();
+					}
+					sleep(random(150, 250));
+					use.hovering = null;
+				} else {
+					use.hovering = null;
+					if (inventory.getSelectedItem() != null
+							&& inventory.getSelectedItem().getID() == logs[logId]) {
+						if (!inventory.getItem(590).doAction("Use " + name[logId])) {
+							return 100;
+						}
+						sleep(random(100, 200));
+					} else {
+						if (inventory.getSelectedItem() == null
+								|| inventory.getSelectedItem().getID() != 590) {
+							if (!inventory.getItem(590).doAction("Use Tinderbox")) {
+								return 100;
+							}
+							sleep(random(90, 150));
+						}
+						if (inventory.getSelectedItem() == null
+								|| inventory.getSelectedItem().getID() != logs[logId]) {
+							if (!inventory.getItem(logs[logId]).doAction("Use")) {
+								return 100;
+							}
+							sleep(random(300, 500));
+						}
+					}
+				}
+				c = 0;
+				// Wait until player stops moving
+				while (valid() && c < 21) {
+					c++;
+					sleep(50);
+					if (!getMyPlayer().isMoving()) {
+						break;
+					}
+					if (interfaces.get(740).isValid()) {
+						return 10;
+					}
+					if (objects.getTopAt(getMyPlayer().getLocation(), 1) != null) {
+						break;
+					}
+					if (disallow + 2000 > System.currentTimeMillis()) {
+						disallow = 0;
+						use = null;
+						makeFire = false;
+						return 100;
+					}
+				}
+				if (use.hasNext()) {
+					// Hovering
+					if (inventory.getSelectedItem() == null) {
+						if (next != null) {
+							if (inventory.getItem(590).doAction("Use Tinderbox")) {
+								sleep(random(100, 200));
+								next.doHover();
+								use.hovering = next;
+							}
+						}
+					}
+				}
+				c = 0;
+				// Wait until player finish firemaking (check for movement)
+				while (valid() && c < 121) {
+					if (!makeFire) {
+						makeFire = true;
+					}
+					c++;
+					sleep(50);
+					if (getMyPlayer().isMoving()) {
+						break;
+					}
+					if (interfaces.get(740).isValid()) {
+						return 10;
+					}
+					if (objects.getTopAt(getMyPlayer().getLocation(), 1) != null) {
+						break;
+					}
+					if (disallow + 2000 > System.currentTimeMillis()) {
+						disallow = 0;
+						use = null;
+						makeFire = false;
+						return 100;
+					}
+				}
+				if (makeFire && inventory.contains(logId)
+						&& getMyPlayer().isMoving()
+						|| objects.getTopAt(getMyPlayer().getLocation(), 1) == null) {
+					return 1;
+				}
+				if (getMyPlayer().isMoving()) {
+					sleep(random(250, 400));
+				}
+				if (!inventory.contains(logs[logId])) {
+					if (random(0, 3) == 0) {
+						antiban.main(true);
+					}
+				}
+				return random(100, 200);
+			case Bank:
+				laneActive = false;
+				makeFire = false;
+				use = null;
+				doBank();
+				return random(100, 200);
+			case GoBank:
+				laneActive = false;
+				makeFire = false;
+				if (!onTile(startLoc, "Walk here", 0.5, 0.5, 0)) {
+					if (!walking.walkTileMM(startLoc)) {
+						walking.walkTo(startLoc);
+					}
+				}
+				sleep(random(1000, 1200));
+				while (valid() && getMyPlayer().isMoving()) {
+					sleep(random(45, 70));
+					if (random(0, 2) == 0) {
+						if (!antiban.lookAway()) {
+							antiban.main(false);
+						}
+					}
+				}
+				return 10;
+			case Antiban:
+				antiban.main(false);
+				return random(45, 75);
 		}
 		return 100;
 	}
@@ -3688,7 +3644,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 					sleep(random(350, 500));
 					bank.withdraw(590, 1);
 				}
-				bank.depositAllExcept(new int[] { 590, logs[logId] });
+				bank.depositAllExcept(new int[]{590, logs[logId]});
 				bankCount = bank.getCount(logs[logId]);
 				sleep(random(50, 100));
 				c = 0;
@@ -3775,7 +3731,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 
 	/**
 	 * Checks if the current fire lane can be used
-	 * 
+	 *
 	 * @return if fire lane passed check, false if use is null
 	 */
 	private boolean fireLaneCheck() {
@@ -3854,7 +3810,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 	}
 
 	private boolean isInLane(final int minX, final int maxX, final int checkMX,
-			final int checkMY) {
+	                         final int checkMY) {
 		for (int x = minX; x <= maxX; x++) {
 			if (x >= checkMX && x <= checkMY) {
 				return true;
@@ -4163,7 +4119,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 	}
 
 	private boolean onTile(final RSTile tile, final String action,
-			final double dx, final double dy, final int height) {
+	                       final double dx, final double dy, final int height) {
 		Point checkScreen;
 		try {
 			checkScreen = calc.tileToScreen(tile, dx, dy, height);
@@ -4227,7 +4183,7 @@ public class WhiteBearAIOFiremaker extends Script implements PaintListener,
 	}
 
 	private boolean playerInArea(final int maxX, final int maxY,
-			final int minX, final int minY) {
+	                             final int minX, final int minY) {
 		final int x = getMyPlayer().getLocation().getX();
 		final int y = getMyPlayer().getLocation().getY();
 		if (x >= minX && x <= maxX && y >= minY && y <= maxY) {

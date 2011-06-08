@@ -1,10 +1,3 @@
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.util.HashMap;
-
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
@@ -13,13 +6,12 @@ import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Methods;
 import org.rsbot.script.methods.Skills;
 import org.rsbot.script.util.Timer;
-import org.rsbot.script.wrappers.RSArea;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.script.wrappers.RSTilePath;
+import org.rsbot.script.wrappers.*;
 
-@ScriptManifest(authors = { "LastCoder" }, keywords = { "Smithing" }, name = "ArbiSmitherLite", version = 2.0, description = "Start, all options are in GUI.")
+import java.awt.*;
+import java.util.HashMap;
+
+@ScriptManifest(authors = {"LastCoder"}, keywords = {"Smithing"}, name = "ArbiSmitherLite", version = 2.0, description = "Start, all options are in GUI.")
 public class AutoSmith extends Script implements MessageListener, PaintListener {
 
 	static class Gui extends javax.swing.JFrame {
@@ -45,6 +37,7 @@ public class AutoSmith extends Script implements MessageListener, PaintListener 
 		private javax.swing.JLabel jLabel3;
 
 		// End of variables declaration
+
 		/**
 		 * Creates new form Gui
 		 */
@@ -123,8 +116,8 @@ public class AutoSmith extends Script implements MessageListener, PaintListener 
 		public int secondary;
 
 		public Materials(final String name, final int REQ_LVL,
-				final int INV_ID, final int INV_SECOND_ID, final int PRIMARY,
-				final int SECONDARY) {
+		                 final int INV_ID, final int INV_SECOND_ID, final int PRIMARY,
+		                 final int SECONDARY) {
 			this.name = name;
 			req_lvl = REQ_LVL;
 			inv_id = INV_ID;
@@ -141,7 +134,7 @@ public class AutoSmith extends Script implements MessageListener, PaintListener 
 		public RSTile[] walk_path;
 
 		public SMLoc(final String name, final int FURNACE_ID,
-				final RSArea bankZones, final RSTile[] WALK_PATH) {
+		             final RSArea bankZones, final RSTile[] WALK_PATH) {
 			this.name = name;
 			furnace_id = FURNACE_ID;
 			bank_area = bankZones;
@@ -153,7 +146,7 @@ public class AutoSmith extends Script implements MessageListener, PaintListener 
 		BANK, WALK, SMITH, INTERFACE, SLEEP
 	}
 
-	private static final SMLoc[] LOCATIONS = new SMLoc[] { new SMLoc("AL_KHARID", 11666, new RSArea(new RSTile(3275, 3175), new RSTile(3264, 3160)), new RSTile[] {
+	private static final SMLoc[] LOCATIONS = new SMLoc[]{new SMLoc("AL_KHARID", 11666, new RSArea(new RSTile(3275, 3175), new RSTile(3264, 3160)), new RSTile[]{
 			new RSTile(3271, 3166), new RSTile(3273, 3166),
 			new RSTile(3274, 3167), new RSTile(3274, 3169),
 			new RSTile(3275, 3172), new RSTile(3276, 3174),
@@ -161,7 +154,7 @@ public class AutoSmith extends Script implements MessageListener, PaintListener 
 			new RSTile(3278, 3180), new RSTile(3280, 3182),
 			new RSTile(3281, 3183), new RSTile(3281, 3185),
 			new RSTile(3280, 3185), new RSTile(3278, 3185),
-			new RSTile(3277, 3186), new RSTile(3276, 3186) }) };
+			new RSTile(3277, 3186), new RSTile(3276, 3186)})};
 	private static final Color COLOR_1 = new Color(0, 0, 0, 155);
 	private static final Color COLOR_2 = new Color(0, 0, 0);
 	private static final Color COLOR_3 = new Color(255, 255, 255);
@@ -169,7 +162,7 @@ public class AutoSmith extends Script implements MessageListener, PaintListener 
 	private static final BasicStroke STROKE = new BasicStroke(1);
 	private static final Font FONT_1 = new Font("Arial", 0, 17);
 	private static final Font FONT_2 = new Font("Arial", 0, 9);
-	private static final Materials[] Materials = new Materials[] {
+	private static final Materials[] Materials = new Materials[]{
 			new Materials("Bronze Bars", 1, 436, 438, 14, 14),
 			new Materials("Iron Bars", 15, 440, -1, 28, -1),
 			new Materials("Silver Bars", 20, 442, -1, 28, -1),
@@ -177,7 +170,7 @@ public class AutoSmith extends Script implements MessageListener, PaintListener 
 			new Materials("Gold Bars", 40, 444, -1, 28, -1),
 			new Materials("Mithril Bars", 50, 447, 453, 12, 14),
 			new Materials("Adamant Bars", 70, 449, 453, 4, 24),
-			new Materials("Rune Bars", 85, 451, 453, 3, 24) };
+			new Materials("Rune Bars", 85, 451, 453, 3, 24)};
 	private static SMLoc location;
 	private static Materials MATERIAL;
 	private long activity_time;
@@ -247,93 +240,93 @@ public class AutoSmith extends Script implements MessageListener, PaintListener 
 	@Override
 	public int loop() {
 		switch (getState()) {
-		case BANK:
-			if (!bank.isOpen()) {
-				bank.open();
-				for (int i = 0; i < 100 && !bank.isOpen(); i++) {
-					Methods.sleep(20);
-				}
-			} else {
-				if (AutoSmith.MATERIAL.inv_second_id != -1) {
-					if (!inventory.contains(AutoSmith.MATERIAL.inv_id)) {
-						if (inventory.getCount() > 1) {
-							bank.depositAll();
-						}
-						bank.withdraw(AutoSmith.MATERIAL.inv_id, AutoSmith.MATERIAL.primary);
-						for (int i = 0; i < 100
-								&& !inventory.contains(AutoSmith.MATERIAL.inv_id); i++) {
-							Methods.sleep(20);
-						}
-					}
-					if (!inventory.contains(AutoSmith.MATERIAL.inv_second_id)) {
-						bank.withdraw(AutoSmith.MATERIAL.inv_second_id, AutoSmith.MATERIAL.secondary);
-						for (int i = 0; i < 100
-								&& !inventory.contains(AutoSmith.MATERIAL.inv_second_id); i++) {
-							Methods.sleep(20);
-						}
-					}
-				} else {
-					if (!inventory.contains(AutoSmith.MATERIAL.inv_id)) {
-						if (inventory.getCount() > 1) {
-							bank.depositAll();
-						}
-						bank.withdraw(AutoSmith.MATERIAL.inv_id, AutoSmith.MATERIAL.primary);
-						for (int i = 0; i < 100
-								&& !inventory.contains(AutoSmith.MATERIAL.inv_id); i++) {
-							Methods.sleep(20);
-						}
-					}
-				}
-			}
-			break;
-		case WALK:
-			if (AutoSmith.MATERIAL.inv_second_id != -1) {
-				if (inventory.contains(AutoSmith.MATERIAL.inv_id)
-						&& inventory.contains(AutoSmith.MATERIAL.inv_second_id)) {
-					path.traverse();
-					Methods.sleep(20);
-				} else {
-					path_back.traverse();
-					Methods.sleep(20);
-				}
-			} else {
-				if (inventory.contains(AutoSmith.MATERIAL.inv_id)) {
-					path.traverse();
-				} else {
-					path_back.traverse();
-				}
-			}
-			break;
-		case SMITH:
-			final RSObject furnace = objects.getNearest(AutoSmith.location.furnace_id);
-			if (furnace != null) {
-				if (!furnace.isOnScreen()) {
-					camera.turnTo(furnace);
-					for (int i = 0; i < 100 && !furnace.isOnScreen(); i++) {
+			case BANK:
+				if (!bank.isOpen()) {
+					bank.open();
+					for (int i = 0; i < 100 && !bank.isOpen(); i++) {
 						Methods.sleep(20);
 					}
 				} else {
-					if (!inventory.isItemSelected()) {
-						final RSItem ore = inventory.getItem(AutoSmith.MATERIAL.inv_id);
-						if (ore != null) {
-							ore.doAction("Use");
+					if (AutoSmith.MATERIAL.inv_second_id != -1) {
+						if (!inventory.contains(AutoSmith.MATERIAL.inv_id)) {
+							if (inventory.getCount() > 1) {
+								bank.depositAll();
+							}
+							bank.withdraw(AutoSmith.MATERIAL.inv_id, AutoSmith.MATERIAL.primary);
+							for (int i = 0; i < 100
+									&& !inventory.contains(AutoSmith.MATERIAL.inv_id); i++) {
+								Methods.sleep(20);
+							}
 						}
-						for (int i = 0; i < 100 && !inventory.isItemSelected(); i++) {
+						if (!inventory.contains(AutoSmith.MATERIAL.inv_second_id)) {
+							bank.withdraw(AutoSmith.MATERIAL.inv_second_id, AutoSmith.MATERIAL.secondary);
+							for (int i = 0; i < 100
+									&& !inventory.contains(AutoSmith.MATERIAL.inv_second_id); i++) {
+								Methods.sleep(20);
+							}
+						}
+					} else {
+						if (!inventory.contains(AutoSmith.MATERIAL.inv_id)) {
+							if (inventory.getCount() > 1) {
+								bank.depositAll();
+							}
+							bank.withdraw(AutoSmith.MATERIAL.inv_id, AutoSmith.MATERIAL.primary);
+							for (int i = 0; i < 100
+									&& !inventory.contains(AutoSmith.MATERIAL.inv_id); i++) {
+								Methods.sleep(20);
+							}
+						}
+					}
+				}
+				break;
+			case WALK:
+				if (AutoSmith.MATERIAL.inv_second_id != -1) {
+					if (inventory.contains(AutoSmith.MATERIAL.inv_id)
+							&& inventory.contains(AutoSmith.MATERIAL.inv_second_id)) {
+						path.traverse();
+						Methods.sleep(20);
+					} else {
+						path_back.traverse();
+						Methods.sleep(20);
+					}
+				} else {
+					if (inventory.contains(AutoSmith.MATERIAL.inv_id)) {
+						path.traverse();
+					} else {
+						path_back.traverse();
+					}
+				}
+				break;
+			case SMITH:
+				final RSObject furnace = objects.getNearest(AutoSmith.location.furnace_id);
+				if (furnace != null) {
+					if (!furnace.isOnScreen()) {
+						camera.turnTo(furnace);
+						for (int i = 0; i < 100 && !furnace.isOnScreen(); i++) {
 							Methods.sleep(20);
 						}
 					} else {
-						furnace.doAction("Furnace");
-						Methods.sleep(200);
+						if (!inventory.isItemSelected()) {
+							final RSItem ore = inventory.getItem(AutoSmith.MATERIAL.inv_id);
+							if (ore != null) {
+								ore.doAction("Use");
+							}
+							for (int i = 0; i < 100 && !inventory.isItemSelected(); i++) {
+								Methods.sleep(20);
+							}
+						} else {
+							furnace.doAction("Furnace");
+							Methods.sleep(200);
+						}
 					}
 				}
-			}
-			break;
-		case INTERFACE:
-			interfaces.get(905).getComponent(14).doAction("All");
-			break;
-		case SLEEP:
-			Methods.sleep(20);
-			break;
+				break;
+			case INTERFACE:
+				interfaces.get(905).getComponent(14).doAction("All");
+				break;
+			case SLEEP:
+				Methods.sleep(20);
+				break;
 		}
 		return Methods.random(600, 1200);
 	}

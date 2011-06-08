@@ -5,17 +5,14 @@
  ************By: Himekp*************
  */
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
+import org.rsbot.event.listeners.PaintListener;
+import org.rsbot.script.Script;
+import org.rsbot.script.ScriptManifest;
+import org.rsbot.script.methods.Skills;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -23,22 +20,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.imageio.ImageIO;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.WindowConstants;
-
-import org.rsbot.event.listeners.PaintListener;
-import org.rsbot.script.Script;
-import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.methods.Skills;
-
-@ScriptManifest(authors = { "Himekp" }, keywords = { "Construction" }, name = "ProConstruction", version = 1.03, description = "ProConstruction, By: Himekp", website = "http://www.powerbot.org/vb/showthread.php?t=787874")
+@ScriptManifest(authors = {"Himekp"}, keywords = {"Construction"}, name = "ProConstruction", version = 1.03, description = "ProConstruction, By: Himekp", website = "http://www.powerbot.org/vb/showthread.php?t=787874")
 public class ProConstruction extends Script implements PaintListener {
 	public class ProConstructionGUI extends JPanel {
 		private static final long serialVersionUID = 1L;
@@ -170,8 +152,8 @@ public class ProConstruction extends Script implements PaintListener {
 
 				// ---- comboBox1 ----
 				frame1ContentPane.add(comboBox1);
-				comboBox1.setModel(new DefaultComboBoxModel(new String[] {
-						"Normal Butler", "Demon Butler" }));
+				comboBox1.setModel(new DefaultComboBoxModel(new String[]{
+						"Normal Butler", "Demon Butler"}));
 				comboBox1.setBounds(160, 95, 180, 30);
 
 				// ---- label3 ----
@@ -190,9 +172,9 @@ public class ProConstruction extends Script implements PaintListener {
 
 				// ---- comboBox2 ----
 				frame1ContentPane.add(comboBox2);
-				comboBox2.setModel(new DefaultComboBoxModel(new String[] {
+				comboBox2.setModel(new DefaultComboBoxModel(new String[]{
 						"Oak Larder", "Teak Carved Magic Wardrobe",
-						"Mahogany Table", "Oak Dungeon Door" }));
+						"Mahogany Table", "Oak Dungeon Door"}));
 				comboBox2.setBounds(160, 135, 180, 30);
 
 				// ---- label5 ----

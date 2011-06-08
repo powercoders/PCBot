@@ -1,60 +1,22 @@
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.awt.geom.Ellipse2D;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Properties;
-
-import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSlider;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextPane;
-import javax.swing.border.LineBorder;
-
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.methods.Bank;
-import org.rsbot.script.methods.Game;
-import org.rsbot.script.methods.Magic;
-import org.rsbot.script.methods.Methods;
-import org.rsbot.script.methods.Skills;
+import org.rsbot.script.methods.*;
 import org.rsbot.script.util.Timer;
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSInterface;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSPlayer;
-import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.Ellipse2D;
+import java.io.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Properties;
 
 /* @Updated 2.1.2011.
  * * * * *  Version 5.99  * * * *
@@ -67,7 +29,7 @@ import org.rsbot.script.wrappers.RSTile;
  *  
  */
 
-@ScriptManifest(authors = { "Fallen" }, keywords = { "Magic" }, name = "Fallen's Superheater", version = 5.99, description = "Superheats any kind of bars.", website = "http://www.powerbot.org/vb/showthread.php?t=474761")
+@ScriptManifest(authors = {"Fallen"}, keywords = {"Magic"}, name = "Fallen's Superheater", version = 5.99, description = "Superheats any kind of bars.", website = "http://www.powerbot.org/vb/showthread.php?t=474761")
 public class FallenSuperheater extends Script implements PaintListener,
 		MessageListener, MouseListener, MouseMotionListener {
 
@@ -110,13 +72,13 @@ public class FallenSuperheater extends Script implements PaintListener,
 	 */
 	public class FallenBank extends Thread {
 		public int BANK_IFACE = 762;
-		public int[] BANKERS = { 44, 45, 494, 495, 499, 958, 1036, 2271, 2354,
+		public int[] BANKERS = {44, 45, 494, 495, 499, 958, 1036, 2271, 2354,
 				2355, 3824, 5488, 5901, 5912, 5913, 6362, 6532, 6533, 6534,
-				6535, 7605, 8948, 9710, 14367 };
-		public int[] BANK_BOOTHS = { 2213, 4483, 6084, 11402, 11758, 12759,
+				6535, 7605, 8948, 9710, 14367};
+		public int[] BANK_BOOTHS = {2213, 4483, 6084, 11402, 11758, 12759,
 				14367, 19230, 24914, 25808, 26972, 27663, 29085, 34752, 35647,
-				36786 };
-		public int[] BANK_CHESTS = { 4483, 12308, 21301, 27663, 42192 };
+				36786};
+		public int[] BANK_CHESTS = {4483, 12308, 21301, 27663, 42192};
 
 		public boolean click(final RSTile t, final int... IDS) {
 			mouse.move(calc.tileToScreen(t, 0.5, 0.5, 50));
@@ -272,7 +234,7 @@ public class FallenSuperheater extends Script implements PaintListener,
 		}
 
 		private void addComponent(final Container container, final Component c,
-				final int x, final int y, final int width, final int height) {
+		                          final int x, final int y, final int width, final int height) {
 			c.setBounds(x, y, width, height);
 			container.add(c);
 		}
@@ -433,8 +395,8 @@ public class FallenSuperheater extends Script implements PaintListener,
 			});
 
 			// GENERAL
-			final String[] types = { "Bronze", "Iron", "Steel", "Silver",
-					"Gold", "Mithril", "Adamantite", "Runite" };
+			final String[] types = {"Bronze", "Iron", "Steel", "Silver",
+					"Gold", "Mithril", "Adamantite", "Runite"};
 			Options = new JComboBox(types);
 			OptionText = new JLabel();
 			Options.setSelectedItem(types[2]);
@@ -449,7 +411,7 @@ public class FallenSuperheater extends Script implements PaintListener,
 					final String item = Options.getSelectedItem().toString();
 					if (item != null
 							&& (item == "Steel" || item == "Mithril"
-									|| item == "Adamantite" || item == "Runite")) {
+							|| item == "Adamantite" || item == "Runite")) {
 						Box5.setEnabled(true);
 					} else {
 						Box5.setEnabled(false);
@@ -462,7 +424,7 @@ public class FallenSuperheater extends Script implements PaintListener,
 			final String item = Options.getSelectedItem().toString();
 			if (item != null
 					&& (item == "Steel" || item == "Mithril"
-							|| item == "Adamantite" || item == "Runite")) {
+					|| item == "Adamantite" || item == "Runite")) {
 				Box5.setEnabled(true);
 			} else {
 				Box5.setEnabled(false);
@@ -1242,60 +1204,60 @@ public class FallenSuperheater extends Script implements PaintListener,
 					}
 				} else if (afk == 5) {
 					switch (Methods.random(1, 4)) {
-					case 1:
-						Status = "ANTIBAN - AFK'ing.";
-						Methods.sleep(Methods.random(FallenSuperheater.AFK1, FallenSuperheater.AFK2));
-						break;
-					case 2:
-						Status = "ANTIBAN - AFK'ing.";
-						Methods.sleep(Methods.random(FallenSuperheater.AFK1 / 4, FallenSuperheater.AFK2 / 10));
-						mouse.moveRandomly(750);
-						Methods.sleep(Methods.random(FallenSuperheater.AFK1, FallenSuperheater.AFK2));
-						break;
-					case 3:
-						Status = "ANTIBAN - AFK'ing.";
-						Methods.sleep(Methods.random(0, 500));
-						mouse.moveRandomly(1000);
-						Methods.sleep(Methods.random(FallenSuperheater.AFK1 / 4, FallenSuperheater.AFK2 / 10));
-						mouse.moveRandomly(1500);
-						Methods.sleep(Methods.random(FallenSuperheater.AFK1, FallenSuperheater.AFK2));
-						break;
+						case 1:
+							Status = "ANTIBAN - AFK'ing.";
+							Methods.sleep(Methods.random(FallenSuperheater.AFK1, FallenSuperheater.AFK2));
+							break;
+						case 2:
+							Status = "ANTIBAN - AFK'ing.";
+							Methods.sleep(Methods.random(FallenSuperheater.AFK1 / 4, FallenSuperheater.AFK2 / 10));
+							mouse.moveRandomly(750);
+							Methods.sleep(Methods.random(FallenSuperheater.AFK1, FallenSuperheater.AFK2));
+							break;
+						case 3:
+							Status = "ANTIBAN - AFK'ing.";
+							Methods.sleep(Methods.random(0, 500));
+							mouse.moveRandomly(1000);
+							Methods.sleep(Methods.random(FallenSuperheater.AFK1 / 4, FallenSuperheater.AFK2 / 10));
+							mouse.moveRandomly(1500);
+							Methods.sleep(Methods.random(FallenSuperheater.AFK1, FallenSuperheater.AFK2));
+							break;
 					}
 				} else if (camerahh == 5) {
 					final int randomFormation = Methods.random(1, 6);
 					switch (randomFormation) {
-					case 1:
-						new CameraRotateThread().start();
-						break;
-					case 2:
-						new CameraHeightThread().start();
-						break;
-					case 3:
-						new CameraRotateThread().start();
-						if (Methods.random(0, 100) > Methods.random(0, 50)) {
-							Methods.sleep(Methods.random(100, 2000));
+						case 1:
 							new CameraRotateThread().start();
-						}
-						break;
-					case 4:
-						new CameraHeightThread().start();
-						if (Methods.random(0, 100) > Methods.random(0, 50)) {
-							Methods.sleep(Methods.random(100, 2000));
+							break;
+						case 2:
 							new CameraHeightThread().start();
-						}
-						break;
-					case 5:
-						new CameraRotateThread().start();
-						new CameraHeightThread().start();
-						if (Methods.random(0, 100) > Methods.random(0, 50)) {
-							Methods.sleep(Methods.random(100, 2000));
+							break;
+						case 3:
 							new CameraRotateThread().start();
-						}
-						if (Methods.random(0, 100) > Methods.random(0, 50)) {
-							Methods.sleep(Methods.random(100, 1000));
+							if (Methods.random(0, 100) > Methods.random(0, 50)) {
+								Methods.sleep(Methods.random(100, 2000));
+								new CameraRotateThread().start();
+							}
+							break;
+						case 4:
 							new CameraHeightThread().start();
-						}
-						break;
+							if (Methods.random(0, 100) > Methods.random(0, 50)) {
+								Methods.sleep(Methods.random(100, 2000));
+								new CameraHeightThread().start();
+							}
+							break;
+						case 5:
+							new CameraRotateThread().start();
+							new CameraHeightThread().start();
+							if (Methods.random(0, 100) > Methods.random(0, 50)) {
+								Methods.sleep(Methods.random(100, 2000));
+								new CameraRotateThread().start();
+							}
+							if (Methods.random(0, 100) > Methods.random(0, 50)) {
+								Methods.sleep(Methods.random(100, 1000));
+								new CameraHeightThread().start();
+							}
+							break;
 					}
 				}
 			}
@@ -1341,33 +1303,31 @@ public class FallenSuperheater extends Script implements PaintListener,
 		if (Methods.random(0, (400 / FallenSuperheater.Percentage)) == 2) {
 			final int randomTurn = Methods.random(1, 4);
 			switch (randomTurn) {
-			case 1:
-				new CameraRotateThread().start();
-				break;
-			case 2:
-				new CameraHeightThread().start();
-				break;
-			case 3:
-				final int randomFormation = Methods.random(0, 2);
-				if (randomFormation == 0) {
+				case 1:
 					new CameraRotateThread().start();
+					break;
+				case 2:
 					new CameraHeightThread().start();
-				} else {
-					new CameraHeightThread().start();
-					new CameraRotateThread().start();
-				}
-				break;
+					break;
+				case 3:
+					final int randomFormation = Methods.random(0, 2);
+					if (randomFormation == 0) {
+						new CameraRotateThread().start();
+						new CameraHeightThread().start();
+					} else {
+						new CameraHeightThread().start();
+						new CameraRotateThread().start();
+					}
+					break;
 			}
 		}
 	}
 
 	/**
 	 * Checks if Continue & BankTime are true or false.
-	 * 
-	 * @param ore1Count
-	 *            - The count of prime -ores.
-	 * @param ore2Count
-	 *            - The count of coal.
+	 *
+	 * @param ore1Count - The count of prime -ores.
+	 * @param ore2Count - The count of coal.
 	 */
 	private void checkBooleans() {
 		if (game.getCurrentTab() != Game.TAB_INVENTORY) {
@@ -1600,9 +1560,8 @@ public class FallenSuperheater extends Script implements PaintListener,
 	/**
 	 * Deposits all items in inventory except for the given IDs. Supports
 	 * deposit boxes.
-	 * 
-	 * @param items
-	 *            The items not to deposit.
+	 *
+	 * @param items The items not to deposit.
 	 * @return true on success.
 	 */
 	public boolean depositAllExcept(final int... items) {
@@ -1753,11 +1712,10 @@ public class FallenSuperheater extends Script implements PaintListener,
 	/**
 	 * Since I actually came up with this method, credits for it's usage would
 	 * be appreciated.(Or at least not deleting this.)
-	 * 
+	 *
 	 * @param ItemID
-	 * @param p
-	 *            - This is the point where from you want to find the closest
-	 *            item.
+	 * @param p      - This is the point where from you want to find the closest
+	 *               item.
 	 * @return The closest item from <b>p</b> with the id <b>ItemID</b>.
 	 * @author Fall3n.
 	 */
@@ -1876,74 +1834,74 @@ public class FallenSuperheater extends Script implements PaintListener,
 			return 500;
 		}
 		switch (getState()) { // Switches between these states based on getState
-		case SUPERHEAT:
-			Status = "Superheating.";
-			DirectHeat = false;
-			if (!isSuperheatSelected()) {
-				if (game.getCurrentTab() != Game.TAB_MAGIC) {
-					game.openTab(Game.TAB_MAGIC);
-				}
-				if (!bank.isOpen()) {
-					try {
-						if (magic.castSpell(Magic.SPELL_SUPERHEAT_ITEM)) {
-							waitForTab(Game.TAB_INVENTORY, 2500);
-							if (game.getCurrentTab() != Game.TAB_INVENTORY) {
-								spellCheck();
-							}
-						} else {
-							break;
-						}
-					} catch (final Exception e) {
+			case SUPERHEAT:
+				Status = "Superheating.";
+				DirectHeat = false;
+				if (!isSuperheatSelected()) {
+					if (game.getCurrentTab() != Game.TAB_MAGIC) {
+						game.openTab(Game.TAB_MAGIC);
 					}
-				} else {
-					bank.close();
-					break;
+					if (!bank.isOpen()) {
+						try {
+							if (magic.castSpell(Magic.SPELL_SUPERHEAT_ITEM)) {
+								waitForTab(Game.TAB_INVENTORY, 2500);
+								if (game.getCurrentTab() != Game.TAB_INVENTORY) {
+									spellCheck();
+								}
+							} else {
+								break;
+							}
+						} catch (final Exception e) {
+						}
+					} else {
+						bank.close();
+						break;
+					}
 				}
-			}
-			if (!bank.isOpen() && game.getCurrentTab() == Game.TAB_INVENTORY) {
-				checkBooleans();
-				final RSItem closest = getClosestItem(Ore1, mouse.getLocation());
-				if (closest != null && closest.doAction("Cast")
-						|| atLastInventoryItem(Ore1, "Cast")) {
-					spellAfterMath();
-					break;
+				if (!bank.isOpen() && game.getCurrentTab() == Game.TAB_INVENTORY) {
+					checkBooleans();
+					final RSItem closest = getClosestItem(Ore1, mouse.getLocation());
+					if (closest != null && closest.doAction("Cast")
+							|| atLastInventoryItem(Ore1, "Cast")) {
+						spellAfterMath();
+						break;
+					}
 				}
-			}
-			break;
-		case OPENBANK:
-			Status = "Opening the bank.";
-			if (magic.isSpellSelected()) {
-				game.openTab(Game.TAB_INVENTORY);
-			}
-			if (OpenedBank < 2) {
-				if (new FallenBank().open()) {
-					OpenedBank = 0;
-					BankTime = false;
-				} else {
+				break;
+			case OPENBANK:
+				Status = "Opening the bank.";
+				if (magic.isSpellSelected()) {
+					game.openTab(Game.TAB_INVENTORY);
+				}
+				if (OpenedBank < 2) {
 					if (new FallenBank().open()) {
 						OpenedBank = 0;
 						BankTime = false;
 					} else {
-						OpenedBank++;
+						if (new FallenBank().open()) {
+							OpenedBank = 0;
+							BankTime = false;
+						} else {
+							OpenedBank++;
+						}
 					}
+					mouse.moveRandomly(50);
+				} else {
+					game.openTab(Methods.random(0, 17));
+					Methods.sleep(Methods.random(300, 600));
+					game.openTab(Game.TAB_INVENTORY);
+					OpenedBank = 0;
 				}
-				mouse.moveRandomly(50);
-			} else {
-				game.openTab(Methods.random(0, 17));
-				Methods.sleep(Methods.random(300, 600));
-				game.openTab(Game.TAB_INVENTORY);
-				OpenedBank = 0;
-			}
-			break;
-		case DefaultBank:
-			defaultBank();
-			break;
-		case AdamantBank:
-			adamantBank();
-			break;
-		case CoalBagBank:
-			coalBagBank();
-			break;
+				break;
+			case DefaultBank:
+				defaultBank();
+				break;
+			case AdamantBank:
+				adamantBank();
+				break;
+			case CoalBagBank:
+				coalBagBank();
+				break;
 		}
 		return Methods.random(10, 50);
 	}
@@ -2440,13 +2398,11 @@ public class FallenSuperheater extends Script implements PaintListener,
 	}
 
 	/**
-	 * @param distance
-	 *            - How far the returned tile should be from you.
-	 * @param t
-	 *            - Get's the opposite direction from this tile. (Could be e.g.
-	 *            the location of a monster/object)
+	 * @param distance - How far the returned tile should be from you.
+	 * @param t        - Get's the opposite direction from this tile. (Could be e.g.
+	 *                 the location of a monster/object)
 	 * @returns A tile that's 'distance' away from you in the opposite direction
-	 *          of RSTile 't'.
+	 * of RSTile 't'.
 	 * @author Fall3n
 	 */
 	/*
@@ -2529,7 +2485,7 @@ public class FallenSuperheater extends Script implements PaintListener,
 	}
 
 	public boolean waitForMageTabWO(final int timeout,
-			final boolean smartHeating) {
+	                                final boolean smartHeating) {
 		final long start = System.currentTimeMillis();
 		final int cap = Methods.random(600, 900);
 		if (Methods.random(0, 33) == Methods.random(0, 33)) {
@@ -2612,31 +2568,31 @@ public class FallenSuperheater extends Script implements PaintListener,
 			}
 		}
 		switch (count) {
-		case 0: // Withdraw All
-			return item.doAction("Withdraw-All");
-		case 1: // Withdraw 1
-			return item.doClick(true);
-		case 5: // Withdraw 5
-		case 10: // Withdraw 10
-			return item.doAction("Withdraw-" + count);
-		default: // Withdraw x
-			if (item.doClick(false)) {
-				Methods.sleep(Methods.random(100, 300));
-				if (menu.contains("Withdraw-" + count + " ")) {
-					if (menu.doAction("Withdraw-" + count + " ")) {
-						Methods.sleep(Methods.random(100, 200));
-						return true;
+			case 0: // Withdraw All
+				return item.doAction("Withdraw-All");
+			case 1: // Withdraw 1
+				return item.doClick(true);
+			case 5: // Withdraw 5
+			case 10: // Withdraw 10
+				return item.doAction("Withdraw-" + count);
+			default: // Withdraw x
+				if (item.doClick(false)) {
+					Methods.sleep(Methods.random(100, 300));
+					if (menu.contains("Withdraw-" + count + " ")) {
+						if (menu.doAction("Withdraw-" + count + " ")) {
+							Methods.sleep(Methods.random(100, 200));
+							return true;
+						}
+						return false;
 					}
-					return false;
+					if (item.doAction("Withdraw-X")) {
+						Methods.sleep(Methods.random(1000, 1300));
+						keyboard.sendText("" + count, true);
+					}
+					Methods.sleep(Methods.random(100, 200));
+					return true;
 				}
-				if (item.doAction("Withdraw-X")) {
-					Methods.sleep(Methods.random(1000, 1300));
-					keyboard.sendText("" + count, true);
-				}
-				Methods.sleep(Methods.random(100, 200));
-				return true;
-			}
-			break;
+				break;
 		}
 		return false;
 	}

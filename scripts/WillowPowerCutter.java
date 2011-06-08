@@ -1,13 +1,3 @@
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.io.IOException;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
@@ -16,16 +6,21 @@ import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Skills;
 import org.rsbot.script.wrappers.RSObject;
 
-@ScriptManifest(authors = { "SupahScripts" }, keywords = { "WillowPowerCutter" }, name = "WillowPwner", version = 1.06, description = "Universal Willow Tree Cutter. Only PowerCuts (Supports most hatchets)", website = "http://www.powerbot.org/vb/showthread.php?t=772773")
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
+
+@ScriptManifest(authors = {"SupahScripts"}, keywords = {"WillowPowerCutter"}, name = "WillowPwner", version = 1.06, description = "Universal Willow Tree Cutter. Only PowerCuts (Supports most hatchets)", website = "http://www.powerbot.org/vb/showthread.php?t=772773")
 public class WillowPowerCutter extends Script implements PaintListener,
 		MessageListener {
 
 	private final int willowLogID = 1519;
-	private final int willowTree[] = { 5551, 5552, 5553, 1308, 8481, 8482,
+	private final int willowTree[] = {5551, 5552, 5553, 1308, 8481, 8482,
 			8483, 8484, 8485, 8486, 8487, 8488, 38627, 38616, 38627, 2210, 142,
-			2372, 139 };
-	private final int hatchets[] = { 1349, 1351, 1353, 1355, 1357, 1359, 1361,
-			6739, 13470 };
+			2372, 139};
+	private final int hatchets[] = {1349, 1351, 1353, 1355, 1357, 1359, 1361,
+			6739, 13470};
 	private int startXP;
 	public long startTime = System.currentTimeMillis();
 	public int xpGained;

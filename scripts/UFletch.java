@@ -1,58 +1,3 @@
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.MenuItem;
-import java.awt.Point;
-import java.awt.PopupMenu;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.image.RenderedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.LinkedList;
-import java.util.Properties;
-import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JSlider;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
@@ -65,7 +10,18 @@ import org.rsbot.script.methods.Skills;
 import org.rsbot.script.wrappers.RSInterface;
 import org.rsbot.script.wrappers.RSItem;
 
-@ScriptManifest(authors = { "Fletch To 99" }, keywords = "Fletching", name = "UFletch", website = "http://www.universalscripts.org/", version = 2.28, description = "The best fletcher!")
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.RenderedImage;
+import java.io.*;
+import java.net.*;
+import java.util.LinkedList;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+@ScriptManifest(authors = {"Fletch To 99"}, keywords = "Fletching", name = "UFletch", website = "http://www.universalscripts.org/", version = 2.28, description = "The best fletcher!")
 /**
  * All-in-One Fletching script for RSBot 2.XX
  * @author Fletch To 99
@@ -120,19 +76,19 @@ public class UFletch extends Script implements PaintListener, MouseListener,
 	}
 
 	private static interface constants {
-		final String[] optionMethod = { "Fletching Bow", "Stringing Bow",
+		final String[] optionMethod = {"Fletching Bow", "Stringing Bow",
 				"Fletch then String", "Add Stocks to limbs",
 				"Stringing Crossbow", "Chop, Fletch, Drop or Shaft", "Arrows",
-				"Bolts", "Darts" };
-		final String[] optionLog = { "Normal", "Oak", "Willow", "Maple", "Yew",
-				"Magic", "N/A" };
-		final String[] optionBow = { "Short", "Long", "Shafts", "Stocks",
-				"C'Bow (u)", "N/A" };
-		final String[] optionKnife = { "Normal", "clay", "N/A" };
-		final String[] optionAxe = { "Bronze", "Iron", "Steel", "Mith",
-				"Adamant", "Rune", "Dragon", "N/A" };
-		final String[] optionColor = { "Black", "Red", "Orange", "Blue",
-				"Green", "Yellow", "Pink", "White", "Tan" };
+				"Bolts", "Darts"};
+		final String[] optionLog = {"Normal", "Oak", "Willow", "Maple", "Yew",
+				"Magic", "N/A"};
+		final String[] optionBow = {"Short", "Long", "Shafts", "Stocks",
+				"C'Bow (u)", "N/A"};
+		final String[] optionKnife = {"Normal", "clay", "N/A"};
+		final String[] optionAxe = {"Bronze", "Iron", "Steel", "Mith",
+				"Adamant", "Rune", "Dragon", "N/A"};
+		final String[] optionColor = {"Black", "Red", "Orange", "Blue",
+				"Green", "Yellow", "Pink", "White", "Tan"};
 		final Color TAN = new Color(220, 202, 169);
 		final int BOW_STRING_ID = 1777, CBOW_STRING_ID = 943, FEATHER_ID = 314,
 				FEATHER_SHAFT_ID = 53, SHAFT_ID = 52, xpIsClose = 13020000;
@@ -985,7 +941,7 @@ public class UFletch extends Script implements PaintListener, MouseListener,
 		private final double lastingTime;
 
 		public MouseCirclePathPoint(final int x, final int y,
-				final int lastingTime) {
+		                            final int lastingTime) {
 			super(x, y);
 			this.lastingTime = lastingTime;
 			finishTime = System.currentTimeMillis() + lastingTime;
@@ -1012,7 +968,7 @@ public class UFletch extends Script implements PaintListener, MouseListener,
 		private final double lastingTime;
 
 		public MouseCirclePathPoint2(final int x, final int y,
-				final int lastingTime) {
+		                             final int lastingTime) {
 			super(x, y);
 			this.lastingTime = lastingTime;
 			finishTime = System.currentTimeMillis() + lastingTime;
@@ -1450,10 +1406,10 @@ public class UFletch extends Script implements PaintListener, MouseListener,
 				urlConn.setUseCaches(false);
 				urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 				String content = "";
-				final String[] stats = { "auth", "secs", "mins", "hours",
-						"days", "fletched", "strung", "expgained" };
-				final Object[] data = { gui.textField2.getText(), 0, 0, 0, 0,
-						0, 0, 0 };
+				final String[] stats = {"auth", "secs", "mins", "hours",
+						"days", "fletched", "strung", "expgained"};
+				final Object[] data = {gui.textField2.getText(), 0, 0, 0, 0,
+						0, 0, 0};
 				for (int i = 0; i < stats.length; i++) {
 					content += stats[i] + "=" + data[i] + "&";
 				}
@@ -1908,7 +1864,7 @@ public class UFletch extends Script implements PaintListener, MouseListener,
 	}
 
 	public Image getImage(final String fileName, final boolean save,
-			final String url) {
+	                      final String url) {
 		final Logger log = Logger.getLogger(this.getClass().getName());
 		final File dir = new File(getCacheDirectory() + "/Images");
 		try {
@@ -2094,7 +2050,7 @@ public class UFletch extends Script implements PaintListener, MouseListener,
 	}
 
 	private double getRot(final double rot, final boolean negative,
-			final double speed) {
+	                      final double speed) {
 		if (negative) {
 			return Math.toRadians(-System.currentTimeMillis() % rot / speed);
 		}
@@ -2119,25 +2075,25 @@ public class UFletch extends Script implements PaintListener, MouseListener,
 
 	private int[] getTreeId() {
 		if (gui.comboBox2.getSelectedIndex() == 0) {
-			return new int[] { 1278, 1276, 38787, 38760, 38788, 38784, 38783,
-					38782 };
+			return new int[]{1278, 1276, 38787, 38760, 38788, 38784, 38783,
+					38782};
 		} else if (gui.comboBox2.getSelectedIndex() == 1) {
-			return new int[] { 1281, 38731 };
+			return new int[]{1281, 38731};
 		} else if (gui.comboBox2.getSelectedIndex() == 2) {
-			return new int[] { 5551, 5552, 5553, 1308, 38616, 38617, 38627 };
+			return new int[]{5551, 5552, 5553, 1308, 38616, 38617, 38627};
 		} else if (gui.comboBox2.getSelectedIndex() == 3) {
-			return new int[] { 1307 };
+			return new int[]{1307};
 		} else if (gui.comboBox2.getSelectedIndex() == 4) {
-			return new int[] { 1309, 38755 };
+			return new int[]{1309, 38755};
 		} else if (gui.comboBox2.getSelectedIndex() == 5) {
-			return new int[] { 1306 };
+			return new int[]{1306};
 		}
 		return null;
 	}
 
 	private int getUnstrungId() {
 		if (getBowType() == 1) { // 1=Shortbows 2=Longbows 3=Shafts 4=Stocks
-									// 5=c'bow
+			// 5=c'bow
 			if (gui.comboBox2.getSelectedIndex() == 0) {
 				return 50;
 			} else if (gui.comboBox2.getSelectedIndex() == 1) {
@@ -2463,8 +2419,8 @@ public class UFletch extends Script implements PaintListener, MouseListener,
 			sleep(random(200, 250));
 		} else if (!isBusy()
 				&& (!inventory.contains(constants.SHAFT_ID)
-						|| !inventory.contains(constants.FEATHER_ID)
-						|| !inventory.contains(getObjectId()) || !inventory.contains(constants.FEATHER_SHAFT_ID))) {
+				|| !inventory.contains(constants.FEATHER_ID)
+				|| !inventory.contains(getObjectId()) || !inventory.contains(constants.FEATHER_SHAFT_ID))) {
 			log.severe("Out of supplys");
 			stopScript();
 		} else if (fletched >= amount && amount != 0) {
@@ -2838,7 +2794,7 @@ public class UFletch extends Script implements PaintListener, MouseListener,
 				g.setFont(constants.textFont);
 				g.drawString("XP/h: "
 						+ getHourly(skills.getCurrentExp(Skills.FLETCHING)
-								- startXP), 141, 50);
+						- startXP), 141, 50);
 				g.drawString("XPTL: "
 						+ skills.getExpToNextLevel(Skills.FLETCHING), 141, 65);
 			} else {
@@ -3335,10 +3291,10 @@ public class UFletch extends Script implements PaintListener, MouseListener,
 				urlConn.setUseCaches(false);
 				urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 				String content = "";
-				final String[] stats = { "auth", "secs", "mins", "hours",
-						"days", "fletched", "strung", "expgained" };
-				final Object[] data = { gui.textField2.getText(), seconds,
-						minutes, hours, days, fletched, strung, xpGained };
+				final String[] stats = {"auth", "secs", "mins", "hours",
+						"days", "fletched", "strung", "expgained"};
+				final Object[] data = {gui.textField2.getText(), seconds,
+						minutes, hours, days, fletched, strung, xpGained};
 				for (int i = 0; i < stats.length; i++) {
 					content += stats[i] + "=" + data[i] + "&";
 				}

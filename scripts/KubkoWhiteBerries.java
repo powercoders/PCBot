@@ -1,19 +1,3 @@
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
@@ -23,14 +7,14 @@ import org.rsbot.script.methods.Equipment;
 import org.rsbot.script.methods.Game;
 import org.rsbot.script.methods.GrandExchange.GEItem;
 import org.rsbot.script.methods.Magic;
-import org.rsbot.script.wrappers.RSArea;
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSGroundItem;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.*;
 
-@ScriptManifest(authors = { "Kubko" }, keywords = { "White", "Berry", "Picker" }, name = "KubkoWhiteBerries", description = "Pickin' up them berries.", version = 1.0, website = "http://www.powerbot.org/vb/showthread.php?t=722427")
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.IOException;
+import java.net.*;
+
+@ScriptManifest(authors = {"Kubko"}, keywords = {"White", "Berry", "Picker"}, name = "KubkoWhiteBerries", description = "Pickin' up them berries.", version = 1.0, website = "http://www.powerbot.org/vb/showthread.php?t=722427")
 public class KubkoWhiteBerries extends Script implements PaintListener,
 		MessageListener {
 	private enum STATE {
@@ -77,7 +61,8 @@ public class KubkoWhiteBerries extends Script implements PaintListener,
 	int lawRune = 554;
 	int fireRune = 563;
 	boolean needsToBank;// / TEst
-	int step = 0;; // /TEST
+	int step = 0;
+	; // /TEST
 	boolean compassClicked;
 	boolean isDead;
 	int spellsCasted;
@@ -90,88 +75,89 @@ public class KubkoWhiteBerries extends Script implements PaintListener,
 	int plane;
 	int airStaffId = 1381;
 
-	boolean worldHopped;;
+	boolean worldHopped;
+	;
 
 	boolean firstTeleGrab = true;
 
 	RSArea lair = new RSArea(new RSTile(2883, 4372), new RSTile(2888, 4377));
 
-	RSTile[] toGe = { new RSTile(3209, 3427), new RSTile(3208, 3431),
+	RSTile[] toGe = {new RSTile(3209, 3427), new RSTile(3208, 3431),
 			new RSTile(3206, 3436), new RSTile(3203, 3441),
 			new RSTile(3199, 3444), new RSTile(3194, 3447),
 			new RSTile(3189, 3448), new RSTile(3184, 3454),
 			new RSTile(3181, 3455), new RSTile(3175, 3459),
 			new RSTile(3166, 3461), new RSTile(3165, 3467),
 			new RSTile(3163, 3472), new RSTile(3163, 3477),
-			new RSTile(3161, 3482), new RSTile(3162, 3489) };
+			new RSTile(3161, 3482), new RSTile(3162, 3489)};
 
 	RSArea entrance = new RSArea(new RSTile(3213, 3778), new RSTile(3215, 3785));
 
-	public final RSTile[] backToEntrance = { new RSTile(3207, 3811),
+	public final RSTile[] backToEntrance = {new RSTile(3207, 3811),
 			new RSTile(3202, 3813), new RSTile(3198, 3819),
 			new RSTile(3198, 3825), new RSTile(3197, 3830),
 			new RSTile(3198, 3835), new RSTile(3203, 3837),
 			new RSTile(3204, 3843), new RSTile(3204, 3848),
-			new RSTile(3202, 3853), };
+			new RSTile(3202, 3853),};
 	RSTile teleGrabTile = new RSTile(3218, 3805);
 
 	RSArea teleGrabTileArea = new RSArea(new RSTile(3214, 3790), new RSTile(3230, 3813));
 
-	public final RSTile[] backFromDragonIsle = { new RSTile(3200, 3814),
+	public final RSTile[] backFromDragonIsle = {new RSTile(3200, 3814),
 			new RSTile(3201, 3819), new RSTile(3200, 3824),
 			new RSTile(3200, 3832), new RSTile(3200, 3837),
 			new RSTile(3202, 3842), new RSTile(3201, 3847),
-			new RSTile(3201, 3855) };
-	public final RSTile[] walkToIsle = { new RSTile(3201, 3853),
+			new RSTile(3201, 3855)};
+	public final RSTile[] walkToIsle = {new RSTile(3201, 3853),
 			new RSTile(3202, 3847), new RSTile(3202, 3842),
 			new RSTile(3202, 3837), new RSTile(3202, 3832),
 			new RSTile(3201, 3827), new RSTile(3200, 3822),
 			new RSTile(3200, 3817), new RSTile(3204, 3814),
 			new RSTile(3207, 3810), new RSTile(3212, 3811),
-			new RSTile(3217, 3813) };
+			new RSTile(3217, 3813)};
 	RSArea ge = new RSArea(new RSTile(3144, 3468), new RSTile(3185, 3516));
 	RSArea redDragonIsle = new RSArea(new RSTile(3189, 3821), new RSTile(3205, 3843));
 	RSArea teleGrabPlace = new RSArea(new RSTile(3211, 3790), new RSTile(3230, 3810));
-	public final RSArea redDragonEntrance = new RSArea(new RSTile[] {
+	public final RSArea redDragonEntrance = new RSArea(new RSTile[]{
 			new RSTile(3194, 3853), new RSTile(3208, 3853),
 			new RSTile(3209, 3858), new RSTile(3209, 3864),
 			new RSTile(3209, 3870), new RSTile(3207, 3875),
-			new RSTile(3202, 3876), new RSTile(3197, 3875) });
+			new RSTile(3202, 3876), new RSTile(3197, 3875)});
 	RSArea nearDitch = new RSArea(new RSTile(3127, 3498), new RSTile(3139, 3520));
-	public final RSTile[] toIsle = { new RSTile(3201, 3860),
-			new RSTile(3201, 3855), new RSTile(3201, 3849) };
-	RSTile geShortCut[] = { new RSTile(3158, 3485), new RSTile(3153, 3492),
+	public final RSTile[] toIsle = {new RSTile(3201, 3860),
+			new RSTile(3201, 3855), new RSTile(3201, 3849)};
+	RSTile geShortCut[] = {new RSTile(3158, 3485), new RSTile(3153, 3492),
 			new RSTile(3153, 3501), new RSTile(3148, 3507),
 			new RSTile(3145, 3510), new RSTile(3145, 3512),
-			new RSTile(3144, 3514) };
+			new RSTile(3144, 3514)};
 
 	RSTile ditch = new RSTile(3138, 3520);
-	RSTile[] toLumb2 = { new RSTile(3219, 3219), new RSTile(3219, 3219),
+	RSTile[] toLumb2 = {new RSTile(3219, 3219), new RSTile(3219, 3219),
 			new RSTile(3215, 3215), new RSTile(3219, 3219),
 			new RSTile(3215, 3215), new RSTile(3213, 3211),
 			new RSTile(3219, 3219), new RSTile(3215, 3215),
-			new RSTile(3213, 3211), new RSTile(3205, 3209) };
-	RSTile toBerry1[] = { new RSTile(3201, 3849), new RSTile(3201, 3843),
+			new RSTile(3213, 3211), new RSTile(3205, 3209)};
+	RSTile toBerry1[] = {new RSTile(3201, 3849), new RSTile(3201, 3843),
 			new RSTile(3201, 3837), new RSTile(3201, 3832),
 			new RSTile(3201, 3826), new RSTile(3201, 3820),
 			new RSTile(3196, 3812), new RSTile(3199, 3810),
-			new RSTile(3206, 3810) };
-	public final RSTile[] toFurther = { new RSTile(3200, 3856),
+			new RSTile(3206, 3810)};
+	public final RSTile[] toFurther = {new RSTile(3200, 3856),
 			new RSTile(3203, 3860), new RSTile(3208, 3861),
 			new RSTile(3213, 3861), new RSTile(3218, 3860),
-			new RSTile(3223, 3860), new RSTile(3228, 3860) };
+			new RSTile(3223, 3860), new RSTile(3228, 3860)};
 	RSArea atBerries = new RSArea(new RSTile(3207, 3808), new RSTile(3221, 3820));
 	RSArea afterShortcut = new RSArea(new RSTile(3135, 3516), new RSTile(3138, 3516));
 
-	RSTile[] toCave = { new RSTile(3220, 3804), new RSTile(3219, 3800),
+	RSTile[] toCave = {new RSTile(3220, 3804), new RSTile(3219, 3800),
 			new RSTile(3218, 3795), new RSTile(3217, 3792),
-			new RSTile(3217, 3786), new RSTile(3214, 3783) };
+			new RSTile(3217, 3786), new RSTile(3214, 3783)};
 
 	RSArea varrockArea = new RSArea(new RSTile(3160, 3420), new RSTile(3232, 3476));
 
 	RSTile canoe = new RSTile(3133, 3510);
 
-	public final RSTile[] toTeleGrab = { new RSTile(3147, 3800),
+	public final RSTile[] toTeleGrab = {new RSTile(3147, 3800),
 			new RSTile(3152, 3800), new RSTile(3157, 3800),
 			new RSTile(3162, 3800), new RSTile(3167, 3798),
 			new RSTile(3172, 3796), new RSTile(3177, 3794),
@@ -179,7 +165,7 @@ public class KubkoWhiteBerries extends Script implements PaintListener,
 			new RSTile(3193, 3796), new RSTile(3198, 3797),
 			new RSTile(3203, 3797), new RSTile(3208, 3797),
 			new RSTile(3213, 3799), new RSTile(3218, 3800),
-			new RSTile(3222, 3803) };
+			new RSTile(3222, 3803)};
 
 	RSArea lumbBank = new RSArea(new RSTile(3205, 3209), new RSTile(3212, 3225), 2);
 
@@ -367,152 +353,126 @@ public class KubkoWhiteBerries extends Script implements PaintListener,
 		if (game.isLoggedIn()) {
 			switch (states()) {
 
-			case MAKE_CANOE:
-				canoeWalking();
-				sleep(3000, 4000);
-				final RSObject station2 = objects.getNearest(12166);
-				if (station2.isOnScreen() && station2 != null) {
-					canoeChopping();
-					sleep(4000, 5000);
-					canoeChopped = true;
-				}
-				if (canoeChopped == true) {
-					canoeShaping();
-					sleep(4000, 6000);
-					if (interfaces.get(52).getComponent(24).isValid()) {
-						canoeShaped = true;
+				case MAKE_CANOE:
+					canoeWalking();
+					sleep(3000, 4000);
+					final RSObject station2 = objects.getNearest(12166);
+					if (station2.isOnScreen() && station2 != null) {
+						canoeChopping();
+						sleep(4000, 5000);
+						canoeChopped = true;
 					}
-				}
-				if (interfaces.get(52).getComponent(24).isValid()
-						&& canoeShaped == true) {
-					canoeSelecting();
-					sleep(7000, 8000);
-				}
-				if (canoeSelected == true) {
-					canoeFloating();
-					sleep(1500, 2000);
-				}
-				if (canoeFloated == true) {
-					canoePaddling();
-					sleep(1300, 2000);
-				}
-				if (interfaces.get(53).getComponent(45).isValid()) {
-					canoeDestination();
-					sleep(6000, 7000);
-				}
-				final RSComponent travel = interfaces.get(53).getComponent(45);
-				if (interfaces.get(53).getComponent(45).isValid()) {
-					travel.doAction("Select");
-				}
-				return 50;
-
-			case WALK_TO_LUMB_BANK:
-				walking.newTilePath(toLumb2);
-				sleep(450, 700);
-				final RSObject stairs = objects.getNearest(36773);
-				if (stairs.isOnScreen() && stairs != null) {
-					stairs.doAction("Climb-up");
-				}
-				if (game.getPlane() == 1) {
-					final RSObject stairs2 = objects.getNearest(36774);
-					stairs2.doAction("Climb-up");
-					sleep(600, 700);
-				}
-
-			case TELEGRAB:
-				if (firstTeleGrab == true) {
-					walking.walkTo(teleGrabTile);
-					firstTeleGrab = false;
-				}
-				// if (compassClicked == false){
-				// mouse.click(542, 24, 5, 5, true);
-				compassClicked = true;
-				if (getMyPlayer().getAnimation() == -1) {
-					if (!magic.isSpellSelected()) {
-						final RSGroundItem berryGround = groundItems.getNearest(239);
-						camera.turnTo(new RSTile(3216, 3806));
-						magic.castSpell(Magic.SPELL_TELEKINETIC_GRAB);
-						if (berryGround != null && berryGround.isOnScreen()) {
-							berryGround.doAction("Cast");
-							sleep(1300, 1600);
-							spellsCasted++;
-						}
-					} else {
-						final RSGroundItem berryGround2 = groundItems.getNearest(239);
-						if (berryGround2 != null && berryGround2.isOnScreen()) {
-							berryGround2.doAction("Cast");
-							sleep(1000, 1300);
+					if (canoeChopped == true) {
+						canoeShaping();
+						sleep(4000, 6000);
+						if (interfaces.get(52).getComponent(24).isValid()) {
+							canoeShaped = true;
 						}
 					}
-				}
-				return 50;
+					if (interfaces.get(52).getComponent(24).isValid()
+							&& canoeShaped == true) {
+						canoeSelecting();
+						sleep(7000, 8000);
+					}
+					if (canoeSelected == true) {
+						canoeFloating();
+						sleep(1500, 2000);
+					}
+					if (canoeFloated == true) {
+						canoePaddling();
+						sleep(1300, 2000);
+					}
+					if (interfaces.get(53).getComponent(45).isValid()) {
+						canoeDestination();
+						sleep(6000, 7000);
+					}
+					final RSComponent travel = interfaces.get(53).getComponent(45);
+					if (interfaces.get(53).getComponent(45).isValid()) {
+						travel.doAction("Select");
+					}
+					return 50;
 
-			case WALK_TO_CAVE:
-				walking.newTilePath(toCave).traverse();
-				return 50;
+				case WALK_TO_LUMB_BANK:
+					walking.newTilePath(toLumb2);
+					sleep(450, 700);
+					final RSObject stairs = objects.getNearest(36773);
+					if (stairs.isOnScreen() && stairs != null) {
+						stairs.doAction("Climb-up");
+					}
+					if (game.getPlane() == 1) {
+						final RSObject stairs2 = objects.getNearest(36774);
+						stairs2.doAction("Climb-up");
+						sleep(600, 700);
+					}
+
+				case TELEGRAB:
+					if (firstTeleGrab == true) {
+						walking.walkTo(teleGrabTile);
+						firstTeleGrab = false;
+					}
+					// if (compassClicked == false){
+					// mouse.click(542, 24, 5, 5, true);
+					compassClicked = true;
+					if (getMyPlayer().getAnimation() == -1) {
+						if (!magic.isSpellSelected()) {
+							final RSGroundItem berryGround = groundItems.getNearest(239);
+							camera.turnTo(new RSTile(3216, 3806));
+							magic.castSpell(Magic.SPELL_TELEKINETIC_GRAB);
+							if (berryGround != null && berryGround.isOnScreen()) {
+								berryGround.doAction("Cast");
+								sleep(1300, 1600);
+								spellsCasted++;
+							}
+						} else {
+							final RSGroundItem berryGround2 = groundItems.getNearest(239);
+							if (berryGround2 != null && berryGround2.isOnScreen()) {
+								berryGround2.doAction("Cast");
+								sleep(1000, 1300);
+							}
+						}
+					}
+					return 50;
+
+				case WALK_TO_CAVE:
+					walking.newTilePath(toCave).traverse();
+					return 50;
 
 				// case CANOE_BANK:
 
-			case GO_TO_LAIR:
-				final RSObject entrance = objects.getNearest(38815);
-				if (entrance != null && entrance.isOnScreen()) {
-					entrance.doAction("Go-through");
-					sleep(600, 1000);
-				}
-				return 50;
-			case TELEPORT:
-				magic.castSpell(Magic.SPELL_VARROCK_TELEPORT);
-				log("teleported to varrock");
-				sleep(5000, 6000);
-				return 50;
-
-			case BACK_TO_ENTRANCE:
-				status = "Walking to entrance.";
-				walking.newTilePath(backToEntrance).traverse();
-				return 50;
-
-			case WALK_TO_BANK:
-				walking.newTilePath(backToEntrance).traverse();
-				return 50;
-
-			case WORLDHOP:
-				worldHop(true);
-				return 50;
-			case BANK:
-				status = "Banking";
-				walking.walkTo(new RSTile(3164, 3487));
-				sleep(1000, 2000);
-				bank.open();
-				sleep(300, 600);
-				if (bank.isOpen()) {
-					bank.depositAllExcept(hatchet, 554, 553);
-					berriesPicked = berriesPicked + 25;
-					bank.withdraw(554, 1);
-					sleep(300, 600);
-					bank.withdraw(563, 31);
-					if (inventory.contains(554) && inventory.contains(563)
-							&& inventory.contains(hatchet)) {
-						bank.close();
-						needsToBank = false;
+				case GO_TO_LAIR:
+					final RSObject entrance = objects.getNearest(38815);
+					if (entrance != null && entrance.isOnScreen()) {
+						entrance.doAction("Go-through");
+						sleep(600, 1000);
 					}
-				}
+					return 50;
+				case TELEPORT:
+					magic.castSpell(Magic.SPELL_VARROCK_TELEPORT);
+					log("teleported to varrock");
+					sleep(5000, 6000);
+					return 50;
 
-			case LUMB_BANK:
-				canoeFloated = false;
-				canoeChopped = false;
-				canoeSelected = false;
-				canoePaddled = false;
-				canoeShaped = false;
+				case BACK_TO_ENTRANCE:
+					status = "Walking to entrance.";
+					walking.newTilePath(backToEntrance).traverse();
+					return 50;
 
-				status = "Banking";
+				case WALK_TO_BANK:
+					walking.newTilePath(backToEntrance).traverse();
+					return 50;
 
-				if (needsToBank) {
-					walking.walkTo(new RSTile(3208, 3220));
-					sleep(500, 700);
+				case WORLDHOP:
+					worldHop(true);
+					return 50;
+				case BANK:
+					status = "Banking";
+					walking.walkTo(new RSTile(3164, 3487));
+					sleep(1000, 2000);
 					bank.open();
 					sleep(300, 600);
 					if (bank.isOpen()) {
-						bank.depositAllExcept(hatchet, 554, 553, 1381);
+						bank.depositAllExcept(hatchet, 554, 553);
+						berriesPicked = berriesPicked + 25;
 						bank.withdraw(554, 1);
 						sleep(300, 600);
 						bank.withdraw(563, 31);
@@ -520,75 +480,101 @@ public class KubkoWhiteBerries extends Script implements PaintListener,
 								&& inventory.contains(hatchet)) {
 							bank.close();
 							needsToBank = false;
-							isDead = false;
-							final RSItem airstaff = inventory.getItem(1381);
-							sleep(600, 900);
-							if (lumbBanked == false && inventory.contains(1381)) {
-								airstaff.doAction("Wield");
-								airstaff.doAction("Wield");
-								airstaff.doAction("Wield");
-								final RSItem wielding = equipment.getItem(Equipment.WEAPON);
-								log("we are wielding " + wielding);
-								lumbBanked = true;
-								game.openTab(Game.TAB_EQUIPMENT);
-								if (equipment.getItem(Equipment.WEAPON) == airstaff) {
+						}
+					}
+
+				case LUMB_BANK:
+					canoeFloated = false;
+					canoeChopped = false;
+					canoeSelected = false;
+					canoePaddled = false;
+					canoeShaped = false;
+
+					status = "Banking";
+
+					if (needsToBank) {
+						walking.walkTo(new RSTile(3208, 3220));
+						sleep(500, 700);
+						bank.open();
+						sleep(300, 600);
+						if (bank.isOpen()) {
+							bank.depositAllExcept(hatchet, 554, 553, 1381);
+							bank.withdraw(554, 1);
+							sleep(300, 600);
+							bank.withdraw(563, 31);
+							if (inventory.contains(554) && inventory.contains(563)
+									&& inventory.contains(hatchet)) {
+								bank.close();
+								needsToBank = false;
+								isDead = false;
+								final RSItem airstaff = inventory.getItem(1381);
+								sleep(600, 900);
+								if (lumbBanked == false && inventory.contains(1381)) {
+									airstaff.doAction("Wield");
+									airstaff.doAction("Wield");
+									airstaff.doAction("Wield");
+									final RSItem wielding = equipment.getItem(Equipment.WEAPON);
+									log("we are wielding " + wielding);
 									lumbBanked = true;
-								}
-							} else {
-								final RSItem airstaff2 = inventory.getItem(1381);
-								game.openTab(Game.TAB_EQUIPMENT);
-								sleep(1000, 1500);
-								final RSItem wielding4 = equipment.getItem(Equipment.WEAPON);
-								log("we are wielding " + wielding4);
-								if (equipment.getItem(Equipment.WEAPON) == airstaff2) {
-									final RSItem wielding2 = equipment.getItem(Equipment.WEAPON);
-									log("we are wielding " + wielding2);
-									lumbBanked = true;
+									game.openTab(Game.TAB_EQUIPMENT);
+									if (equipment.getItem(Equipment.WEAPON) == airstaff) {
+										lumbBanked = true;
+									}
 								} else {
-									final RSItem wielding3 = equipment.getItem(Equipment.WEAPON);
-									log("we are wielding " + wielding3);
-									log("no airstaff in inv or worn, shutting down, please have airstaff in inv OR woren");
-									stopScript();
+									final RSItem airstaff2 = inventory.getItem(1381);
+									game.openTab(Game.TAB_EQUIPMENT);
+									sleep(1000, 1500);
+									final RSItem wielding4 = equipment.getItem(Equipment.WEAPON);
+									log("we are wielding " + wielding4);
+									if (equipment.getItem(Equipment.WEAPON) == airstaff2) {
+										final RSItem wielding2 = equipment.getItem(Equipment.WEAPON);
+										log("we are wielding " + wielding2);
+										lumbBanked = true;
+									} else {
+										final RSItem wielding3 = equipment.getItem(Equipment.WEAPON);
+										log("we are wielding " + wielding3);
+										log("no airstaff in inv or worn, shutting down, please have airstaff in inv OR woren");
+										stopScript();
+									}
 								}
 							}
 						}
 					}
-				}
-				return 50;
+					return 50;
 
-			case WALK_TO_SHORTCUT:
-				status = "Walking to ge shortcut";
-				walking.newTilePath(geShortCut).traverse();
-				sleep(700, 1200);
-				final RSObject shortcut = objects.getNearest(geShortcut);
-				if (shortcut != null && shortcut.isOnScreen()) {
-					camera.turnTo(shortcut);
-					shortcut.doAction("Climb-into");
-					sleep(4500, 5000);
-				}
-				return 50;
+				case WALK_TO_SHORTCUT:
+					status = "Walking to ge shortcut";
+					walking.newTilePath(geShortCut).traverse();
+					sleep(700, 1200);
+					final RSObject shortcut = objects.getNearest(geShortcut);
+					if (shortcut != null && shortcut.isOnScreen()) {
+						camera.turnTo(shortcut);
+						shortcut.doAction("Climb-into");
+						sleep(4500, 5000);
+					}
+					return 50;
 
-			case WALK_TO_GE:
-				walkPath(toGe);
-				sleep(800, 900);
-				return 50;
+				case WALK_TO_GE:
+					walkPath(toGe);
+					sleep(800, 900);
+					return 50;
 
-			case WALK_TO_TELEGRAB:
-				compassClicked = false;
-				walking.newTilePath(toTeleGrab).traverse();
-				sleep(700, 900);
-				return 50;
+				case WALK_TO_TELEGRAB:
+					compassClicked = false;
+					walking.newTilePath(toTeleGrab).traverse();
+					sleep(700, 900);
+					return 50;
 
-			case WALK_TO_TELEGRAB_TILE:
-				compassClicked = false;
-				walking.walkTo(teleGrabTile);
-				sleep(700, 1200);
-				sleep(1000, 1300);
-				return 50;
+				case WALK_TO_TELEGRAB_TILE:
+					compassClicked = false;
+					walking.walkTo(teleGrabTile);
+					sleep(700, 1200);
+					sleep(1000, 1300);
+					return 50;
 
-			case SLEEP:
-				status = "ERROR";
-				log("Problem? Well, we do..");
+				case SLEEP:
+					status = "ERROR";
+					log("Problem? Well, we do..");
 			}
 		}
 		return 1;
@@ -787,10 +773,9 @@ public class KubkoWhiteBerries extends Script implements PaintListener,
 
 	/**
 	 * Checks wether the door is open or closed.
-	 * 
-	 * @param tile
-	 *            - any tile after the door tile, you can also use getEnd()
-	 *            method.
+	 *
+	 * @param tile - any tile after the door tile, you can also use getEnd()
+	 *             method.
 	 * @return true if the door is open, otherwise false.
 	 */
 
@@ -816,11 +801,9 @@ public class KubkoWhiteBerries extends Script implements PaintListener,
 	 * Hops to the first visible filtered world on the list by jtryba avoids the
 	 * last x worlds you've been to since starting the script credits to MrByte
 	 * for his help
-	 * 
-	 * @param members
-	 *            <tt>true</tt> if player should hop to a members world.
+	 *
+	 * @param members <tt>true</tt> if player should hop to a members world.
 	 * @return void
-	 * 
 	 */
 
 	public void worldHop(final boolean members) {
@@ -832,7 +815,7 @@ public class KubkoWhiteBerries extends Script implements PaintListener,
 	}
 
 	public void worldHop(final boolean members, final int maxping,
-			final int maxpop) {
+	                     final int maxpop) {
 
 		final int LOBBY_PARENT = 906;
 		final int WORLD_SELECT_TAB_PARENT = 910;
@@ -893,24 +876,24 @@ public class KubkoWhiteBerries extends Script implements PaintListener,
 		if (random(0, 10) < 5) {
 			RSComponent com = null;
 			switch (random(0, 6)) {
-			case 0: // population
-				com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT, SORT_POPULATION_BUTTON_PARENT).getComponent(random(0, 2));
-				break;
-			case 1: // ping
-				com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT, SORT_PING_BUTTON_PARENT).getComponent(random(0, 2));
-				break;
-			case 2: // loot share
-				com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT, SORT_LOOTSHARE_BUTTON_PARENT).getComponent(random(0, 2));
-				break;
-			case 3: // type
-				com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT, SORT_TYPE_BUTTON_PARENT).getComponent(random(0, 2));
-				break;
-			case 4: // activity
-				com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT, SORT_ACTIVITY_BUTTON_PARENT).getComponent(random(0, 2));
-				break;
-			case 5: // world
-				com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT, SORT_WORLD_BUTTON_PARENT).getComponent(random(0, 2));
-				break;
+				case 0: // population
+					com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT, SORT_POPULATION_BUTTON_PARENT).getComponent(random(0, 2));
+					break;
+				case 1: // ping
+					com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT, SORT_PING_BUTTON_PARENT).getComponent(random(0, 2));
+					break;
+				case 2: // loot share
+					com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT, SORT_LOOTSHARE_BUTTON_PARENT).getComponent(random(0, 2));
+					break;
+				case 3: // type
+					com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT, SORT_TYPE_BUTTON_PARENT).getComponent(random(0, 2));
+					break;
+				case 4: // activity
+					com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT, SORT_ACTIVITY_BUTTON_PARENT).getComponent(random(0, 2));
+					break;
+				case 5: // world
+					com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT, SORT_WORLD_BUTTON_PARENT).getComponent(random(0, 2));
+					break;
 			}
 			if (com.doClick()) {
 				sleep(random(1250, 1500));

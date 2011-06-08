@@ -1,26 +1,3 @@
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.IOException;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
@@ -28,7 +5,17 @@ import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Skills;
 
-@ScriptManifest(authors = { "BlackWood" }, name = "BW Herblore", version = 1.8, description = "Herblore Done Right!", website = "http://www.powerbot.org/vb/showthread.php?t=660521")
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.URL;
+
+@ScriptManifest(authors = {"BlackWood"}, name = "BW Herblore", version = 1.8, description = "Herblore Done Right!", website = "http://www.powerbot.org/vb/showthread.php?t=660521")
 public class BWHerblore extends Script implements PaintListener,
 		MessageListener, MouseListener {
 
@@ -47,29 +34,29 @@ public class BWHerblore extends Script implements PaintListener,
 		}
 
 		private void initComponents() {
-			final String[] MethodList = { "Cleaning", "Unfs", "Completes",
-					"Full Completes", "Extremes", "Tars" };
-			final String[] HerbList = { "Guam", "Marrentill", "Tarromin",
+			final String[] MethodList = {"Cleaning", "Unfs", "Completes",
+					"Full Completes", "Extremes", "Tars"};
+			final String[] HerbList = {"Guam", "Marrentill", "Tarromin",
 					"Harralander", "Ranarr", "Toadflax", "Spirit Weed", "Irit",
 					"Avantoe", "Kwuarm", "Snapdragon", "Cadantine",
-					"Lantadyme", "Dwarf Weed", "Torstol" };
-			final String[] UnfList = { "Guam Potion", "Marrentill Potion",
+					"Lantadyme", "Dwarf Weed", "Torstol"};
+			final String[] UnfList = {"Guam Potion", "Marrentill Potion",
 					"Tarromin Potion", "Harralander Potion", "Ranarr Potion",
 					"Toadflax Potion", "Spirit Weed Potion", "Irit Potion",
 					"Avantoe Potion", "Kwuarm Potion", "Snapdragon Potion",
 					"Cadantine Potion", "Lantadyme Potion",
-					"Dwarf Weed Potion", "Torstol Potion" };
-			final String[] CompleteList = { "Attack", "Anti-Poison",
+					"Dwarf Weed Potion", "Torstol Potion"};
+			final String[] CompleteList = {"Attack", "Anti-Poison",
 					"Strength", "Serum 207", "Stat Restore", "Energy",
 					"Defence", "Agility", "Combat", "Prayer", "Summoning",
 					"Super Attack", "Super Anti-Poison", "Fishing",
 					"Super Energy", "Hunter", "Super Strength", "Fletching",
 					"Weapon Poison", "Super Restore", "Super Defence",
-					"Anti-Fire", "Ranging", "Magic", "Zamorak", "Saradomin" };
-			final String[] ExtremeList = { "Attack", "Strength", "Defence",
-					"Magic", "Ranging" };
-			final String[] TarList = { "Guam", "Marrentill", "Tarromin",
-					"Harralander" };
+					"Anti-Fire", "Ranging", "Magic", "Zamorak", "Saradomin"};
+			final String[] ExtremeList = {"Attack", "Strength", "Defence",
+					"Magic", "Ranging"};
+			final String[] TarList = {"Guam", "Marrentill", "Tarromin",
+					"Harralander"};
 			comboBox1 = new JComboBox(MethodList);
 			comboBox2 = new JComboBox(HerbList);
 			button1 = new JButton("Start");
@@ -85,7 +72,6 @@ public class BWHerblore extends Script implements PaintListener,
 			comboBox2.setBounds(25, 45, 115, 30);
 			comboBox2.setSelectedItem(UnfList[0]);
 			comboBox1.addActionListener(new ActionListener() {
-				@Override
 				public void actionPerformed(final ActionEvent e) {
 					if (comboBox1.getSelectedItem() == "Cleaning") {
 						comboBox2.removeAllItems();
@@ -128,7 +114,6 @@ public class BWHerblore extends Script implements PaintListener,
 			contentPane.add(button1);
 			button1.setBounds(25, 85, 115, 30);
 			button1.addActionListener(new ActionListener() {
-				@Override
 				public void actionPerformed(final ActionEvent e) {
 					StartPressed(e);
 				}
@@ -465,7 +450,7 @@ public class BWHerblore extends Script implements PaintListener,
 		private final int OutcomeID;
 
 		private ExtremeStats(final int CompleteID, final int IngredientID,
-				final int OutcomeID) {
+		                     final int OutcomeID) {
 			this.CompleteID = CompleteID;
 			this.IngredientID = IngredientID;
 			this.OutcomeID = OutcomeID;
@@ -497,7 +482,7 @@ public class BWHerblore extends Script implements PaintListener,
 		private final int CompleteID;
 
 		private PotionStats(final int GrimyID, final int CleanID,
-				final int UnfID, final int IngredientID, final int CompleteID) {
+		                    final int UnfID, final int IngredientID, final int CompleteID) {
 			this.GrimyID = GrimyID;
 			this.CleanID = CleanID;
 			this.UnfID = UnfID;
@@ -520,7 +505,7 @@ public class BWHerblore extends Script implements PaintListener,
 		private final int OutcomeID;
 
 		private TarStats(final int GrimyID, final int CleanID,
-				final int OutcomeID) {
+		                 final int OutcomeID) {
 			this.GrimyID = GrimyID;
 			this.CleanID = CleanID;
 			this.OutcomeID = OutcomeID;
@@ -963,161 +948,161 @@ public class BWHerblore extends Script implements PaintListener,
 			if (game.isLoggedIn()) {
 				AntiBans = AntiBans();
 				switch (AntiBans) {
-				case CHECKEXP:
-					skills.doHover(Skills.getIndex("Herblore"));
-					sleep(500, 1500);
-					break;
-				case MOVECAMERA:
-					camera.setAngle(random(100, 359));
-					sleep(500, 1500);
-					break;
-				case MOUSEOFFSCREEN:
-					mouse.moveOffScreen();
-					sleep(random(2000, 4000));
-					break;
-				case MOVEMOUSE:
-					mouse.moveSlightly();
-					sleep(300, 700);
-					mouse.moveRandomly(40, 860);
-					break;
+					case CHECKEXP:
+						skills.doHover(Skills.getIndex("Herblore"));
+						sleep(500, 1500);
+						break;
+					case MOVECAMERA:
+						camera.setAngle(random(100, 359));
+						sleep(500, 1500);
+						break;
+					case MOUSEOFFSCREEN:
+						mouse.moveOffScreen();
+						sleep(random(2000, 4000));
+						break;
+					case MOVEMOUSE:
+						mouse.moveSlightly();
+						sleep(300, 700);
+						mouse.moveRandomly(40, 860);
+						break;
 				}
 			}
 			if (Cleaning == true && StartedScript == true && HasItemIDs == true) {
 				CleanState = CleanState();
 				switch (CleanState) {
-				case CLEAN:
-					MouseKeyAll(GrimyID, false, "CleanID");
-					break;
-				case BANK:
-					bank.open();
-					break;
-				case WITHDRAW:
-					while (bank.isOpen()) {
-						CleanBank();
-					}
-					break;
+					case CLEAN:
+						MouseKeyAll(GrimyID, false, "CleanID");
+						break;
+					case BANK:
+						bank.open();
+						break;
+					case WITHDRAW:
+						while (bank.isOpen()) {
+							CleanBank();
+						}
+						break;
 				}
 			}
 			if (Unfs == true && StartedScript == true && HasItemIDs == true) {
 				UnfState = UnfState();
 				switch (UnfState) {
-				case FINISHED:
-					isInteracting = false;
-					break;
-				case MIXING:
-					Mix(VialID, CleanID);
-					break;
-				case INTERFACE:
-					clickInterface(905, 14);
-					break;
-				case BANK:
-					bank.open();
-					break;
-				case WITHDRAW:
-					while (bank.isOpen()) {
-						UnfBank();
-					}
-					break;
+					case FINISHED:
+						isInteracting = false;
+						break;
+					case MIXING:
+						Mix(VialID, CleanID);
+						break;
+					case INTERFACE:
+						clickInterface(905, 14);
+						break;
+					case BANK:
+						bank.open();
+						break;
+					case WITHDRAW:
+						while (bank.isOpen()) {
+							UnfBank();
+						}
+						break;
 				}
 			}
 			if (Completes == true && StartedScript == true
 					&& HasItemIDs == true) {
 				CompleteState = CompleteState();
 				switch (CompleteState) {
-				case FINISHED:
-					isInteracting = false;
-					break;
-				case MIXING:
-					Mix(UnfID, IngredientID);
-					break;
-				case INTERFACE:
-					clickInterface(905, 14);
-					break;
-				case BANK:
-					bank.open();
-					break;
-				case WITHDRAW:
-					while (bank.isOpen()) {
-						CompleteBank();
-					}
-					break;
+					case FINISHED:
+						isInteracting = false;
+						break;
+					case MIXING:
+						Mix(UnfID, IngredientID);
+						break;
+					case INTERFACE:
+						clickInterface(905, 14);
+						break;
+					case BANK:
+						bank.open();
+						break;
+					case WITHDRAW:
+						while (bank.isOpen()) {
+							CompleteBank();
+						}
+						break;
 				}
 			}
 			if (FullCompletes == true && StartedScript == true
 					&& HasItemIDs == true) {
 				FullState = FullState();
 				switch (FullState) {
-				case SLEEP:
-					sleep(random(1000, 1500));
-					break;
-				case UNFDONE:
-					isInteracting = false;
-					break;
-				case MIXUNF:
-					Mix(VialID, CleanID);
-					break;
-				case COMPLETEDONE:
-					isInteracting = false;
-					break;
-				case MIXCOMPLETE:
-					Mix(UnfID, IngredientID);
-					break;
-				case INTERFACE:
-					clickInterface(905, 14);
-					break;
-				case BANK:
-					bank.open();
-					break;
-				case WITHDRAW:
-					;
-					while (bank.isOpen()) {
-						FullBank();
-					}
-					break;
+					case SLEEP:
+						sleep(random(1000, 1500));
+						break;
+					case UNFDONE:
+						isInteracting = false;
+						break;
+					case MIXUNF:
+						Mix(VialID, CleanID);
+						break;
+					case COMPLETEDONE:
+						isInteracting = false;
+						break;
+					case MIXCOMPLETE:
+						Mix(UnfID, IngredientID);
+						break;
+					case INTERFACE:
+						clickInterface(905, 14);
+						break;
+					case BANK:
+						bank.open();
+						break;
+					case WITHDRAW:
+						;
+						while (bank.isOpen()) {
+							FullBank();
+						}
+						break;
 				}
 			}
 			if (Extremes == true && StartedScript == true && HasItemIDs == true) {
 				ExtremeState = ExtremeState();
 				switch (ExtremeState) {
-				case FINISHED:
-					isInteracting = false;
-					break;
-				case MIXING:
-					Mix(CompleteID, IngredientID);
-					break;
-				case INTERFACE:
-					clickInterface(905, 14);
-					break;
-				case BANK:
-					bank.open();
-					break;
-				case WITHDRAW:
-					while (bank.isOpen()) {
-						ExtremeBank();
-					}
-					break;
+					case FINISHED:
+						isInteracting = false;
+						break;
+					case MIXING:
+						Mix(CompleteID, IngredientID);
+						break;
+					case INTERFACE:
+						clickInterface(905, 14);
+						break;
+					case BANK:
+						bank.open();
+						break;
+					case WITHDRAW:
+						while (bank.isOpen()) {
+							ExtremeBank();
+						}
+						break;
 				}
 			}
 			if (Taring == true && StartedScript == true && HasItemIDs == true) {
 				TarState = TarState();
 				switch (TarState) {
-				case FINISHED:
-					isInteracting = false;
-					break;
-				case MIXING:
-					Mix(SwampTarID, CleanID);
-					break;
-				case INTERFACE:
-					clickInterface(905, 14);
-					break;
-				case BANK:
-					bank.open();
-					break;
-				case WITHDRAW:
-					while (bank.isOpen()) {
-						TarBank();
-					}
-					break;
+					case FINISHED:
+						isInteracting = false;
+						break;
+					case MIXING:
+						Mix(SwampTarID, CleanID);
+						break;
+					case INTERFACE:
+						clickInterface(905, 14);
+						break;
+					case BANK:
+						bank.open();
+						break;
+					case WITHDRAW:
+						while (bank.isOpen()) {
+							TarBank();
+						}
+						break;
 				}
 			}
 		} catch (final Exception e) {
@@ -1180,29 +1165,29 @@ public class BWHerblore extends Script implements PaintListener,
 	// If you use my MouseKey Method.. GIVE CREDIT Or don't use it! ~ BlackWood
 	// ~
 	void MouseKeyAll(final int ID, final boolean UseMenu,
-			final String Interaction) {
+	                 final String Interaction) {
 		int[] MousePath = {};
-		final int[] MousePath1 = { 0, 1, 4, 5, 8, 9, 12, 13, 16, 17, 20, 21,
-				24, 25, 26, 27, 23, 22, 19, 18, 15, 14, 11, 10, 7, 6, 3, 2 };
-		final int[] MousePath2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-				13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 };
-		final int[] MousePath3 = { 0, 4, 8, 12, 16, 20, 24, 1, 5, 9, 13, 17,
-				21, 25, 2, 6, 10, 14, 18, 22, 26, 3, 7, 11, 15, 19, 23, 27 };
-		final int[] MousePath4 = { 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17,
-				16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+		final int[] MousePath1 = {0, 1, 4, 5, 8, 9, 12, 13, 16, 17, 20, 21,
+				24, 25, 26, 27, 23, 22, 19, 18, 15, 14, 11, 10, 7, 6, 3, 2};
+		final int[] MousePath2 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+				13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27};
+		final int[] MousePath3 = {0, 4, 8, 12, 16, 20, 24, 1, 5, 9, 13, 17,
+				21, 25, 2, 6, 10, 14, 18, 22, 26, 3, 7, 11, 15, 19, 23, 27};
+		final int[] MousePath4 = {27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17,
+				16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
 		switch (random(1, 4)) {
-		case 1:
-			MousePath = MousePath1;
-			break;
-		case 2:
-			MousePath = MousePath2;
-			break;
-		case 3:
-			MousePath = MousePath3;
-			break;
-		case 4:
-			MousePath = MousePath4;
-			break;
+			case 1:
+				MousePath = MousePath1;
+				break;
+			case 2:
+				MousePath = MousePath2;
+				break;
+			case 3:
+				MousePath = MousePath3;
+				break;
+			case 4:
+				MousePath = MousePath4;
+				break;
 		}
 		for (int Slot = 0; Slot <= 27; Slot++) {
 			if (inventory.contains(ID)) {
@@ -1262,7 +1247,7 @@ public class BWHerblore extends Script implements PaintListener,
 				g.setColor(Color.RED);
 				g.drawString("Duration: "
 						+ convertDurationToString(System.currentTimeMillis()
-								- Duration), 10, 467);
+						- Duration), 10, 467);
 				g.drawString("Interactions: " + Made, 10, 358);
 				g.drawString("Interactions /H: "
 						+ (int) (Made * 3600000D / (System.currentTimeMillis() - Duration)), 10, 377);

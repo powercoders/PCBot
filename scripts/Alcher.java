@@ -1,39 +1,22 @@
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.methods.Equipment;
-import org.rsbot.script.methods.Game;
-import org.rsbot.script.methods.Magic;
-import org.rsbot.script.methods.Methods;
-import org.rsbot.script.methods.Skills;
+import org.rsbot.script.methods.*;
 import org.rsbot.script.wrappers.RSItem;
 
-@ScriptManifest(authors = { "iPhQ" }, keywords = { "Magic" }, name = "iPhQ's Alcher", version = 2.1, description = "Alch it baby - Now works with the new version of powerbot.", website = "http://www.powerbot.org/vb/showthread.php?t=607582")
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+
+@ScriptManifest(authors = {"iPhQ"}, keywords = {"Magic"}, name = "iPhQ's Alcher", version = 2.1, description = "Alch it baby - Now works with the new version of powerbot.", website = "http://www.powerbot.org/vb/showthread.php?t=607582")
 public class Alcher extends Script implements PaintListener, MouseListener,
 		MessageListener {
 
@@ -49,11 +32,11 @@ public class Alcher extends Script implements PaintListener, MouseListener,
 		@Override
 		public void run() {
 			switch (ID) {
-			case 20:
-				log("Performing antiban - rotate camera");
-				camera.setAngle(Methods.random(98, 278));
-				log("Done");
-				break;
+				case 20:
+					log("Performing antiban - rotate camera");
+					camera.setAngle(Methods.random(98, 278));
+					log("Done");
+					break;
 			}
 		}
 
@@ -61,7 +44,7 @@ public class Alcher extends Script implements PaintListener, MouseListener,
 
 	class NewFrame extends java.awt.Frame {
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = 1L;
 
@@ -98,7 +81,9 @@ public class Alcher extends Script implements PaintListener, MouseListener,
 			initComponents();
 		}
 
-		/** Exit the Application */
+		/**
+		 * Exit the Application
+		 */
 		private void exitForm(final java.awt.event.WindowEvent evt) {
 			stopScript();
 			setVisible(false);
@@ -284,14 +269,14 @@ public class Alcher extends Script implements PaintListener, MouseListener,
 					final int afkMin = StringintTo(jTextField1.getText());
 					final int afkMax = StringintTo(jTextField2.getText());
 
-					final Object[] options = { "High", "Low" };
+					final Object[] options = {"High", "Low"};
 					final int n = JOptionPane.showOptionDialog(null, "High or Low alch?", "iPhQ's Alcher | What kind of alching?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, // do
-																																																	// not
-																																																	// use
-																																																	// a
-					// custom Icon
-					options, // the titles of buttons
-					options[0]); // default button title
+							// not
+							// use
+							// a
+							// custom Icon
+							options, // the titles of buttons
+							options[0]); // default button title
 
 					boolean high = true;
 
@@ -485,84 +470,84 @@ public class Alcher extends Script implements PaintListener, MouseListener,
 		if (game.isLoggedIn()) {
 
 			switch (getStatus()) {
-			case CHECK:
-				STATUS = "Sleeping :)";
-				Methods.sleep(Methods.random(2000, 5000));
-				STATUS = "Checking...";
-				if (inventory.contains(561)) {
-					if (equipment.containsAll(1387)
-							|| equipment.containsAll(1401)) {
-						if (inventory.contains(IDitem)) {
+				case CHECK:
+					STATUS = "Sleeping :)";
+					Methods.sleep(Methods.random(2000, 5000));
+					STATUS = "Checking...";
+					if (inventory.contains(561)) {
+						if (equipment.containsAll(1387)
+								|| equipment.containsAll(1401)) {
+							if (inventory.contains(IDitem)) {
 
-							checked = true;
-						} else {
-							log("The item ID does not excist in your inventory !");
-							stopScript();
-						}
-					} else {
-						log("You must wear a staff of fire to use this script !");
-						this.stopScript();
-					}
-				} else {
-					log("You don't have any nature runes !");
-					stopScript();
-				}
-				break;
-			case ALCH:
-				STATUS = "Alching...";
-				if (high) {
-					magic.castSpell(Magic.SPELL_HIGH_LEVEL_ALCHEMY);
-				} else {
-					magic.castSpell(Magic.SPELL_LOW_LEVEL_ALCHEMY);
-				}
-				Methods.sleep(Methods.random(100, 1000));
-
-				try {
-					if (inventory.getItem(IDitem) == null) {
-						check();
-					} else {
-						inventory.getItem(IDitem).doClick(true);
-					}
-				} catch (final Exception e) {
-					log("There was an error while alching!");
-					e.printStackTrace();
-				}
-
-				Methods.sleep(Methods.random(1200, 1500));
-				antiban();
-				if (AFKon) {
-					afk(Methods.random(0, 1000), Methods.random(minAfkTime, maxAfkTime));
-				}
-				break;
-
-			case WAIT_FOR_GUI:
-				if (guiOpen == false) {
-					createAndWaitforGUI();
-					gui.getjList1Model().removeAllElements();
-					gui.getjList1().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-					for (int i = 0; i < inventory.getItems().length; i++) {
-						final RSItem[] itemI = inventory.getItems();
-						final int itemid = itemI[i].getID();
-						String message = "";
-						final int slot = i + 1;
-						final String itemname = itemI[i].getName();
-						if (itemid != -1) {
-							message = "<html><body>Slot: " + slot + " Name: "
-									+ itemname + "</body></html>";
-							gui.getjList1Model().addElement(message);
-						} else {
-							if (slot <= 28) {
-								message = "<html><body><i>No item in slot: "
-										+ slot + "</i></body></html>";
-								gui.getjList1Model().addElement(message);
+								checked = true;
+							} else {
+								log("The item ID does not excist in your inventory !");
+								stopScript();
 							}
+						} else {
+							log("You must wear a staff of fire to use this script !");
+							this.stopScript();
 						}
-
+					} else {
+						log("You don't have any nature runes !");
+						stopScript();
 					}
-					gui.setVisible(true);
-					guiOpen = true;
-				}
-				break;
+					break;
+				case ALCH:
+					STATUS = "Alching...";
+					if (high) {
+						magic.castSpell(Magic.SPELL_HIGH_LEVEL_ALCHEMY);
+					} else {
+						magic.castSpell(Magic.SPELL_LOW_LEVEL_ALCHEMY);
+					}
+					Methods.sleep(Methods.random(100, 1000));
+
+					try {
+						if (inventory.getItem(IDitem) == null) {
+							check();
+						} else {
+							inventory.getItem(IDitem).doClick(true);
+						}
+					} catch (final Exception e) {
+						log("There was an error while alching!");
+						e.printStackTrace();
+					}
+
+					Methods.sleep(Methods.random(1200, 1500));
+					antiban();
+					if (AFKon) {
+						afk(Methods.random(0, 1000), Methods.random(minAfkTime, maxAfkTime));
+					}
+					break;
+
+				case WAIT_FOR_GUI:
+					if (guiOpen == false) {
+						createAndWaitforGUI();
+						gui.getjList1Model().removeAllElements();
+						gui.getjList1().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+						for (int i = 0; i < inventory.getItems().length; i++) {
+							final RSItem[] itemI = inventory.getItems();
+							final int itemid = itemI[i].getID();
+							String message = "";
+							final int slot = i + 1;
+							final String itemname = itemI[i].getName();
+							if (itemid != -1) {
+								message = "<html><body>Slot: " + slot + " Name: "
+										+ itemname + "</body></html>";
+								gui.getjList1Model().addElement(message);
+							} else {
+								if (slot <= 28) {
+									message = "<html><body><i>No item in slot: "
+											+ slot + "</i></body></html>";
+									gui.getjList1Model().addElement(message);
+								}
+							}
+
+						}
+						gui.setVisible(true);
+						guiOpen = true;
+					}
+					break;
 			}
 
 			return Methods.random(100, 500);
@@ -727,14 +712,14 @@ public class Alcher extends Script implements PaintListener, MouseListener,
 
 	@Override
 	public void onFinish() {
-		final Object[] options = { "Visit the thread", "Stop the script" };
+		final Object[] options = {"Visit the thread", "Stop the script"};
 		final int n = JOptionPane.showOptionDialog(null, "Thank you for using iPhQ's Alcher.\n Did you find any errors or you want to give me some feedback\n on the script please visit my thread on PowerBot's forums.", "iPhQ's Alcher | Thank you!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, // do
-																																																																														// not
-																																																																														// use
-																																																																														// a
-		// custom Icon
-		options, // the titles of buttons
-		options[0]); // default button title
+				// not
+				// use
+				// a
+				// custom Icon
+				options, // the titles of buttons
+				options[0]); // default button title
 
 		if (n == 0) {
 			BotGUI.openURL(link);
@@ -774,7 +759,7 @@ public class Alcher extends Script implements PaintListener, MouseListener,
 	}
 
 	public void startScript(final int itemID, final boolean afkOn,
-			final int afkMin, final int afkMax, final boolean highAlch) {
+	                        final int afkMin, final int afkMax, final boolean highAlch) {
 		high = highAlch;
 		IDitem = itemID;
 		AFKon = afkOn;

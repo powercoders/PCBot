@@ -1,19 +1,3 @@
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.io.IOException;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
@@ -26,8 +10,14 @@ import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSPath;
 import org.rsbot.script.wrappers.RSTile;
 
-@ScriptManifest(authors = { "Wei Su" }, name = "Ultimate Cannon ball smelter", version = 0.1, description = "Balls deep", keywords = {
-		"cannon", "balls", "money" }, website = "http://www.powerbot.org/vb/showthread.php?t=783447")
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.net.URL;
+
+@ScriptManifest(authors = {"Wei Su"}, name = "Ultimate Cannon ball smelter", version = 0.1, description = "Balls deep", keywords = {
+		"cannon", "balls", "money"}, website = "http://www.powerbot.org/vb/showthread.php?t=783447")
 /* Save as script.java - who could get that wrong! :) */
 public class UltimateAmmo extends Script implements PaintListener,
 		MessageListener, ActionListener, MouseMotionListener, MouseListener {
@@ -70,70 +60,70 @@ public class UltimateAmmo extends Script implements PaintListener,
 
 	public int antibanlist() {
 		switch (random(0, 350)) {
-		case 0:
-			chooserandomAFK();
-			break;
-		case 1:
-		case 2:
-		case 3:
-			chooserandomAFK();
-			break;
-		case 4:
-			mouse.moveSlightly();
-			break;
-		case 5:
-			chooserandomAFK();
-			break;
-		case 6:
-		case 7:
+			case 0:
+				chooserandomAFK();
+				break;
+			case 1:
+			case 2:
+			case 3:
+				chooserandomAFK();
+				break;
+			case 4:
+				mouse.moveSlightly();
+				break;
+			case 5:
+				chooserandomAFK();
+				break;
+			case 6:
+			case 7:
 
-			break;
-		case 8:
-			superAntiMoveMouse();
-			break;
-		case 9:
-			randomXPcheck();
-			break;
-		case 10:
-			randomtab();
-			break;
-		case 11:
-		case 12:
-			randomtab();
-			break;
-		case 13:
-			superAntiMoveMouse();
-			break;
-		case 14:
-			randomXPcheck();
-			break;
-		case 15:
-		case 16:
-		case 17:
-			break;
-		default:
-			break;
+				break;
+			case 8:
+				superAntiMoveMouse();
+				break;
+			case 9:
+				randomXPcheck();
+				break;
+			case 10:
+				randomtab();
+				break;
+			case 11:
+			case 12:
+				randomtab();
+				break;
+			case 13:
+				superAntiMoveMouse();
+				break;
+			case 14:
+				randomXPcheck();
+				break;
+			case 15:
+			case 16:
+			case 17:
+				break;
+			default:
+				break;
 		}
 		return 100;
 	}
 
 	public void chooserandomAFK() {
 		switch (random(0, 4)) {
-		case 0:
-			sleep(random(500, 900));
-			break;
-		case 1:
-			sleep(random(400, 1000));
-			break;
-		case 2:
-			sleep(random(1000, 2000));
-			break;
-		case 3:
-			sleep(random(1000, 3000));
-			break;
-		case 4:
-			log("Not doing AFK");
-			break;
+			case 0:
+				sleep(random(500, 900));
+				break;
+			case 1:
+				sleep(random(400, 1000));
+				break;
+			case 2:
+				sleep(random(1000, 2000));
+				break;
+			case 3:
+				sleep(random(1000, 3000));
+				break;
+			case 4:
+				log("Not doing AFK");
+				break;
 		}
 	}
 
@@ -196,24 +186,24 @@ public class UltimateAmmo extends Script implements PaintListener,
 			}
 
 			switch (getCase()) {
-			case 1:
-				walkToFurnace();
-				status = "Walking to the furnace";
-				return random(50, 100);
+				case 1:
+					walkToFurnace();
+					status = "Walking to the furnace";
+					return random(50, 100);
 
-			case 2:
-				useFurnace();
-				status = "Using furnace";
-				return random(50, 100);
+				case 2:
+					useFurnace();
+					status = "Using furnace";
+					return random(50, 100);
 
-			case 3:
-				walkToBank();
-				status = "Walking to bank";
-				return random(50, 100);
+				case 3:
+					walkToBank();
+					status = "Walking to bank";
+					return random(50, 100);
 
-			case 4:
-				useBank();
-				status = "Using bank";
+				case 4:
+					useBank();
+					status = "Using bank";
 			}
 		} catch (final Exception ignore) {
 		}
@@ -229,8 +219,8 @@ public class UltimateAmmo extends Script implements PaintListener,
 
 	@Override
 	public void mouseClicked(final MouseEvent e) {// this is the mouse listener,
-													// it listen's for the
-													// click.
+		// it listen's for the
+		// click.
 
 	}
 
@@ -358,188 +348,188 @@ public class UltimateAmmo extends Script implements PaintListener,
 
 	public void randomtab() {
 		switch (random(0, 12)) {
-		case 0:
-			game.openTab(Game.TAB_STATS);
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 1:
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 2:
-			game.openTab(Game.TAB_CLAN);
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 3:
-			game.openTab(Game.TAB_FRIENDS);
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 4:
+			case 0:
+				game.openTab(Game.TAB_STATS);
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 1:
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 2:
+				game.openTab(Game.TAB_CLAN);
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 3:
+				game.openTab(Game.TAB_FRIENDS);
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 4:
 
-		case 5:
-			game.openTab(Game.TAB_EQUIPMENT);
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 6:
-			game.openTab(Game.TAB_MAGIC);
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 7:
-			game.openTab(Game.TAB_QUESTS);
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 8:
+			case 5:
+				game.openTab(Game.TAB_EQUIPMENT);
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 6:
+				game.openTab(Game.TAB_MAGIC);
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 7:
+				game.openTab(Game.TAB_QUESTS);
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 8:
 
-		case 9:
-			game.openTab(Game.TAB_NOTES);
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 10:
-			game.openTab(Game.TAB_PRAYER);
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 11:
-			game.openTab(Game.TAB_MUSIC);
-			game.openTab(Game.TAB_INVENTORY);
-			break;
+			case 9:
+				game.openTab(Game.TAB_NOTES);
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 10:
+				game.openTab(Game.TAB_PRAYER);
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 11:
+				game.openTab(Game.TAB_MUSIC);
+				game.openTab(Game.TAB_INVENTORY);
+				break;
 		}
 	}
 
 	public void randomXPcheck() {
 		game.openTab(Game.TAB_STATS);
 		switch (random(0, 20)) {
-		case 0:
-			skills.doHover(Skills.INTERFACE_FISHING);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 1:
-			skills.doHover(Skills.INTERFACE_WOODCUTTING);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 2:
-			skills.doHover(Skills.INTERFACE_ATTACK);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 3:
-			skills.doHover(Skills.INTERFACE_STRENGTH);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 4:
-			skills.doHover(Skills.INTERFACE_COOKING);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 5:
-			skills.doHover(Skills.INTERFACE_RANGE);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 6:
-			skills.doHover(Skills.INTERFACE_FIREMAKING);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 7:
-			skills.doHover(Skills.INTERFACE_CONSTRUCTION);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 8:
-			skills.doHover(Skills.INTERFACE_RUNECRAFTING);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 9:
-			skills.doHover(Skills.INTERFACE_SUMMONING);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 10:
-			skills.doHover(Skills.INTERFACE_SLAYER);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 11:
-			skills.doHover(Skills.INTERFACE_SMITHING);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 12:
-			skills.doHover(Skills.INTERFACE_FARMING);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 13:
-			skills.doHover(Skills.INTERFACE_AGILITY);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 14:
-			skills.doHover(Skills.INTERFACE_THIEVING);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 15:
-			skills.doHover(Skills.INTERFACE_HUNTER);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 16:
-			skills.doHover(Skills.INTERFACE_MINING);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 17:
-			skills.doHover(Skills.INTERFACE_SMITHING);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 18:
-			skills.doHover(Skills.INTERFACE_MAGIC);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 19:
-			skills.doHover(Skills.INTERFACE_FLETCHING);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
-		case 20:
-			skills.doHover(Skills.INTERFACE_PRAYER);
-			sleep(random(200, 300));
-			game.openTab(Game.TAB_INVENTORY);
-			break;
+			case 0:
+				skills.doHover(Skills.INTERFACE_FISHING);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 1:
+				skills.doHover(Skills.INTERFACE_WOODCUTTING);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 2:
+				skills.doHover(Skills.INTERFACE_ATTACK);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 3:
+				skills.doHover(Skills.INTERFACE_STRENGTH);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 4:
+				skills.doHover(Skills.INTERFACE_COOKING);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 5:
+				skills.doHover(Skills.INTERFACE_RANGE);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 6:
+				skills.doHover(Skills.INTERFACE_FIREMAKING);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 7:
+				skills.doHover(Skills.INTERFACE_CONSTRUCTION);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 8:
+				skills.doHover(Skills.INTERFACE_RUNECRAFTING);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 9:
+				skills.doHover(Skills.INTERFACE_SUMMONING);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 10:
+				skills.doHover(Skills.INTERFACE_SLAYER);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 11:
+				skills.doHover(Skills.INTERFACE_SMITHING);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 12:
+				skills.doHover(Skills.INTERFACE_FARMING);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 13:
+				skills.doHover(Skills.INTERFACE_AGILITY);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 14:
+				skills.doHover(Skills.INTERFACE_THIEVING);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 15:
+				skills.doHover(Skills.INTERFACE_HUNTER);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 16:
+				skills.doHover(Skills.INTERFACE_MINING);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 17:
+				skills.doHover(Skills.INTERFACE_SMITHING);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 18:
+				skills.doHover(Skills.INTERFACE_MAGIC);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 19:
+				skills.doHover(Skills.INTERFACE_FLETCHING);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
+			case 20:
+				skills.doHover(Skills.INTERFACE_PRAYER);
+				sleep(random(200, 300));
+				game.openTab(Game.TAB_INVENTORY);
+				break;
 		}
 	}
 
 	public void superAntiMoveMouse() {
 		switch (random(0, 10)) {
-		case 0:
-			log("Doing superAnti! Wiggling mouse a lot");
-			mouse.setSpeed(random(6, 9));
-			mouse.moveSlightly();
-			mouse.moveSlightly();
-			mouse.moveSlightly();
-			break;
-		case 1:
-			log("Doing superAnti! Wiggling mouse ");
-			mouse.setSpeed(random(6, 9));
-			mouse.moveSlightly();
-			mouse.moveSlightly();
-			break;
-		case 2:
-			log("Doing superAnti! Wiggling mouse a lot");
-			mouse.setSpeed(random(6, 9));
-			mouse.moveSlightly();
-			mouse.moveSlightly();
-			mouse.moveSlightly();
-			mouse.moveSlightly();
-			mouse.moveSlightly();
-			mouse.moveSlightly();
-			break;
+			case 0:
+				log("Doing superAnti! Wiggling mouse a lot");
+				mouse.setSpeed(random(6, 9));
+				mouse.moveSlightly();
+				mouse.moveSlightly();
+				mouse.moveSlightly();
+				break;
+			case 1:
+				log("Doing superAnti! Wiggling mouse ");
+				mouse.setSpeed(random(6, 9));
+				mouse.moveSlightly();
+				mouse.moveSlightly();
+				break;
+			case 2:
+				log("Doing superAnti! Wiggling mouse a lot");
+				mouse.setSpeed(random(6, 9));
+				mouse.moveSlightly();
+				mouse.moveSlightly();
+				mouse.moveSlightly();
+				mouse.moveSlightly();
+				mouse.moveSlightly();
+				mouse.moveSlightly();
+				break;
 		}
 	}
 

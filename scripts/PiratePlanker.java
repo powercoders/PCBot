@@ -1,34 +1,3 @@
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.WindowConstants;
-
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
@@ -42,7 +11,17 @@ import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSPlayer;
 import org.rsbot.script.wrappers.RSTile;
 
-@ScriptManifest(authors = { "ElyzianPirate" }, name = "PiratePlanker", version = 1.52, website = "http://www.powerbot.org/vb/showthread.php?t=544986", description = "Fastest planker from N,S,E and W.")
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+
+@ScriptManifest(authors = {"ElyzianPirate"}, name = "PiratePlanker", version = 1.52, website = "http://www.powerbot.org/vb/showthread.php?t=544986", description = "Fastest planker from N,S,E and W.")
 public class PiratePlanker extends Script implements PaintListener,
 		MessageListener, MouseListener, MouseMotionListener {
 
@@ -173,41 +152,41 @@ public class PiratePlanker extends Script implements PaintListener,
 				}
 			} else if (afk == 5) {
 				switch (random(1, 4)) {
-				case 1:
-					sleep(random(AFK1, AFK2));
-					break;
-				case 2:
-					sleep(random(AFK1 / 4, AFK2 / 10));
-					mouse.moveRandomly(750);
-					sleep(random(AFK1, AFK2));
-					break;
-				case 3:
-					sleep(random(0, 500));
-					mouse.moveRandomly(1000);
-					sleep(random(AFK1 / 4, AFK2 / 10));
-					mouse.moveRandomly(1500);
-					sleep(random(AFK1, AFK2));
-					break;
+					case 1:
+						sleep(random(AFK1, AFK2));
+						break;
+					case 2:
+						sleep(random(AFK1 / 4, AFK2 / 10));
+						mouse.moveRandomly(750);
+						sleep(random(AFK1, AFK2));
+						break;
+					case 3:
+						sleep(random(0, 500));
+						mouse.moveRandomly(1000);
+						sleep(random(AFK1 / 4, AFK2 / 10));
+						mouse.moveRandomly(1500);
+						sleep(random(AFK1, AFK2));
+						break;
 				}
 			} else if (camerahh == 5) {
 				final int randomTurn = random(1, 4);
 				switch (randomTurn) {
-				case 1:
-					new CameraRotateThread().start();
-					break;
-				case 2:
-					new CameraHeightThread().start();
-					break;
-				case 3:
-					final int randomFormation = random(0, 2);
-					if (randomFormation == 0) {
+					case 1:
 						new CameraRotateThread().start();
+						break;
+					case 2:
 						new CameraHeightThread().start();
-					} else {
-						new CameraHeightThread().start();
-						mouse.moveRandomly(200);
-						new CameraRotateThread().start();
-					}
+						break;
+					case 3:
+						final int randomFormation = random(0, 2);
+						if (randomFormation == 0) {
+							new CameraRotateThread().start();
+							new CameraHeightThread().start();
+						} else {
+							new CameraHeightThread().start();
+							mouse.moveRandomly(200);
+							new CameraRotateThread().start();
+						}
 				}
 			}
 			return;
@@ -265,7 +244,7 @@ public class PiratePlanker extends Script implements PaintListener,
 		private boolean firstBanked = false;
 		private int logsAvailable;
 		private int logID = 6332;
-		private final int noBank[] = { 995, 9075, 561 };
+		private final int noBank[] = {995, 9075, 561};
 		private int levelsGained;
 		private int castCount;
 		private boolean guiWait = true, guiExit;
@@ -411,8 +390,8 @@ public class PiratePlanker extends Script implements PaintListener,
 			label2.setBounds(140, 40, 105, label2.getPreferredSize().height);
 
 			// ---- plankTypeBox ----
-			plankTypeBox.setModel(new DefaultComboBoxModel(new String[] {
-					"Regular", "Oak", "Teak", "Mahogany" }));
+			plankTypeBox.setModel(new DefaultComboBoxModel(new String[]{
+					"Regular", "Oak", "Teak", "Mahogany"}));
 			contentPane.add(plankTypeBox);
 			plankTypeBox.setBounds(new Rectangle(new Point(140, 80), plankTypeBox.getPreferredSize()));
 

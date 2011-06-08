@@ -1,48 +1,23 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.JTree;
-import javax.swing.WindowConstants;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeCellRenderer;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
 
-@ScriptManifest(authors = { "Iscream", "joku.rules" }, keywords = "Development", name = "Interface Explorer", version = 0.5, description = "Fetches various interface data for developers.")
+import javax.swing.*;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+@ScriptManifest(authors = {"Iscream", "joku.rules"}, keywords = "Development", name = "Interface Explorer", version = 0.5, description = "Fetches various interface data for developers.")
 public class InterfaceExplorer extends Script implements PaintListener {
 	private class HighLightInterface {
 		private RSInterface parent = null;
@@ -51,7 +26,7 @@ public class InterfaceExplorer extends Script implements PaintListener {
 		private final int change;
 
 		HighLightInterface(final RSInterface a, final RSComponent b,
-				final RSComponent c, final int change) {
+		                   final RSComponent c, final int change) {
 			parent = a;
 			child = b;
 			component = c;
@@ -87,9 +62,9 @@ public class InterfaceExplorer extends Script implements PaintListener {
 
 		@Override
 		public Component getTreeCellRendererComponent(final JTree tree,
-				final Object value, final boolean isSelected,
-				final boolean expanded, final boolean leaf, final int row,
-				final boolean hasFocus) {
+		                                              final Object value, final boolean isSelected,
+		                                              final boolean expanded, final boolean leaf, final int row,
+		                                              final boolean hasFocus) {
 			final JComponent c = (JComponent) renderer.getTreeCellRendererComponent(tree, value, isSelected, expanded, leaf, row, hasFocus);
 			HighLightableWraps.clear();
 			HighLightableWraps.addAll(HighLightWraps);
@@ -136,7 +111,7 @@ public class InterfaceExplorer extends Script implements PaintListener {
 
 		private void fireTreeStructureChanged(final Object oldRoot) {
 			treeModelListeners.size();
-			final TreeModelEvent e = new TreeModelEvent(this, new Object[] { oldRoot });
+			final TreeModelEvent e = new TreeModelEvent(this, new Object[]{oldRoot});
 			for (final TreeModelListener tml : treeModelListeners) {
 				tml.treeStructureChanged(e);
 			}
@@ -195,7 +170,7 @@ public class InterfaceExplorer extends Script implements PaintListener {
 		}
 
 		public boolean searchMatches(final RSComponent iface,
-				final String contains) {
+		                             final String contains) {
 			return iface.getText().toLowerCase().contains(contains.toLowerCase());
 		}
 
@@ -231,7 +206,7 @@ public class InterfaceExplorer extends Script implements PaintListener {
 
 		@Override
 		public void valueForPathChanged(final TreePath path,
-				final Object newValue) {
+		                                final Object newValue) {
 		}
 	}
 
@@ -590,11 +565,11 @@ public class InterfaceExplorer extends Script implements PaintListener {
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			private void addInfo(final String key, final String value,
-					final boolean highlight) {
+			                     final boolean highlight) {
 				final JPanel row = new JPanel();
 				row.setAlignmentX(Component.LEFT_ALIGNMENT);
 				row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
-				for (final String data : new String[] { key, value }) {
+				for (final String data : new String[]{key, value}) {
 					final JLabel label = new JLabel(data);
 					label.setAlignmentY(Component.TOP_ALIGNMENT);
 					if (highlight) {

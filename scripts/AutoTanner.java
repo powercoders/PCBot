@@ -1,10 +1,3 @@
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.util.HashMap;
-
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
@@ -12,13 +5,12 @@ import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Methods;
 import org.rsbot.script.util.Timer;
-import org.rsbot.script.wrappers.RSArea;
-import org.rsbot.script.wrappers.RSInterface;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.script.wrappers.RSTilePath;
+import org.rsbot.script.wrappers.*;
 
-@ScriptManifest(authors = { "LastCoder" }, keywords = { "Crafting" }, name = "ArbiTannerLite", version = 2.0, description = "Start, all options are in GUI.")
+import java.awt.*;
+import java.util.HashMap;
+
+@ScriptManifest(authors = {"LastCoder"}, keywords = {"Crafting"}, name = "ArbiTannerLite", version = 2.0, description = "Start, all options are in GUI.")
 public class AutoTanner extends Script implements MessageListener,
 		PaintListener {
 
@@ -41,6 +33,7 @@ public class AutoTanner extends Script implements MessageListener,
 		private javax.swing.JLabel jLabel3;
 
 		// End of variables declaration
+
 		/**
 		 * Creates new form Gui
 		 */
@@ -106,7 +99,7 @@ public class AutoTanner extends Script implements MessageListener,
 		public int component_id;
 
 		public Hide(final String name, final int ind_id, final int tanned_id,
-				final int component_id) {
+		            final int component_id) {
 			this.name = name;
 			this.ind_id = ind_id;
 			this.component_id = component_id;
@@ -118,12 +111,12 @@ public class AutoTanner extends Script implements MessageListener,
 		BANK, WALK_TO, TRADE_TANNER, INTERFACE, WALK_FROM, REST, TURN_ON_RUN
 	}
 
-	private static final Hide[] HIDE_ARRAY = new Hide[] {
+	private static final Hide[] HIDE_ARRAY = new Hide[]{
 			new Hide("Cow Hide", 1739, 1741, 2),
 			new Hide("Green Dragon Hide", 1753, 1745, 5),
 			new Hide("Red Dragon Hide", 1749, 2507, 7),
 			new Hide("Blue Dragon Hide", 1751, 2505, 6),
-			new Hide("Black Dragon Hide", 1747, 2509, 8) };
+			new Hide("Black Dragon Hide", 1747, 2509, 8)};
 	private static final Color COLOR_1 = new Color(0, 0, 0, 155);
 	private static final Color COLOR_2 = new Color(0, 0, 0);
 	private static final Color COLOR_3 = new Color(255, 255, 255);
@@ -132,7 +125,7 @@ public class AutoTanner extends Script implements MessageListener,
 
 	private static final Font FONT_2 = new Font("Arial", 0, 9);
 	private static final int TANNER = 2824;
-	private static final RSTile[] OLD_PATH = new RSTile[] {
+	private static final RSTile[] OLD_PATH = new RSTile[]{
 			new RSTile(3269, 3166), new RSTile(3270, 3166),
 			new RSTile(3271, 3166), new RSTile(3272, 3166),
 			new RSTile(3273, 3166), new RSTile(3274, 3167),
@@ -148,7 +141,7 @@ public class AutoTanner extends Script implements MessageListener,
 			new RSTile(3281, 3185), new RSTile(3281, 3186),
 			new RSTile(3281, 3186), new RSTile(3281, 3187),
 			new RSTile(3281, 3190), new RSTile(3280, 3191),
-			new RSTile(3278, 3191), new RSTile(3276, 3192) };
+			new RSTile(3278, 3191), new RSTile(3276, 3192)};
 	private RSTilePath current_path;
 	private RSTilePath path_back;
 	private Hide hide;
@@ -203,66 +196,66 @@ public class AutoTanner extends Script implements MessageListener,
 	@Override
 	public int loop() {
 		switch (getState()) {
-		case TURN_ON_RUN:
-			walking.setRun(true);
-			for (int i = 0; i < 10 && !walking.isRunEnabled(); i++) {
-				Methods.sleep(100, 200);
-			}
-			Methods.sleep(Methods.random(1200, 1500));
-			break;
-		case REST:
-			walking.rest();
-			Methods.sleep(Methods.random(1200, 1500));
-			break;
-		case WALK_TO:
-			current_path.traverse();
-			break;
-		case WALK_FROM:
-			path_back.traverse();
-			break;
-		case TRADE_TANNER:
-			final RSNPC tanner_npc = npcs.getNearest(AutoTanner.TANNER);
-			if (tanner_npc != null && getMyPlayer().getAnimation() == -1) {
-				tanner_npc.doAction("Trade");
-				Methods.sleep(Methods.random(1200, 1500));
-			}
-			break;
-		case BANK:
-			if (!bank.isOpen()) {
-				if (getMyPlayer().getAnimation() != -1) {
-					Methods.sleep(Methods.random(1200, 1500));
-				} else {
-					bank.open();
+			case TURN_ON_RUN:
+				walking.setRun(true);
+				for (int i = 0; i < 10 && !walking.isRunEnabled(); i++) {
+					Methods.sleep(100, 200);
 				}
-			} else {
-
-				if (!inventory.contains(hide.ind_id)) {
-					if (inventory.contains(hide.tanned_id)) {
-						bank.deposit(hide.tanned_id, 0);
-						Methods.sleep(Methods.random(1200, 1500));
-					}
-					if (bank.getItem(hide.ind_id) != null) {
-						bank.withdraw(hide.ind_id, 0);
+				Methods.sleep(Methods.random(1200, 1500));
+				break;
+			case REST:
+				walking.rest();
+				Methods.sleep(Methods.random(1200, 1500));
+				break;
+			case WALK_TO:
+				current_path.traverse();
+				break;
+			case WALK_FROM:
+				path_back.traverse();
+				break;
+			case TRADE_TANNER:
+				final RSNPC tanner_npc = npcs.getNearest(AutoTanner.TANNER);
+				if (tanner_npc != null && getMyPlayer().getAnimation() == -1) {
+					tanner_npc.doAction("Trade");
+					Methods.sleep(Methods.random(1200, 1500));
+				}
+				break;
+			case BANK:
+				if (!bank.isOpen()) {
+					if (getMyPlayer().getAnimation() != -1) {
 						Methods.sleep(Methods.random(1200, 1500));
 					} else {
-						log("Out of Hides.");
-						break;
+						bank.open();
+					}
+				} else {
+
+					if (!inventory.contains(hide.ind_id)) {
+						if (inventory.contains(hide.tanned_id)) {
+							bank.deposit(hide.tanned_id, 0);
+							Methods.sleep(Methods.random(1200, 1500));
+						}
+						if (bank.getItem(hide.ind_id) != null) {
+							bank.withdraw(hide.ind_id, 0);
+							Methods.sleep(Methods.random(1200, 1500));
+						} else {
+							log("Out of Hides.");
+							break;
+						}
 					}
 				}
-			}
-			break;
-		case INTERFACE:
-			final RSInterface tan_inter = interfaces.get(324);
-			if (tan_inter.isValid()) {
-				tan_inter.getComponent(hide.component_id).doAction("Tan All");
-				for (int i = 0; i < 100 && inventory.contains(hide.tanned_id); i++) {
-					Methods.sleep(20);
-				}
-				made = made + inventory.getCount(hide.tanned_id);
-				profitMade = profit * made;
+				break;
+			case INTERFACE:
+				final RSInterface tan_inter = interfaces.get(324);
+				if (tan_inter.isValid()) {
+					tan_inter.getComponent(hide.component_id).doAction("Tan All");
+					for (int i = 0; i < 100 && inventory.contains(hide.tanned_id); i++) {
+						Methods.sleep(20);
+					}
+					made = made + inventory.getCount(hide.tanned_id);
+					profitMade = profit * made;
 
-			}
-			break;
+				}
+				break;
 		}
 		return Methods.random(800, 1200);
 	}

@@ -1,41 +1,3 @@
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Properties;
-
-import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextPane;
-import javax.swing.border.LineBorder;
-
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
@@ -46,13 +8,17 @@ import org.rsbot.script.methods.Game;
 import org.rsbot.script.methods.Methods;
 import org.rsbot.script.methods.Skills;
 import org.rsbot.script.util.Timer;
-import org.rsbot.script.wrappers.RSInterface;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSModel;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSPlayer;
-import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Properties;
 
 /* @Updated 2.15.2011.
  * 
@@ -61,7 +27,7 @@ import org.rsbot.script.wrappers.RSTile;
  * Added a temp. fix for prices.
  */
 
-@ScriptManifest(authors = { "Fallen" }, keywords = { "Thieving" }, name = "Fallen's Safe Cracker", version = 4.3, description = "Cracks safes at Rogue Den's.", website = "http://www.powerbot.org/vb/showthread.php?t=485694")
+@ScriptManifest(authors = {"Fallen"}, keywords = {"Thieving"}, name = "Fallen's Safe Cracker", version = 4.3, description = "Cracks safes at Rogue Den's.", website = "http://www.powerbot.org/vb/showthread.php?t=485694")
 public class FallenSafeCracker extends Script implements PaintListener,
 		MessageListener, MouseListener, MouseMotionListener {
 
@@ -148,7 +114,7 @@ public class FallenSafeCracker extends Script implements PaintListener,
 		}
 
 		private void addComponent(final Container container, final Component c,
-				final int x, final int y, final int width, final int height) {
+		                          final int x, final int y, final int width, final int height) {
 			c.setBounds(x, y, width, height);
 			container.add(c);
 		}
@@ -275,9 +241,9 @@ public class FallenSafeCracker extends Script implements PaintListener,
 			});
 
 			// GENERAL
-			final String[] types = { "Trout", "Salmon", "Tuna", "Cake",
+			final String[] types = {"Trout", "Salmon", "Tuna", "Cake",
 					"Lobster", "Bass", "Swordfish", "Monkfish", "Shark",
-					"Rocktail" };
+					"Rocktail"};
 			Options = new JComboBox(types);
 			OptionText = new JLabel();
 			OptionText.setFont(new Font("Verdana", Font.PLAIN, 14));
@@ -812,7 +778,7 @@ public class FallenSafeCracker extends Script implements PaintListener,
 	private int Cracked = 0;
 
 	private int FoodID;
-	private final int[] FoodIDS = { 1895, 1893, 1891, 4293, 2142, 291, 2140,
+	private final int[] FoodIDS = {1895, 1893, 1891, 4293, 2142, 291, 2140,
 			3228, 9980, 7223, 6297, 6293, 6295, 6299, 7521, 9988, 7228, 2878,
 			7568, 2343, 1861, 13433, 315, 325, 319, 3144, 347, 355, 333, 339,
 			351, 329, 3381, 361, 10136, 5003, 379, 365, 373, 7946, 385, 397,
@@ -826,7 +792,7 @@ public class FallenSafeCracker extends Script implements PaintListener,
 			2034, 2048, 2036, 2217, 2213, 2205, 2209, 2054, 2040, 2080, 2277,
 			2225, 2255, 2221, 2253, 2219, 2281, 2227, 2223, 2191, 2233, 2092,
 			2032, 2074, 2030, 2281, 2235, 2064, 2028, 2187, 2185, 2229, 6883,
-			1971, 4608, 1883, 1885, 15272 };
+			1971, 4608, 1883, 1885, 15272};
 	private static int FoodWDAmount;
 	private static int EatingPoint;
 	private final int Stethoscope = 5560;
@@ -916,79 +882,79 @@ public class FallenSafeCracker extends Script implements PaintListener,
 			if (mousee == 5) {
 				final int randomFormation = Methods.random(1, 10);
 				switch (randomFormation) {
-				case 1:
-					mouse.move(200, 300, 100, 100);
-					Methods.sleep(Methods.random(100, 500));
-					break;
-				case 2:
-					mouse.move(100, 700, 1000, 1000);
-					break;
-				case 3:
-					mouse.move(340, 200, 300, 200);
-					Methods.sleep(Methods.random(100, 500));
-					break;
-				case 4:
-					mouse.move(122, 458, 50, 10);
-					Methods.sleep(Methods.random(100, 500));
-					mouse.moveSlightly();
-					break;
-				case 5:
-					mouse.move(340, 200, 300, 200);
-					Methods.sleep(Methods.random(100, 500));
-					break;
-				case 6:
-					game.openTab(Methods.random(0, 17));
-					Methods.sleep(Methods.random(300, 1000));
-					game.openTab(Game.TAB_INVENTORY);
-					break;
-				case 7:
-					mouse.move(80, 70, 400 - 80, 240 - 70);
-					Methods.sleep(Methods.random(100, 500));
-					break;
-				case 8:
-					mouse.move(80, 70, 400 - 80, 240 - 70);
-					Methods.sleep(Methods.random(100, 500));
-					break;
-				case 9:
-					mouse.move(80, 70, 400 - 80, 240 - 70);
-					Methods.sleep(Methods.random(100, 500));
-					break;
+					case 1:
+						mouse.move(200, 300, 100, 100);
+						Methods.sleep(Methods.random(100, 500));
+						break;
+					case 2:
+						mouse.move(100, 700, 1000, 1000);
+						break;
+					case 3:
+						mouse.move(340, 200, 300, 200);
+						Methods.sleep(Methods.random(100, 500));
+						break;
+					case 4:
+						mouse.move(122, 458, 50, 10);
+						Methods.sleep(Methods.random(100, 500));
+						mouse.moveSlightly();
+						break;
+					case 5:
+						mouse.move(340, 200, 300, 200);
+						Methods.sleep(Methods.random(100, 500));
+						break;
+					case 6:
+						game.openTab(Methods.random(0, 17));
+						Methods.sleep(Methods.random(300, 1000));
+						game.openTab(Game.TAB_INVENTORY);
+						break;
+					case 7:
+						mouse.move(80, 70, 400 - 80, 240 - 70);
+						Methods.sleep(Methods.random(100, 500));
+						break;
+					case 8:
+						mouse.move(80, 70, 400 - 80, 240 - 70);
+						Methods.sleep(Methods.random(100, 500));
+						break;
+					case 9:
+						mouse.move(80, 70, 400 - 80, 240 - 70);
+						Methods.sleep(Methods.random(100, 500));
+						break;
 				}
 			} else if (cameraa == 5) {
 				final int randomFormation = Methods.random(1, 6);
 				switch (randomFormation) {
-				case 1:
-					new CameraRotateThread().start();
-					break;
-				case 2:
-					new CameraHeightThread().start();
-					break;
-				case 3:
-					new CameraRotateThread().start();
-					if (Methods.random(0, 100) > Methods.random(0, 50)) {
-						Methods.sleep(Methods.random(100, 2000));
+					case 1:
 						new CameraRotateThread().start();
-					}
-					break;
-				case 4:
-					new CameraHeightThread().start();
-					if (Methods.random(0, 100) > Methods.random(0, 50)) {
-						Methods.sleep(Methods.random(100, 2000));
+						break;
+					case 2:
 						new CameraHeightThread().start();
-					}
-					break;
-				case 5:
-					new CameraRotateThread().start();
-					new CameraHeightThread().start();
-					if (Methods.random(0, 100) > Methods.random(0, 50)) {
-						Methods.sleep(Methods.random(100, 2000));
+						break;
+					case 3:
 						new CameraRotateThread().start();
 						if (Methods.random(0, 100) > Methods.random(0, 50)) {
-							Methods.sleep(Methods.random(100, 1000));
+							Methods.sleep(Methods.random(100, 2000));
+							new CameraRotateThread().start();
+						}
+						break;
+					case 4:
+						new CameraHeightThread().start();
+						if (Methods.random(0, 100) > Methods.random(0, 50)) {
+							Methods.sleep(Methods.random(100, 2000));
 							new CameraHeightThread().start();
 						}
-					}
-					break;
+						break;
+					case 5:
+						new CameraRotateThread().start();
+						new CameraHeightThread().start();
+						if (Methods.random(0, 100) > Methods.random(0, 50)) {
+							Methods.sleep(Methods.random(100, 2000));
+							new CameraRotateThread().start();
+							if (Methods.random(0, 100) > Methods.random(0, 50)) {
+								Methods.sleep(Methods.random(100, 1000));
+								new CameraHeightThread().start();
+							}
+						}
+						break;
 				}
 			} else if (statCheck == 5) {
 				game.openTab(Game.TAB_STATS);
@@ -1027,17 +993,17 @@ public class FallenSafeCracker extends Script implements PaintListener,
 		final int GambleInt4 = Methods.random(1, 1000);
 		if (GambleInt4 >= 930) {
 			switch (randomTurn) {
-			case 1:
-				new CameraRotateThread().start();
-				break;
-			case 2:
-				final int randomFormation = Methods.random(0, 2);
-				if (randomFormation == 0) {
+				case 1:
 					new CameraRotateThread().start();
-				} else {
-					new CameraRotateThread().start();
-					new CameraRotateThread().start();
-				}
+					break;
+				case 2:
+					final int randomFormation = Methods.random(0, 2);
+					if (randomFormation == 0) {
+						new CameraRotateThread().start();
+					} else {
+						new CameraRotateThread().start();
+						new CameraRotateThread().start();
+					}
 			}
 		}
 	}
@@ -1079,15 +1045,14 @@ public class FallenSafeCracker extends Script implements PaintListener,
 	}
 
 	/**
-	 * @param destination
-	 *            - the tile to walk to.
+	 * @param destination - the tile to walk to.
 	 * @return True if reached the distance to the red flag on your minimap.
 	 * @Author Fall3n
-	 *         <p/>
-	 *         Has to be looped.
-	 *         <p/>
-	 *         Walks directly to the specified locations. Customize the
-	 *         variables inside the method if you wish.
+	 * <p/>
+	 * Has to be looped.
+	 * <p/>
+	 * Walks directly to the specified locations. Customize the
+	 * variables inside the method if you wish.
 	 */
 	private boolean directWalk(final RSTile destination) {
 		final int distance = Methods.random(3, 5);
@@ -1205,21 +1170,17 @@ public class FallenSafeCracker extends Script implements PaintListener,
 	/**
 	 * Draws a tile with the passed color on the passed instance of
 	 * <code>Graphics</code>.
-	 * 
-	 * @param render
-	 *            The instance of <code>Graphics</code> you want to draw on.
-	 * @param tile
-	 *            The instance of the tile you want to draw.
-	 * @param color
-	 *            The color you want the drawn tile to be.
-	 * @param drawCardinalDirections
-	 *            True if you want the cardinal directions to be drawn in each
-	 *            corner.
+	 *
+	 * @param render                 The instance of <code>Graphics</code> you want to draw on.
+	 * @param tile                   The instance of the tile you want to draw.
+	 * @param color                  The color you want the drawn tile to be.
+	 * @param drawCardinalDirections True if you want the cardinal directions to be drawn in each
+	 *                               corner.
 	 * @author Gnarly
 	 */
 	public void drawTile(final Graphics render, final RSTile tile,
-			final Color color, final boolean drawCardinalDirections,
-			final String s) {
+	                     final Color color, final boolean drawCardinalDirections,
+	                     final String s) {
 		final Point southwest = calc.tileToScreen(tile, 0, 0, 0);
 		final Point southeast = calc.tileToScreen(new RSTile(tile.getX() + 1, tile.getY()), 0, 0, 0);
 		final Point northwest = calc.tileToScreen(new RSTile(tile.getX(), tile.getY() + 1), 0, 0, 0);
@@ -1229,17 +1190,17 @@ public class FallenSafeCracker extends Script implements PaintListener,
 				&& calc.pointOnScreen(northwest)
 				&& calc.pointOnScreen(northeast)) {
 			render.setColor(Color.BLACK);
-			render.drawPolygon(new int[] { (int) northwest.getX(),
+			render.drawPolygon(new int[]{(int) northwest.getX(),
 					(int) northeast.getX(), (int) southeast.getX(),
-					(int) southwest.getX() }, new int[] {
+					(int) southwest.getX()}, new int[]{
 					(int) northwest.getY(), (int) northeast.getY(),
-					(int) southeast.getY(), (int) southwest.getY() }, 4);
+					(int) southeast.getY(), (int) southwest.getY()}, 4);
 			render.setColor(color);
-			render.fillPolygon(new int[] { (int) northwest.getX(),
+			render.fillPolygon(new int[]{(int) northwest.getX(),
 					(int) northeast.getX(), (int) southeast.getX(),
-					(int) southwest.getX() }, new int[] {
+					(int) southwest.getX()}, new int[]{
 					(int) northwest.getY(), (int) northeast.getY(),
-					(int) southeast.getY(), (int) southwest.getY() }, 4);
+					(int) southeast.getY(), (int) southwest.getY()}, 4);
 
 			if (drawCardinalDirections) {
 				render.setColor(Color.WHITE);
@@ -1260,7 +1221,7 @@ public class FallenSafeCracker extends Script implements PaintListener,
 			}
 			if (inventory.containsOneOf(FoodIDS)
 					&& Integer.parseInt(interfaces.get(748).getComponent(8).getText()) <= FallenSafeCracker.EatingPoint
-							+ skills.getRealLevel(Skills.CONSTITUTION)) {
+					+ skills.getRealLevel(Skills.CONSTITUTION)) {
 				final RSItem eatMe2 = inventory.getItem(FoodIDS);
 				if (eatMe2 != null) {
 					Methods.sleep(Methods.random(1000, 1300));
@@ -1417,7 +1378,7 @@ public class FallenSafeCracker extends Script implements PaintListener,
 	}
 
 	private boolean inRectangle(final int x1, final int y1, final int x2,
-			final int y2) {
+	                            final int y2) {
 		getX = getMyPlayer().getLocation().getX();
 		getY = getMyPlayer().getLocation().getY();
 		if (getX >= x1 && getX <= x2 && getY >= y1 && getY <= y2) {
@@ -1490,139 +1451,139 @@ public class FallenSafeCracker extends Script implements PaintListener,
 			return 300;
 		}
 		switch (getState()) {
-		case WALKTOSAFES:
-			if (inventory.isItemSelected()) {
-				inventory.clickSelectedItem(true);
-			}
-			if (camera.getPitch() < 80) {
-				up = true;
-				new CameraHeightThread().start();
-			}
-			if (!randomized) {
-				final int GambleInt = Methods.random(0, 100);
-				if (GambleInt >= 49) {
-					dest = new RSTile(3056, 4978);
+			case WALKTOSAFES:
+				if (inventory.isItemSelected()) {
+					inventory.clickSelectedItem(true);
 				}
-				if (GambleInt <= 48) {
-					dest = new RSTile(3056, 4969);
+				if (camera.getPitch() < 80) {
+					up = true;
+					new CameraHeightThread().start();
 				}
-				randomized = true;
-			}
-			directWalk(dest);
-			CrackState = 0;
-			break;
-		case SMALLWALK:
-			if (inventory.isItemSelected()) {
-				inventory.clickSelectedItem(true);
-			}
-			if (camera.getPitch() < 80) {
-				up = true;
-				new CameraHeightThread().start();
-			}
-			smallWalk();
-			CrackState = 0;
-			break;
-		case CRACK:
-			randomized = false;
-			if (CrackState == 0) {
-				getInvCounts();
-				crackSafe();
-				CrackState = 1;
-			} else if (CrackState == 1) {
-				waitForStateChange(Methods.random(6500, 7500));
-				if (CrackState == 1) {
-					CrackState = 2;
+				if (!randomized) {
+					final int GambleInt = Methods.random(0, 100);
+					if (GambleInt >= 49) {
+						dest = new RSTile(3056, 4978);
+					}
+					if (GambleInt <= 48) {
+						dest = new RSTile(3056, 4969);
+					}
+					randomized = true;
+				}
+				directWalk(dest);
+				CrackState = 0;
+				break;
+			case SMALLWALK:
+				if (inventory.isItemSelected()) {
+					inventory.clickSelectedItem(true);
+				}
+				if (camera.getPitch() < 80) {
+					up = true;
+					new CameraHeightThread().start();
+				}
+				smallWalk();
+				CrackState = 0;
+				break;
+			case CRACK:
+				randomized = false;
+				if (CrackState == 0) {
+					getInvCounts();
+					crackSafe();
+					CrackState = 1;
+				} else if (CrackState == 1) {
+					waitForStateChange(Methods.random(6500, 7500));
+					if (CrackState == 1) {
+						CrackState = 2;
+						break;
+					}
+				} else if (CrackState == 2) {
+					Methods.sleep(Methods.random(300, 400));
+					getInvCounts();
+					if (!clickFirst) {
+						Methods.sleep(Methods.random(100, 200));
+					}
+					crackSafe();
+				} else {
+					Methods.sleep(Methods.random(200, 300));
+					getInvCounts();
+					waitForSafe(Methods.random(1000, 2000));
+					crackSafe();
+				}
+				break;
+			case WALKTOBANK:
+				if (inventory.isItemSelected()) {
+					inventory.clickSelectedItem(true);
+				}
+				if (inventory.isFull()) {
+					if (inventory.containsOneOf(FoodIDS)) {
+						if (Integer.parseInt(interfaces.get(748).getComponent(8).getText()) <= skills.getRealLevel(Skills.CONSTITUTION) * 10 - 100) {
+							inventory.getItem(FoodIDS).doAction("eat");
+							waitForAnim(1000);
+							Methods.sleep(Methods.random(200, 400));
+							break;
+						}
+					}
+				}
+				if (camera.getPitch() < 80) {
+					up = true;
+					new CameraHeightThread().start();
+				}
+				final RSNPC Banker = npcs.getNearest(BankerID);
+				CameraAntiBan();
+				if (Banker != null) {
+					final RSTile moveTo = npcs.getNearest(BankerID).getLocation();
+					if (!Banker.isOnScreen()) {
+						directWalk(moveTo);
+					}
 					break;
 				}
-			} else if (CrackState == 2) {
-				Methods.sleep(Methods.random(300, 400));
-				getInvCounts();
-				if (!clickFirst) {
-					Methods.sleep(Methods.random(100, 200));
+				directWalk(approxBank);
+				break;
+			case OPENBANK:
+				final RSNPC Bankerr = npcs.getNearest(BankerID);
+				if (Bankerr.doAction("Bank")) {
+					if (waitForIF(interfaces.get(Bank.INTERFACE_BANK), 2000)) {
+						Methods.sleep(Methods.random(200, 300));
+					}
 				}
-				crackSafe();
-			} else {
-				Methods.sleep(Methods.random(200, 300));
-				getInvCounts();
-				waitForSafe(Methods.random(1000, 2000));
-				crackSafe();
-			}
-			break;
-		case WALKTOBANK:
-			if (inventory.isItemSelected()) {
-				inventory.clickSelectedItem(true);
-			}
-			if (inventory.isFull()) {
-				if (inventory.containsOneOf(FoodIDS)) {
-					if (Integer.parseInt(interfaces.get(748).getComponent(8).getText()) <= skills.getRealLevel(Skills.CONSTITUTION) * 10 - 100) {
-						inventory.getItem(FoodIDS).doAction("eat");
-						waitForAnim(1000);
-						Methods.sleep(Methods.random(200, 400));
+				break;
+			case BANK:
+				if (!bank.isOpen()) {
+					break;
+				}
+				if (UseStethoscope) {
+					if (inventory.getCountExcept(Stethoscope, FoodID) > 0) {
+						try {
+							bank.depositAll();
+							waitForDepositedItem(Methods.random(2000, 3000));
+						} catch (final Exception e) {
+						}
+						CameraAntiBan();
 						break;
 					}
 				}
-			}
-			if (camera.getPitch() < 80) {
-				up = true;
-				new CameraHeightThread().start();
-			}
-			final RSNPC Banker = npcs.getNearest(BankerID);
-			CameraAntiBan();
-			if (Banker != null) {
-				final RSTile moveTo = npcs.getNearest(BankerID).getLocation();
-				if (!Banker.isOnScreen()) {
-					directWalk(moveTo);
-				}
-				break;
-			}
-			directWalk(approxBank);
-			break;
-		case OPENBANK:
-			final RSNPC Bankerr = npcs.getNearest(BankerID);
-			if (Bankerr.doAction("Bank")) {
-				if (waitForIF(interfaces.get(Bank.INTERFACE_BANK), 2000)) {
-					Methods.sleep(Methods.random(200, 300));
-				}
-			}
-			break;
-		case BANK:
-			if (!bank.isOpen()) {
-				break;
-			}
-			if (UseStethoscope) {
-				if (inventory.getCountExcept(Stethoscope, FoodID) > 0) {
-					try {
-						bank.depositAll();
-						waitForDepositedItem(Methods.random(2000, 3000));
-					} catch (final Exception e) {
+				if (!UseStethoscope) {
+					if (inventory.getCountExcept(FoodID) > 0) {
+						try {
+							bank.depositAll();
+							waitForDepositedItem(Methods.random(2000, 3000));
+						} catch (final Exception e) {
+						}
+						CameraAntiBan();
+						break;
 					}
-					CameraAntiBan();
+				}
+				if (UseStethoscope && !inventory.contains(Stethoscope)) {
+					if (WD(Stethoscope, 1)) {
+						CameraAntiBan();
+						waitForWithdrawnItem(Stethoscope, Methods.random(2000, 3000));
+					}
 					break;
 				}
-			}
-			if (!UseStethoscope) {
-				if (inventory.getCountExcept(FoodID) > 0) {
-					try {
-						bank.depositAll();
-						waitForDepositedItem(Methods.random(2000, 3000));
-					} catch (final Exception e) {
-					}
+				if (WD(FoodID, FallenSafeCracker.FoodWDAmount)) {
 					CameraAntiBan();
-					break;
-				}
-			}
-			if (UseStethoscope && !inventory.contains(Stethoscope)) {
-				if (WD(Stethoscope, 1)) {
-					CameraAntiBan();
-					waitForWithdrawnItem(Stethoscope, Methods.random(2000, 3000));
+					waitForWithdrawnItem(FoodID, Methods.random(2000, 3000));
 				}
 				break;
-			}
-			if (WD(FoodID, FallenSafeCracker.FoodWDAmount)) {
-				CameraAntiBan();
-				waitForWithdrawnItem(FoodID, Methods.random(2000, 3000));
-			}
-			break;
 		}
 		timeToQuit();
 		return Methods.random(10, 50);
@@ -2394,16 +2355,14 @@ public class FallenSafeCracker extends Script implements PaintListener,
 	}
 
 	/**
-	 * @param dist
-	 *            - waits until reached this distance. If < 0; waits until the
-	 *            destination is visible on the screen.
-	 * @param timeout
-	 *            - the max amount of time to wait.
+	 * @param dist    - waits until reached this distance. If < 0; waits until the
+	 *                destination is visible on the screen.
+	 * @param timeout - the max amount of time to wait.
 	 * @return True if reached the distance to your destination.
 	 * @Author Fall3n
-	 *         <p/>
-	 *         If moving, waits to arrive to a specified distance of your
-	 *         destination.
+	 * <p/>
+	 * If moving, waits to arrive to a specified distance of your
+	 * destination.
 	 */
 	private boolean waitToGetClose(final int dist, final int timeout) {
 		final long start = System.currentTimeMillis();
@@ -2505,31 +2464,31 @@ public class FallenSafeCracker extends Script implements PaintListener,
 			return false;
 		}
 		switch (count) {
-		case 0: // Withdraw All
-			return item.doAction("Withdraw-All");
-		case 1: // Withdraw 1
-			return item.doClick(true);
-		case 5: // Withdraw 5
-		case 10: // Withdraw 10
-			return item.doAction("Withdraw-" + count);
-		default: // Withdraw x
-			if (item.doClick(false)) {
-				Methods.sleep(Methods.random(100, 300));
-				if (menu.contains("Withdraw-" + count)) {
-					if (menu.doAction("Withdraw-" + count)) {
-						Methods.sleep(Methods.random(100, 200));
-						return true;
+			case 0: // Withdraw All
+				return item.doAction("Withdraw-All");
+			case 1: // Withdraw 1
+				return item.doClick(true);
+			case 5: // Withdraw 5
+			case 10: // Withdraw 10
+				return item.doAction("Withdraw-" + count);
+			default: // Withdraw x
+				if (item.doClick(false)) {
+					Methods.sleep(Methods.random(100, 300));
+					if (menu.contains("Withdraw-" + count)) {
+						if (menu.doAction("Withdraw-" + count)) {
+							Methods.sleep(Methods.random(100, 200));
+							return true;
+						}
+						return false;
 					}
-					return false;
+					if (item.doAction("Withdraw-X")) {
+						Methods.sleep(Methods.random(1000, 1300));
+						keyboard.sendText("" + count, true);
+					}
+					Methods.sleep(Methods.random(100, 200));
+					return true;
 				}
-				if (item.doAction("Withdraw-X")) {
-					Methods.sleep(Methods.random(1000, 1300));
-					keyboard.sendText("" + count, true);
-				}
-				Methods.sleep(Methods.random(100, 200));
-				return true;
-			}
-			break;
+				break;
 		}
 		return false;
 	}

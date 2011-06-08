@@ -1,31 +1,21 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import org.rsbot.Configuration;
+import org.rsbot.event.events.MessageEvent;
+import org.rsbot.event.listeners.MessageListener;
+import org.rsbot.event.listeners.PaintListener;
+import org.rsbot.script.Script;
+import org.rsbot.script.ScriptManifest;
+import org.rsbot.script.methods.Skills;
+import org.rsbot.script.util.Filter;
+import org.rsbot.script.wrappers.*;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -36,39 +26,7 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import org.rsbot.Configuration;
-import org.rsbot.event.events.MessageEvent;
-import org.rsbot.event.listeners.MessageListener;
-import org.rsbot.event.listeners.PaintListener;
-import org.rsbot.script.Script;
-import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.methods.Skills;
-import org.rsbot.script.util.Filter;
-import org.rsbot.script.wrappers.RSArea;
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSGroundItem;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSPath;
-import org.rsbot.script.wrappers.RSTile;
-
-@ScriptManifest(authors = { "Mr. Byte" }, name = "Beefy Bill Cow Killer", keywords = { "Combat" }, description = "Kills Cows, Loots Hides,"
+@ScriptManifest(authors = {"Mr. Byte"}, name = "Beefy Bill Cow Killer", keywords = {"Combat"}, description = "Kills Cows, Loots Hides,"
 		+ " Buries Bones, Chops Trees,"
 		+ " Makes Fire, Cooks Looted Meat "
 		+ "(phew!).", version = 3.31)
@@ -299,8 +257,8 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 					{
 						hideBankCount = new JComboBox();
 						contentPanel.add(hideBankCount);
-						hideBankCount.setModel(new DefaultComboBoxModel(new String[] {
-								"10 Hides", "20 Hides" }));
+						hideBankCount.setModel(new DefaultComboBoxModel(new String[]{
+								"10 Hides", "20 Hides"}));
 						hideBankCount.setBounds(206, 295, 110, 30);
 					}
 					{
@@ -369,8 +327,8 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 
 			if (iCanHazCheezBurger) {
 				whenToEat = (double) HPPercentToEat.getValue() / 100; // Convert
-																		// 75 to
-																		// .75
+				// 75 to
+				// .75
 				iCanCookCheezBurger = guiGetFood.isSelected();
 			}
 			if (!restWhenTired.isSelected()) {
@@ -414,14 +372,14 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 	}
 
 	private boolean isJar = false;
-	private static final RSArea billPen = new RSArea(new RSTile[] {
+	private static final RSArea billPen = new RSArea(new RSTile[]{
 			new RSTile(3154, 3348), new RSTile(3153, 3345),
 			new RSTile(3152, 3325), new RSTile(3152, 3323),
 			new RSTile(3154, 3316), new RSTile(3156, 3314),
 			new RSTile(3160, 3314), new RSTile(3171, 3316),
 			new RSTile(3181, 3314), new RSTile(3192, 3306),
 			new RSTile(3215, 3308), new RSTile(3205, 3334),
-			new RSTile(3179, 3348) }),
+			new RSTile(3179, 3348)}),
 			gateArea = new RSArea(3175, 3312, 3178, 3315),
 			bankArea = new RSArea(3206, 3217, 3211, 3223),
 			lumStairs = new RSArea(3205, 3206, 3208, 3211),
@@ -429,12 +387,12 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 
 	private static final int gate = 45206;
 
-	private static final int[] lumbyStairs = { 36773, 36774, 36775 };
+	private static final int[] lumbyStairs = {36773, 36774, 36775};
 
 	private static final RSArea keepOut = new RSArea(3152, 3330, 3171, 3341);
 	// keepOut is for keeping out of the northern pen, it's just a pain in the
 	// ass.
-	private static final RSTile[] lumBank2BillPen = { new RSTile(3205, 3209),
+	private static final RSTile[] lumBank2BillPen = {new RSTile(3205, 3209),
 			new RSTile(3208, 3209), new RSTile(3213, 3209),
 			new RSTile(3215, 3214), new RSTile(3217, 3218),
 			new RSTile(3223, 3219), new RSTile(3228, 3219),
@@ -446,22 +404,22 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 			new RSTile(3205, 3280), new RSTile(3196, 3280),
 			new RSTile(3192, 3289), new RSTile(3189, 3293),
 			new RSTile(3189, 3299), new RSTile(3186, 3306),
-			new RSTile(3178, 3310), new RSTile(3177, 3315) },
-			landingToStairs = { new RSTile(3232, 3218), new RSTile(3224, 3218),
+			new RSTile(3178, 3310), new RSTile(3177, 3315)},
+			landingToStairs = {new RSTile(3232, 3218), new RSTile(3224, 3218),
 					new RSTile(3217, 3219), new RSTile(3214, 3214),
-					new RSTile(3212, 3211), new RSTile(3206, 3209) };
+					new RSTile(3212, 3211), new RSTile(3206, 3209)};
 	// safespot is just north of the pen.
 	private static final DecimalFormat k = new DecimalFormat("#.#");
 	private static final DecimalFormat whole = new DecimalFormat("####");
-	private static final String[] skillNames$ = { "Attack", "Defense",
-			"Strength", "Constitution", "Range", "Prayer", "Magic" };
-	private static final String[] statusNames$ = { "Starting Up", "Cooking",
+	private static final String[] skillNames$ = {"Attack", "Defense",
+			"Strength", "Constitution", "Range", "Prayer", "Magic"};
+	private static final String[] statusNames$ = {"Starting Up", "Cooking",
 			"Eating", "Banking", "Fighting", "Looting", "Attacking", "Resting",
 			"Burying", "Dumping Junk", "Returning to Pen", "Looking for a cow",
-			"Quitting...", "Gathering Arrows" };
-	private static final Color[] statusColors = { Color.GREEN.darker(),
+			"Quitting...", "Gathering Arrows"};
+	private static final Color[] statusColors = {Color.GREEN.darker(),
 			Color.CYAN.darker(), Color.ORANGE.brighter(),
-			Color.GREEN.brighter(), Color.RED.brighter() };
+			Color.GREEN.brighter(), Color.RED.brighter()};
 	private static final int bones = 526; // , 532, 530, 528, 3183, 2859 };
 
 	/*
@@ -470,8 +428,8 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 	 * * Rune 892 Bronze Bolts: 877 Training Arrows: 9706
 	 */
 
-	private static final int[] hatchets = { 1349, 1351, 1353, 1355, 1357, 1359,
-			1361, 6739 };
+	private static final int[] hatchets = {1349, 1351, 1353, 1355, 1357, 1359,
+			1361, 6739};
 
 	/*
 	 * Training Bow: 9705
@@ -483,8 +441,8 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 	 * Crossbow: 837
 	 */
 
-	private static final int[] arrows = { 877, 878, 882, 883, 884, 885, 886,
-			887, 888, 889, 890, 891, 892, 893, 9706 };
+	private static final int[] arrows = {877, 878, 882, 883, 884, 885, 886,
+			887, 888, 889, 890, 891, 892, 893, 9706};
 
 	/*
 	 * {conditional meat, conditional bones, conditional air staff, burnt meat,
@@ -493,17 +451,17 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 	 * stuff.
 	 */
 
-	private static final int[] bows = { 829, 837, 839, 841, 843, 845, 847, 849,
-			851, 853, 9705 };
-	private final int[] junk = { 2146, 2146, 2146, 2146, 1511, 1521, 19830,
-			20114, 20111 };
+	private static final int[] bows = {829, 837, 839, 841, 843, 845, 847, 849,
+			851, 853, 9705};
+	private final int[] junk = {2146, 2146, 2146, 2146, 1511, 1521, 19830,
+			20114, 20111};
 	private static final int beefyBillID = 246;
 	private static final int cowhideID = 1739;
 	private static final int beefyBillInterface = 236;
 	private RSComponent cookingIface, amountIncreaseButton,
 			amountDecreaseButton;
-	private static final int[] liveTree = { 1278, 1276 };
-	private static final int[] logs = { 1511, 1521 };
+	private static final int[] liveTree = {1278, 1276};
+	private static final int[] logs = {1511, 1521};
 	private static final int tinderbox = 590;
 	private static final int litFire = 2732;
 	private static final int rawMeat = 2132;
@@ -511,7 +469,7 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 
 	private static final int airStaff = 1381;
 
-	private final int[] loots = { 0, 0, 0, 0, 0 };
+	private final int[] loots = {0, 0, 0, 0, 0};
 	private long startTime, lastTele = 0;
 	private int[] startXP;
 	private int hidesToBank = 10;
@@ -564,7 +522,7 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 				return action.COOKING;
 			} else if (iCanHazCheezBurger
 					&& combat.getLifePoints() < skills.getRealLevel(3) * 10
-							* whenToEat) {
+					* whenToEat) {
 				status = 2;
 				return action.EATING;
 			} else if (bankingHides
@@ -1103,238 +1061,238 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 		}
 
 		switch (action()) {
-		case COOKING:
-			final RSObject fire = objects.getNearest(litFire);
-			if (fire == null) {
-				bePrometheus();
-			} else {
-				final RSTile where = fire.getLocation();
-				if (!billPen.contains(where)) {
-					if (verbose) {
-						log("Fire found outside Bill's Pen...Do NOT want...");
-					}
-					return 50;
-				}
-				doCook();
-			}
-			return random(2000, 3000);
-
-		case EATING:
-			eatFood(status);
-			if (status == 12) {
-				return -1;
-			}
-			return 50;
-
-		case BANKING:
-			if (verbose) {
-				log("Hide/Meat limit reached. Going to Bill.");
-			}
-			bill = npcs.getNearest(beefyBillID);
-			if (bill == null) {
-				if (verbose) {
-					log("Bill not found?");
-				}
-				walking.walkTileMM(walking.getClosestTileOnMap(billPen.getCentralTile()));
-				return random(200, 250);
-			}
-			camera.setAngle(0);
-			sleep(500, 750);
-			camera.setPitch(true);
-			final RSTile newTile = bill.getLocation();
-			if (!bill.isOnScreen()) {
-				if (verbose) {
-					log("Walking to Bill");
-				}
-				walking.walkTileMM(walking.getClosestTileOnMap(newTile), 3, 3);
-				return 1000;
-			} else {
-				waitPlayerMoving();
-				if (hidesHeld >= hidesToBank) {
-					bankAtBill(cowhideID, "cowhide");
-					hidesHeld = inventory.getCount(cowhideID);
-
-					if (hidesHeld != hidesToBank) {
-						bankCycles++;
-					}
-					hidesBanked = bankCycles * (hidesToBank - hideCost);
-					if (verbose) {
-						log("Hides Banked!");
-					}
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
-					}
-				}
-
-				if (rawMeatHeld >= 10) {
-					bankAtBill(rawMeat, "raw");
-					rawMeatHeld = inventory.getCount(rawMeat);
-
-					if (rawMeatHeld != 10) {
-						meatCycles++;
-						meatsBanked = meatCycles * 9;
+			case COOKING:
+				final RSObject fire = objects.getNearest(litFire);
+				if (fire == null) {
+					bePrometheus();
+				} else {
+					final RSTile where = fire.getLocation();
+					if (!billPen.contains(where)) {
 						if (verbose) {
-							log("Meats Banked!");
+							log("Fire found outside Bill's Pen...Do NOT want...");
+						}
+						return 50;
+					}
+					doCook();
+				}
+				return random(2000, 3000);
+
+			case EATING:
+				eatFood(status);
+				if (status == 12) {
+					return -1;
+				}
+				return 50;
+
+			case BANKING:
+				if (verbose) {
+					log("Hide/Meat limit reached. Going to Bill.");
+				}
+				bill = npcs.getNearest(beefyBillID);
+				if (bill == null) {
+					if (verbose) {
+						log("Bill not found?");
+					}
+					walking.walkTileMM(walking.getClosestTileOnMap(billPen.getCentralTile()));
+					return random(200, 250);
+				}
+				camera.setAngle(0);
+				sleep(500, 750);
+				camera.setPitch(true);
+				final RSTile newTile = bill.getLocation();
+				if (!bill.isOnScreen()) {
+					if (verbose) {
+						log("Walking to Bill");
+					}
+					walking.walkTileMM(walking.getClosestTileOnMap(newTile), 3, 3);
+					return 1000;
+				} else {
+					waitPlayerMoving();
+					if (hidesHeld >= hidesToBank) {
+						bankAtBill(cowhideID, "cowhide");
+						hidesHeld = inventory.getCount(cowhideID);
+
+						if (hidesHeld != hidesToBank) {
+							bankCycles++;
+						}
+						hidesBanked = bankCycles * (hidesToBank - hideCost);
+						if (verbose) {
+							log("Hides Banked!");
 						}
 						if (interfaces.canContinue()) {
 							interfaces.clickContinue();
 						}
 					}
-				}
-			}
-			if (interfaces.canContinue()) {
-				interfaces.clickContinue();
-			}
-			return random(50, 80);
 
-		case BANKSTAFFS:
-			if (!bank.isOpen() && inventory.contains(airStaff)) {
-				bank.open();
-				return random(500, 1000);
-			} else if (bank.isOpen()) {
-				if (inventory.contains(airStaff)) {
-					if (!bank.deposit(airStaff, 0)) {
-						bank.deposit(airStaff, 0);
-					}
-					return random(2000, 2200);
-				}
+					if (rawMeatHeld >= 10) {
+						bankAtBill(rawMeat, "raw");
+						rawMeatHeld = inventory.getCount(rawMeat);
 
-				bank.close();
-				return random(2000, 2500);
-			}
-			walking.walkTileMM(objects.getNearest(lumbyStairs).getLocation());
-			waitPlayerMoving();
-			return random(50, 80);
-
-		case LOOTING:
-			final RSGroundItem loot = findLoot();
-			if (loot == null) {
-				return random(20, 25);
-			}
-			if (inventory.containsOneOf(junk) || random(1, 100) < 10) {
-				if (inventory.isFull()) {
-					status = dropJunk(status, junk);
-				}
-			}
-			if (havebones && gettingBones
-					&& (inventory.isFull() || random(1, 100) < 30)) {
-				status = buryBones(status);
-			}
-			try {
-				final RSTile lootLocation = loot.getLocation();
-				final RSGroundItem lootpile[] = groundItems.getAllAt(lootLocation);
-
-				if (needMeat && !bankingMeats) {
-					loots[0] = rawMeat;
-				} else if (!bankingMeats && !needMeat) {
-					loots[0] = 0;
-				}
-
-				if (!loot.isOnScreen()) {
-					walking.walkTileMM(walking.getClosestTileOnMap(lootLocation));
-				}
-
-				waitPlayerMoving();
-
-				for (final RSGroundItem element : lootpile) {
-					final int item = element.getItem().getID();
-					for (final int loot2 : loots) {
-						if (item == loot2 && !inventory.isFull()) {
-							takeItem(element);
-							waitPlayerMoving();
-							sleep(650, 800);
+						if (rawMeatHeld != 10) {
+							meatCycles++;
+							meatsBanked = meatCycles * 9;
+							if (verbose) {
+								log("Meats Banked!");
+							}
+							if (interfaces.canContinue()) {
+								interfaces.clickContinue();
+							}
 						}
 					}
 				}
-
-			} catch (final Exception e) {
-				if (verbose) {
-					log.log(Level.SEVERE, "Looting: ", e);
+				if (interfaces.canContinue()) {
+					interfaces.clickContinue();
 				}
-				return 5;
-			}
+				return random(50, 80);
 
-			return random(300, 400);
+			case BANKSTAFFS:
+				if (!bank.isOpen() && inventory.contains(airStaff)) {
+					bank.open();
+					return random(500, 1000);
+				} else if (bank.isOpen()) {
+					if (inventory.contains(airStaff)) {
+						if (!bank.deposit(airStaff, 0)) {
+							bank.deposit(airStaff, 0);
+						}
+						return random(2000, 2200);
+					}
 
-		case ATTACKING:
-			cow = newNPC();
-			if (cow == null) {
-				status = 11;
-				searchTime++;
-				if (searchTime >= 2) {
-					randomWalk();
+					bank.close();
+					return random(2000, 2500);
+				}
+				walking.walkTileMM(objects.getNearest(lumbyStairs).getLocation());
+				waitPlayerMoving();
+				return random(50, 80);
+
+			case LOOTING:
+				final RSGroundItem loot = findLoot();
+				if (loot == null) {
+					return random(20, 25);
+				}
+				if (inventory.containsOneOf(junk) || random(1, 100) < 10) {
+					if (inventory.isFull()) {
+						status = dropJunk(status, junk);
+					}
+				}
+				if (havebones && gettingBones
+						&& (inventory.isFull() || random(1, 100) < 30)) {
+					status = buryBones(status);
+				}
+				try {
+					final RSTile lootLocation = loot.getLocation();
+					final RSGroundItem lootpile[] = groundItems.getAllAt(lootLocation);
+
+					if (needMeat && !bankingMeats) {
+						loots[0] = rawMeat;
+					} else if (!bankingMeats && !needMeat) {
+						loots[0] = 0;
+					}
+
+					if (!loot.isOnScreen()) {
+						walking.walkTileMM(walking.getClosestTileOnMap(lootLocation));
+					}
+
 					waitPlayerMoving();
-					searchTime = 0;
-				}
-				return random(50, 100);
-			}
-			searchTime = 0;
 
-			if (toNPC(cow)) {
-				waitPlayerMoving();
-				clickNPC(cow, "Attack");
-			}
-			return 500;
-
-		case FIGHTING:
-			try {
-				if (players.getMyPlayer().getInteracting() != null
-						|| players.getMyPlayer().isInCombat()) {
-					while (cow.getHPPercent() > 0
-							&& players.getMyPlayer().getInteracting() != null) {
-						if (combat.getLifePoints() < skills.getRealLevel(3)
-								* 10 * whenToEat) {
-							eatFood(status);
-						}
-						if (status == 12 || quitNow) {
-							return -1;
+					for (final RSGroundItem element : lootpile) {
+						final int item = element.getItem().getID();
+						for (final int loot2 : loots) {
+							if (item == loot2 && !inventory.isFull()) {
+								takeItem(element);
+								waitPlayerMoving();
+								sleep(650, 800);
+							}
 						}
 					}
-					sleep(3000, 4000);
+
+				} catch (final Exception e) {
+					if (verbose) {
+						log.log(Level.SEVERE, "Looting: ", e);
+					}
+					return 5;
 				}
-			} catch (final Exception ignored) {
-				return random(10, 15);
-			}
-			return random(600, 550);
 
-		case CLIMBING:
+				return random(300, 400);
 
-			final int plane = game.getPlane();
+			case ATTACKING:
+				cow = newNPC();
+				if (cow == null) {
+					status = 11;
+					searchTime++;
+					if (searchTime >= 2) {
+						randomWalk();
+						waitPlayerMoving();
+						searchTime = 0;
+					}
+					return random(50, 100);
+				}
+				searchTime = 0;
 
-			if (plane == 2 && inventory.contains(airStaff)) {
-				walking.walkTileMM(bankArea.getNearestTile(bankArea.getCentralTile()));
-				return 6000;
-			}
+				if (toNPC(cow)) {
+					waitPlayerMoving();
+					clickNPC(cow, "Attack");
+				}
+				return 500;
 
-			if (plane == 0 && !inventory.contains(airStaff)) {
-				path = walking.newTilePath(lumBank2BillPen);
+			case FIGHTING:
+				try {
+					if (players.getMyPlayer().getInteracting() != null
+							|| players.getMyPlayer().isInCombat()) {
+						while (cow.getHPPercent() > 0
+								&& players.getMyPlayer().getInteracting() != null) {
+							if (combat.getLifePoints() < skills.getRealLevel(3)
+									* 10 * whenToEat) {
+								eatFood(status);
+							}
+							if (status == 12 || quitNow) {
+								return -1;
+							}
+						}
+						sleep(3000, 4000);
+					}
+				} catch (final Exception ignored) {
+					return random(10, 15);
+				}
+				return random(600, 550);
+
+			case CLIMBING:
+
+				final int plane = game.getPlane();
+
+				if (plane == 2 && inventory.contains(airStaff)) {
+					walking.walkTileMM(bankArea.getNearestTile(bankArea.getCentralTile()));
+					return 6000;
+				}
+
+				if (plane == 0 && !inventory.contains(airStaff)) {
+					path = walking.newTilePath(lumBank2BillPen);
+					path.traverse();
+					waitPlayerMoving();
+					return 500;
+				}
+
+				if (inventory.contains(airStaff) && (plane == 0 || plane == 1)) {
+					climbStairs("Climb-up");
+					return 500;
+				}
+
+				if (!inventory.contains(airStaff) && (plane == 2 || plane == 1)) {
+					climbStairs("Climb-down");
+					return 500;
+				}
+
+			case WALKING:
+
 				path.traverse();
-				waitPlayerMoving();
-				return 500;
-			}
+				while (calc.distanceTo(walking.getDestination()) > 5) {
+					sleep(25, 26);
+				}
+				if (calc.distanceTo(lumStairs.getCentralTile()) < 3
+						&& inventory.contains(airStaff)) {
+					walking.walkTileOnScreen(objects.getNearest(lumbyStairs).getLocation());
+				}
 
-			if (inventory.contains(airStaff) && (plane == 0 || plane == 1)) {
-				climbStairs("Climb-up");
-				return 500;
-			}
-
-			if (!inventory.contains(airStaff) && (plane == 2 || plane == 1)) {
-				climbStairs("Climb-down");
-				return 500;
-			}
-
-		case WALKING:
-
-			path.traverse();
-			while (calc.distanceTo(walking.getDestination()) > 5) {
-				sleep(25, 26);
-			}
-			if (calc.distanceTo(lumStairs.getCentralTile()) < 3
-					&& inventory.contains(airStaff)) {
-				walking.walkTileOnScreen(objects.getNearest(lumbyStairs).getLocation());
-			}
-
-			return 50;
+				return 50;
 
 		} // switch ends here...`
 		return random(100, 200);
@@ -1703,8 +1661,8 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 			final int foodcount = countCheezBurgers();
 			meatSpace = 28
 					- (inventory.getCount() - inventory.getCount(cowhideID)
-							- inventory.getCount(bones)
-							- inventory.getCount(rawMeat) - foodcount)
+					- inventory.getCount(bones)
+					- inventory.getCount(rawMeat) - foodcount)
 					- hidesToBank;
 			if (meatSpace > 4) {
 				meatSpace = 4;
@@ -2085,33 +2043,33 @@ public class BeefyBillCowKiller extends Script implements PaintListener,
 		}
 		return true;
 	}
-	
+
 	/*
-	 * Changelog:
-	 * 
-	 * v3.25 Changelog started. Changed GE price storage method to use item ID's
-	 * rather than names Eliminated the skills[i] array, as it was not really
-	 * needed. Cleaned up sleep(random(x,x)) sleep(x,x) Changed update checker
-	 * to now look on server at script file and extract the posted version from
-	 * it instead of reading a version file.
-	 * 
-	 * v3.26 Added safety-checks to the ID field in the price file, due to
-	 * errors if reading old price file with latest code.
-	 * 
-	 * v3.27 Improved some visuals on the updater GUI, changed the restart
-	 * message for jar's to reflect the fact that you need to restart the bot
-	 * for the new .jar to appear. Removed compile code, as it's not working
-	 * locally...
-	 * 
-	 * v3.28 Fixed issue in randomWalk() causing script to hang and bot to idle
-	 * and timeout. Improved portability of update method.
-	 * 
-	 * v3.29 Added "Get Air Staffs" option.
-	 * 
-	 * v3.30 Moved price file location to comply with new security stuff.
-	 * 
-	 * v3.31 Changed "GlobalConfiguration" to "Configuration" to match bot
-	 * change. Added jar detection logic.
-	 */
-	
+		 * Changelog:
+		 *
+		 * v3.25 Changelog started. Changed GE price storage method to use item ID's
+		 * rather than names Eliminated the skills[i] array, as it was not really
+		 * needed. Cleaned up sleep(random(x,x)) sleep(x,x) Changed update checker
+		 * to now look on server at script file and extract the posted version from
+		 * it instead of reading a version file.
+		 *
+		 * v3.26 Added safety-checks to the ID field in the price file, due to
+		 * errors if reading old price file with latest code.
+		 *
+		 * v3.27 Improved some visuals on the updater GUI, changed the restart
+		 * message for jar's to reflect the fact that you need to restart the bot
+		 * for the new .jar to appear. Removed compile code, as it's not working
+		 * locally...
+		 *
+		 * v3.28 Fixed issue in randomWalk() causing script to hang and bot to idle
+		 * and timeout. Improved portability of update method.
+		 *
+		 * v3.29 Added "Get Air Staffs" option.
+		 *
+		 * v3.30 Moved price file location to comply with new security stuff.
+		 *
+		 * v3.31 Changed "GlobalConfiguration" to "Configuration" to match bot
+		 * change. Added jar detection logic.
+		 */
+
 }

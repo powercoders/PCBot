@@ -1,12 +1,14 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.RenderingHints;
+import org.rsbot.Configuration;
+import org.rsbot.event.listeners.PaintListener;
+import org.rsbot.script.Script;
+import org.rsbot.script.ScriptManifest;
+import org.rsbot.script.methods.Game;
+import org.rsbot.script.methods.Skills;
+import org.rsbot.script.util.Filter;
+import org.rsbot.script.wrappers.*;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -15,40 +17,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import org.rsbot.Configuration;
-import org.rsbot.event.listeners.PaintListener;
-import org.rsbot.script.Script;
-import org.rsbot.script.ScriptManifest;
-import org.rsbot.script.methods.Game;
-import org.rsbot.script.methods.Skills;
-import org.rsbot.script.util.Filter;
-import org.rsbot.script.wrappers.RSCharacter;
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSGroundItem;
-import org.rsbot.script.wrappers.RSInterface;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSModel;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSPlayer;
-import org.rsbot.script.wrappers.RSTile;
 
 /**
  * Change log: v1.61: Made SDN compatible v1.60: Stable: Potions and ash
@@ -63,7 +33,7 @@ import org.rsbot.script.wrappers.RSTile;
  * it. v0.92: Loot support, mainly. Many small changes. v0.91: Oops, forgot to
  * add mouse speed settings! v0.9: Initial release
  */
-@ScriptManifest(name = "TFighterEE", authors = { "!@!@!", "Zalgo2462" }, version = 1.61, description = "TFighter by !@!@! with additions by Zalgo2462", website = "http://www.powerbot.org/vb/showthread.php?t=477661")
+@ScriptManifest(name = "TFighterEE", authors = {"!@!@!", "Zalgo2462"}, version = 1.61, description = "TFighter by !@!@! with additions by Zalgo2462", website = "http://www.powerbot.org/vb/showthread.php?t=477661")
 public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 	private class AttackLoop implements LoopAction {
@@ -102,8 +72,8 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 	}
 
 	private class BonesLoop implements LoopAction {
-		private final int[] BONE_IDS = new int[] { 526, 528, 530, 532, 534,
-				536, 2859, 3123, 3125, 3183, 6182, 20268, 20266, 20264 };
+		private final int[] BONE_IDS = new int[]{526, 528, 530, 532, 534,
+				536, 2859, 3123, 3125, 3183, 6182, 20268, 20266, 20264};
 
 		public boolean activate() {
 			return inventory.getCount(BONE_IDS) != 0;
@@ -122,9 +92,9 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 	private class Eating {
 
-		private final int[] B2P_TAB_ID = new int[] { 8015 };
-		private final int[] BONES_ID = new int[] { 526, 532, 530, 528, 3183,
-				2859 };
+		private final int[] B2P_TAB_ID = new int[]{8015};
+		private final int[] BONES_ID = new int[]{526, 532, 530, 528, 3183,
+				2859};
 
 		private int toEatAtPercent = getRandomEatPercent();
 
@@ -140,7 +110,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Attempts to eat food.
-		 * 
+		 *
 		 * @return True if we ate.
 		 */
 		private boolean eatFood() {
@@ -158,7 +128,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Finds food based on inventory actions.
-		 * 
+		 *
 		 * @return The RSItem of food, or null if none was found.
 		 */
 		private RSItem getFood() {
@@ -179,7 +149,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Returns an integer representing the current health percentage.
-		 * 
+		 *
 		 * @return The current health percentage.
 		 */
 		public int getHPPercent() {
@@ -193,7 +163,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Returns a random integer of when to eat.
-		 * 
+		 *
 		 * @return A random integer of the percent to eat at.
 		 */
 		private int getRandomEatPercent() {
@@ -202,7 +172,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Checks if we have at least one B2P tab.
-		 * 
+		 *
 		 * @return True if we have a tab.
 		 */
 		private boolean haveB2pTab() {
@@ -211,7 +181,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Checks if the inventory contains bones, for B2P.
-		 * 
+		 *
 		 * @return True if we have bones.
 		 */
 		private boolean haveBones() {
@@ -220,7 +190,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Checks if we have food.
-		 * 
+		 *
 		 * @return True if we have food.
 		 */
 		private boolean haveFood() {
@@ -229,7 +199,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Checks whether you need to eat or not.
-		 * 
+		 *
 		 * @return True if we need to eat.
 		 */
 		private boolean needEat() {
@@ -560,7 +530,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Gets the nearest loot, based on the filter
-		 * 
+		 *
 		 * @return The nearest item to loot, or null if none.
 		 */
 		private RSGroundItem getLoot() {
@@ -575,9 +545,8 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Attempts to take an item.
-		 * 
-		 * @param item
-		 *            The item to take.
+		 *
+		 * @param item The item to take.
 		 * @return -1 if error, 0 if taken, 1 if walked
 		 */
 		private int takeItem(final RSGroundItem item) {
@@ -661,7 +630,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 						&& t.isValid()
 						&& (!onlyInRadius || calc.distanceBetween(t.getLocation(), startTile) < maxRadius)
 						&& (utilizeMultiwayCombat || !t.isInCombat()
-								&& t.getInteracting() == null)
+						&& t.getInteracting() == null)
 						&& t.getHPPercent() != 0;
 			}
 		};
@@ -679,11 +648,9 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Clicks an NPC based on its model.
-		 * 
-		 * @param npc
-		 *            The NPC to click.
-		 * @param action
-		 *            The action to perform.
+		 *
+		 * @param npc    The NPC to click.
+		 * @param action The action to perform.
 		 * @return 0 if the NPC was clicked, 1 if we walked to it, or -1 if
 		 *         nothing happened.
 		 */
@@ -731,11 +698,9 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Gets a closer tile to us within dist.
-		 * 
-		 * @param t
-		 *            The tile to start with.
-		 * @param dist
-		 *            The max dist.
+		 *
+		 * @param t    The tile to start with.
+		 * @param dist The max dist.
 		 * @return A closer tile.
 		 */
 		private RSTile closerTile(final RSTile t, final int dist) {
@@ -752,11 +717,9 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Calculates the distance between two points.
-		 * 
-		 * @param p1
-		 *            The first point.
-		 * @param p2
-		 *            The second point.
+		 *
+		 * @param p1 The first point.
+		 * @param p2 The second point.
 		 * @return The distance between the two points, using the distance
 		 *         formula.
 		 */
@@ -769,9 +732,8 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 		 * Generates a rough central point. Performs the calculation by first
 		 * generating a rough point, and then finding the point closest to the
 		 * rough point that is actually on the RSModel.
-		 * 
-		 * @param m
-		 *            The RSModel to test.
+		 *
+		 * @param m The RSModel to test.
 		 * @return The rough central point.
 		 */
 		private Point getCentralPoint(final RSModel m) {
@@ -816,7 +778,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Returns the interacting NPC that matches our description, if any.
-		 * 
+		 *
 		 * @return The closest interacting NPC that matches the filter.
 		 */
 		private RSNPC getInteracting() {
@@ -839,7 +801,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Returns the nearest NPC.
-		 * 
+		 *
 		 * @return The nearest NPC that matches the filter.
 		 */
 		private RSNPC getNPC() {
@@ -852,12 +814,10 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Gets a point on a model that is on screen.
-		 * 
-		 * @param m
-		 *            The RSModel to test.
-		 * @param first
-		 *            If true, it will return the first point that it finds on
-		 *            screen.
+		 *
+		 * @param m     The RSModel to test.
+		 * @param first If true, it will return the first point that it finds on
+		 *              screen.
 		 * @return A random point on screen of an object.
 		 */
 		private Point getPointOnScreen(final RSModel m, final boolean first) {
@@ -885,7 +845,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Checks if we are in combat.
-		 * 
+		 *
 		 * @return True if we are in combat.
 		 */
 		private boolean isInCombat() {
@@ -911,9 +871,8 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Checks if a model is partially on screen.
-		 * 
-		 * @param m
-		 *            The RSModel to check.
+		 *
+		 * @param m The RSModel to check.
 		 * @return True if any point on the model is on screen.
 		 */
 		private boolean isPartiallyOnScreen(final RSModel m) {
@@ -923,47 +882,47 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 	private class Potion {
 
-		private final int[] MAGIC_POTIONS = new int[] { 3040, 3042, 3044, 3046,
-				11513, 11515, 13520, 13521, 13522, 13523 };
+		private final int[] MAGIC_POTIONS = new int[]{3040, 3042, 3044, 3046,
+				11513, 11515, 13520, 13521, 13522, 13523};
 
-		private final int[] PRAYER_POTIONS = new int[] { 2434, 139, 141, 143,
-				11465, 11467 };
+		private final int[] PRAYER_POTIONS = new int[]{2434, 139, 141, 143,
+				11465, 11467};
 
-		private final int[] RANGE_POTIONS = new int[] { 2444, 169, 171, 173,
-				11509, 11511, 13524, 13525, 15326, 15327 };
+		private final int[] RANGE_POTIONS = new int[]{2444, 169, 171, 173,
+				11509, 11511, 13524, 13525, 15326, 15327};
 
-		private final int[] ENERGY_POTIONS = new int[] { 3008, 3010, 3012,
-				3014, 3016, 3018, 3020, 3022, 11453, 11455, 11481, 11483 };
+		private final int[] ENERGY_POTIONS = new int[]{3008, 3010, 3012,
+				3014, 3016, 3018, 3020, 3022, 11453, 11455, 11481, 11483};
 
-		private final int[] COMBAT_POTIONS = new int[] { 9739, 9741, 9743,
-				9745, 11445, 11447 };
+		private final int[] COMBAT_POTIONS = new int[]{9739, 9741, 9743,
+				9745, 11445, 11447};
 
-		private final int[] ATTACK_POTIONS = new int[] { 2428, 121, 123, 125,
+		private final int[] ATTACK_POTIONS = new int[]{2428, 121, 123, 125,
 				2436, 145, 147, 149, 11429, 11431, 11429, 11431, 11429, 11431,
-				11469, 11471, 15308, 15309, 15310, 15311 };
+				11469, 11471, 15308, 15309, 15310, 15311};
 
-		private final int[] STRENGTH_POTIONS = new int[] { 113, 115, 117, 119,
+		private final int[] STRENGTH_POTIONS = new int[]{113, 115, 117, 119,
 				2440, 157, 159, 161, 11443, 11441, 11485, 11487, 15312, 15313,
-				15314, 15315 };
+				15314, 15315};
 
-		private final int[] DEFENSE_POTIONS = new int[] { 2432, 133, 135, 137,
+		private final int[] DEFENSE_POTIONS = new int[]{2432, 133, 135, 137,
 				2442, 163, 165, 167, 11457, 11459, 11497, 11499, 15316, 15317,
-				15318, 15319 };
+				15318, 15319};
 
-		private final int[] ANTIPOISON = new int[] { 2446, 175, 177, 179, 2448,
+		private final int[] ANTIPOISON = new int[]{2446, 175, 177, 179, 2448,
 				181, 183, 185, 5952, 5954, 5956, 5958, 5943, 5945, 5947, 5949,
-				11433, 11435, 11501, 11503 };
+				11433, 11435, 11501, 11503};
 
-		private final int[] ZAMORAK_POTIONS = new int[] { 2450, 189, 191, 193,
-				11521, 11523 };
+		private final int[] ZAMORAK_POTIONS = new int[]{2450, 189, 191, 193,
+				11521, 11523};
 
-		private final int[] SARADOMIN_POTIONS = new int[] { 6685, 6687, 6689,
-				6691 };
+		private final int[] SARADOMIN_POTIONS = new int[]{6685, 6687, 6689,
+				6691};
 
-		private final int[] OVERLOAD_POTIONS = new int[] { 15332, 15333, 15334,
-				15335 };
+		private final int[] OVERLOAD_POTIONS = new int[]{15332, 15333, 15334,
+				15335};
 
-		private final int[] VIAL = new int[] { 229 };
+		private final int[] VIAL = new int[]{229};
 
 		private HashMap<String, RSItem[]> getPotions() {
 			final HashMap<String, RSItem[]> potions = new HashMap<String, RSItem[]>();
@@ -1048,9 +1007,9 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 			if (potions.get("OVERLOAD").length != 0
 					&& (!statIsBoosted(Skills.ATTACK)
-							|| !statIsBoosted(Skills.STRENGTH)
-							|| !statIsBoosted(Skills.DEFENSE)
-							|| !statIsBoosted(Skills.RANGE) || !statIsBoosted(Skills.MAGIC))) {
+					|| !statIsBoosted(Skills.STRENGTH)
+					|| !statIsBoosted(Skills.DEFENSE)
+					|| !statIsBoosted(Skills.RANGE) || !statIsBoosted(Skills.MAGIC))) {
 				return true;
 			}
 			return false;
@@ -1100,8 +1059,8 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 			if (!u.pot.statIsBoosted(Skills.STRENGTH)
 					&& (potions.get("STRENGTH").length != 0
-							|| potions.get("COMBAT").length != 0
-							|| potions.get("ZAMORAK").length != 0 || potions.get("OVERLOAD").length != 0)) {
+					|| potions.get("COMBAT").length != 0
+					|| potions.get("ZAMORAK").length != 0 || potions.get("OVERLOAD").length != 0)) {
 				if (potions.get("COMBAT").length != 0) {
 					potions.get("COMBAT")[0].doClick(true);
 					return random(2000, 2500);
@@ -1119,7 +1078,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 			if (!u.pot.statIsBoosted(Skills.DEFENSE)
 					&& (potions.get("DEFENSE").length != 0
-							|| potions.get("SARADOMIN").length != 0 || potions.get("OVERLOAD").length != 0)) {
+					|| potions.get("SARADOMIN").length != 0 || potions.get("OVERLOAD").length != 0)) {
 				if (potions.get("DEFENSE").length != 0) {
 					potions.get("DEFENSE")[0].doClick(true);
 					return random(2000, 2500);
@@ -1134,8 +1093,8 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 			if (!u.pot.statIsBoosted(Skills.ATTACK)
 					&& (potions.get("ATTACK").length != 0
-							|| potions.get("COMBAT").length != 0
-							|| potions.get("ZAMORAK").length != 0 || potions.get("OVERLOAD").length != 0)) {
+					|| potions.get("COMBAT").length != 0
+					|| potions.get("ZAMORAK").length != 0 || potions.get("OVERLOAD").length != 0)) {
 				if (potions.get("COMBAT").length != 0) {
 					potions.get("COMBAT")[0].doClick(true);
 					return random(2000, 2500);
@@ -1183,15 +1142,14 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 	private class SkillWatcher {
 
 		private final Map<Integer, Integer> startExpMap = new HashMap<Integer, Integer>();
-		private final int[] SKILLS_TO_WATCH = new int[] { Skills.SLAYER,
+		private final int[] SKILLS_TO_WATCH = new int[]{Skills.SLAYER,
 				Skills.CONSTITUTION, Skills.ATTACK, Skills.STRENGTH,
-				Skills.DEFENSE, Skills.RANGE, Skills.MAGIC, Skills.PRAYER };
+				Skills.DEFENSE, Skills.RANGE, Skills.MAGIC, Skills.PRAYER};
 
 		/**
 		 * Returns the amount of exp gained in the specified skill.
-		 * 
-		 * @param skill
-		 *            The skill see Skills.*
+		 *
+		 * @param skill The skill see Skills.*
 		 * @return
 		 */
 		private int getExpGainedIn(final int skill) {
@@ -1203,7 +1161,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		/**
 		 * Returns a map of skill names and exp gained.
-		 * 
+		 *
 		 * @return A map of exp gains and skill names.
 		 */
 		private Map<String, Integer> getExpGainedMap() {
@@ -1282,30 +1240,30 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 		final Thread mouseThread = new Thread() {
 			public void run() {
 				switch (random(0, 5)) {
-				case 0:
-					mouse.moveOffScreen();
-					break;
-				case 1:
-					mouse.move(random(0, game.getWidth()), random(0, game.getHeight()));
-					break;
-				case 2:
-					mouse.move(random(0, game.getWidth()), random(0, game.getHeight()));
-					break;
+					case 0:
+						mouse.moveOffScreen();
+						break;
+					case 1:
+						mouse.move(random(0, game.getWidth()), random(0, game.getHeight()));
+						break;
+					case 2:
+						mouse.move(random(0, game.getWidth()), random(0, game.getHeight()));
+						break;
 				}
 			}
 		};
 		final Thread keyThread = new Thread() {
 			public void run() {
 				switch (random(0, 4)) {
-				case 0:
-					camera.setAngle(camera.getAngle() + random(-100, 100));
-					break;
-				case 1:
-					camera.setAngle(camera.getAngle() + random(-100, 100));
-					break;
-				case 2:
-					camera.setAngle(camera.getAngle() + random(-100, 100));
-					break;
+					case 0:
+						camera.setAngle(camera.getAngle() + random(-100, 100));
+						break;
+					case 1:
+						camera.setAngle(camera.getAngle() + random(-100, 100));
+						break;
+					case 2:
+						camera.setAngle(camera.getAngle() + random(-100, 100));
+						break;
 				}
 			}
 		};
@@ -1325,7 +1283,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 	/**
 	 * True if click continue interface is valid.
-	 * 
+	 *
 	 * @return True if you can click continue.
 	 */
 	private boolean canContinue() {
@@ -1334,7 +1292,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 	/**
 	 * True if we successfully clicked continue.
-	 * 
+	 *
 	 * @return True if we clicked continue.
 	 */
 	private boolean clickContinue() {
@@ -1359,7 +1317,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 	/**
 	 * Gets the "Click here to continue" button on any interface.
-	 * 
+	 *
 	 * @return The "Click here to continue" button.
 	 */
 	private RSComponent getContinueInterface() {
@@ -1433,9 +1391,8 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 	/**
 	 * Formats the given value into a clock format that follows the form of
 	 * 00:00:00
-	 * 
-	 * @param millis
-	 *            The total millis to be evaluated
+	 *
+	 * @param millis The total millis to be evaluated
 	 * @return A String representation of millis, formatted as a clock
 	 */
 	private String millisToTime(final int millis) {
@@ -1516,9 +1473,7 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 					g.drawString(entry.getKey() + ": "
 							+ nf.format(entry.getValue()) + " (p/hr: "
 							+ nf.format(expPerHour) + ")", x + 25, y += g.getFontMetrics().getMaxAscent());
-				}
-
-				else if (skillLayoutNumber == 5) {
+				} else if (skillLayoutNumber == 5) {
 					g.drawString(entry.getKey() + ": "
 							+ nf.format(entry.getValue()) + " (p/hr: "
 							+ nf.format(expPerHour) + ")", x + 175, skillYStart);
@@ -1560,14 +1515,14 @@ public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 		LoopAction[] actions;
 		if (prioritizeLoot) {
-			actions = new LoopAction[] { (buryBones ? new BonesLoop() : null),
+			actions = new LoopAction[]{(buryBones ? new BonesLoop() : null),
 					new LootLoop(), (useSafespot ? new SafespotLoop() : null),
-					new InCombatLoop(), new AttackLoop() };
+					new InCombatLoop(), new AttackLoop()};
 		} else {
-			actions = new LoopAction[] {
+			actions = new LoopAction[]{
 					(useSafespot ? new SafespotLoop() : null),
 					new InCombatLoop(), (buryBones ? new BonesLoop() : null),
-					new LootLoop(), new AttackLoop() };
+					new LootLoop(), new AttackLoop()};
 		}
 		for (final LoopAction a : actions) {
 			loopActions.add(a);

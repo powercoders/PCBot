@@ -1,61 +1,3 @@
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.URL;
-import java.net.URLConnection;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.SwingConstants;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import org.rsbot.Configuration;
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
@@ -64,29 +6,39 @@ import org.rsbot.gui.AccountManager;
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.util.Filter;
-import org.rsbot.script.wrappers.RSArea;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSGroundItem;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSPlayer;
-import org.rsbot.script.wrappers.RSTile;
-import org.rsbot.script.wrappers.RSTilePath;
+import org.rsbot.script.wrappers.*;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @ScriptManifest(
-		authors = "Mr. Byte", 
-		name = "Byte's Wine Grabber", 
-		version = 1.21, 
+		authors = "Mr. Byte",
+		name = "Byte's Wine Grabber",
+		version = 1.21,
 		description = "Snags the Wine of Zamorak",
 		website = "http://LetTheSmokeOut.com")
-		
+
 public class BytesWineGrabber extends Script implements PaintListener, MessageListener, MouseListener {
 
 	private boolean isJar = false;
 
 	private enum STATE {
 		SNATCH, TELEPORT, WALK_TO_BANK, BANK, WALK_TO_TEMPLE, WALK_TO_TILE, SLEEP
-	};
+	}
+
+	;
 
 	public File PRICE_FILE = new File(new File(Configuration.Paths
 			.getScriptCacheDirectory()), "WGGEPrices.txt");
@@ -98,14 +50,14 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 
 	private static final RSArea zammyTempleArea = new RSArea(2930, 3513, 2943,
 			3518), bankArea = new RSArea(2949, 3368, 2943, 3371),
-			restArea = new RSArea(new RSTile[] { new RSTile(2954, 3396),
+			restArea = new RSArea(new RSTile[]{new RSTile(2954, 3396),
 					new RSTile(2974, 3396), new RSTile(2974, 3416),
-					new RSTile(2957, 3418) }), fallyArea = new RSArea(2937, 3363, 2973, 3393);
+					new RSTile(2957, 3418)}), fallyArea = new RSArea(2937, 3363, 2973, 3393);
 
-	private static final RSTile[] waitSpots = { new RSTile(2932, 3515),
+	private static final RSTile[] waitSpots = {new RSTile(2932, 3515),
 			new RSTile(2932, 3514), new RSTile(2931, 3514)};
 
-	private static final RSTile[] templePath = { new RSTile(2946, 3371),
+	private static final RSTile[] templePath = {new RSTile(2946, 3371),
 			new RSTile(2948, 3376), new RSTile(2950, 3380),
 			new RSTile(2954, 3382), new RSTile(2960, 3384),
 			new RSTile(2962, 3389), new RSTile(2965, 3394),
@@ -123,19 +75,19 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 			new RSTile(2942, 3495), new RSTile(2942, 3499),
 			new RSTile(2941, 3504), new RSTile(2941, 3508),
 			new RSTile(2941, 3512), new RSTile(2942, 3516),
-			new RSTile(2936, 3516), new RSTile(2933, 3515) }, bankPath = {
+			new RSTile(2936, 3516), new RSTile(2933, 3515)}, bankPath = {
 			new RSTile(2961, 3381), new RSTile(2955, 3381),
 			new RSTile(2950, 3377), new RSTile(2947, 3376),
-			new RSTile(2946, 3368) };
+			new RSTile(2946, 3368)};
 
 	RSTilePath pathToTemple, pathToBank;
-	RSTile me, waitSpot = waitSpots[random(0,2)];
+	RSTile me, waitSpot = waitSpots[random(0, 2)];
 	RSTile hover = new RSTile(2931, 3515);
 
 	RSGroundItem wine;
 
 	Rectangle paintToggle = new Rectangle(390, 343, 120, 15);
-	Rectangle killMeNow   = new Rectangle(390, 360, 120, 15);
+	Rectangle killMeNow = new Rectangle(390, 360, 120, 15);
 
 	private long startTime = 0;
 
@@ -154,7 +106,7 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 			foodID = 0, foodToGet = 0, canHazCheezBurger = 0,
 			maxPastWorlds = 10, MAXping = 150, MAXpop = 1000, currentWorld = 0, newWorld = 0,
 			hopped = 0, skillTotal = 0, ttlGold = 0;
-	
+
 	private double wph = 0, gph = 0;
 
 	private int[] startXP;
@@ -171,7 +123,7 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 	private boolean testHopping = false;  // change to true to do nothing but hop worlds...for testing purposes only!
 
 	private int lawsToWaste = 0, maxPlayers = 0;
-	
+
 	private long runTime;
 
 	private STATE doWhat() {
@@ -197,14 +149,14 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 				return STATE.BANK;
 			}
 		}
-		if(fallyArea.contains(me)){
+		if (fallyArea.contains(me)) {
 			if ((goToBank || players.getMyPlayer().getHPPercent() < 51)
 					&& !bankArea.contains(me)) {
 				status$ = "Walking to Bank";
 				return STATE.WALK_TO_BANK;
 			}
 		}
-		if(goToBank && !fallyArea.contains(me)){
+		if (goToBank && !fallyArea.contains(me)) {
 			status$ = "Teleport to Falador";
 			return STATE.TELEPORT;
 		} else {
@@ -224,26 +176,28 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 		}
 
 		findFoodID();
-		if (foodID != 0)
+		if (foodID != 0) {
 			log("Eating " + food$);
+		}
 
 		gui = new GUI();
 		gui.setVisible(true);
 		while (gui.isVisible()) {
 			sleep(50);
 		}
-		if (guiExit)
+		if (guiExit) {
 			return false;
+		}
 
 		pathToTemple = walking.newTilePath(templePath);
 		pathToBank = walking.newTilePath(bankPath);
-		int x = random(0,2);
+		int x = random(0, 2);
 		waitSpot = waitSpots[x];
 		log("WaitSpot# " + x);
 
 		if (!inventory.contains(waterID)
 				|| (equipment.getItem(equipment.WEAPON).getID() != airStaff && equipment
-						.getItem(equipment.WEAPON).getID() != caitlinsStaff)) {
+				.getItem(equipment.WEAPON).getID() != caitlinsStaff)) {
 			log("You need Water runes, and an equipped Air/Caitlin's Staff to use the script.");
 			log("It helps to have laws in inventory as well, but they can be in the bank.");
 			return false;
@@ -256,8 +210,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 		goToBank = (inventory.isFull() || inventory.contains(wineID));
 		me = players.getMyPlayer().getLocation();
 
-		if (inventory.getItem(lawID) != null)
+		if (inventory.getItem(lawID) != null) {
 			lawsInInv = inventory.getItem(lawID).getStackSize();
+		}
 
 		if (!readPrices()) {
 			winePrice = grandExchange.lookup(wineID).getGuidePrice();
@@ -267,8 +222,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 
 		startXP = new int[7];
 		for (int i = 0; i < 25; i++) {
-			if (i < 7)
+			if (i < 7) {
 				startXP[i] = skills.getCurrentExp(i);
+			}
 			skillTotal += skills.getRealLevel(i);
 		}
 		log(skillTotal + " total level");
@@ -291,16 +247,18 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 
 	@Override
 	public int loop() {
-		
-		if(killScript) return -1;
-		
+
+		if (killScript) {
+			return -1;
+		}
+
 		mouse.setSpeed(random(4, 8));
 		ttlGold = wineTaken * winePrice - (lawsUsed * lawPrice);
 		runTime = System.currentTimeMillis() - startTime;
 		lawsWasted = (lawsUsed - wineTaken - bankTrips);
 		wph = wineTaken * 3600000D
-		/ (System.currentTimeMillis() - startTime);
-		
+				/ (System.currentTimeMillis() - startTime);
+
 		int ttlWine = wineTaken * winePrice;
 
 		gph = (ttlWine - (lawPrice * lawsUsed)) * 3600000D
@@ -309,22 +267,25 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 
 		me = players.getMyPlayer().getLocation();
 		RSTile dest = walking.getDestination();
-		if (dest == null)
+		if (dest == null) {
 			dest = me;
+		}
 
 		if (!bank.isOpen()) {
 			wineInInv = inventory.getCount(wineID);
 			if (inventory.contains(lawID)) {
 				lawsInInv = inventory.getItem(lawID).getStackSize();
-			} else
+			} else {
 				lawsInInv = 0;
-			
-			goToBank = (inventory.isFull() 
-					|| lawsInInv <= 1 
+			}
+
+			goToBank = (inventory.isFull()
+					|| lawsInInv <= 1
 					|| !zammyTempleArea.contains(me) && wineInInv > 0);
-		
-			if(inventory.contains(526))
+
+			if (inventory.contains(526)) {
 				dropJunk(526);
+			}
 		}
 
 		if (restForTheWicked && restArea.contains(dest)
@@ -357,186 +318,196 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 
 		switch (doWhat()) {
 
-		case SNATCH:
-			if (testHopping ||(worldHopping && misses >= lawsToWaste)) {
-				misses = 0;
-				worldHop(isMember, MAXping, MAXpop);
-				hopping = false;
-				return 100;
-			}
-
-			if (camera.getPitch() != 100) {
-				camera.setPitch(100);
-				sleep(900, 1000);
-			}
-			while (!magic.isSpellSelected()) {
-				magic.castSpell(magic.SPELL_TELEKINETIC_GRAB);
-				sleep(250);
-			}
-
-			mouse.move(calc.tileToScreen(hover, -500));
-			mouse.setSpeed(1);
-			for (int i = 0; i < 1000; i++) {
-				RSGroundItem wine = groundItems.getNearest(wineID);
-				if (wine != null && wine.isOnScreen()) {
-					mouse.click(calc.tileToScreen(wine.getLocation(), -500),
-							true);
-					sleep(1000, 1200);
-					antiBan();
-					break;
+			case SNATCH:
+				if (testHopping || (worldHopping && misses >= lawsToWaste)) {
+					misses = 0;
+					worldHop(isMember, MAXping, MAXpop);
+					hopping = false;
+					return 100;
 				}
-				if (!waitSpot.equals(players.getMyPlayer().getLocation()) || 
-						(foodID > 0 && players.getMyPlayer().getHPPercent() < canHazCheezBurger)||
-						players.getMyPlayer().getHPPercent() < 50 || killScript)
-					break; // break out if a random occurs...or need food...or need to bail.
+
+				if (camera.getPitch() != 100) {
+					camera.setPitch(100);
+					sleep(900, 1000);
+				}
 				while (!magic.isSpellSelected()) {
 					magic.castSpell(magic.SPELL_TELEKINETIC_GRAB);
 					sleep(250);
 				}
-				sleep(25, 26);
-			}
-			if (foodID > 0 && players.getMyPlayer().getHPPercent() < canHazCheezBurger) {
-				log("Eating?");
-				if (inventory.contains(foodID)) {
-					eatFood();
+
+				mouse.move(calc.tileToScreen(hover, -500));
+				mouse.setSpeed(1);
+				for (int i = 0; i < 1000; i++) {
+					RSGroundItem wine = groundItems.getNearest(wineID);
+					if (wine != null && wine.isOnScreen()) {
+						mouse.click(calc.tileToScreen(wine.getLocation(), -500),
+								true);
+						sleep(1000, 1200);
+						antiBan();
+						break;
+					}
+					if (!waitSpot.equals(players.getMyPlayer().getLocation()) ||
+							(foodID > 0 && players.getMyPlayer().getHPPercent() < canHazCheezBurger) ||
+							players.getMyPlayer().getHPPercent() < 50 || killScript) {
+						break; // break out if a random occurs...or need food...or need to bail.
+					}
+					while (!magic.isSpellSelected()) {
+						magic.castSpell(magic.SPELL_TELEKINETIC_GRAB);
+						sleep(250);
+					}
+					sleep(25, 26);
+				}
+				if (foodID > 0 && players.getMyPlayer().getHPPercent() < canHazCheezBurger) {
+					log("Eating?");
+					if (inventory.contains(foodID)) {
+						eatFood();
+						return 0;
+					}
+				}
+				if (players.getMyPlayer().getHPPercent() < 50) {
 					return 0;
 				}
-			}
-			if(players.getMyPlayer().getHPPercent() < 50)
-				return 0;
 
-			sleep(1000, 1200);
-			antiBan();
+				sleep(1000, 1200);
+				antiBan();
 
-			if (wineInInv < inventory.getCount(wineID)) {
-				wineTaken++;
-				if (misses > 0)
-					misses--;
-				if (worldHopping && playerCount() > maxPlayers) {
-					if (lostDuel) {
-						lostDuel = false;
-						worldHop(isMember, MAXping, MAXpop);
+				if (wineInInv < inventory.getCount(wineID)) {
+					wineTaken++;
+					if (misses > 0) {
+						misses--;
 					}
-					lostDuel = true;
+					if (worldHopping && playerCount() > maxPlayers) {
+						if (lostDuel) {
+							lostDuel = false;
+							worldHop(isMember, MAXping, MAXpop);
+						}
+						lostDuel = true;
+					}
+					wineInInv = inventory.getCount(wineID);
+				} else {
+					misses++;
 				}
-				wineInInv = inventory.getCount(wineID);
-			} else {
-				misses++;
-			}
-			try {
-				if (lawsInInv > inventory.getItem(lawID).getStackSize()) {
-					lawsUsed++;
+				try {
+					if (lawsInInv > inventory.getItem(lawID).getStackSize()) {
+						lawsUsed++;
+					}
+				} catch (NullPointerException e) {
 				}
-			} catch (NullPointerException e) {
-			}
 
-			return 50;
+				return 50;
 
-		case TELEPORT:
-			if (magic.castSpell(magic.SPELL_FALADOR_TELEPORT)) {
-				sleep(5500, 6000);
-				return random(3000, 3500);
-			}
-			return 5;
+			case TELEPORT:
+				if (magic.castSpell(magic.SPELL_FALADOR_TELEPORT)) {
+					sleep(5500, 6000);
+					return random(3000, 3500);
+				}
+				return 5;
 
-		case WALK_TO_BANK:
-			pathToBank.traverse();
-			return 50;
+			case WALK_TO_BANK:
+				pathToBank.traverse();
+				return 50;
 
-		case BANK:
-			if (!bank.isOpen()) {
-				if (foodID > 0) {
-					log("We are Eating...");
-					if (!inventory.contains(foodID)) {
-						log("Have NO food!");
-						foodToGet = 4;
+			case BANK:
+				if (!bank.isOpen()) {
+					if (foodID > 0) {
+						log("We are Eating...");
+						if (!inventory.contains(foodID)) {
+							log("Have NO food!");
+							foodToGet = 4;
+						} else {
+							log("Food in Inventory: " + inventory.getCount(foodID));
+							if (inventory.contains(foodID)) {
+								foodToGet = 4 - inventory.getCount(foodID);
+							}
+							log("Need " + foodToGet + " food.");
+						}
+					}
+					bank.open();
+					return 500;
+				}
+
+				if (inventory.contains(wineID)) {
+					bank.deposit(wineID, 0);
+					return random(2000, 2200);
+				}
+
+				int x = 0;
+
+				if (foodToGet > 0 && bank.getItem(foodID) != null) {
+					x = bank.getItem(foodID).getStackSize();
+				}
+
+				if (x > foodToGet) {
+					bank.withdraw(foodID, foodToGet);
+					sleep(4000, 4200);
+					if (x > bank.getItem(foodID).getStackSize()) {
+						foodToGet = 0;
 					} else {
-						log("Food in Inventory: " + inventory.getCount(foodID));
-						if (inventory.contains(foodID))
-							foodToGet = 4 - inventory.getCount(foodID);
-						log("Need " + foodToGet + " food.");
+						return 50;
 					}
 				}
-				bank.open();
-				return 500;
-			}
 
-			if (inventory.contains(wineID)) {
-				bank.deposit(wineID, 0);
-				return random(2000, 2200);
-			}
+				if (bank.getItem(lawID) != null) {
+					x = bank.getItem(lawID).getStackSize();
+					lawsToGet = 100 - lawsInInv;
+				} else {
+					lawsToGet = 0;
+				}
 
-			int x = 0;
+				if (lawsInInv < 100 && x >= lawsToGet) {
+					bank.withdraw(lawID, lawsToGet);
+					sleep(4000, 4200);
+					if (bank.getItem(lawID) == null
+							|| bank.getItem(lawID).getStackSize() < x) {
+						lawsInInv = lawsInInv + lawsToGet;
+					} else {
+						return 50;
+					}
+				}
 
-			if (foodToGet > 0 && bank.getItem(foodID) != null)
-				x = bank.getItem(foodID).getStackSize();
+				if (!inventory.contains(wineID)) {
+					bankTrips++;
+					goToBank = false;
+				}
 
-			if (x > foodToGet) {
-				bank.withdraw(foodID, foodToGet);
-				sleep(4000, 4200);
-				if (x > bank.getItem(foodID).getStackSize())
-					foodToGet = 0;
-				else
-					return 50;
-			}
+				if (!bank.close()) {
+					bank.close();
+				}
+				sleep(1000, 1200);
+				antiBan();
 
-			if (bank.getItem(lawID) != null) {
-				x = bank.getItem(lawID).getStackSize();
-				lawsToGet = 100 - lawsInInv;
-			} else {
-				lawsToGet = 0;
-			}
+				if (inventory.getCount(lawID) == 0
+						|| inventory.getCount(waterID) == 0 || foodToGet > 0) {
+					log("Out of Laws/Waters/Food, Quitting.");
+					env.saveScreenshot(true);
+					return -1;
+				}
 
-			if (lawsInInv < 100 && x >= lawsToGet) {
-				bank.withdraw(lawID, lawsToGet);
-				sleep(4000, 4200);
-				if (bank.getItem(lawID) == null
-						|| bank.getItem(lawID).getStackSize() < x)
-					lawsInInv = lawsInInv + lawsToGet;
-				else
-					return 50;
-			}
+				return 50;
 
-			if (!inventory.contains(wineID)) {
-				bankTrips++;
-				goToBank = false;
-			}
+			case WALK_TO_TEMPLE:
+				pathToTemple.traverse();
+				return 50;
 
-			if (!bank.close())
-				bank.close();
-			sleep(1000, 1200);
-			antiBan();
+			case WALK_TO_TILE:
+				/* first check for too many ppl in Temple */
+				if (playerCount() > maxPlayers && worldHopping) {
+					worldHop(isMember);
+				}
+				tiles.doAction(calc.getTileOnScreen(waitSpot), "here");
+				// walking.walkTileOnScreen(waitSpot);
 
-			if (inventory.getCount(lawID) == 0
-					|| inventory.getCount(waterID) == 0 || foodToGet > 0) {
-				log("Out of Laws/Waters/Food, Quitting.");
-				env.saveScreenshot(true);
-				return -1;
-			}
+				if (walking.getDestination() != null
+						&& !zammyTempleArea.contains(walking.getDestination())) {
+					walking.walkTileOnScreen(players.getMyPlayer().getLocation());
+				}
+				waitPlayerMoving();
+				sleep(1000, 1200);
+				antiBan();
+				return 50;
 
-			return 50;
-
-		case WALK_TO_TEMPLE:
-			pathToTemple.traverse();
-			return 50;
-
-		case WALK_TO_TILE:
-			/* first check for too many ppl in Temple */
-			if (playerCount() > maxPlayers && worldHopping)
-				worldHop(isMember);
-			tiles.doAction(calc.getTileOnScreen(waitSpot), "here");
-			// walking.walkTileOnScreen(waitSpot);
-
-			if (walking.getDestination() != null
-					&& !zammyTempleArea.contains(walking.getDestination()))
-				walking.walkTileOnScreen(players.getMyPlayer().getLocation());
-			waitPlayerMoving();
-			sleep(1000, 1200);
-			antiBan();
-			return 50;
-
-		case SLEEP:
-			log("Houston, we have a problem.");
+			case SLEEP:
+				log("Houston, we have a problem.");
 		}
 		return 1;
 	}
@@ -554,8 +525,8 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 			y = game.getHeight() - 113;
 			z = y - 47;
 			paintToggle = new Rectangle(390, z, 120, 15);
-			killMeNow = new Rectangle(390, z+17, 120,15);
-			}
+			killMeNow = new Rectangle(390, z + 17, 120, 15);
+		}
 		if (showPaint) {
 
 			// render "+" over mouse.
@@ -567,12 +538,14 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 			g.setFont(new Font("Arial", Font.PLAIN, fntSize));
 			g.setColor(new Color(255, 0, 0, 220));
 
-			if (wph < 0)
+			if (wph < 0) {
 				wph = 0;
+			}
 
 			g.setColor(new Color(0, 0, 0, 220));
-			if(killScript) 
-				g.setColor(new Color(128,0,0,180));
+			if (killScript) {
+				g.setColor(new Color(128, 0, 0, 180));
+			}
 			g.fillRoundRect(x - 6, y - 50, len, (spcng * 11) + 8, 5, 5);
 			g.setColor(Color.WHITE);
 			g.drawRoundRect(x - 6, y - 50, len, (spcng * 11) + 8, 5, 5);
@@ -582,7 +555,7 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 			g.drawString("Wines Grabbed: " + wineTaken + " Laws Used: "
 					+ lawsUsed + "  Law Wasteage: " + lawsWasted
 					+ "   Laws in Inventory: " + lawsInInv, x, (y - spcng));
-			g.drawString("Money made, if sold at market price: " + ttlGold, x,y+spcng * 5);
+			g.drawString("Money made, if sold at market price: " + ttlGold, x, y + spcng * 5);
 			g.drawString("Wine Snatched/hr: " + whole.format(wph)
 					+ "     Gold Per Hour: " + whole.format(gph)
 					+ "    Wine price: " + winePrice
@@ -618,12 +591,12 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 		g.setColor(Color.WHITE);
 		g.drawRoundRect(400, z, 120, 15, 7, 7);
 		g.drawString(buttonText$, 435, z + 12);
-		g.setColor(new Color(0, 0 ,128, 220));
-		g.fillRoundRect(400, z+17, 120, 15, 7, 7);
+		g.setColor(new Color(0, 0, 128, 220));
+		g.fillRoundRect(400, z + 17, 120, 15, 7, 7);
 		g.setColor(Color.WHITE);
-		g.drawRoundRect(400, z+17, 120, 15, 7, 7);
+		g.drawRoundRect(400, z + 17, 120, 15, 7, 7);
 		g.drawString(killButton$, 435, z + 29);
-		
+
 	}
 
 	/*
@@ -645,8 +618,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 			}
 		});
 		int x = 0;
-		if (gang != null)
+		if (gang != null) {
 			x = gang.length;
+		}
 		log(x + " players in temple...");
 		return x;
 	}
@@ -690,40 +664,40 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 
 	private void antiBan() {
 		switch (random(0, 7)) {
-		case 1:
-			camera.moveRandomly(random(500, 1000));
-			sleep(650, 800);
-			break;
-		case 2:
-			camera.moveRandomly(random(500, 1000));
-			sleep(750, 1000);
-			break;
-		case 3:
-			mouse.moveOffScreen();
-			sleep(1000, 1500);
-			break;
-		case 4:
-			mouse.moveOffScreen();
-			sleep(600, 700);
-			break;
-		case 5:
-			mouse.moveRandomly(20, 100);
-			sleep(400, 800);
-			break;
-		case 6:
-			mouse.moveSlightly();
-			sleep(500, 750);
-			break;
-		case 7:
-			camera.setNorth();
-			camera.setPitch(true);
-			sleep(1000, 1500);
-			break;
+			case 1:
+				camera.moveRandomly(random(500, 1000));
+				sleep(650, 800);
+				break;
+			case 2:
+				camera.moveRandomly(random(500, 1000));
+				sleep(750, 1000);
+				break;
+			case 3:
+				mouse.moveOffScreen();
+				sleep(1000, 1500);
+				break;
+			case 4:
+				mouse.moveOffScreen();
+				sleep(600, 700);
+				break;
+			case 5:
+				mouse.moveRandomly(20, 100);
+				sleep(400, 800);
+				break;
+			case 6:
+				mouse.moveSlightly();
+				sleep(500, 750);
+				break;
+			case 7:
+				camera.setNorth();
+				camera.setPitch(true);
+				sleep(1000, 1500);
+				break;
 		}
 	}
 
 	public boolean updater() {
-		if(isJar){
+		if (isJar) {
 			log("You are running the SDN provided version of Byte's Wine Grabber.");
 			log("Updates are provided via the SDN of Powerbot.");
 			return true;
@@ -792,8 +766,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 				log("Unable to find the new version number. Update failed");
 				return false;
 			}
-			if (in != null)
+			if (in != null) {
 				in.close();
+			}
 
 			if (version < revision) {
 				if (JOptionPane.showConfirmDialog(null, dialog$, scriptName
@@ -818,10 +793,12 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 				}
 			}
 
-			if (version == revision)
+			if (version == revision) {
 				log("Updater: You have the newest available version!");
-			if (version > revision)
+			}
+			if (version > revision) {
 				log.severe("Updater: You have a newer version than available!");
+			}
 		} catch (IOException e) {
 			log.severe("Updater:  Problem getting version. - go to LetTheSmokeOut.com for details on updating.");
 		}
@@ -974,11 +951,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 	 * Hops to the first visible filtered world on the list by jtryba avoids the
 	 * last x worlds you've been to since starting the script credits to MrByte
 	 * for his help
-	 * 
-	 * @param members
-	 *            <tt>true</tt> if player should hop to a members world.
+	 *
+	 * @param members <tt>true</tt> if player should hop to a members world.
 	 * @return void
-	 * 
 	 */
 
 	public void worldHop(boolean members) {
@@ -1039,7 +1014,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 		status$ = "Selecting new world";
 		sleep(random(1500, 2000));
 
-		if(verbose) log("click world select tab (if needed)");
+		if (verbose) {
+			log("click world select tab (if needed)");
+		}
 		safety = System.currentTimeMillis() + SAFETY_TIMEOUT;
 		RSComponent worldSelectTab = interfaces.getComponent(LOBBY_PARENT,
 				WORLD_SELECT_BUTTON_BG_COM);
@@ -1051,57 +1028,76 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 			}
 		}
 
-		if(verbose) log("get current world");
+		if (verbose) {
+			log("get current world");
+		}
 		String cW = interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
 				CURRENT_WORLD_COM).getText();
 		String[] cWS = cW.split(" ");
 		try {
 			currentWorld = Integer.parseInt(cWS[1]);
 		} catch (NullPointerException e) {
-			if(verbose) log("Error getting current world, returning...");
+			if (verbose) {
+				log("Error getting current world, returning...");
+			}
 			return;
 		}
 		newWorld = currentWorld;
 
-		if(verbose) log("randomly sort worlds");
+		if (verbose) {
+			log("randomly sort worlds");
+		}
 		if (random(0, 10) < 3) {
 			RSComponent com = null;
 			switch (random(0, 4)) {
-			case 0:
-				if(verbose) log("population");
-				com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
-						SORT_POPULATION_BUTTON_PARENT).getComponent(
-						random(0, 2));
-				break;
-			case 1:
-				if(verbose) log(" ping");
-				com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
-						SORT_PING_BUTTON_PARENT).getComponent(random(0, 2));
-				break;
-			case 2:
-				if(verbose) log("loot share");
-				com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
-						SORT_LOOTSHARE_BUTTON_PARENT)
-						.getComponent(random(0, 2));
-				break;
-			case 3:
-				if(verbose) log("activity");
-				com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
-						SORT_ACTIVITY_BUTTON_PARENT).getComponent(random(0, 2));
-				break;
-			case 4:
-				if(verbose) log("world");
-				com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
-						SORT_WORLD_BUTTON_PARENT).getComponent(random(0, 2));
-				break;
+				case 0:
+					if (verbose) {
+						log("population");
+					}
+					com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
+							SORT_POPULATION_BUTTON_PARENT).getComponent(
+							random(0, 2));
+					break;
+				case 1:
+					if (verbose) {
+						log(" ping");
+					}
+					com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
+							SORT_PING_BUTTON_PARENT).getComponent(random(0, 2));
+					break;
+				case 2:
+					if (verbose) {
+						log("loot share");
+					}
+					com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
+							SORT_LOOTSHARE_BUTTON_PARENT)
+							.getComponent(random(0, 2));
+					break;
+				case 3:
+					if (verbose) {
+						log("activity");
+					}
+					com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
+							SORT_ACTIVITY_BUTTON_PARENT).getComponent(random(0, 2));
+					break;
+				case 4:
+					if (verbose) {
+						log("world");
+					}
+					com = interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
+							SORT_WORLD_BUTTON_PARENT).getComponent(random(0, 2));
+					break;
 			}
 			if (com != null) {
-				if (com.doClick())
+				if (com.doClick()) {
 					sleep(random(1250, 1500));
+				}
 			}
 		}
 
-		if(verbose) log("sort by ptp/ftp");
+		if (verbose) {
+			log("sort by ptp/ftp");
+		}
 		status$ = "Sorting by type";
 		if (interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
 				SORT_TYPE_BUTTON_PARENT).getComponent(members ? 0 : 1)
@@ -1180,21 +1176,25 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 
 					if (world != 0 && !isPastWorld(world)
 							&& world != currentWorld && member == members) {
-						ping = pingHost("world" + world + ".runescape.com",	500);
+						ping = pingHost("world" + world + ".runescape.com", 500);
 					} else {
 						ping = -1;
 					}
 
 					if (world > 0) {
 						if (ping > 0 && ping > maxping && ping < adjping) {
-							if(verbose) log("world: " + world + "   adjping now: "
-									+ (adjping+50));
+							if (verbose) {
+								log("world: " + world + "   adjping now: "
+										+ (adjping + 50));
+							}
 							adjping = ping + 50;
 							pingadj = true;
 						}
 
 						if (pop > maxpop && pop < adjpop) {
-							if(verbose) log("world: " + world + "   adjpop now: " + adjpop);
+							if (verbose) {
+								log("world: " + world + "   adjpop now: " + adjpop);
+							}
 							adjpop = pop;
 							popadj = true;
 						}
@@ -1203,7 +1203,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 					if (world > 0 && !isPastWorld(world)
 							&& world != currentWorld && pop < maxpop && pop > 0
 							&& ping < maxping && ping > 0 && member == members) {
-						if(verbose) log("World: " + world + " selected.");
+						if (verbose) {
+							log("World: " + world + " selected.");
+						}
 						worldToHop = comWorldSelect[i];
 					}
 					if (worldToHop != null) {
@@ -1222,7 +1224,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 				} catch (Exception e) {
 					w = -1;
 				}
-				if(verbose) log("click new world");
+				if (verbose) {
+					log("click new world");
+				}
 				while (w != world && worldToHop != null) {
 					worldToHop = getWorldComponent(world, comWorldNumber,
 							comWorldSelect);
@@ -1270,27 +1274,37 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 						}
 					}
 				}
-				if(verbose) log("get new world");
+				if (verbose) {
+					log("get new world");
+				}
 				sleep(random(1000, 1500));
 				String cW2 = interfaces.getComponent(WORLD_SELECT_TAB_PARENT,
 						CURRENT_WORLD_COM).getText();
 				String[] cWS2 = cW2.split(" ");
 				newWorld = Integer.parseInt(cWS2[1]);
 			} else {
-				if(verbose) log("Called with " + maxping + " " + maxpop);
-				if(verbose) log("ping or pop too low. MAXping now: " + adjping + " MAXpop:"
-						+ adjpop);
-				if (pingadj)
+				if (verbose) {
+					log("Called with " + maxping + " " + maxpop);
+				}
+				if (verbose) {
+					log("ping or pop too low. MAXping now: " + adjping + " MAXpop:"
+							+ adjpop);
+				}
+				if (pingadj) {
 					MAXping = adjping;
-				if (popadj)
+				}
+				if (popadj) {
 					MAXpop = adjpop;
+				}
 				worldHop(isMember, MAXping, MAXpop);
 				return;
 			}
 		}
 		/*-END-PICK-NEXT-WORLD-*/
 
-		if(verbose) log("set last & current world/s");
+		if (verbose) {
+			log("set last & current world/s");
+		}
 		if (currentWorld != newWorld) {
 			for (int i = 0; i < pastWorld.length; i++) {
 				if (i < pastWorld.length - 1) {
@@ -1298,8 +1312,10 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 				} else {
 					pastWorld[i] = currentWorld;
 				}
-				if(verbose) log("i: " + i + " pastWorld[i]: " + pastWorld[i]
-						+ "currentWorld: " + currentWorld);
+				if (verbose) {
+					log("i: " + i + " pastWorld[i]: " + pastWorld[i]
+							+ "currentWorld: " + currentWorld);
+				}
 			}
 			currentWorld = newWorld;
 		}
@@ -1308,13 +1324,17 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 		while (game.getClientState() != 10
 				&& System.currentTimeMillis() < safety) {
 			status$ = "Logging in...";
-			if(verbose) log("click play button");
+			if (verbose) {
+				log("click play button");
+			}
 			if (interfaces.getComponent(LOBBY_PARENT, PLAY_BUTTON_COM)
 					.doClick()) {
 				hopped++;
 			}
 
-			if(verbose) log("check for high risk world warning during login");
+			if (verbose) {
+				log("check for high risk world warning during login");
+			}
 			safety = System.currentTimeMillis() + SAFETY_TIMEOUT;
 			while (game.getClientState() != 10
 					&& System.currentTimeMillis() < safety) {
@@ -1331,7 +1351,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 							if (LogIn.doHover()) {
 								sleep(random(250, 500));
 								if (menu.contains("Log In")) {
-									if(verbose) log("accept warning / click login");
+									if (verbose) {
+										log("accept warning / click login");
+									}
 									mouse.click(true);
 									log
 											.warning("This is a high risk wilderness world.");
@@ -1343,29 +1365,39 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 				}
 				sleep(100);
 			}
-			if(verbose) log("check for login errors");
+			if (verbose) {
+				log("check for login errors");
+			}
 			String returnText = interfaces.getComponent(LOBBY_PARENT,
 					RETURN_TEXT_COM).getText().toLowerCase();
 			if (!game.isLoggedIn()) {
 				if (returnText.contains("update")) {
 					status$ = "Stopping script";
-					if(verbose) log("Runescape has been updated, please reload RSBot.");
+					if (verbose) {
+						log("Runescape has been updated, please reload RSBot.");
+					}
 					stopScript(true);
 				}
 				if (returnText.contains("disable")) {
 					status$ = "Stopping script";
-					if(verbose) log("Your account is banned/disabled.");
+					if (verbose) {
+						log("Your account is banned/disabled.");
+					}
 					stopScript(true);
 				}
 				if (returnText.contains("error connecting")) {
 					status$ = "Stopping script";
-					if(verbose) log("Error connecting to runescape.");
+					if (verbose) {
+						log("Error connecting to runescape.");
+					}
 					interfaces.getComponent(LOBBY_PARENT,
 							CONNECT_ERROR_BACK_BUTTON_COM).doClick();
 					stopScript(true);
 				}
 				if (returnText.contains("full")) {
-					if(verbose) log("World Is Full.");
+					if (verbose) {
+						log("World Is Full.");
+					}
 					interfaces.getComponent(LOBBY_PARENT,
 							WORLD_FULL_BACK_BUTTON_COM).doClick();
 					sleep(random(1000, 1500));
@@ -1376,7 +1408,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 							SUBSCRIBE_BACK_BUTTON_COM).doClick();
 					if (members) {
 						status$ = "stopping script.";
-						if(verbose) log("You are not a member.");
+						if (verbose) {
+							log("You are not a member.");
+						}
 						stopScript(true);
 					} else {
 						sleep(random(500, 1000));
@@ -1401,7 +1435,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 					sleep(random(10000, 15000));
 					if (members) {
 						status$ = "stopping script.";
-						if(verbose) log("You are not a member.");
+						if (verbose) {
+							log("You are not a member.");
+						}
 						stopScript(true);
 					} else {
 						worldHop(members, maxping, maxpop); // try again
@@ -1418,7 +1454,7 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 	}
 
 	private RSComponent getWorldComponent(int world,
-			RSComponent[] WorldNumberComponents, RSComponent[] WorldComponents) {
+	                                      RSComponent[] WorldNumberComponents, RSComponent[] WorldComponents) {
 		for (int i = 0; i < WorldNumberComponents.length; i++) {
 			int w = -1;
 			try {
@@ -1474,9 +1510,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 		}
 		return total; // returns -1 if timeout
 	}
-	
+
 	public void dropJunk(int... items) {
-		while(inventory.containsOneOf(items)) {
+		while (inventory.containsOneOf(items)) {
 			inventory.getItem(items).interact("Drop");
 			sleep(1000);
 		}
@@ -1516,8 +1552,8 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 				buttonText$ = "Show Paint";
 			}
 		}
-		
-		if(killMeNow.contains(q)) {
+
+		if (killMeNow.contains(q)) {
 			killScript = true;
 		}
 	}
@@ -1546,8 +1582,9 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 			}
 			checkForUpdates = guiCheckForUpdates.isSelected();
 			restForTheWicked = guiRestForTheWicked.isSelected();
-			if (foodID > 0)
+			if (foodID > 0) {
 				canHazCheezBurger = HPPercentToEat.getValue();
+			}
 			gui.dispose();
 			return;
 		}
@@ -1624,7 +1661,7 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 
 				// ---- runButton ----
 				runButton.setText("Let's Snag Some Wine!");
-				runButton.setFont(new java.awt.Font("Dialog",0,11));
+				runButton.setFont(new java.awt.Font("Dialog", 0, 11));
 				runButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						runButtonPressed(e);
@@ -1635,7 +1672,7 @@ public class BytesWineGrabber extends Script implements PaintListener, MessageLi
 
 				// ---- cancelButton ----
 				cancelButton.setText("Err...Sorry...Wand Needs Polishing...");
-				cancelButton.setFont(new java.awt.Font("Dialog",0,11));
+				cancelButton.setFont(new java.awt.Font("Dialog", 0, 11));
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						cancelButtonPressed(e);

@@ -1,18 +1,3 @@
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.IOException;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-
 import org.rsbot.event.events.MessageEvent;
 import org.rsbot.event.listeners.MessageListener;
 import org.rsbot.event.listeners.PaintListener;
@@ -20,14 +5,18 @@ import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Skills;
 import org.rsbot.script.util.Timer;
-import org.rsbot.script.wrappers.RSComponent;
-import org.rsbot.script.wrappers.RSItem;
-import org.rsbot.script.wrappers.RSNPC;
-import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSTile;
+import org.rsbot.script.wrappers.*;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.URL;
 
 //end
-@ScriptManifest(authors = { "Ryan", "Truemenskeet" }, name = "GoofyScriptsMultiCooker", version = 1.0, description = "Cooks food in Al Kharid and Rogues Den", website = "http://www.powerbot.org/vb/showthread.php?t=768104")
+@ScriptManifest(authors = {"Ryan", "Truemenskeet"}, name = "GoofyScriptsMultiCooker", version = 1.0, description = "Cooks food in Al Kharid and Rogues Den", website = "http://www.powerbot.org/vb/showthread.php?t=768104")
 public class GoofyScriptsMultiCooker extends Script implements PaintListener,
 		MessageListener, MouseListener {
 
@@ -125,7 +114,7 @@ public class GoofyScriptsMultiCooker extends Script implements PaintListener,
 								&& count > inventory.getCount(rawID)) {
 							count = inventory.getCount(rawID);
 							sleep(3500); // 2000 is an example if your return is
-											// 500
+							// 500
 							mouseAntiban();
 						} else {
 							final RSObject booth = objects.getNearest(35648);
@@ -223,7 +212,7 @@ public class GoofyScriptsMultiCooker extends Script implements PaintListener,
 								&& count > inventory.getCount(rawID)) {
 							count = inventory.getCount(rawID);
 							sleep(3500); // 2000 is an example if your return is
-											// 500
+							// 500
 							mouseAntiban();
 						} else {
 
@@ -774,9 +763,9 @@ public class GoofyScriptsMultiCooker extends Script implements PaintListener,
 
 		}
 		g.setColor(color8);
-		final int[] X = new int[] { 515, (int) mouse.getLocation().getX(), 800,
-				800 };
-		final int[] Y = new int[] { 0, (int) mouse.getLocation().getY(), 170, 0 };
+		final int[] X = new int[]{515, (int) mouse.getLocation().getX(), 800,
+				800};
+		final int[] Y = new int[]{0, (int) mouse.getLocation().getY(), 170, 0};
 		g.fillPolygon(X, Y, X.length);
 	}
 
