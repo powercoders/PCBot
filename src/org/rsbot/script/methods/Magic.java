@@ -28,12 +28,12 @@ public class Magic extends MethodProvider {
 			return id;
 		}
 	}
-	
+
 	/**
 	 * Provides information for magic spells.
-	 * <p>
+	 * <p/>
 	 * <i>Note that the experience of combat spells is based on the minimum gained.</i>
-	 * 
+	 *
 	 * @author Dunnkers
 	 */
 	public static enum Spell {
@@ -116,7 +116,7 @@ public class Magic extends MethodProvider {
 		EARTH_SURGE(Book.MODERN, 90, 90, 85),
 		TELEOTHER_CAMELOT(Book.MODERN, 89, 90, 100),
 		FIRE_SURGE(Book.MODERN, 91, 95, 90),
-		
+
 		/*LUNAR*/
 		LUNAR_HOME_TELEPORT(Book.LUNAR, 38, 65, 0),
 		BAKE_PIE(Book.LUNAR, 37, 65, 60),
@@ -166,7 +166,7 @@ public class Magic extends MethodProvider {
 		VENGEANCE_GROUP(Book.LUNAR, 73, 95, 120),
 		HEAL_GROUP(Book.LUNAR, 52, 95, 124),
 		SPELLBOOK_SWAP(Book.LUNAR, 34, 96, 130),
-		
+
 		/*ANCIENT*/
 		//COMBAT SPELLS
 		SMOKE_RUSH(Book.ANCIENT, 28, 50, 30),
@@ -199,7 +199,7 @@ public class Magic extends MethodProvider {
 		CARRALLANGAR_TELEPORT(Book.ANCIENT, 45, 84, 94),
 		ANNAKARL_TELEPORT(Book.ANCIENT, 46, 90, 100),
 		GHORROCK_TELEPORT(Book.ANCIENT, 47, 96, 106),
-		
+
 		/*DUNGEONEERING*/
 		DUNGEON_HOME_TELEPORT(Book.DUNGEONEERING, 24, 1, 0),
 		WIND_STRIKE_DUNGEONEERING(Book.DUNGEONEERING, 25, 1, WIND_STRIKE.getExperience()),
@@ -245,24 +245,24 @@ public class Magic extends MethodProvider {
 		VENGEANCE_DUNGEONEERING(Book.DUNGEONEERING, 36, 94, VENGEANCE.getExperience()),
 		VENGEANCE_GROUP_DUNGEONEERING(Book.DUNGEONEERING, 73, 95, VENGEANCE_GROUP.getExperience()),
 		FIRE_SURGE_DUNGEONEERING(Book.DUNGEONEERING, 91, 95, FIRE_SURGE.getExperience());
-		
+
 		private final Book book;
 		private final int component;
 		private final int level;
 		private final double experience;
-		
+
 		Spell(Book book, int component, int level, double experience) {
 			this.book = book;
 			this.component = component;
 			this.level = level;
 			this.experience = experience;
 		}
-		
+
 		/**
 		 * Gets the name of this spell.
-		 * <p>
+		 * <p/>
 		 * <i>Example: "Lumbridge Home Teleport"</i>
-		 * 
+		 *
 		 * @return The name of this spell.
 		 */
 		public String getName() {
@@ -630,11 +630,11 @@ public class Magic extends MethodProvider {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Checks if we are on the correct spell book and if we have the required
 	 * level.
-	 * 
+	 *
 	 * @param spell The spell to check.
 	 * @return <tt>True</tt> if we can cast this spell, otherwise <tt>False</
 	 */

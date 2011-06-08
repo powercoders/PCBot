@@ -1,6 +1,5 @@
 package org.rsbot.script;
 
-import org.rsbot.gui.AccountManager;
 import org.rsbot.util.Base64;
 import org.rsbot.util.StringUtil;
 
