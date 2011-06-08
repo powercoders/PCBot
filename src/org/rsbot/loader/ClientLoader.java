@@ -32,6 +32,13 @@ public class ClientLoader {
 
 		try {
 			HttpClient.download(script, cache);
+		} catch (final IOException ioe) {
+			if (cache.exists()) {
+				log.warning("Unable to download client patch, attempting to use cached copy");
+			}
+		}
+
+		try {
 			fis = new FileInputStream(cache);
 			data = load(fis);
 		} catch (final IOException ioe) {
