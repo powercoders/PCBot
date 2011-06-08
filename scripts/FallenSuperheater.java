@@ -67,7 +67,7 @@ import org.rsbot.script.wrappers.RSTile;
  *  
  */
 
-@ScriptManifest(authors = { "Fallen" }, keywords = { "Magic" }, name = "Fallen's Superheater", version = 5.99, description = "Superheats any kind of bars.", website = "http://www.powerbot.org/vb/showthread.php?t=474761", requiresVersion = 244)
+@ScriptManifest(authors = { "Fallen" }, keywords = { "Magic" }, name = "Fallen's Superheater", version = 5.99, description = "Superheats any kind of bars.", website = "http://www.powerbot.org/vb/showthread.php?t=474761")
 public class FallenSuperheater extends Script implements PaintListener,
 		MessageListener, MouseListener, MouseMotionListener {
 

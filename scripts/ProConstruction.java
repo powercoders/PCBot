@@ -38,7 +38,7 @@ import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Skills;
 
-@ScriptManifest(authors = { "Himekp" }, keywords = { "Construction" }, name = "ProConstruction", version = 1.03, description = "ProConstruction, By: Himekp", website = "http://www.powerbot.org/vb/showthread.php?t=787874", requiresVersion = 244)
+@ScriptManifest(authors = { "Himekp" }, keywords = { "Construction" }, name = "ProConstruction", version = 1.03, description = "ProConstruction, By: Himekp", website = "http://www.powerbot.org/vb/showthread.php?t=787874")
 public class ProConstruction extends Script implements PaintListener {
 	public class ProConstructionGUI extends JPanel {
 		private static final long serialVersionUID = 1L;

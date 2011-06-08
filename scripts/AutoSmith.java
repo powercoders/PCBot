@@ -19,7 +19,7 @@ import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSTile;
 import org.rsbot.script.wrappers.RSTilePath;
 
-@ScriptManifest(authors = { "LastCoder" }, keywords = { "Smithing" }, name = "ArbiSmitherLite", version = 2.0, description = "Start, all options are in GUI.", requiresVersion = 244)
+@ScriptManifest(authors = { "LastCoder" }, keywords = { "Smithing" }, name = "ArbiSmitherLite", version = 2.0, description = "Start, all options are in GUI.")
 public class AutoSmith extends Script implements MessageListener, PaintListener {
 
 	static class Gui extends javax.swing.JFrame {

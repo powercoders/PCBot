@@ -63,7 +63,7 @@ import org.rsbot.script.wrappers.RSTile;
  * it. v0.92: Loot support, mainly. Many small changes. v0.91: Oops, forgot to
  * add mouse speed settings! v0.9: Initial release
  */
-@ScriptManifest(name = "TFighterEE", authors = { "!@!@!", "Zalgo2462" }, version = 1.61, description = "TFighter by !@!@! with additions by Zalgo2462", website = "http://www.powerbot.org/vb/showthread.php?t=477661", requiresVersion = 244)
+@ScriptManifest(name = "TFighterEE", authors = { "!@!@!", "Zalgo2462" }, version = 1.61, description = "TFighter by !@!@! with additions by Zalgo2462", website = "http://www.powerbot.org/vb/showthread.php?t=477661")
 public class TFighterEE extends Script implements PaintListener, MouseListener {
 
 	private class AttackLoop implements LoopAction {

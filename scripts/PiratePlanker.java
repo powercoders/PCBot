@@ -42,7 +42,7 @@ import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSPlayer;
 import org.rsbot.script.wrappers.RSTile;
 
-@ScriptManifest(authors = { "ElyzianPirate" }, name = "PiratePlanker", version = 1.52, website = "http://www.powerbot.org/vb/showthread.php?t=544986", description = "Fastest planker from N,S,E and W.", requiresVersion = 244)
+@ScriptManifest(authors = { "ElyzianPirate" }, name = "PiratePlanker", version = 1.52, website = "http://www.powerbot.org/vb/showthread.php?t=544986", description = "Fastest planker from N,S,E and W.")
 public class PiratePlanker extends Script implements PaintListener,
 		MessageListener, MouseListener, MouseMotionListener {
 

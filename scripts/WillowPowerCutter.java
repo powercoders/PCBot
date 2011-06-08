@@ -16,7 +16,7 @@ import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Skills;
 import org.rsbot.script.wrappers.RSObject;
 
-@ScriptManifest(authors = { "SupahScripts" }, keywords = { "WillowPowerCutter" }, name = "WillowPwner", version = 1.06, description = "Universal Willow Tree Cutter. Only PowerCuts (Supports most hatchets)", website = "http://www.powerbot.org/vb/showthread.php?t=772773", requiresVersion = 244)
+@ScriptManifest(authors = { "SupahScripts" }, keywords = { "WillowPowerCutter" }, name = "WillowPwner", version = 1.06, description = "Universal Willow Tree Cutter. Only PowerCuts (Supports most hatchets)", website = "http://www.powerbot.org/vb/showthread.php?t=772773")
 public class WillowPowerCutter extends Script implements PaintListener,
 		MessageListener {
 

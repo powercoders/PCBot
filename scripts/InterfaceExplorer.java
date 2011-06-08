@@ -42,7 +42,7 @@ import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
 
-@ScriptManifest(authors = { "Iscream", "joku.rules" }, keywords = "Development", name = "Interface Explorer", version = 0.5, description = "Fetches various interface data for developers.", requiresVersion = 244)
+@ScriptManifest(authors = { "Iscream", "joku.rules" }, keywords = "Development", name = "Interface Explorer", version = 0.5, description = "Fetches various interface data for developers.")
 public class InterfaceExplorer extends Script implements PaintListener {
 	private class HighLightInterface {
 		private RSInterface parent = null;

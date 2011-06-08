@@ -28,7 +28,7 @@ import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.methods.Skills;
 
-@ScriptManifest(authors = { "BlackWood" }, name = "BW Herblore", version = 1.8, description = "Herblore Done Right!", website = "http://www.powerbot.org/vb/showthread.php?t=660521", requiresVersion = 244)
+@ScriptManifest(authors = { "BlackWood" }, name = "BW Herblore", version = 1.8, description = "Herblore Done Right!", website = "http://www.powerbot.org/vb/showthread.php?t=660521")
 public class BWHerblore extends Script implements PaintListener,
 		MessageListener, MouseListener {
 

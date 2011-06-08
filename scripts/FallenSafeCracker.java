@@ -61,7 +61,7 @@ import org.rsbot.script.wrappers.RSTile;
  * Added a temp. fix for prices.
  */
 
-@ScriptManifest(authors = { "Fallen" }, keywords = { "Thieving" }, name = "Fallen's Safe Cracker", version = 4.3, description = "Cracks safes at Rogue Den's.", website = "http://www.powerbot.org/vb/showthread.php?t=485694", requiresVersion = 244)
+@ScriptManifest(authors = { "Fallen" }, keywords = { "Thieving" }, name = "Fallen's Safe Cracker", version = 4.3, description = "Cracks safes at Rogue Den's.", website = "http://www.powerbot.org/vb/showthread.php?t=485694")
 public class FallenSafeCracker extends Script implements PaintListener,
 		MessageListener, MouseListener, MouseMotionListener {
 

@@ -44,7 +44,7 @@ import org.rsbot.script.wrappers.RSPath;
 import org.rsbot.script.wrappers.RSPlayer;
 import org.rsbot.script.wrappers.RSTile;
 
-@ScriptManifest(authors = { "Debauchery" }, name = "DebaucherySoulWars", version = 0.51, description = "Start the script in soulwars lobby", website = "http://www.powerbot.org/vb/showthread.php?t=560367", requiresVersion = 244)
+@ScriptManifest(authors = { "Debauchery" }, name = "DebaucherySoulWars", version = 0.51, description = "Start the script in soulwars lobby", website = "http://www.powerbot.org/vb/showthread.php?t=560367")
 public class DebaucherySoulWars extends Script implements MouseListener,
 		MessageListener, PaintListener {
 

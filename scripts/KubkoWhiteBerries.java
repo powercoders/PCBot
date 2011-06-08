@@ -30,7 +30,7 @@ import org.rsbot.script.wrappers.RSItem;
 import org.rsbot.script.wrappers.RSObject;
 import org.rsbot.script.wrappers.RSTile;
 
-@ScriptManifest(authors = { "Kubko" }, keywords = { "White", "Berry", "Picker" }, name = "KubkoWhiteBerries", description = "Pickin' up them berries.", version = 1.0, website = "http://www.powerbot.org/vb/showthread.php?t=722427", requiresVersion = 244)
+@ScriptManifest(authors = { "Kubko" }, keywords = { "White", "Berry", "Picker" }, name = "KubkoWhiteBerries", description = "Pickin' up them berries.", version = 1.0, website = "http://www.powerbot.org/vb/showthread.php?t=722427")
 public class KubkoWhiteBerries extends Script implements PaintListener,
 		MessageListener {
 	private enum STATE {
