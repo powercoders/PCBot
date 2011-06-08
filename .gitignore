@@ -16,6 +16,11 @@
 /bin
 /lib/*.jar
 /temp/*
+<<<<<<< HEAD
+=======
+/scripts/
+/devscripts/
+>>>>>>> master
 /temp.txt
 /build.xml
 /manifest.mf
