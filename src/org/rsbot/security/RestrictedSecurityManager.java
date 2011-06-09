@@ -56,6 +56,12 @@ public class RestrictedSecurityManager extends SecurityManager {
 		}
 		return false;
 	}
+
+	public static void assertNonScript() {
+		final SecurityManager sm = System.getSecurityManager();
+		if (sm == null || !(sm instanceof RestrictedSecurityManager) || ((RestrictedSecurityManager) sm).isCallerScript()) {
+			throw new SecurityException();
+		}
 	}
 
 	public static boolean isHostAllowed(final String host) {

@@ -66,9 +66,7 @@ public class AccountStore {
 	private final Map<String, Account> accounts = new TreeMap<String, Account>();
 
 	public AccountStore(final File file) {
-		if (((RestrictedSecurityManager) System.getSecurityManager()).isCallerScript()) {
-			throw new SecurityException();
-		}
+		RestrictedSecurityManager.assertNonScript();
 		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
 		if (s.length < 3 ||
 				!s[0].getClassName().equals(Thread.class.getName()) ||
