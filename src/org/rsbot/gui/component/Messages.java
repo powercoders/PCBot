@@ -30,6 +30,7 @@ public interface Messages {
 	public static final String BINDTO = "Bind to address:";
 	public static final String USEPASSWORD = "Use password:";
 	public static final String LESSCPU = "Less CPU";
+	public static final String DISABLECANVAS = "Disable Canvas";
 	public static final String EXTDVIEWS = "Extended views";
 	public static final String AUTOSHUTDOWN = "Shutdown (mins):";
 	public static final String BETAPATCH = "Use beta client patch";

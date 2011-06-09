@@ -58,6 +58,11 @@ public class Bot {
 	public volatile boolean disableRendering = false;
 
 	/**
+	 * Whether or not graphics are enabled.
+	 */
+	public volatile boolean disableGraphics = false;
+
+	/**
 	 * Defines what types of input are enabled when overrideInput is false.
 	 * Defaults to 'keyboard only' whenever a script is started.
 	 */
@@ -186,6 +191,13 @@ public class Bot {
 
 	public Graphics getBufferGraphics() {
 		final Graphics back = backBuffer.getGraphics();
+		if (disableGraphics) {
+			paintEvent.graphics = null;
+			textPaintEvent.graphics = null;
+			eventManager.processEvent(paintEvent);
+			eventManager.processEvent(textPaintEvent);
+			return backBuffer.getGraphics();
+		}
 		paintEvent.graphics = back;
 		textPaintEvent.graphics = back;
 		textPaintEvent.idx = 0;
