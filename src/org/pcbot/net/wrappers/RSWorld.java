@@ -15,7 +15,7 @@ public class RSWorld extends MethodProvider {
 	}
 
 	public int getServer() {
-		return Integer.parseInt(methods.interfaces.getComponent(Lobby.WORLD_SELECT_INTERFACE, Lobby.WORLD_SELECT_INTERFACE_WORLD_NAME).getComponents()[component.getComponentIndex()].getText());
+		return methods.worlds.openTab() ? Integer.parseInt(methods.interfaces.getComponent(Lobby.WORLD_SELECT_INTERFACE, Lobby.WORLD_SELECT_INTERFACE_WORLD_NAME).getComponents()[component.getComponentIndex()].getText()) : -1;
 	}
 
 	public long getPing() {
@@ -29,7 +29,7 @@ public class RSWorld extends MethodProvider {
 				if (star.getBackgroundColor() == Worlds.INTERFACE_MEMBERS_TEXTURE) {
 					return true;
 				}
-			} catch (ArrayIndexOutOfBoundsException aioe) {
+			} catch (ArrayIndexOutOfBoundsException ignored) {
 			}
 		}
 		return false;
