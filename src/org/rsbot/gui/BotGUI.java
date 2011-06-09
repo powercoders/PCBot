@@ -178,9 +178,9 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 						current.overrideInput = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 						updateScriptControls();
 					} else if (option.equals(Messages.LESSCPU)) {
-						lessCpu(((JCheckBoxMenuItem) evt.getSource()).isSelected());
+						current.disableRendering = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals(Messages.DISABLECANVAS)) {
-						disableCanvas(((JCheckBoxMenuItem) evt.getSource()).isSelected());
+						current.disableGraphics = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals(Messages.EXTDVIEWS)) {
 						menuBar.setExtendedView(((JCheckBoxMenuItem) evt.getSource()).isSelected());
 					} else if (option.equals(Messages.DISABLEANTIRANDOMS)) {
@@ -295,20 +295,6 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		repaint();
 	}
 
-	private void lessCpu(boolean on) {
-		final Bot bot = getCurrentBot();
-		if (bot != null) {
-			bot.disableRendering = on;
-		}
-	}
-
-	private void disableCanvas(boolean on) {
-		final Bot bot = getCurrentBot();
-		if (bot != null) {
-			bot.disableGraphics = on;
-		}
-	}
-
 	public BotPanel getPanel() {
 		return panel;
 	}
@@ -410,6 +396,26 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		setMinimumSize(size);
 		if ((getExtendedState() & Frame.MAXIMIZED_BOTH) != Frame.MAXIMIZED_BOTH) {
 			pack();
+		}
+	}
+
+	private void lessCpu(boolean on) {
+		final Bot bot = getCurrentBot();
+		if (bot != null) {
+			disableRendering(on || menuBar.isTicked(Messages.LESSCPU));
+			disableGraphics(on || menuBar.isTicked(Messages.DISABLECANVAS));
+		}
+	}
+
+	public void disableRendering(final boolean mode) {
+		for (final Bot bot : bots) {
+			bot.disableRendering = mode;
+		}
+	}
+
+	public void disableGraphics(final boolean mode) {
+		for (final Bot bot : bots) {
+			bot.disableGraphics = mode;
 		}
 	}
 
