@@ -1,5 +1,6 @@
 package org.rsbot.script.methods;
 
+import org.pcbot.net.methods.Worlds;
 import org.rsbot.bot.Bot;
 import org.rsbot.client.Client;
 import org.rsbot.script.internal.InputManager;
@@ -183,6 +184,11 @@ public class MethodContext {
 	 * The singleton of Lobby
 	 */
 	public final Lobby lobby = new Lobby(this);
+
+	/**
+	 * The singleton of Worlds
+	 */
+	public final Worlds worlds = new Worlds(this);
 
 	/**
 	 * The Bot's input manager

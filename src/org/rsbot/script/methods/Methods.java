@@ -1,5 +1,6 @@
 package org.rsbot.script.methods;
 
+import org.pcbot.net.methods.Worlds;
 import org.rsbot.Configuration;
 import org.rsbot.script.internal.reflection.Reflection;
 import org.rsbot.script.wrappers.*;
@@ -158,6 +159,10 @@ public class Methods {
 	 */
 	protected Web web;
 	/**
+	 * The singleton of Worlds
+	 */
+	protected Worlds worlds;
+	/**
 	 * Reflection providers.
 	 */
 	protected Reflection reflection;
@@ -208,6 +213,7 @@ public class Methods {
 		lobby = ctx.lobby;
 		trade = ctx.trade;
 		web = ctx.web;
+		worlds = ctx.worlds;
 		reflection = ctx.reflection;
 	}
 
