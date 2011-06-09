@@ -50,8 +50,11 @@ public class RestrictedSecurityManager extends SecurityManager {
 		final Thread[] list = new Thread[root.activeCount()];
 		root.enumerate(list);
 		for (int i = 0; i < list.length; i++) {
-			if (list[i].getName().startsWith(SCRIPTTHREAD) || list[i].getClass().getName().startsWith(SCRIPTCLASS)) {
-				return true;
+			try {
+				if (list[i].getName().startsWith(SCRIPTTHREAD) || list[i].getClass().getName().startsWith(SCRIPTCLASS)) {
+					return true;
+				}
+			} catch (final NullPointerException ignored) {
 			}
 		}
 		return false;
