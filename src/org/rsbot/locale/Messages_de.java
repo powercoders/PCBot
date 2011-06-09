@@ -1,7 +1,6 @@
 package org.rsbot.locale;
 
 public class Messages_de extends Messages {
-
 	public Messages_de() {
 		super();
 	}
@@ -15,10 +14,10 @@ public class Messages_de extends Messages {
 	public final String HELP = "Hilfe";
 
 	public final String NEWBOT = "Neuer Bot";
-	public final String CLOSEBOT = "Bot schlieﬂen";
+	public final String CLOSEBOT = "Bot schlie√üen";
 	public final String HIDEBOT = "Ausblenden";
-	public final String ADDSCRIPT = "Script hinzuf¸gen";
-	public final String RUNSCRIPT = "Script ausf¸hren";
+	public final String ADDSCRIPT = "Script hinzuf√ºgen";
+	public final String RUNSCRIPT = "Script ausf√ºhren";
 	public final String RESUMESCRIPT = "Script fortsetzen";
 	public final String STOPSCRIPT = "Script anhalten";
 	public final String PAUSESCRIPT = "Script pausieren";
@@ -27,13 +26,14 @@ public class Messages_de extends Messages {
 
 	public final String ACCOUNTS = "Konten";
 	public final String FORCEINPUT = "Eingabe erzwingen";
-	public final String DISABLEANTIRANDOMS = "Zuf‰lle deaktivieren";
+	public final String DISABLEANTIRANDOMS = "Zuf√§lle deaktivieren";
 	public final String DISABLEAUTOLOGIN = "Login deaktivieren";
 	public final String DISABLEADS = "Werbung deaktivieren";
-	public final String DISABLECONFIRMATIONS = "Best‰tigungen deaktivieren";
+	public final String DISABLECONFIRMATIONS = "Best√§tigungen deaktivieren";
 	public final String BINDTO = "Auf Addresse binden";
 	public final String USEPASSWORD = "Benutze dieses Passwort:";
 	public final String LESSCPU = "Weniger CPU";
+	public final String DISABLECANVAS = "Deaktivieren Leinwand";
 	public final String EXTDVIEWS = "Extended views";
 	public final String AUTOSHUTDOWN = "Herunterfahren (mins):";
 	public final String BETAPATCH = "Beta Client patch verwenden";
@@ -47,7 +47,7 @@ public class Messages_de extends Messages {
 
 	public final String SITE = "Site";
 	public final String PROJECT = "Projekt";
-	public final String ABOUT = "‹ber";
+	public final String ABOUT = "√úber";
 
 	public final String TABDEFAULTTEXT = "Bot";
 }
