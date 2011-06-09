@@ -11,22 +11,20 @@ import java.util.regex.Pattern;
  * Obtains information on tradeable items from the Grand Exchange website and
  * Grand Exchange ingame interaction.
  *
- * @author Aion, Boolean, Debauchery
+ * @author Aion, Boolean, Debauchery, kyleshay
  */
 public class GrandExchange extends MethodProvider {
 
 	private static final String HOST = "http://services.runescape.com";
 	private static final String GET = "/m=itemdb_rs/viewitem.ws?obj=";
 
-	public static final int INTERFACE_GRAND_EXCHANGE_WINDOW = 105;
-	public static final int INTERFACE_GRAND_EXCHANGE_SELL_INVENTORY = 107;
+	public static final int INTERFACE_GRAND_EXCHANGE = 105;
 	public static final int INTERFACE_BUY_SEARCH_BOX = 389;
-	public static final int[] GRAND_EXCHANGE_SELL_BUTTON = {29, 45, 61, 77,
-			93, 109};
-	public static final int[] GRAND_EXCHANGE_BUY_BUTTON = {30, 46, 62, 78, 94,
-			110};
-	public static final int[] GRAND_EXCHANGE_OFFER_BOXES = {19, 35, 51, 67,
-			83, 99};
+	public static final int[] INTERFACE_GRAND_EXCHANGE_BUY_BUTTON = {31, 47, 63, 82, 101, 120};	
+	public static final int[] INTERFACE_GRAND_EXCHANGE_SELL_BUTTON = {32, 48, 64, 83, 102, 121};
+	public static final int[] INTERFACE_GRAND_EXCHANGE_OFFER_BOXES = {19, 35, 51, 67, 83, 99};
+			
+			
 	public static final int GRAND_EXCHANGE_COLLECT_BOX_ONE = 209;
 	public static final int GRAND_EXCHANGE_COLLECT_BOX_TWO = 211;
 
@@ -40,13 +38,21 @@ public class GrandExchange extends MethodProvider {
 	}
 
 	/**
-	 * Checks if Grand Exchange is open.
+	 * Gets the Grand Exchange interface.
 	 *
-	 * @return True if it's open, otherwise false.
+	 * @return The grand exchange <code>RSInterface</code>.
+	 */
+	public RSInterface getInterface() {
+		return methods.interfaces.get(INTERFACE_GRAND_EXCHANGE);
+	}
+	
+	/**
+	 * Checks whether or not the Grand Exchange is open.
+	 *
+	 * @return <tt>true</tt> if the grand exchange interface is open; otherwise <tt>false</tt>.
 	 */
 	public boolean isOpen() {
-		return methods.interfaces.get(INTERFACE_GRAND_EXCHANGE_WINDOW)
-				.isValid();
+		return getInterface().isValid();
 	}
 
 	/**
@@ -55,11 +61,16 @@ public class GrandExchange extends MethodProvider {
 	 * @return True if it's open, otherwise false.
 	 */
 	public boolean open() {
-		if (!methods.interfaces.get(INTERFACE_GRAND_EXCHANGE_WINDOW).isValid()) {
-			methods.npcs.getNearest(GRAND_EXCHANGE_CLERK).interact("Exchange");
+		if (isOpen()) {
+			return true;
 		}
-		return methods.interfaces.get(INTERFACE_GRAND_EXCHANGE_WINDOW)
-				.isValid();
+		
+		RSNPC clerk = methods.npcs.getNearest(GRAND_EXCHANGE_CLERK);
+		if(clerk != null) {
+			clerk.interact("Exchange " + clerk.getName());
+		}
+		
+		return isOpen();
 	}
 
 	/**
@@ -70,8 +81,8 @@ public class GrandExchange extends MethodProvider {
 	 */
 	public boolean checkSlotIsEmpty(final int slot) {
 		try {
-			final int slotComponent = GRAND_EXCHANGE_OFFER_BOXES[slot];
-			return isOpen() && methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW, slotComponent).getComponent(10).containsText("Empty");
+			final int slotComponent = INTERFACE_GRAND_EXCHANGE_OFFER_BOXES[slot];
+			return isOpen() && methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE, slotComponent).getComponent(10).containsText("Empty");
 		} catch (final Exception e) {
 			return false;
 		}
@@ -86,11 +97,11 @@ public class GrandExchange extends MethodProvider {
 	 */
 	public String checkSlot(final int slot) {
 		try {
-			final int slotComponent = GRAND_EXCHANGE_OFFER_BOXES[slot];
+			final int slotComponent = INTERFACE_GRAND_EXCHANGE_OFFER_BOXES[slot];
 			if (isOpen()) {
-				if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW, slotComponent).getComponent(
+				if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE, slotComponent).getComponent(
 						10).isValid()) {
-					return methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW, slotComponent).getComponent(
+					return methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE, slotComponent).getComponent(
 							10).getText();
 				} else {
 					return null;
@@ -114,8 +125,8 @@ public class GrandExchange extends MethodProvider {
 		for (int i = 1; i <= 6; i++) {
 			if (isOpen()) {
 				if (checkSlotIsEmpty(i)) {
-					final int slotComponent = GRAND_EXCHANGE_OFFER_BOXES[i];
-					final String s = methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW,
+					final int slotComponent = INTERFACE_GRAND_EXCHANGE_OFFER_BOXES[i];
+					final String s = methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE,
 							slotComponent).getComponent(18).getText();
 					if (s.equals(name)) {
 						return i;
@@ -150,8 +161,8 @@ public class GrandExchange extends MethodProvider {
 	public boolean checkCompleted(final int slot) {
 		if (!checkSlotIsEmpty(slot)) {
 			if (slot != 0) {
-				final int slotComponent = GRAND_EXCHANGE_OFFER_BOXES[slot];
-				return !methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW, slotComponent).containsAction("Abort Offer");
+				final int slotComponent = INTERFACE_GRAND_EXCHANGE_OFFER_BOXES[slot];
+				return !methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE, slotComponent).containsAction("Abort Offer");
 			}
 		}
 		return false;
@@ -168,23 +179,60 @@ public class GrandExchange extends MethodProvider {
 			open();
 		}
 		if (isOpen()) {
-			final int slotComponent = GRAND_EXCHANGE_OFFER_BOXES[slot];
-			methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW, slotComponent).containsAction(
+			final int slotComponent = INTERFACE_GRAND_EXCHANGE_OFFER_BOXES[slot];
+			methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE, slotComponent).containsAction(
 					"Veiw Offer");
 			sleep(random(700, 1200));
-			if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW,
+			if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE,
 					GRAND_EXCHANGE_COLLECT_BOX_TWO).containsAction("Collect")) {
-				methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW,
+				methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE,
 						GRAND_EXCHANGE_COLLECT_BOX_TWO).interact("Collect");
 				sleep(random(400, 900));
 			}
-			if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW,
+			if (methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE,
 					GRAND_EXCHANGE_COLLECT_BOX_ONE).containsAction("Collect")) {
-				methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE_WINDOW,
+				methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE,
 						GRAND_EXCHANGE_COLLECT_BOX_ONE).interact("Collect");
 				sleep(random(400, 900));
 			}
 		}
+	}
+	
+	/**
+	 * Clicks the buy button for specified slot.
+	 *
+	 * @param slot An int for the corresponding slot.
+	 * @return <tt>true</tt> on click.
+	 */
+	public boolean openBuySlot(final int slot) {
+		return openSlot(slot, true);
+	}		
+	
+	/**
+	 * Clicks the sell button for specified slot.
+	 *
+	 * @param slot An int for the corresponding slot.
+	 * @return <tt>true</tt> on click.
+	 */
+	public boolean openSellSlot(final int slot) {
+		return openSlot(slot, false);
+	}	
+	
+	/**
+	 * Clicks the buy/sell button for specified slot.
+	 *
+	 * @param slot An int for the corresponding slot.
+	 * @param buy a boolean to click buy or sell.
+	 * @return <tt>true</tt> on click.
+	 */
+	private boolean openSlot(final int slot, boolean buy) {
+		if(!isOpen()) return false;
+		
+		final int slotComponent = buy?
+		INTERFACE_GRAND_EXCHANGE_BUY_BUTTON[slot]:
+		INTERFACE_GRAND_EXCHANGE_SELL_BUTTON[slot];
+		
+		return methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE, slotComponent).interact("Make "+(buy?"Buy":"Sell")+" Offer");
 	}
 
 	/**
