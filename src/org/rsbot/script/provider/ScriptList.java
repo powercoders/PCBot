@@ -1,9 +1,9 @@
 package org.rsbot.script.provider;
 
+import org.rsbot.util.io.IOHelper;
+
 import java.io.File;
 import java.io.PrintStream;
-
-import org.rsbot.util.io.IOHelper;
 
 public class ScriptList {
 	public static final String DELIMITER = ",";
