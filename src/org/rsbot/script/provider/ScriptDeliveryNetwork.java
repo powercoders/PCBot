@@ -61,7 +61,7 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 
 	public void refresh(final boolean force) {
 		final File controlFile = getFile("control");
-		if (force || !manifest.exists()) {
+		if (force || !manifest.exists() || base == null) {
 			try {
 				HttpClient.download(new URL(Configuration.Paths.URLs.SDN_CONTROL), controlFile);
 				final HashMap<String, String> control = IniParser.deserialise(controlFile).get(IniParser.emptySection);
