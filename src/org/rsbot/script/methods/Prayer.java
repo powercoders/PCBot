@@ -11,10 +11,9 @@ import java.util.List;
  * @author Debauchery
  */
 public class Prayer extends MethodProvider {
-	public static final int PRAYER_INTERFACE = 271;
 
-	public static final int INTERFACE_PRAYER_ORB = 749;
 	public static final int INTERFACE_PRAYER = 271;
+	public static final int INTERFACE_PRAYER_ORB = 749;
 
 	Prayer(final MethodContext ctx) {
 		super(ctx);
@@ -263,7 +262,7 @@ public class Prayer extends MethodProvider {
 			}
 			methods.game.openTab(Game.Tab.PRAYER);
 			if (methods.game.getTab() == Game.Tab.PRAYER) {
-				RSComponent component = methods.interfaces.getComponent(PRAYER_INTERFACE, 7)
+				RSComponent component = methods.interfaces.getComponent(INTERFACE_PRAYER, 7)
 						.getComponent(pray.getComponentIndex());
 				if (component.isValid()) {
 					component.interact(active ? "Activate" : "Deactivate");
