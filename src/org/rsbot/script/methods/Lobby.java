@@ -11,7 +11,6 @@ import java.util.ArrayList;
  */
 @SuppressWarnings("unused")
 public class Lobby extends MethodProvider {
-
 	public Lobby(final MethodContext ctx) {
 		super(ctx);
 	}
@@ -25,31 +24,31 @@ public class Lobby extends MethodProvider {
 	public final static int TAB_CLAN_CHAT = 4;
 	public final static int TAB_OPTIONS = 5;
 
-	private final static int PLAYER_INFO_INTERFACE = 906;
-	private final static int PLAYER_INFO_INTERFACE_PLAY_BUTTON = 106;
-	private final static int LOGOUT_COMPONENT = 195;
+	public final static int PLAYER_INFO_INTERFACE = 906;
+	public final static int PLAYER_INFO_INTERFACE_PLAY_BUTTON = 106;
+	public final static int LOGOUT_COMPONENT = 195;
 
-	private final static int WORLD_SELECT_INTERFACE = 910;
-	private final static int WORLD_SELECT_INTERFACE_CURRENT_WORLD = 11;
-	private final static int WORLD_SELECT_INTERFACE_WORLD_LIST = 77;
-	private final static int WORLD_SELECT_INTERFACE_WORLD_NAME = 69;
-	private final static int WORLD_SELECT_INTERFACE_AMOUNT_OF_PLAYERS = 71;
-	private final static int WORLD_SELECT_INTERFACE_WORLD_ACTIVITY = 72;
-	private final static int WORLD_SELECT_INTERFACE_WORLD_TYPE = 74;
-	private final static int WORLD_SELECT_INTERFACE_WORLD_PING = 76;
-	private final static int WORLD_SELECT_INTERFACE_SCROLL_AREA = 86;
-	private final static int WORLD_SELECT_INTERFACE_SCROLL_BAR = 1;
+	public final static int WORLD_SELECT_INTERFACE = 910;
+	public final static int WORLD_SELECT_INTERFACE_CURRENT_WORLD = 11;
+	public final static int WORLD_SELECT_INTERFACE_WORLD_LIST = 77;
+	public final static int WORLD_SELECT_INTERFACE_WORLD_NAME = 69;
+	public final static int WORLD_SELECT_INTERFACE_AMOUNT_OF_PLAYERS = 71;
+	public final static int WORLD_SELECT_INTERFACE_WORLD_ACTIVITY = 72;
+	public final static int WORLD_SELECT_INTERFACE_WORLD_TYPE = 74;
+	public final static int WORLD_SELECT_INTERFACE_WORLD_PING = 76;
+	public final static int WORLD_SELECT_INTERFACE_SCROLL_AREA = 86;
+	public final static int WORLD_SELECT_INTERFACE_SCROLL_BAR = 1;
 
-	private final static int FRIENDS_INTERFACE = 909;
+	public final static int FRIENDS_INTERFACE = 909;
 
-	private final static int FRIENDS_CHAT_INTERFACE = 589;
+	public final static int FRIENDS_CHAT_INTERFACE = 589;
 
-	private final static int CLAN_CHAT_INTERFACE = 912;
+	public final static int CLAN_CHAT_INTERFACE = 912;
 
-	private final static int OPTIONS_INTERFACE = 978;
+	public final static int OPTIONS_INTERFACE = 978;
 
-	private final static int[] TABS = new int[]{188, 189, 190, 191, 192, 193};
-	private final static int[] TABS_TEXTURE = new int[]{0, 12, 11, 254, 10, 9};
+	public final static int[] TABS = new int[]{188, 189, 190, 191, 192, 193};
+	public final static int[] TABS_TEXTURE = new int[]{0, 12, 11, 254, 10, 9};
 
 	/**
 	 * Checks that current game is in lobby.
