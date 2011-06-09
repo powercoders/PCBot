@@ -2,7 +2,7 @@ package org.rsbot.gui;
 
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
-import org.rsbot.gui.component.Messages;
+import org.rsbot.locale.Messages;
 import org.rsbot.service.Preferences;
 
 import javax.swing.*;
@@ -16,6 +16,7 @@ import java.awt.event.WindowListener;
  * @author Paris
  */
 public class SettingsManager extends JDialog {
+	private static final Messages msg = Messages.getInstance();
 	private static final long serialVersionUID = 1657935322078534422L;
 	private static final String DEFAULT_PASSWORD = "\0\0\0\0\0\0\0\0";
 	private final Preferences preferences = Preferences.getInstance();
@@ -25,7 +26,7 @@ public class SettingsManager extends JDialog {
 	}
 
 	public SettingsManager(final Frame owner) {
-		super(owner, Messages.OPTIONS, true);
+		super(owner, msg.OPTIONS, true);
 		preferences.load();
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_WRENCH));
@@ -35,12 +36,12 @@ public class SettingsManager extends JDialog {
 		final JPanel panelInternal = new JPanel(new GridLayout(0, 1));
 		panelInternal.setBorder(BorderFactory.createTitledBorder("Internal"));
 
-		final JCheckBox checkConfirmations = new JCheckBox(Messages.DISABLECONFIRMATIONS);
+		final JCheckBox checkConfirmations = new JCheckBox(msg.DISABLECONFIRMATIONS);
 		checkConfirmations.setToolTipText("Suppress confirmation messages");
 		checkConfirmations.setSelected(preferences.confirmations);
 
 		final JPanel panelShutdown = new JPanel(new GridLayout(1, 2));
-		final JCheckBox checkShutdown = new JCheckBox(Messages.AUTOSHUTDOWN);
+		final JCheckBox checkShutdown = new JCheckBox(msg.AUTOSHUTDOWN);
 		checkShutdown.setToolTipText("Automatic system shutdown after specified period of inactivity");
 		checkShutdown.setSelected(preferences.shutdown);
 		panelShutdown.add(checkShutdown);

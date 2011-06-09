@@ -1,6 +1,7 @@
 package org.rsbot.gui;
 
 import org.rsbot.Configuration;
+import org.rsbot.locale.Messages;
 import org.rsbot.log.LabelLogHandler;
 import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
@@ -62,6 +63,8 @@ public class LoadScreen extends JFrame {
 		setLocationRelativeTo(getOwner());
 		setResizable(false);
 		setVisible(true);
+
+		log.info("Language: " + Messages.getInstance().LANGUAGE);
 
 		log.info("Registering logs");
 		bootstrap();
