@@ -24,7 +24,7 @@ public class Settings extends MethodProvider {
 	public static final int SETTING_TOGGLE_DEFENSIVE_CASTING = 439; //(265 = on)
 	public static final int SETTING_ENTER_ALTAR_TYPE = 491; //(4 = water, 8 = earth, fire = 16)
 	public static final int SETTING_CORRECT_PINS_CLICKED = 563; //(0 = none, 4 = all)
-	public static final int SETTING_ADJUST_AREA_SOUND_EFFECT_VOLUME = 872;	
+	public static final int SETTING_ADJUST_AREA_SOUND_EFFECT_VOLUME = 872;
 	public static final int SETTING_SWAP_QUEST_DIARY = 1002;
 	public static final int SETTING_MAGIC_SORT = 1376;
 	public static final int SETTING_HERBICIDE = 1866;

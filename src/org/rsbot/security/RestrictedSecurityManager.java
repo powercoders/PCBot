@@ -57,7 +57,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 				".ipcounter.de",
 				".wikia.com",
 				".wikia.nocookie.net",
-				
+
 				"pastie.org",
 				"pastebin.com",
 				"shadowscripting.org", // iDungeon
