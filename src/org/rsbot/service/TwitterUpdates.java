@@ -11,10 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TwitterUpdates {
-
-	private TwitterUpdates() {
-	}
-
 	public static void loadTweets(final int count) {
 		final Logger log = Logger.getLogger("@" + Configuration.Twitter.NAME);
 		final Level level = Level.INFO;

@@ -81,13 +81,11 @@ public class Pinball extends Random {
 		if (model != null) {
 			final Point central = model.getCentralPoint();
 			mouse.click(central.x, central.y, 4, 4, true);
-			return;
 		} else {
 			final Point p = calc.tileToScreen(pillar.getLocation());
 			if (calc.pointOnScreen(p)) {
 				mouse.click(p.x, p.y - 25, 4, 20, true);
 			}
-			return;
 		}
 	}
 

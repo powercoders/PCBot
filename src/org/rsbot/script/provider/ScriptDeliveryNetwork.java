@@ -5,16 +5,23 @@ import org.rsbot.script.Script;
 import org.rsbot.script.provider.FileScriptSource.FileScriptDefinition;
 import org.rsbot.service.ServiceException;
 import org.rsbot.util.io.HttpClient;
+import org.rsbot.util.io.IOHelper;
 import org.rsbot.util.io.IniParser;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
@@ -47,6 +54,7 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 			def.path = entry.getKey();
 			final HashMap<String, String> values = entry.getValue();
 			def.id = Integer.parseInt(values.get("id"));
+			def.crc32 = values.containsKey("crc32") ? Long.parseLong(values.get("crc32")) : 0;
 			def.name = values.get("name");
 			def.version = Double.parseDouble(values.get("version"));
 			def.description = values.get("description");
@@ -90,6 +98,24 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 		return defs;
 	}
 
+	public Map<String, ScriptDefinition> listMap() {
+		final List<ScriptDefinition> list = list();
+		final Map<String, ScriptDefinition> map = new LinkedHashMap<String, ScriptDefinition>(list.size());
+		for (final ScriptDefinition def : list) {
+			map.put(def.path, def);
+		}
+		return map;
+	}
+
+	public List<String> listPaths() {
+		final List<ScriptDefinition> list = list();
+		final ArrayList<String> files = new ArrayList<String>(list.size());
+		for (final ScriptDefinition def : list) {
+			files.add(def.path);
+		}
+		return files;
+	}
+
 	private static File getCacheDirectory() {
 		final File store = new File(Configuration.Paths.getScriptsNetworkDirectory());
 		if (!store.exists()) {
@@ -105,26 +131,48 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 		return store;
 	}
 
-	@Override
-	public Script load(ScriptDefinition def) throws ServiceException {
-		final File store = getCacheDirectory();
-		final File file = new File(store, def.path);
-		final LinkedList<ScriptDefinition> defs = new LinkedList<ScriptDefinition>();
-		if (file.exists()) {
-			try {
-				FileScriptSource.load(file, defs, null);
-				if (defs.size() != 1 || defs.getFirst().version < def.version) {
-					file.delete();
-				}
-			} catch (final IOException ignored) {
+	public void download(final ScriptDefinition def) {
+		final File cache = new File(getCacheDirectory(), def.path);
+		try {
+			HttpClient.download(new URL(base, def.path), cache);
+		} catch (final IOException ignored) {
+		}
+	}
+
+	public void sync() {
+		final ArrayList<Callable<Collection<Object>>> tasks = new ArrayList<Callable<Collection<Object>>>();
+		final Map<String, ScriptDefinition> list = listMap();
+		for (final File file : getCacheDirectory().listFiles()) {
+			final String path = file.getName();
+			if (!list.keySet().contains(path)) {
+				file.delete();
+			} else {
+				tasks.add(new Callable<Collection<Object>>() {
+					public Collection<Object> call() throws Exception {
+						download(list.get(path));
+						return null;
+					}
+				});
 			}
 		}
+		final int threads = 2;
+		final ExecutorService executorService = Executors.newFixedThreadPool(threads);
 		try {
-			if (!file.exists()) {
+			executorService.invokeAll(tasks);
+		} catch (final InterruptedException ignored) {
+		}
+	}
+
+	@Override
+	public Script load(final ScriptDefinition def) throws ServiceException {
+		final File cache = new File(getCacheDirectory(), def.path);
+		final LinkedList<ScriptDefinition> defs = new LinkedList<ScriptDefinition>();
+		try {
+			if (!cache.exists() || IOHelper.crc32(cache) != def.crc32) {
 				log.info("Downloading script " + def.name + "...");
-				HttpClient.download(new URL(base, def.path), file);
+				download(def);
 			}
-			FileScriptSource.load(file, defs, null);
+			FileScriptSource.load(cache, defs, null);
 			return FileScriptSource.load((FileScriptDefinition) defs.getFirst());
 		} catch (final Exception ignored) {
 			log.severe("Unable to load script");

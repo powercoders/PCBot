@@ -137,7 +137,7 @@ public class FriendChat extends MethodProvider {
 	public boolean join(final String channel) {
 		methods.game.openTab(Game.Tab.FRIENDS_CHAT);
 		if (isInChannel()) {
-			if (getName() == channel) {
+			if (getName().equals(channel)) {
 				return true;
 			}
 			if (!leave()) {
@@ -513,7 +513,6 @@ public class FriendChat extends MethodProvider {
 				for (Friend friend : getFriends()) {
 					if (name.equalsIgnoreCase(friend.getName())) {
 						friends.add(friend);
-						continue;
 					}
 				}
 			}

@@ -4,19 +4,17 @@ import org.rsbot.Configuration;
 import org.rsbot.bot.Bot;
 import org.rsbot.gui.component.JComboCheckBox;
 import org.rsbot.script.Script;
-import org.rsbot.script.ScriptManifest.Tags;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
-import org.rsbot.script.provider.FileScriptSource;
-import org.rsbot.script.provider.ScriptDefinition;
-import org.rsbot.script.provider.ScriptDeliveryNetwork;
-import org.rsbot.script.provider.ScriptSource;
+import org.rsbot.script.provider.*;
+import org.rsbot.service.Preferences;
 import org.rsbot.service.ServiceException;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
@@ -34,12 +32,13 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private static final String[] COLUMN_NAMES = new String[]{"", "Name", "Description"};
 
 	private static final ScriptSource SRC_SOURCES;
-	private static final ScriptSource SRC_PRECOMPILED;
+	private static final ScriptSource SRC_PRE_COMPILED;
 	private static final ScriptSource SRC_NETWORK;
 	private final BotGUI frame;
 	private final Bot bot;
 	private JTable table;
 	private JTextField search;
+	private final static Color searchAltColor = Color.GRAY;
 	private JComboBox accounts;
 	private final JComboCheckBox categories = new JComboCheckBox();
 	private final ScriptTableModel model;
@@ -49,16 +48,18 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	static {
 		SRC_SOURCES = new FileScriptSource(new File(Configuration.Paths.getScriptsSourcesDirectory()));
-		SRC_PRECOMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
+		SRC_PRE_COMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
 		SRC_NETWORK = ScriptDeliveryNetwork.getInstance();
 	}
 
 	public ScriptSelector(final BotGUI frame, final Bot bot) {
-		super(frame, "Script Selector", true);
+		super(frame, "Scripts", true);
 		this.frame = frame;
 		this.bot = bot;
 		scripts = new ArrayList<ScriptDefinition>();
+		connected = Preferences.getInstance().sdnShow;
 		model = new ScriptTableModel(scripts);
+		ScriptLikes.load();
 	}
 
 	public void showGUI() {
@@ -68,7 +69,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		setVisible(true);
 	}
 
-	public void update() {
+	void update() {
 		final boolean available = bot.getScriptHandler().getRunningScripts().size() == 0;
 		submit.setEnabled(available && table.getSelectedRow() != -1);
 		table.setEnabled(available);
@@ -85,16 +86,21 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				scripts.addAll(net);
 			}
 		}
-		scripts.addAll(SRC_PRECOMPILED.list());
+		Preferences.getInstance().sdnShow = connected;
+		scripts.addAll(SRC_PRE_COMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
 		Collections.sort(scripts);
 
-		categories.populate(getScriptKeywords(), false);
+		populateCategories();
 		filter();
 		table.revalidate();
 	}
 
-	private Iterable<String> getScriptKeywords() {
+	private void unload() {
+		ScriptLikes.save();
+	}
+
+	private void populateCategories() {
 		final LinkedHashSet<String> keywords = new LinkedHashSet<String>(scripts.size());
 		for (final ScriptDefinition def : scripts) {
 			keywords.addAll(def.getKeywords());
@@ -103,7 +109,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		keywords.toArray(array);
 		final List<String> list = Arrays.asList(array);
 		Collections.sort(list);
-		return list;
+		categories.populate(list, false);
+		categories.setEnabled(list.size() != 0);
 	}
 
 	private void init() {
@@ -115,10 +122,11 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			@Override
 			public void windowClosing(final WindowEvent e) {
 				bot.getScriptHandler().removeScriptListener(ScriptSelector.this);
+				setVisible(false);
+				unload();
 				dispose();
 			}
 		});
-		final Color searchAltColor = Color.GRAY;
 		final JButton refresh = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
 		refresh.setToolTipText("Refresh");
 		refresh.addActionListener(new ActionListener() {
@@ -146,6 +154,22 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				int row = rowAtPoint(e.getPoint());
 				ScriptDefinition def = model.getDefinition(row);
 				return def.toString();
+			}
+
+			@Override
+			public Component prepareRenderer(final TableCellRenderer renderer, final int row, final int column) {
+				final Component comp = super.prepareRenderer(renderer, row, column);
+				final ScriptDefinition def = model.getDefinition(row);
+				final Color color;
+				if (ScriptLikes.isLiked(def)) {
+					color = new Color(0xffffcc);
+				} else if (row % 2 == 0) {
+					color = new Color(0xf8f8f8);
+				} else {
+					color = Color.WHITE;
+				}
+				comp.setBackground(isCellSelected(row, column) ? comp.getBackground() : color);
+				return comp;
 			}
 		};
 		table.addMouseListener(new MouseAdapter() {
@@ -183,6 +207,16 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				});
 				start.setEnabled(submit.isEnabled());
 
+				final JMenuItem like = new JMenuItem();
+				like.setText(ScriptLikes.isLiked(def) ? "Unlike" : "Like");
+				like.setIcon(new ImageIcon(Configuration.getImage(
+						ScriptLikes.isLiked(def) ? Configuration.Paths.Resources.ICON_UNLIKE : Configuration.Paths.Resources.ICON_LIKE)));
+				like.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						ScriptLikes.flip(def);
+					}
+				});
+
 				final JMenuItem delete = new JMenuItem();
 				delete.setText("Delete");
 				delete.setIcon(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_CLOSE)));
@@ -190,11 +224,14 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					public void actionPerformed(ActionEvent e) {
 						final File path = def.path == null || def.path.isEmpty() ? null : new File(def.path);
 						if (path != null && path.exists() && path.delete()) {
-							log.info("Deleted script " + def.name + " (" + def.path + ")");
+							log.info("Removed script " + def.getName());
 						} else {
-							log.warning("Could not delete " + def.name);
+							log.warning("Could not remove " + def.getName());
 						}
 						scripts.remove(def);
+						if (ScriptLikes.isLiked(def)) {
+							ScriptLikes.flip(def);
+						}
 						load();
 					}
 				});
@@ -204,11 +241,13 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				}
 
 				contextMenu.add(start);
+				contextMenu.add(like);
 				contextMenu.add(visit);
 				contextMenu.add(delete);
 				contextMenu.show(table, e.getX(), e.getY());
 			}
 		});
+		//table.setAutoCreateRowSorter(true);
 		table.setRowHeight(20);
 		table.setIntercellSpacing(new Dimension(1, 1));
 		table.setShowGrid(false);
@@ -220,7 +259,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		toolBar.setFloatable(false);
 		search = new JTextField();
 		final Color searchDefaultColor = search.getForeground();
-		final String searchDefaultText = "Type to filter...\0";
+		final String searchDefaultText = "Search";
 		search.setText(searchDefaultText);
 		search.setForeground(searchAltColor);
 		search.addFocusListener(new FocusAdapter() {
@@ -253,10 +292,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				keyTyped(e);
 			}
 		});
-		submit = new JButton("Start", new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
-		final JButton connect = new JButton(new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_CONNECT)));
+		submit = new JButton("Start", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PLAY)));
+		final JButton connect = new JButton(new ImageIcon(Configuration.getImage(connected ? Configuration.Paths.Resources.ICON_CONNECT : Configuration.Paths.Resources.ICON_DISCONNECT)));
 		connect.setToolTipText("Show network scripts");
 		submit.setEnabled(false);
 		submit.addActionListener(new ActionListener() {
@@ -265,6 +302,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				setVisible(false);
 				final String account = (String) accounts.getSelectedItem();
 				bot.getScriptHandler().removeScriptListener(ScriptSelector.this);
+				unload();
 				dispose();
 				Script script = null;
 				try {
@@ -279,24 +317,19 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				}
 			}
 		});
-		if (connect.isEnabled()) {
-			final ActionListener listenConnect = new ActionListener() {
-				public void actionPerformed(final ActionEvent e) {
-					final String icon = connected ? Configuration.Paths.Resources.ICON_DISCONNECT :
-							Configuration.Paths.Resources.ICON_CONNECT;
-					connect.setIcon(new ImageIcon(Configuration.getImage(icon)));
-					connect.repaint();
-					connected = !connected;
-					load();
-				}
-			};
-			connect.addActionListener(listenConnect);
-		}
+		connect.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent arg0) {
+				final String icon = connected ? Configuration.Paths.Resources.ICON_DISCONNECT : Configuration.Paths.Resources.ICON_CONNECT;
+				connect.setIcon(new ImageIcon(Configuration.getImage(icon)));
+				connect.repaint();
+				connected = !connected;
+				load();
+			}
+		});
 		accounts = new JComboBox(AccountManager.getAccountNames());
 		accounts.setPreferredSize(new Dimension(125, 20));
 		categories.setPreferredSize(new Dimension(150, 20));
 		categories.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent arg0) {
 				final String[] selected = categories.getSelectedItems();
 				final StringBuilder s = new StringBuilder(16);
@@ -347,7 +380,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	private void filter() {
-		model.search((search == null || search.getText().contains("\0")) ? "" : search.getText(), categories.getSelectedItems());
+		model.search((search == null || search.getForeground() == searchAltColor) ? "" : search.getText(), categories.getSelectedItems());
 	}
 
 	private void setColumnWidths(final JTable table, final int... widths) {
@@ -386,12 +419,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	private static class ScriptTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
-		public static final ImageIcon ICON_SCRIPT_SRC = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_CODE));
-		public static final ImageIcon ICON_SCRIPT_PRE = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_GEAR));
-		public static final ImageIcon ICON_SCRIPT_NET = new ImageIcon(
-				Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_LIVE));
+		public static final ImageIcon ICON_SCRIPT_SRC = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_CODE));
+		public static final ImageIcon ICON_SCRIPT_PRE = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_GEAR));
+		public static final ImageIcon ICON_SCRIPT_NET = new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_LIVE));
 		private final List<ScriptDefinition> scripts;
 		private final List<ScriptDefinition> matches;
 
@@ -406,19 +436,10 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				if (find.length() != 0 && !def.name.toLowerCase().contains(find)) {
 					continue;
 				}
-				final ArrayList<String> list;
-				if (def.tags!= null) {
-					list = new ArrayList<String>(def.keywords.length + def.tags.length);
-				} else {
-					list = new ArrayList<String>(def.keywords.length);
-				}
-				for (final String key : def.keywords) {
+				final List<String> keywords = def.getKeywords();
+				final ArrayList<String> list = new ArrayList<String>(keywords.size());
+				for (final String key : keywords) {
 					list.add(key.toLowerCase());
-				}
-				if (def.tags!= null) {
-					for (final Tags tag : def.tags) {
-						list.add(tag.tag().toLowerCase());
-					}
 				}
 				boolean hit = true;
 				for (final String key : keys) {
@@ -454,7 +475,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 						if (def.source == SRC_SOURCES) {
 							return ICON_SCRIPT_SRC;
 						}
-						if (def.source == SRC_PRECOMPILED) {
+						if (def.source == SRC_PRE_COMPILED) {
 							return ICON_SCRIPT_PRE;
 						}
 						return ICON_SCRIPT_NET;

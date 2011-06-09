@@ -15,7 +15,6 @@ public class TMenu implements TextPaintListener {
 		client = bot.getClient();
 	}
 
-	@Override
 	public int drawLine(final Graphics render, int idx) {
 		StringUtil.drawLine(render, idx++, "Menu " + (client.isMenuOpen() ? "Open" : "Closed") +
 				" & " + (client.isMenuCollapsed() ? "Collapsed" : "Expanded"));

@@ -1,6 +1,7 @@
 package org.rsbot.gui;
 
 import org.rsbot.Configuration;
+import org.rsbot.locale.Messages;
 import org.rsbot.log.LabelLogHandler;
 import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
@@ -64,6 +65,8 @@ public class LoadScreen extends JFrame {
 		setResizable(false);
 		setVisible(true);
 
+		log.info("Language: " + Messages.getInstance().LANGUAGE);
+
 		log.info("Registering logs");
 		bootstrap();
 
@@ -77,8 +80,10 @@ public class LoadScreen extends JFrame {
 		Configuration.createDirectories();
 
 		log.info("Enforcing security policy");
-		System.setProperty("sun.net.spi.nameservice.nameservers", "8.8.8.8,8.8.4.4"); // Google Public DNS (http://code.google.com/speed/public-dns/)
-		System.setProperty("sun.net.spi.nameservice.provider.1", "dns,sun");
+		if (Configuration.GOOGLEDNS) {
+			System.setProperty("sun.net.spi.nameservice.nameservers", RestrictedSecurityManager.DNSA + "," + RestrictedSecurityManager.DNSB);
+			System.setProperty("sun.net.spi.nameservice.provider.1", "dns,sun");
+		}
 		System.setProperty("java.io.tmpdir", Configuration.Paths.getGarbageDirectory());
 		System.setSecurityManager(new RestrictedSecurityManager());
 
@@ -91,7 +96,7 @@ public class LoadScreen extends JFrame {
 		}
 
 		log.info("Downloading network scripts");
-		ScriptDeliveryNetwork.getInstance().list();
+		ScriptDeliveryNetwork.getInstance().sync();
 
 		log.info("Checking for updates");
 
@@ -135,7 +140,7 @@ public class LoadScreen extends JFrame {
 		System.setErr(new PrintStream(new LogOutputStream(Logger.getLogger("STDERR"), Level.SEVERE), true));
 	}
 
-	public static void extractResources() {
+	private static void extractResources() {
 		final ArrayList<String> extract = new ArrayList<String>(2);
 		if (Configuration.getCurrentOperatingSystem() == Configuration.OperatingSystem.WINDOWS) {
 			extract.add(Configuration.Paths.COMPILE_SCRIPTS_BAT);

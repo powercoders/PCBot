@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
-import java.util.regex.Pattern;
 
 public class Configuration {
 	public enum OperatingSystem {
@@ -62,6 +61,8 @@ public class Configuration {
 			public static final String ICON_SCRIPT_CODE = ROOT_IMG + "/script_code.png";
 			public static final String ICON_WEBLINK = ROOT_IMG + "/world_link.png";
 			public static final String ICON_WRENCH = ROOT_IMG + "/wrench.png";
+			public static final String ICON_LIKE = ROOT_IMG + "/like.png";
+			public static final String ICON_UNLIKE = ROOT_IMG + "/unlike.png";
 
 			public static final String VERSION = ROOT + "/version.txt";
 		}
@@ -223,6 +224,7 @@ public class Configuration {
 	private static final OperatingSystem CURRENT_OS;
 	public static boolean RUNNING_FROM_JAR = false;
 	public static final boolean SKINNED = false;
+	public static final boolean GOOGLEDNS = true;
 
 	public static class Twitter {
 		public static final boolean ENABLED = true;
@@ -232,7 +234,6 @@ public class Configuration {
 	}
 
 	static final URL resource;
-    public static boolean betaBuild = isBetaBuild();
 
 	static {
 		resource = Configuration.class.getClassLoader().getResource(Paths.Resources.VERSION);
@@ -343,13 +344,4 @@ public class Configuration {
 	public static String getVersionFormatted() {
 		return StringUtil.formatVersion(getVersion());
 	}
-
-    public static boolean isBetaBuild()
-    {
-        if(betaBuild)
-            return true;
-        String location = Boot.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        Pattern pattern = Pattern.compile("RSBot-([0-9]+)-beta([0-9]+).jar");
-        return pattern.matcher(location).find();
-    }
 }

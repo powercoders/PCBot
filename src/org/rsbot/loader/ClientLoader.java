@@ -32,10 +32,17 @@ public class ClientLoader {
 
 		try {
 			HttpClient.download(script, cache);
+		} catch (final IOException ioe) {
+			if (cache.exists()) {
+				log.warning("Unable to download client patch, attempting to use cached copy");
+			}
+		}
+
+		try {
 			fis = new FileInputStream(cache);
 			data = load(fis);
 		} catch (final IOException ioe) {
-			log.severe("Could not load ModScript data");
+			log.severe("Could not load client patch");
 		} finally {
 			try {
 				if (fis != null) {
@@ -62,19 +69,9 @@ public class ClientLoader {
 
 		if (script.getAttribute("minbotversion") != null) {
 			int botVersion = Configuration.getVersion();
-			try {
-				int minVersion = Integer.parseInt(script.getAttribute("minbotversion"));
-				if (botVersion < minVersion) {
-					JOptionPane.showMessageDialog(
-							null,
-							"The latest update requires you to update your bot. Please download the newst version.",
-							"Outdated bot",
-							JOptionPane.INFORMATION_MESSAGE);
-					throw new IOException("BotVersion #" + botVersion + " < #" + minVersion);
-				}
-
-			} catch (NumberFormatException ignored) {
-
+			int minVersion = Integer.parseInt(script.getAttribute("minbotversion"));
+			if (botVersion < minVersion) {
+				throw new IOException("Client patch requires newer version (" + botVersion + " < " + minVersion + ")");
 			}
 		}
 

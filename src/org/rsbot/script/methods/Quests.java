@@ -53,10 +53,7 @@ public class Quests extends MethodProvider {
 	 * @return Whether the Quest is filtered out or not.
 	 */
 	public boolean isFiltered(final String name) {
-		if (getComponent(name) != null) {
-			return getComponent(name).getTextColor() == 2236962;
-		}
-		return false;
+		return getComponent(name) != null && getComponent(name).getTextColor() == 2236962;
 	}
 
 	/**
@@ -66,10 +63,7 @@ public class Quests extends MethodProvider {
 	 * @return Whether the specified quest is completed or not.
 	 */
 	public boolean isCompleted(final String name) {
-		if (!isFiltered(name)) {
-			return getProgress(name).equals(State.FINISHED);
-		}
-		return false;
+		return !isFiltered(name) && getProgress(name).equals(State.FINISHED);
 	}
 
 	/**

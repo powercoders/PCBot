@@ -2,121 +2,32 @@ package org.rsbot.gui;
 
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
-import org.rsbot.gui.component.Messages;
+import org.rsbot.bot.RSLoader;
+import org.rsbot.locale.Messages;
 import org.rsbot.service.DRM;
+import org.rsbot.service.Preferences;
 import org.rsbot.util.StringUtil;
-import org.rsbot.util.io.IniParser;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.logging.Logger;
 
 /**
  * @author Paris
  */
 public class SettingsManager extends JDialog {
-	private static Logger log = Logger.getLogger(SettingsManager.class.getName());
+	private static final Messages msg = Messages.getInstance();
 	private static final long serialVersionUID = 1657935322078534422L;
-	private static final String DEFAULTPASSWORD = "\0\0\0\0\0\0\0\0";
-	private Preferences prefs;
-
-	public class Preferences {
-		private File store;
-
-		public boolean hideAds = false;
-		public String user = "";
-		public boolean confirmations = true;
-		public boolean shutdown = false;
-		public int shutdownTime = 10;
-		public boolean web = false;
-		public String webBind = "localhost:9500";
-		public boolean webPassRequire = false;
-		public String webPass = "";
-
-		public Preferences(final File store) {
-			this.store = store;
-		}
-
-		public void load() {
-			HashMap<String, String> keys = null;
-			try {
-				if (!store.exists()) {
-					store.createNewFile();
-				}
-				keys = IniParser.deserialise(store).get(IniParser.emptySection);
-			} catch (final IOException ignored) {
-				log.severe("Failed to load preferences");
-			}
-			if (keys == null || keys.isEmpty()) {
-				return;
-			}
-			if (keys.containsKey("user")) {
-				user = keys.get("user");
-			}
-			if (keys.containsKey("hideAds")) {
-				hideAds = IniParser.parseBool(keys.get("hideAds"));
-			}
-			if (keys.containsKey("confirmations")) {
-				confirmations = IniParser.parseBool(keys.get("confirmations"));
-			}
-			if (keys.containsKey("shutdown")) {
-				shutdown = IniParser.parseBool(keys.get("shutdown"));
-			}
-			if (keys.containsKey("shutdownTime")) {
-				shutdownTime = Integer.parseInt(keys.get("shutdownTime"));
-				shutdownTime = Math.max(Math.min(shutdownTime, 60), 3);
-			}
-			if (keys.containsKey("web")) {
-				web = IniParser.parseBool(keys.get("web"));
-			}
-			if (keys.containsKey("webBind")) {
-				webBind = keys.get("webBind");
-			}
-			if (keys.containsKey("webPassRequire")) {
-				webPassRequire = IniParser.parseBool(keys.get("webPassRequire"));
-			}
-			if (keys.containsKey("webPass")) {
-				webPass = keys.get("webPass");
-			}
-		}
-
-		public void save() {
-			final HashMap<String, String> keys = new HashMap<String, String>(5);
-			keys.put("user", user);
-			keys.put("hideAds", Boolean.toString(hideAds));
-			keys.put("confirmations", Boolean.toString(confirmations));
-			keys.put("shutdown", Boolean.toString(shutdown));
-			keys.put("shutdownTime", Integer.toString(shutdownTime));
-			keys.put("web", Boolean.toString(web));
-			keys.put("webBind", webBind);
-			keys.put("webPassRequire", Boolean.toString(webPassRequire));
-			keys.put("webPass", webPass);
-			final HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>(1);
-			data.put(IniParser.emptySection, keys);
-			try {
-				final BufferedWriter out = new BufferedWriter(new FileWriter(store));
-				IniParser.serialise(data, out);
-				out.close();
-			} catch (final IOException ignored) {
-				log.severe("Could not save preferences");
-			}
-		}
-	}
+	private static final String DEFAULT_PASSWORD = "\0\0\0\0\0\0\0\0";
+	private final Preferences preferences = Preferences.getInstance();
 
 	public Preferences getPreferences() {
-		return prefs;
+		return preferences;
 	}
 
-	public SettingsManager(final Frame owner, final File store) {
-		super(owner, Messages.OPTIONS, true);
-		prefs = new Preferences(store);
-		prefs.load();
+	public SettingsManager(final Frame owner) {
+		super(owner, msg.OPTIONS, true);
+		preferences.load();
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_WRENCH));
 
@@ -134,29 +45,33 @@ public class SettingsManager extends JDialog {
 			panelLoginOptions[i] = new JPanel(new GridLayout(1, 2));
 		}
 		panelLoginOptions[0].add(new JLabel("  Username:"));
-		final JTextField textLoginUser = new JTextField(prefs.user);
+		final JTextField textLoginUser = new JTextField(preferences.user);
 		textLoginUser.setToolTipText(Configuration.Paths.URLs.HOST + " forum account username, leave blank to log out");
 		panelLoginOptions[0].add(textLoginUser);
 		panelLoginOptions[1].add(new JLabel("  Password:"));
-		final JPasswordField textLoginPass = new JPasswordField(prefs.user.length() == 0 ? "" : DEFAULTPASSWORD);
+		final JPasswordField textLoginPass = new JPasswordField(preferences.user.length() == 0 ? "" : DEFAULT_PASSWORD);
 		panelLoginOptions[1].add(textLoginPass);
 		panelLogin.add(panelLoginOptions[0]);
 		panelLogin.add(panelLoginOptions[1]);
 
-		final JCheckBox checkAds = new JCheckBox(Messages.DISABLEADS);
-		checkAds.setToolTipText("Show advertisment on startup");
-		checkAds.setSelected(prefs.hideAds);
+		final JCheckBox checkPatchBeta = new JCheckBox(msg.BETAPATCH);
+		checkPatchBeta.setToolTipText("Update against the latest development client patch");
+		checkPatchBeta.setSelected(preferences.patchBeta);
 
-		final JCheckBox checkConf = new JCheckBox(Messages.DISABLECONFIRMATIONS);
-		checkConf.setToolTipText("Supress confirmation messages");
-		checkConf.setSelected(prefs.confirmations);
+		final JCheckBox checkAds = new JCheckBox(msg.DISABLEADS);
+		checkAds.setToolTipText("Show advertisement on startup");
+		checkAds.setSelected(preferences.hideAds);
+
+		final JCheckBox checkConfirmations = new JCheckBox(msg.DISABLECONFIRMATIONS);
+		checkConfirmations.setToolTipText("Suppress confirmation messages");
+		checkConfirmations.setSelected(preferences.confirmations);
 
 		final JPanel panelShutdown = new JPanel(new GridLayout(1, 2));
-		final JCheckBox checkShutdown = new JCheckBox(Messages.AUTOSHUTDOWN);
-		checkShutdown.setToolTipText("Automatic system shutdown after specified period of inactivty");
-		checkShutdown.setSelected(prefs.shutdown);
+		final JCheckBox checkShutdown = new JCheckBox(msg.AUTOSHUTDOWN);
+		checkShutdown.setToolTipText("Automatic system shutdown after specified period of inactivity");
+		checkShutdown.setSelected(preferences.shutdown);
 		panelShutdown.add(checkShutdown);
-		final SpinnerNumberModel modelShutdown = new SpinnerNumberModel(prefs.shutdownTime, 3, 60, 1);
+		final SpinnerNumberModel modelShutdown = new SpinnerNumberModel(preferences.shutdownTime, 3, 60, 1);
 		final JSpinner valueShutdown = new JSpinner(modelShutdown);
 		panelShutdown.add(valueShutdown);
 		checkShutdown.addActionListener(new ActionListener() {
@@ -171,17 +86,17 @@ public class SettingsManager extends JDialog {
 		for (int i = 0; i < panelWebOptions.length; i++) {
 			panelWebOptions[i] = new JPanel(new GridLayout(1, 2));
 		}
-		final JCheckBox checkWeb = new JCheckBox(Messages.BINDTO);
+		final JCheckBox checkWeb = new JCheckBox(msg.BINDTO);
 		checkWeb.setToolTipText("Remote control via web interface");
-		checkWeb.setSelected(prefs.web);
+		checkWeb.setSelected(preferences.web);
 		panelWebOptions[0].add(checkWeb);
-		final JFormattedTextField textWebBind = new JFormattedTextField(prefs.webBind);
+		final JFormattedTextField textWebBind = new JFormattedTextField(preferences.webBind);
 		textWebBind.setToolTipText("Example: localhost:9500");
 		panelWebOptions[0].add(textWebBind);
-		final JCheckBox checkWebPass = new JCheckBox(Messages.USEPASSWORD);
-		checkWebPass.setSelected(prefs.webPassRequire);
+		final JCheckBox checkWebPass = new JCheckBox(msg.USEPASSWORD);
+		checkWebPass.setSelected(preferences.webPassRequire);
 		panelWebOptions[1].add(checkWebPass);
-		final JPasswordField textWebPass = new JPasswordField(DEFAULTPASSWORD);
+		final JPasswordField textWebPass = new JPasswordField(DEFAULT_PASSWORD);
 		textWebPass.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(final FocusEvent e) {
@@ -209,9 +124,9 @@ public class SettingsManager extends JDialog {
 		}
 
 		panelOptions.add(checkAds);
-		panelOptions.add(checkConf);
+		panelOptions.add(checkConfirmations);
 		panelInternal.add(panelShutdown);
-		panelInternal.add(new JLabel());
+		panelInternal.add(checkPatchBeta);
 		panelWeb.add(panelWebOptions[0]);
 		panelWeb.add(panelWebOptions[1]);
 
@@ -227,27 +142,29 @@ public class SettingsManager extends JDialog {
 		buttonOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
-				prefs.hideAds = checkAds.isSelected();
-				prefs.confirmations = checkConf.isSelected();
-				prefs.shutdown = checkShutdown.isSelected();
-				prefs.shutdownTime = modelShutdown.getNumber().intValue();
-				prefs.web = checkWeb.isSelected();
-				prefs.webBind = textWebBind.getText();
+				preferences.hideAds = checkAds.isSelected();
+				preferences.confirmations = checkConfirmations.isSelected();
+				preferences.shutdown = checkShutdown.isSelected();
+				preferences.shutdownTime = modelShutdown.getNumber().intValue();
+				preferences.web = checkWeb.isSelected();
+				preferences.webBind = textWebBind.getText();
 				final String webUser = textLoginUser.getText(), webPass = new String(textWebPass.getPassword());
-				if (!webUser.equals(prefs.user) || !webPass.equals(DEFAULTPASSWORD)) {
-					prefs.webPass = StringUtil.sha1sum(webPass);
+				if (!webUser.equals(preferences.user) || !webPass.equals(DEFAULT_PASSWORD)) {
+					preferences.webPass = StringUtil.sha1sum(webPass);
 				}
-				prefs.user = webUser;
-				prefs.webPassRequire = checkWebPass.isSelected() && checkWebPass.isEnabled();
+				preferences.user = webUser;
+				preferences.webPassRequire = checkWebPass.isSelected() && checkWebPass.isEnabled();
 				final String loginPass = new String(textLoginPass.getPassword());
-				if (!loginPass.equals(DEFAULTPASSWORD)) {
-					if (!DRM.login(prefs.user, loginPass)) {
-						prefs.user = "";
+				if (!loginPass.equals(DEFAULT_PASSWORD)) {
+					if (!DRM.login(preferences.user, loginPass)) {
+						preferences.user = "";
 					}
 				}
-				prefs.save();
-				textLoginPass.setText(DEFAULTPASSWORD);
-				textWebPass.setText(DEFAULTPASSWORD);
+				preferences.patchBeta = checkPatchBeta.isSelected();
+				RSLoader.runBeta = Configuration.RUNNING_FROM_JAR ? false : preferences.patchBeta;
+				preferences.save();
+				textLoginPass.setText(DEFAULT_PASSWORD);
+				textWebPass.setText(DEFAULT_PASSWORD);
 				dispose();
 			}
 		});
@@ -255,10 +172,11 @@ public class SettingsManager extends JDialog {
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
-				checkAds.setSelected(prefs.hideAds);
-				checkConf.setSelected(prefs.confirmations);
-				checkShutdown.setSelected(prefs.shutdown);
-				modelShutdown.setValue(prefs.shutdownTime);
+				checkPatchBeta.setSelected(preferences.patchBeta);
+				checkAds.setSelected(preferences.hideAds);
+				checkConfirmations.setSelected(preferences.confirmations);
+				checkShutdown.setSelected(preferences.shutdown);
+				modelShutdown.setValue(preferences.shutdownTime);
 				dispose();
 			}
 		});
@@ -275,6 +193,7 @@ public class SettingsManager extends JDialog {
 		if (!Configuration.RUNNING_FROM_JAR) {
 			panel.add(panelWeb); // hide web options from non-development builds for now
 		}
+		checkPatchBeta.setEnabled(!Configuration.RUNNING_FROM_JAR);
 
 		add(panel);
 		add(panelAction, BorderLayout.SOUTH);

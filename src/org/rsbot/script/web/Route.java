@@ -43,4 +43,8 @@ public class Route {
 			route.update();
 		}
 	}
+
+	public double getDistance() {
+		return 0;//TODO distancing.
+	}
 }
