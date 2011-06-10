@@ -12,9 +12,6 @@ import java.awt.*;
  * @author Timer
  */
 public class TWebStatus implements TextPaintListener {
-	public TWebStatus() {
-	}
-
 	public int drawLine(final Graphics render, int idx) {
 		final String[] items = {"Web Queue", "Buffering: " + WebQueue.weAreBuffering + ", " + WebQueue.bufferingCount + " nodes.",
 				"Cache Writer", "Queue Size: " + WebQueue.queueSize(0), "Remove queue size: " + WebQueue.queueSize(1), "Removing queue size: " + WebQueue.queueSize(2)};

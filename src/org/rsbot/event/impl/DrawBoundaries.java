@@ -8,7 +8,6 @@ import org.rsbot.script.wrappers.RSTile;
 import java.awt.*;
 
 public class DrawBoundaries implements PaintListener {
-
 	private final Point[][] minimapPoints = new Point[105][105];
 	private final Point[][] screenPoints = new Point[105][105];
 
@@ -18,7 +17,6 @@ public class DrawBoundaries implements PaintListener {
 		ctx = bot.getMethodContext();
 	}
 
-	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;

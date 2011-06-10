@@ -8,7 +8,6 @@ import org.rsbot.util.StringUtil;
 import java.awt.*;
 
 public class TMenuActions implements TextPaintListener {
-
 	private final Menu menu;
 
 	public TMenuActions(final Bot bot) {

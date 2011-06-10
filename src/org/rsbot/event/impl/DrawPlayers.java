@@ -8,14 +8,12 @@ import org.rsbot.script.wrappers.RSPlayer;
 import java.awt.*;
 
 public class DrawPlayers implements PaintListener {
-
 	private final MethodContext ctx;
 
 	public DrawPlayers(final Bot bot) {
 		ctx = bot.getMethodContext();
 	}
 
-	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;

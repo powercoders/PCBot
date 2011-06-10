@@ -26,13 +26,15 @@ public class BotMenuBar extends JMenuBar {
 	private static final String[][] ELEMENTS;
 
 	private static final boolean EXTENDED_VIEW_INITIAL = !Configuration.RUNNING_FROM_JAR;
-	private static final String[] EXTENDED_VIEW_ITEMS = {"Game State", "Current Tab", "Camera", "Floor Height",
-			"Mouse Position", "User Input Allowed", "Menu", "Menu Actions", "Cache", "Models", "Calc Test", "Settings"};
+	private static final String[] EXTENDED_VIEW_ITEMS = {"Game State", "Current Tab", "Login Info", "Camera", "Floor Height",
+			"Mouse Position", "User Input Allowed", "Menu", "Menu Actions", "Cache", "Ground", "Models", "Calc Test", "Settings",
+			"Character Moved"};
 
 	static {
 		// Text
 		DEBUG_MAP.put("Game State", TLoginIndex.class);
 		DEBUG_MAP.put("Current Tab", TTab.class);
+		DEBUG_MAP.put("Login Info", TLogin.class);
 		DEBUG_MAP.put("Camera", TCamera.class);
 		DEBUG_MAP.put("Animation", TAnimation.class);
 		DEBUG_MAP.put("Floor Height", TFloorHeight.class);
@@ -51,6 +53,7 @@ public class BotMenuBar extends JMenuBar {
 		DEBUG_MAP.put("Models", DrawModel.class);
 		DEBUG_MAP.put("Mouse", DrawMouse.class);
 		DEBUG_MAP.put("Inventory", DrawInventory.class);
+		DEBUG_MAP.put("Ground", DrawGround.class);
 		DEBUG_MAP.put("Ground Items", DrawItems.class);
 		DEBUG_MAP.put("Calc Test", DrawBoundaries.class);
 		DEBUG_MAP.put("Settings", DrawSettings.class);
@@ -58,6 +61,7 @@ public class BotMenuBar extends JMenuBar {
 
 		// Other
 		DEBUG_MAP.put("Log Messages", MessageLogger.class);
+		DEBUG_MAP.put("Character Moved", CharacterMovedLogger.class);
 
 		TITLES = new String[]{msg.FILE, msg.EDIT, msg.VIEW, msg.TOOLS, msg.HELP};
 		ELEMENTS = new String[][]{

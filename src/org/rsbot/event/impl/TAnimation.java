@@ -8,14 +8,12 @@ import org.rsbot.util.StringUtil;
 import java.awt.*;
 
 public class TAnimation implements TextPaintListener {
-
 	private final MethodContext ctx;
 
 	public TAnimation(final Bot bot) {
 		ctx = bot.getMethodContext();
 	}
 
-	@Override
 	public int drawLine(final Graphics render, int idx) {
 		int animation;
 		if (ctx.game.isLoggedIn()) {
@@ -26,5 +24,4 @@ public class TAnimation implements TextPaintListener {
 		StringUtil.drawLine(render, idx++, "Animation " + animation);
 		return idx;
 	}
-
 }

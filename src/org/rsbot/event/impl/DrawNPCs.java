@@ -10,19 +10,16 @@ import org.rsbot.script.wrappers.RSNPC;
 import java.awt.*;
 
 public class DrawNPCs implements PaintListener {
-
 	private final MethodContext ctx;
 
 	public DrawNPCs(final Bot bot) {
 		ctx = bot.getMethodContext();
 	}
 
-	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;
 		}
-
 		final FontMetrics metrics = render.getFontMetrics();
 		for (final int element : ctx.client.getRSNPCIndexArray()) {
 			final Node node = ctx.nodes.lookup(ctx.client.getRSNPCNC(), element);
@@ -39,15 +36,10 @@ public class DrawNPCs implements PaintListener {
 			String s = npc.getID() + (npc.getLevel() > 0 ? " (" + npc.getLevel() + ")" : "");
 			render.setColor(npc.isInCombat() ? (npc.isDead() ? Color.gray : Color.red) : npc.isMoving() ? Color.green : Color.WHITE);
 			render.drawString(s, location.x - metrics.stringWidth(s) / 2, location.y - metrics.getHeight() / 2);
-			// int x = element.getX();
-			// x -= ((int)(x >> 7)) << 7;
 			if (npc.getAnimation() != -1 || npc.getGraphic() > 0) {
 				s = "(A: " + npc.getAnimation() + " | G: " + npc.getGraphic() + ")";
 				render.drawString(s, location.x - metrics.stringWidth(s) / 2, location.y - metrics.getHeight() * 3 / 2);
 			}
-			// s = "" + element.isMoving();
-			// render.drawString(s, location.x - metrics.stringWidth(s) / 2,
-			// location.y - metrics.getHeight() * 5 / 2);
 		}
 	}
 }

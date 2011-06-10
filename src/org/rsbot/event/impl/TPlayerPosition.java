@@ -9,14 +9,12 @@ import org.rsbot.util.StringUtil;
 import java.awt.*;
 
 public class TPlayerPosition implements TextPaintListener {
-
 	private final Players players;
 
 	public TPlayerPosition(final Bot bot) {
 		players = bot.getMethodContext().players;
 	}
 
-	@Override
 	public int drawLine(final Graphics render, int idx) {
 		final RSTile position = players.getMyPlayer().getLocation();
 		StringUtil.drawLine(render, idx++, "Position: " + position);
