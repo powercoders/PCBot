@@ -27,7 +27,7 @@ public class BotMenuBar extends JMenuBar {
 
 	private static final boolean EXTENDED_VIEW_INITIAL = !Configuration.RUNNING_FROM_JAR;
 	private static final String[] EXTENDED_VIEW_ITEMS = {"Game State", "Current Tab", "Login Info", "Camera", "Floor Height",
-			"Mouse Position", "User Input Allowed", "Menu", "Menu Actions", "Cache", "Ground", "Models", "Calc Test", "Settings",
+			"Mouse Position", "User Input Allowed", "Menu", "Menu Actions", "Cache", "Models", "Calc Test", "Settings",
 			"Character Moved"};
 
 	static {
@@ -53,7 +53,6 @@ public class BotMenuBar extends JMenuBar {
 		DEBUG_MAP.put("Models", DrawModel.class);
 		DEBUG_MAP.put("Mouse", DrawMouse.class);
 		DEBUG_MAP.put("Inventory", DrawInventory.class);
-		DEBUG_MAP.put("Ground", DrawGround.class);
 		DEBUG_MAP.put("Ground Items", DrawItems.class);
 		DEBUG_MAP.put("Calc Test", DrawBoundaries.class);
 		DEBUG_MAP.put("Settings", DrawSettings.class);
