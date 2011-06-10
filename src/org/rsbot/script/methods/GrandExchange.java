@@ -1,5 +1,8 @@
 package org.rsbot.script.methods;
 
+import org.rsbot.script.wrappers.RSInterface;
+import org.rsbot.script.wrappers.RSNPC;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
