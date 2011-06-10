@@ -1,8 +1,9 @@
 package org.rsbot.gui;
 
 import org.rsbot.Configuration;
+import org.rsbot.bot.Bot;
 import org.rsbot.script.AccountStore;
-import org.rsbot.security.RestrictedSecurityManager;
+import org.rsbot.script.randoms.LoginBot;
 import org.rsbot.service.DRM;
 
 import javax.swing.*;
@@ -289,7 +290,7 @@ public class AccountManager extends JDialog implements ActionListener {
 	 * @return Array of the names.
 	 */
 	public static String[] getAccountNames() {
-		RestrictedSecurityManager.assertNonScript();
+		assertLoginBot();
 		try {
 			final List<String> theList = new ArrayList<String>();
 			final Collection<AccountStore.Account> accountCollection = AccountManager.accountStore.list();
@@ -314,7 +315,7 @@ public class AccountManager extends JDialog implements ActionListener {
 	 * @return Password or an empty string
 	 */
 	public static String getPassword(final String name) {
-		RestrictedSecurityManager.assertNonScript();
+		assertLoginBot();
 		final AccountStore.Account values = AccountManager.accountStore.get(name);
 		String pass = values.getPassword();
 		if (pass == null) {
@@ -454,6 +455,23 @@ public class AccountManager extends JDialog implements ActionListener {
 				}
 			}.start();
 		} catch (NullPointerException ignored) {
+		}
+	}
+
+	public static void assertLoginBot() {
+		final StackTraceElement[] s = Thread.currentThread().getStackTrace();
+		if (s.length < 4 ||
+				!s[0].getClassName().equals(Thread.class.getName()) ||
+				!s[1].getClassName().equals(AccountManager.class.getName()) ||
+				!(s[2].getClassName().equals(AccountManager.class.getName())) ||
+				!(
+						s[3].getClassName().equals(BotGUI.class.getName()) ||
+						s[3].getClassName().equals(ScriptSelector.class.getName()) ||
+						s[3].getClassName().equals(AccountManager.class.getName()) ||
+						s[3].getClassName().equals(Bot.class.getName()) ||
+						s[3].getClassName().equals(LoginBot.class.getName()))
+				) {
+			throw new SecurityException();
 		}
 	}
 }
