@@ -223,7 +223,7 @@ public class Configuration {
 	private static final OperatingSystem CURRENT_OS;
 	public static boolean RUNNING_FROM_JAR = false;
 	public static final boolean SKINNED = false;
-	public static final boolean GOOGLEDNS = false;
+	public static final boolean GOOGLEDNS = true;
 
 	public static class Twitter {
 		public static final boolean ENABLED = true;
