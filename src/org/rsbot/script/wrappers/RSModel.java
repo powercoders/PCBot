@@ -67,18 +67,32 @@ public abstract class RSModel extends MethodProvider {
 	protected abstract void update();
 
 	/**
+	 * Checks if a model contains a point.
+	 *
 	 * @param p A point on the screen
-	 * @return true of the point is within the bounds of the model
+	 * @return <tt>true</tt> of the point is within the bounds of the model.
 	 */
 	private boolean contains(final Point p) {
-		// TODO do triangular collision detection as the client does it. Much faster
-		final Polygon[] triangles = getTriangles();
-		for (final Polygon poly : triangles) {
-			if (poly.contains(p)) {
-				return true;
+		int x = p.x;
+		int y = p.y;
+		final int[][] points = projectVertices();
+		for (int i = 0; i < numFaces; i++) {
+			int index1 = indices1[i];
+			int index2 = indices2[i];
+			int index3 = indices3[i];
+			if (points[index1][2] + points[index2][2] + points[index3][2] == 3) {
+				if (y < points[index1][1] && y < points[index2][1] && y < points[index3][1]) {
+					continue;
+				}
+				if (y > points[index1][1] && y > points[index2][1] && y > points[index3][1]) {
+					continue;
+				}
+				if (x < points[index1][0] && x < points[index2][0] && x < points[index3][0]) {
+					continue;
+				}
+				return x <= points[index1][0] || x <= points[index2][0] || x <= points[index3][0];
 			}
 		}
-
 		return false;
 	}
 
