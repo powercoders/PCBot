@@ -45,8 +45,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 			return true;
 		}
 		ThreadGroup root = Thread.currentThread().getThreadGroup().getParent();
-		while (root.getParent() != null)
+		while (root.getParent() != null) {
 			root = root.getParent();
+		}
 		final Thread[] list = new Thread[root.activeCount()];
 		root.enumerate(list);
 		for (int i = 0; i < list.length; i++) {

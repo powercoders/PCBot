@@ -20,11 +20,11 @@ public class GrandExchange extends MethodProvider {
 
 	public static final int INTERFACE_GRAND_EXCHANGE = 105;
 	public static final int INTERFACE_BUY_SEARCH_BOX = 389;
-	public static final int[] INTERFACE_GRAND_EXCHANGE_BUY_BUTTON = {31, 47, 63, 82, 101, 120};	
+	public static final int[] INTERFACE_GRAND_EXCHANGE_BUY_BUTTON = {31, 47, 63, 82, 101, 120};
 	public static final int[] INTERFACE_GRAND_EXCHANGE_SELL_BUTTON = {32, 48, 64, 83, 102, 121};
 	public static final int[] INTERFACE_GRAND_EXCHANGE_OFFER_BOXES = {19, 35, 51, 67, 83, 99};
-			
-			
+
+
 	public static final int GRAND_EXCHANGE_COLLECT_BOX_ONE = 209;
 	public static final int GRAND_EXCHANGE_COLLECT_BOX_TWO = 211;
 
@@ -45,7 +45,7 @@ public class GrandExchange extends MethodProvider {
 	public RSInterface getInterface() {
 		return methods.interfaces.get(INTERFACE_GRAND_EXCHANGE);
 	}
-	
+
 	/**
 	 * Checks whether or not the Grand Exchange is open.
 	 *
@@ -64,12 +64,12 @@ public class GrandExchange extends MethodProvider {
 		if (isOpen()) {
 			return true;
 		}
-		
+
 		RSNPC clerk = methods.npcs.getNearest(GRAND_EXCHANGE_CLERK);
-		if(clerk != null) {
+		if (clerk != null) {
 			clerk.interact("Exchange " + clerk.getName());
 		}
-		
+
 		return isOpen();
 	}
 
@@ -197,7 +197,7 @@ public class GrandExchange extends MethodProvider {
 			}
 		}
 	}
-	
+
 	/**
 	 * Clicks the buy button for specified slot.
 	 *
@@ -206,8 +206,8 @@ public class GrandExchange extends MethodProvider {
 	 */
 	public boolean openBuySlot(final int slot) {
 		return openSlot(slot, true);
-	}		
-	
+	}
+
 	/**
 	 * Clicks the sell button for specified slot.
 	 *
@@ -216,23 +216,25 @@ public class GrandExchange extends MethodProvider {
 	 */
 	public boolean openSellSlot(final int slot) {
 		return openSlot(slot, false);
-	}	
-	
+	}
+
 	/**
 	 * Clicks the buy/sell button for specified slot.
 	 *
 	 * @param slot An int for the corresponding slot.
-	 * @param buy a boolean to click buy or sell.
+	 * @param buy  a boolean to click buy or sell.
 	 * @return <tt>true</tt> on click.
 	 */
 	private boolean openSlot(final int slot, boolean buy) {
-		if(!isOpen()) return false;
-		
-		final int slotComponent = buy?
-		INTERFACE_GRAND_EXCHANGE_BUY_BUTTON[slot]:
-		INTERFACE_GRAND_EXCHANGE_SELL_BUTTON[slot];
-		
-		return methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE, slotComponent).interact("Make "+(buy?"Buy":"Sell")+" Offer");
+		if (!isOpen()) {
+			return false;
+		}
+
+		final int slotComponent = buy ?
+				INTERFACE_GRAND_EXCHANGE_BUY_BUTTON[slot] :
+				INTERFACE_GRAND_EXCHANGE_SELL_BUTTON[slot];
+
+		return methods.interfaces.getComponent(INTERFACE_GRAND_EXCHANGE, slotComponent).interact("Make " + (buy ? "Buy" : "Sell") + " Offer");
 	}
 
 	/**
