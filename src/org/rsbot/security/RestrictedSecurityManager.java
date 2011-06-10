@@ -7,6 +7,7 @@ import org.rsbot.bot.Bot;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.gui.LoadScreen;
 import org.rsbot.script.AccountStore;
+import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.JavaCompiler;
@@ -42,24 +43,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public boolean isCallerScript() {
-		if (Thread.currentThread().getName().startsWith(SCRIPTTHREAD) || getCallingClass().startsWith(SCRIPTCLASS)) {
-			return true;
-		}
-		ThreadGroup root = Thread.currentThread().getThreadGroup().getParent();
-		while (root.getParent() != null) {
-			root = root.getParent();
-		}
-		final Thread[] list = new Thread[root.activeCount()];
-		root.enumerate(list);
-		for (int i = 0; i < list.length; i++) {
-			try {
-				if (list[i].getName().startsWith(SCRIPTTHREAD) || list[i].getClass().getName().startsWith(SCRIPTCLASS)) {
-					return true;
-				}
-			} catch (final NullPointerException ignored) {
-			}
-		}
-		return false;
+		return getThreadGroup().getName().equals(ScriptHandler.THREADGROUPID) || Thread.currentThread().getName().startsWith(SCRIPTTHREAD) || getCallingClass().startsWith(SCRIPTCLASS);
 	}
 
 	public static void assertNonScript() {
