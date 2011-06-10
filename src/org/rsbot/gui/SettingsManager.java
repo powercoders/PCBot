@@ -2,7 +2,6 @@ package org.rsbot.gui;
 
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
-import org.rsbot.bot.RSLoader;
 import org.rsbot.locale.Messages;
 import org.rsbot.service.DRM;
 import org.rsbot.service.Preferences;
@@ -53,10 +52,6 @@ public class SettingsManager extends JDialog {
 		panelLoginOptions[1].add(textLoginPass);
 		panelLogin.add(panelLoginOptions[0]);
 		panelLogin.add(panelLoginOptions[1]);
-
-		final JCheckBox checkPatchBeta = new JCheckBox(msg.BETAPATCH);
-		checkPatchBeta.setToolTipText("Update against the latest development client patch");
-		checkPatchBeta.setSelected(preferences.patchBeta);
 
 		final JCheckBox checkAds = new JCheckBox(msg.DISABLEADS);
 		checkAds.setToolTipText("Show advertisement on startup");
@@ -126,7 +121,7 @@ public class SettingsManager extends JDialog {
 		panelOptions.add(checkAds);
 		panelOptions.add(checkConfirmations);
 		panelInternal.add(panelShutdown);
-		panelInternal.add(checkPatchBeta);
+		panelInternal.add(new JLabel());
 		panelWeb.add(panelWebOptions[0]);
 		panelWeb.add(panelWebOptions[1]);
 
@@ -160,8 +155,6 @@ public class SettingsManager extends JDialog {
 						preferences.user = "";
 					}
 				}
-				preferences.patchBeta = checkPatchBeta.isSelected();
-				RSLoader.runBeta = Configuration.RUNNING_FROM_JAR ? false : preferences.patchBeta;
 				preferences.save();
 				textLoginPass.setText(DEFAULT_PASSWORD);
 				textWebPass.setText(DEFAULT_PASSWORD);
@@ -172,7 +165,6 @@ public class SettingsManager extends JDialog {
 		buttonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
-				checkPatchBeta.setSelected(preferences.patchBeta);
 				checkAds.setSelected(preferences.hideAds);
 				checkConfirmations.setSelected(preferences.confirmations);
 				checkShutdown.setSelected(preferences.shutdown);
@@ -193,7 +185,6 @@ public class SettingsManager extends JDialog {
 		if (!Configuration.RUNNING_FROM_JAR) {
 			panel.add(panelWeb); // hide web options from non-development builds for now
 		}
-		checkPatchBeta.setEnabled(!Configuration.RUNNING_FROM_JAR);
 
 		add(panel);
 		add(panelAction, BorderLayout.SOUTH);
