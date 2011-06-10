@@ -287,7 +287,6 @@ public class AccountManager extends JDialog implements ActionListener {
 	 * @return Array of the names.
 	 */
 	public static String[] getAccountNames() {
-		RestrictedSecurityManager.assertNonScript();
 		try {
 			final List<String> theList = new ArrayList<String>();
 			final Collection<AccountStore.Account> accountCollection = AccountManager.accountStore.list();
@@ -312,7 +311,6 @@ public class AccountManager extends JDialog implements ActionListener {
 	 * @return Password or an empty string
 	 */
 	public static String getPassword(final String name) {
-		RestrictedSecurityManager.assertNonScript();
 		final AccountStore.Account values = AccountManager.accountStore.get(name);
 		String pass = values.getPassword();
 		if (pass == null) {
