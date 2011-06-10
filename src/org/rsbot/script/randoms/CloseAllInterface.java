@@ -32,24 +32,28 @@ public class CloseAllInterface extends Random {
 
 	{
 		addChild(743, 20); // Audio
-		addChild(767, 10); // Bank help
+		addChild(767, 10); // Bank of RuneScape - Help
 		addChild(499, 29); // Stats
-		addChild(594, 48); // Report
+		addChild(594, 48); // Report Abuse
 		addChild(275, 8); // Quest
 		addChild(206, 13); // Price check
 		addChild(266, 1); // Tombstone
 		addChild(266, 11); // Grove
 		addChild(102, 13); // Death items
-		addChild(14, 88, true); // New pin
+		addChild(14, 34, true); // New pin
 		addChild(14, 11); // Pin settings
 		addChild(157, 13); // Quick chat help
-		addChild(764, 2); // Objectives
+		addChild(764, 18); // Objectives
 		addChild(895, 19); // Advisor
 		addChild(109, 14); // Grand exchange collection
 		addChild(667, 74); // Equipment Bonus
-		addChild(742, 14); // Graphic
-		addChild(917, 69); // Task List
+		addChild(742, 18); // Graphic
+		addChild(917, 73); // Task List
 		addChild(1107, 174); // Clan Vexillum
+		addChild(276, 76); // Soul Wars Rewards
+		addChild(1011, 51); // Pest Control Rewards ( Commendation Rewards )
+		addChild(732, 208); // Fist of Guthx Reward Shop
+		addChild(1083, 181); // Livid Farm Rewards
 	}
 
 	private void addChild(final int parent, final int idx) {
