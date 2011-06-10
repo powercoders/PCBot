@@ -131,16 +131,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkAccept(final String host, final int port) {
-		if (port == PORT_DNS) {
-			checkConnectDNS(host);
-		} else {
-			throw new SecurityException();
-		}
-	}
-
-	private void checkConnectDNS(final String host) {
-		if (!(host.equals(DNSA) || host.equals(DNSB))) {
-			log.warning("DNS lookup denied: " + host);
+		if (port != PORT_DNS) {
 			throw new SecurityException();
 		}
 	}
@@ -153,9 +144,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 		switch (port) {
 			case PORT_UNKNOWN:
-				break;
 			case PORT_DNS:
-				checkConnectDNS(host);
 				break;
 			case PORT_HTTP:
 			case PORT_HTTPS:
