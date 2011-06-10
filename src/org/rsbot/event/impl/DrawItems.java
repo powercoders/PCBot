@@ -11,14 +11,12 @@ import org.rsbot.script.wrappers.RSTile;
 import java.awt.*;
 
 public class DrawItems implements PaintListener {
-
 	private final MethodContext ctx;
 
 	public DrawItems(final Bot bot) {
 		ctx = bot.getMethodContext();
 	}
 
-	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;

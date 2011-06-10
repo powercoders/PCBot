@@ -16,7 +16,6 @@ import java.util.HashMap;
  * @author Kosaki
  */
 public class DrawModel implements PaintListener, MouseListener {
-
 	private static final HashMap<RSObject.Type, Color> color_map = new HashMap<RSObject.Type, Color>();
 
 	static {
@@ -35,7 +34,6 @@ public class DrawModel implements PaintListener, MouseListener {
 		ctx = bot.getMethodContext();
 	}
 
-	@Override
 	public void onRepaint(final Graphics render) {
 		drawRect(render);
 		if (enabled[0]) {
@@ -43,11 +41,6 @@ public class DrawModel implements PaintListener, MouseListener {
 				final RSModel model = o.getModel();
 				if (model != null) {
 					render.setColor(color_map.get(o.getType()));
-					/*
-					for (final Polygon polygon : model.getTriangles()) {
-						render.drawPolygon(polygon);
-					}
-					*/
 					model.drawWireFrame(render);
 					render.setColor(Color.GREEN);
 					final Point p = model.getPoint();
@@ -60,10 +53,6 @@ public class DrawModel implements PaintListener, MouseListener {
 				final RSModel model = c.getModel();
 				if (model != null) {
 					render.setColor(Color.RED);
-					/*
-					for (final Polygon polygon : model.getTriangles()) {
-						render.drawPolygon(polygon);
-					}*/
 					model.drawWireFrame(render);
 				}
 			}
@@ -73,11 +62,6 @@ public class DrawModel implements PaintListener, MouseListener {
 				final RSModel model = c.getModel();
 				if (model != null) {
 					render.setColor(Color.MAGENTA);
-					/*
-					for (final Polygon polygon : model.getTriangles()) {
-						render.drawPolygon(polygon);
-					}
-					*/
 					model.drawWireFrame(render);
 				}
 			}
@@ -87,11 +71,6 @@ public class DrawModel implements PaintListener, MouseListener {
 				final RSModel model = item.getModel();
 				if (model != null) {
 					render.setColor(Color.CYAN);
-					/*
-					for (final Polygon polygon : model.getTriangles()) {
-						render.drawPolygon(polygon);
-					}
-					*/
 					model.drawWireFrame(render);
 				}
 			}
@@ -118,7 +97,6 @@ public class DrawModel implements PaintListener, MouseListener {
 		}
 	}
 
-	@Override
 	public void mouseClicked(final MouseEvent e) {
 		for (int i = 0; i < OPTIONS.length; i++) {
 			final Rectangle rect = new Rectangle(90 + 80 * i, 3, 80, 12);
@@ -130,22 +108,18 @@ public class DrawModel implements PaintListener, MouseListener {
 		}
 	}
 
-	@Override
 	public void mouseEntered(final MouseEvent arg0) {
 
 	}
 
-	@Override
 	public void mouseExited(final MouseEvent arg0) {
 
 	}
 
-	@Override
 	public void mousePressed(final MouseEvent arg0) {
 
 	}
 
-	@Override
 	public void mouseReleased(final MouseEvent arg0) {
 
 	}

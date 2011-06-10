@@ -10,7 +10,6 @@ import org.rsbot.script.wrappers.RSTile;
 import java.awt.*;
 
 public class DrawGround implements PaintListener {
-
 	private final MethodContext ctx;
 
 	public DrawGround(final Bot bot) {

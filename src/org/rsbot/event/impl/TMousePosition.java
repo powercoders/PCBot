@@ -9,14 +9,12 @@ import org.rsbot.util.StringUtil;
 import java.awt.*;
 
 public class TMousePosition implements TextPaintListener {
-
 	private final Client client;
 
 	public TMousePosition(final Bot bot) {
 		client = bot.getClient();
 	}
 
-	@Override
 	public int drawLine(final Graphics render, int idx) {
 		final Mouse mouse = client.getMouse();
 		if (mouse != null) {
@@ -25,7 +23,6 @@ public class TMousePosition implements TextPaintListener {
 			final String off = mouse.isPresent() ? "" : " (off)";
 			StringUtil.drawLine(render, idx++, "Mouse Position: (" + mouse_x + "," + mouse_y + ")" + off);
 		}
-
 		return idx;
 	}
 }

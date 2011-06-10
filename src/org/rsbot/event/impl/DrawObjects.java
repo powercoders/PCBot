@@ -11,7 +11,6 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class DrawObjects implements PaintListener {
-
 	private final MethodContext ctx;
 
 	public DrawObjects(final Bot bot) {
@@ -27,7 +26,6 @@ public class DrawObjects implements PaintListener {
 		color_map.put(RSObject.Type.WALL_DECORATION, Color.GRAY);
 	}
 
-	@Override
 	public void onRepaint(final Graphics render) {
 		if (!ctx.game.isLoggedIn()) {
 			return;
