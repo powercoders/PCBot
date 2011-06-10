@@ -27,6 +27,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	private final static int PORT_UNKNOWN = -1, PORT_HTTP = 80, PORT_HTTPS = 443, PORT_DNS = 53;
 	public final static String DNSA = "8.8.8.8", DNSB = "8.8.4.4"; // Google Public DNS (http://code.google.com/speed/public-dns/)
 	private static HashSet<String> resolved = new HashSet<String>();
+	public static final String SCRIPTTHREAD = "Script-", SCRIPTCLASS = "org.rsbot.script.Script";
 
 	private String getCallingClass() {
 		final String prefix = Application.class.getPackage().getName() + ".";
@@ -40,7 +41,30 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public boolean isCallerScript() {
-		return Thread.currentThread().getName().startsWith("Script-") || getCallingClass().startsWith("org.rsbot.script.Script");
+		if (Thread.currentThread().getName().startsWith(SCRIPTTHREAD) || getCallingClass().startsWith(SCRIPTCLASS)) {
+			return true;
+		}
+		ThreadGroup root = Thread.currentThread().getThreadGroup().getParent();
+		while (root.getParent() != null)
+			root = root.getParent();
+		final Thread[] list = new Thread[root.activeCount()];
+		root.enumerate(list);
+		for (int i = 0; i < list.length; i++) {
+			try {
+				if (list[i].getName().startsWith(SCRIPTTHREAD) || list[i].getClass().getName().startsWith(SCRIPTCLASS)) {
+					return true;
+				}
+			} catch (final NullPointerException ignored) {
+			}
+		}
+		return false;
+	}
+
+	public static void assertNonScript() {
+		final SecurityManager sm = System.getSecurityManager();
+		if (sm == null || !(sm instanceof RestrictedSecurityManager) || ((RestrictedSecurityManager) sm).isCallerScript()) {
+			throw new SecurityException();
+		}
 	}
 
 	public static boolean isHostAllowed(final String host) {
