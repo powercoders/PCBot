@@ -33,8 +33,6 @@ public interface Client {
 
 	int getCamPosZ();
 
-	String getCurrentPassword();
-
 	String getCurrentUsername();
 
 	int getDestX();
