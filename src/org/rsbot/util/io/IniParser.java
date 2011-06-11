@@ -55,6 +55,13 @@ public class IniParser {
 		return data;
 	}
 
+	public static HashMap<String, HashMap<String, String>> deserialise(final InputStream in) throws IOException {
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		final HashMap<String, HashMap<String, String>> data = deserialise(reader);
+		reader.close();
+		return data;
+	}
+
 	public static HashMap<String, HashMap<String, String>> deserialise(final BufferedReader input) throws IOException {
 		final HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>();
 		String line, section = emptySection;
