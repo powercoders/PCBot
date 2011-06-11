@@ -30,6 +30,7 @@ DISABLECANVAS=Disable Canvas
 EXTDVIEWS=Extended views
 AUTOSHUTDOWN=Shutdown (mins):
 BETAPATCH=Use beta client patch
+ALLOWALLHOSTS=Allow untrusted connections
 
 HIDETOOLBAR=Hide Toolbar
 HIDELOGPANE=Hide Log Pane

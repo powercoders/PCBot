@@ -1,6 +1,7 @@
 package org.rsbot.service;
 
 import org.rsbot.Configuration;
+import org.rsbot.security.RestrictedSecurityManager;
 import org.rsbot.util.io.IniParser;
 
 import java.io.BufferedWriter;
@@ -25,6 +26,7 @@ public class Preferences {
 	public boolean webPassRequire = false;
 	public String webPass = "";
 	public boolean sdnShow = true;
+	public boolean allowAllHosts = false;
 
 	private Preferences(final File store) {
 		this.store = store;
@@ -83,6 +85,9 @@ public class Preferences {
 		if (keys.containsKey("sdnShow")) {
 			sdnShow = IniParser.parseBool(keys.get("sdnShow"));
 		}
+		if (keys.containsKey("allowAllHosts")) {
+			allowAllHosts = IniParser.parseBool(keys.get("allowAllHosts"));
+		}
 	}
 
 	public void save() {
@@ -97,6 +102,7 @@ public class Preferences {
 		keys.put("webPassRequire", Boolean.toString(webPassRequire));
 		keys.put("webPass", webPass);
 		keys.put("sdnShow", Boolean.toString(sdnShow));
+		keys.put("allowAllHosts", Boolean.toString(allowAllHosts));
 		final HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>(1);
 		data.put(IniParser.emptySection, keys);
 		try {
@@ -106,5 +112,9 @@ public class Preferences {
 		} catch (final IOException ignored) {
 			log.severe("Could not save preferences");
 		}
+	}
+
+	public void commit() {
+		RestrictedSecurityManager.allowAllHosts = allowAllHosts;
 	}
 }

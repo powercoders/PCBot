@@ -76,6 +76,10 @@ public class SettingsManager extends JDialog {
 		checkShutdown.setEnabled(Configuration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS);
 		valueShutdown.setEnabled(checkShutdown.isEnabled() && checkShutdown.isSelected());
 
+		final JCheckBox checkHosts = new JCheckBox(Messages.ALLOWALLHOSTS);
+		checkHosts.setToolTipText("Allow connections to all websites (NOT RECOMMENDED)");
+		checkHosts.setSelected(preferences.allowAllHosts);
+
 		final JPanel[] panelWebOptions = new JPanel[2];
 		for (int i = 0; i < panelWebOptions.length; i++) {
 			panelWebOptions[i] = new JPanel(new GridLayout(1, 2));
@@ -120,7 +124,7 @@ public class SettingsManager extends JDialog {
 		panelOptions.add(checkAds);
 		panelOptions.add(checkConfirmations);
 		panelInternal.add(panelShutdown);
-		panelInternal.add(new JLabel());
+		panelInternal.add(checkHosts);
 		panelWeb.add(panelWebOptions[0]);
 		panelWeb.add(panelWebOptions[1]);
 
@@ -154,7 +158,9 @@ public class SettingsManager extends JDialog {
 						preferences.user = "";
 					}
 				}
+				preferences.allowAllHosts = checkHosts.isSelected();
 				preferences.save();
+				preferences.commit();
 				textLoginPass.setText(DEFAULT_PASSWORD);
 				textWebPass.setText(DEFAULT_PASSWORD);
 				dispose();
@@ -167,6 +173,7 @@ public class SettingsManager extends JDialog {
 				checkAds.setSelected(preferences.hideAds);
 				checkConfirmations.setSelected(preferences.confirmations);
 				checkShutdown.setSelected(preferences.shutdown);
+				checkHosts.setSelected(preferences.allowAllHosts);
 				modelShutdown.setValue(preferences.shutdownTime);
 				dispose();
 			}

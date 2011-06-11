@@ -66,6 +66,7 @@ public class Messages {
 	public static final String EXTDVIEWS = map.get("EXTDVIEWS");
 	public static final String AUTOSHUTDOWN = map.get("AUTOSHUTDOWN");
 	public static final String BETAPATCH = map.get("BETAPATCH");
+	public static final String ALLOWALLHOSTS = map.get("ALLOWALLHOSTS");
 
 	public static final String HIDETOOLBAR = map.get("HIDETOOLBAR");
 	public static final String HIDELOGPANE = map.get("HIDELOGPANE");
