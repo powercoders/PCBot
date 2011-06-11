@@ -33,31 +33,31 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	// NOTE: if whitelist item starts with a dot "." then it is checked at the end of the host
 	public final static String[] ALLOWED_HOSTS = {
-		".runescape.com",
-		".powerbot.org",
-		".imageshack.us",
-		".tinypic.com",
-		".photobucket.com",
-		".imgur.com",
-		".deviantart.com",
-		".ipcounter.de",
-		".wikia.com",
-		".wikia.nocookie.net",
+			".runescape.com",
+			".powerbot.org",
+			".imageshack.us",
+			".tinypic.com",
+			".photobucket.com",
+			".imgur.com",
+			".deviantart.com",
+			".ipcounter.de",
+			".wikia.com",
+			".wikia.nocookie.net",
 
-		".glorb.nl", // SXForce - Swamp Lizzy Paid, Snake Killah
-		"scripts.johnkeech.com", // MrSneaky - SneakyFarmerPro
-		"jtryba.com", // jtryba - autoCook, monkR8per
-		"tehgamer.info", // TehGamer - iMiner
-		"www.universalscripts.org", // Fletch To 99 - UFletch
-		"www.dunkscripts.freeiz.com", // Dunnkers
-		"www.dlolpics.com", // DlolPics
-		".logikmedia.co", // countvidal
-		"letthesmokeout.com", // MrByte
-		"zaszmedia.com", // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
-		"massacrescripting.net", // ShizZznit - Aviansie Massacre
-		".ownagebots.com", // Ownageful - OwnageGDK, OwnageBDK, OwnageFDK
-		"tablocks.com", // xCoder99 - xRedChin, xLeather, xWerewolf
-		".solarbots.org", // Wei Su
+			".glorb.nl", // SXForce - Swamp Lizzy Paid, Snake Killah
+			"scripts.johnkeech.com", // MrSneaky - SneakyFarmerPro
+			"jtryba.com", // jtryba - autoCook, monkR8per
+			"tehgamer.info", // TehGamer - iMiner
+			"www.universalscripts.org", // Fletch To 99 - UFletch
+			"www.dunkscripts.freeiz.com", // Dunnkers
+			"www.dlolpics.com", // DlolPics
+			".logikmedia.co", // countvidal
+			"letthesmokeout.com", // MrByte
+			"zaszmedia.com", // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
+			"massacrescripting.net", // ShizZznit - Aviansie Massacre
+			".ownagebots.com", // Ownageful - OwnageGDK, OwnageBDK, OwnageFDK
+			"tablocks.com", // xCoder99 - xRedChin, xLeather, xWerewolf
+			".solarbots.org", // Wei Su
 	};
 
 	private String getCallingClass() {

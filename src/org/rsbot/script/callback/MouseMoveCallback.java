@@ -9,5 +9,5 @@ package org.rsbot.script.callback;
  */
 public interface MouseMoveCallback {
 
-    public boolean onMouseOver();
+	public boolean onMouseOver();
 }

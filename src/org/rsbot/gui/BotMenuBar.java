@@ -192,7 +192,7 @@ public class BotMenuBar extends JMenuBar {
 				item.setSelected(false);
 				item.setEnabled(false);
 			}
-			disable(msg.ALLDEBUGGING, msg.FORCEINPUT, msg.LESSCPU, msg.DISABLEANTIRANDOMS, msg.DISABLEAUTOLOGIN);
+			disable(msg.ALLDEBUGGING, msg.FORCEINPUT, msg.LESSCPU, msg.DISABLECANVAS, msg.DISABLEANTIRANDOMS, msg.DISABLEAUTOLOGIN);
 		} else {
 			commandMenuItem.get(msg.CLOSEBOT).setEnabled(true);
 			commandMenuItem.get(msg.RUNSCRIPT).setEnabled(true);
@@ -211,6 +211,7 @@ public class BotMenuBar extends JMenuBar {
 			enable(msg.ALLDEBUGGING, selections == eventCheckMap.size());
 			enable(msg.FORCEINPUT, bot.overrideInput);
 			enable(msg.LESSCPU, bot.disableRendering);
+			enable(msg.DISABLECANVAS, bot.disableGraphics);
 			enable(msg.DISABLEANTIRANDOMS, bot.disableRandoms);
 			enable(msg.DISABLEAUTOLOGIN, bot.disableAutoLogin);
 		}
