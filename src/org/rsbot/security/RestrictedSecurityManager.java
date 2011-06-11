@@ -67,13 +67,8 @@ public class RestrictedSecurityManager extends SecurityManager {
 				".wikia.com",
 				".wikia.nocookie.net",
 
-				"shadowscripting.org", // iDungeon
-				"shadowscripting.wordpress.com", // iDungeon
 				".glorb.nl", // SXForce - Swamp Lizzy Paid, Snake Killah
 				"scripts.johnkeech.com", // MrSneaky - SneakyFarmerPro
-				"myrsdatabase.x10.mx", // gravemindx - BPestControl, GhoulKiller
-				"thedealer.site11.com", // XscripterzX - PiratePlanker, DealerTanner
-				"elyzianpirate.web44.net", // XscripterzX (see above)
 				"jtryba.com", // jtryba - autoCook, monkR8per
 				"tehgamer.info", // TehGamer - iMiner
 				"www.universalscripts.org", // Fletch To 99 - UFletch
@@ -82,20 +77,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 				".logikmedia.co", // countvidal
 				"letthesmokeout.com", // MrByte
 				"zaszmedia.com", // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
-				"pumyscript.orgfree.com", // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
-				"noneevr2.r00t.la", // noneevr2 - TakeBury
-				"testscriptsecurity.host22.com",//Marneus901 - Runite miner
-				"massacrescripting.net",//ShizZznit - Aviansie Massacre.
-				".ownagebots.com", //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
-				"vassdascripts.comuf.com",//Dandan Boy - ?
-				"doout.net84.net",
-				"doout5.webs.com",
-				"terrabubble.netai.net",
-				"terrabubble.webs.com",
-				"aaimister.webs.com",
-				"xscriptx.atwebpages.com",
+				"massacrescripting.net", // ShizZznit - Aviansie Massacre
+				".ownagebots.com", // Ownageful - OwnageGDK, OwnageBDK, OwnageFDK
 				"tablocks.com", // xCoder99 - xRedChin, xLeather, xWerewolf
-				"fuser.x10.mx", // Fuser - Giant Spider Fuser, Flesh Crawler Fuser
 				".solarbots.org", // Wei Su
 		};
 
