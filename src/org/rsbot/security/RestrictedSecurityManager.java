@@ -62,7 +62,6 @@ public class RestrictedSecurityManager extends SecurityManager {
 				".photobucket.com",
 				".imgur.com",
 				".deviantart.com",
-				".twitter.com",
 				".ipcounter.de",
 				".wikia.com",
 				".wikia.nocookie.net",
