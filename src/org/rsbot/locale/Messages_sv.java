@@ -17,17 +17,17 @@ public class Messages_sv extends Messages {
 	public final String EDIT = "Redigera";
 	public final String VIEW = "Visa";
 	public final String TOOLS = "Verktyg";
-	public final String HELP = "Hjälp";
+	public final String HELP = "HjÃ¤lp";
 
 	public final String NEWBOT = "Ny bot";
-	public final String CLOSEBOT = "Stäng bot";
-	public final String HIDEBOT = "Dölj";
-	public final String ADDSCRIPT = "Lägg till script";
-	public final String RUNSCRIPT = "Kör script";
-	public final String RESUMESCRIPT = "Återuppta script";
+	public final String CLOSEBOT = "StÃ¤ng bot";
+	public final String HIDEBOT = "DÃ¶lj";
+	public final String ADDSCRIPT = "LÃ¤gg till script";
+	public final String RUNSCRIPT = "KÃ¶r script";
+	public final String RESUMESCRIPT = "Ã…teruppta script";
 	public final String STOPSCRIPT = "Stoppa script";
 	public final String PAUSESCRIPT = "Pausa script";
-	public final String SAVESCREENSHOT = "Skärmdump";
+	public final String SAVESCREENSHOT = "SkÃ¤rmdump";
 	public final String EXIT = "Avsluta";
 
 	public final String ACCOUNTS = "Konton";
@@ -35,18 +35,18 @@ public class Messages_sv extends Messages {
 	public final String DISABLEANTIRANDOMS = "Inaktivera randoms";
 	public final String DISABLEAUTOLOGIN = "Inaktivera inloggning";
 	public final String DISABLEADS = "Inaktivera annonser";
-	public final String DISABLECONFIRMATIONS = "Inaktivera bekräftelser";
+	public final String DISABLECONFIRMATIONS = "Inaktivera bekrÃ¤ftelser";
 	public final String BINDTO = "Bind till adress:";
-	public final String USEPASSWORD = "Använd lösenord:";
+	public final String USEPASSWORD = "AnvÃ¤nd lÃ¶senord:";
 	public final String LESSCPU = "Mindre CPU";
 	public final String DISABLECANVAS = "Inaktivera canvas";
-	public final String EXTDVIEWS = "Utökad visa-meny";
-	public final String AUTOSHUTDOWN = "Automatisk avstängning (min):";
-	public final String BETAPATCH = "Använd beta client patch";
+	public final String EXTDVIEWS = "UtÃ¶kad visa-meny";
+	public final String AUTOSHUTDOWN = "Automatisk avstÃ¤ngning (min):";
+	public final String BETAPATCH = "AnvÃ¤nd beta client patch";
 
-	public final String HIDETOOLBAR = "Dölj verktygsfält";
-	public final String HIDELOGPANE = "Dölj loggpanel";
-	public final String ALLDEBUGGING = "All felsökning";
+	public final String HIDETOOLBAR = "DÃ¶lj verktygsfÃ¤lt";
+	public final String HIDELOGPANE = "DÃ¶lj loggpanel";
+	public final String ALLDEBUGGING = "All felsÃ¶kning";
 
 	public final String CLEARCACHE = "Rensa cache";
 	public final String OPTIONS = "Alternativ";
