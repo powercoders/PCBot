@@ -3,7 +3,6 @@ package org.rsbot.script.methods;
 import org.rsbot.bot.Bot;
 import org.rsbot.client.Client;
 import org.rsbot.script.internal.InputManager;
-import org.rsbot.script.internal.reflection.Reflection;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -202,11 +201,6 @@ public class MethodContext {
 	 */
 	public final Web web = new Web(this);
 
-	/**
-	 * Reflection providers.
-	 */
-	public final Reflection reflection;
-
     /**
      * The ExecutorService
      */
@@ -216,7 +210,6 @@ public class MethodContext {
 
 	public MethodContext(final Bot bot) {
 		this.bot = bot;
-		this.reflection = new Reflection(bot);
 		client = bot.getClient();
 		inputManager = bot.getInputManager();
         service = Executors.newCachedThreadPool();

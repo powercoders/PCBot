@@ -1,7 +1,6 @@
 package org.rsbot.script.methods;
 
 import org.rsbot.Configuration;
-import org.rsbot.script.internal.reflection.Reflection;
 import org.rsbot.script.wrappers.*;
 
 import javax.imageio.ImageIO;
@@ -157,10 +156,6 @@ public class Methods {
 	 * The singleton of Web
 	 */
 	protected Web web;
-	/**
-	 * Reflection providers.
-	 */
-	protected Reflection reflection;
 
 
 	/**
@@ -208,7 +203,6 @@ public class Methods {
 		lobby = ctx.lobby;
 		trade = ctx.trade;
 		web = ctx.web;
-		reflection = ctx.reflection;
 	}
 
 	/**
