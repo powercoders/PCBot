@@ -1,0 +1,45 @@
+LANGUAGE=Deutsch
+
+FILE=Datei
+EDIT=Bearbeiten
+VIEW=Ansicht
+TOOLS=Werkzeuge
+HELP=Hilfe
+
+NEWBOT=Neuer Bot
+CLOSEBOT=Bot schließen
+HIDEBOT=Ausblenden
+ADDSCRIPT=Script hinzufügen
+RUNSCRIPT=Script ausführen
+RESUMESCRIPT=Script fortsetzen
+STOPSCRIPT=Script anhalten
+PAUSESCRIPT=Script pausieren
+SAVESCREENSHOT=Screenshot
+EXIT=Beenden
+
+ACCOUNTS=Konten
+FORCEINPUT=Eingabe erzwingen
+DISABLEANTIRANDOMS=Zufälle deaktivieren
+DISABLEAUTOLOGIN=Login deaktivieren
+DISABLEADS=Werbung deaktivieren
+DISABLECONFIRMATIONS=Bestätigungen deaktivieren
+BINDTO=Auf Addresse binden
+USEPASSWORD=Benutze dieses Passwort:
+LESSCPU=Weniger CPU
+DISABLECANVAS=Deaktivieren Leinwand
+EXTDVIEWS=Extended views
+AUTOSHUTDOWN=Herunterfahren (mins):
+BETAPATCH=Beta Client patch verwenden
+
+HIDETOOLBAR=Toolbar verstecken
+HIDELOGPANE=Log-Panel verstecken
+ALLDEBUGGING=Alle Debugging-nachrichten
+
+CLEARCACHE=Cache Leeren
+OPTIONS=Optionen
+
+SITE=Site
+PROJECT=Projekt
+ABOUT=Über
+
+TABDEFAULTTEXT=Bot

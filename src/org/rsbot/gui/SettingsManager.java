@@ -15,7 +15,6 @@ import java.awt.event.*;
  * @author Paris
  */
 public class SettingsManager extends JDialog {
-	private static final Messages msg = Messages.getInstance();
 	private static final long serialVersionUID = 1657935322078534422L;
 	private static final String DEFAULT_PASSWORD = "\0\0\0\0\0\0\0\0";
 	private final Preferences preferences = Preferences.getInstance();
@@ -25,7 +24,7 @@ public class SettingsManager extends JDialog {
 	}
 
 	public SettingsManager(final Frame owner) {
-		super(owner, msg.OPTIONS, true);
+		super(owner, Messages.OPTIONS, true);
 		preferences.load();
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_WRENCH));
@@ -53,16 +52,16 @@ public class SettingsManager extends JDialog {
 		panelLogin.add(panelLoginOptions[0]);
 		panelLogin.add(panelLoginOptions[1]);
 
-		final JCheckBox checkAds = new JCheckBox(msg.DISABLEADS);
+		final JCheckBox checkAds = new JCheckBox(Messages.DISABLEADS);
 		checkAds.setToolTipText("Show advertisement on startup");
 		checkAds.setSelected(preferences.hideAds);
 
-		final JCheckBox checkConfirmations = new JCheckBox(msg.DISABLECONFIRMATIONS);
+		final JCheckBox checkConfirmations = new JCheckBox(Messages.DISABLECONFIRMATIONS);
 		checkConfirmations.setToolTipText("Suppress confirmation messages");
 		checkConfirmations.setSelected(preferences.confirmations);
 
 		final JPanel panelShutdown = new JPanel(new GridLayout(1, 2));
-		final JCheckBox checkShutdown = new JCheckBox(msg.AUTOSHUTDOWN);
+		final JCheckBox checkShutdown = new JCheckBox(Messages.AUTOSHUTDOWN);
 		checkShutdown.setToolTipText("Automatic system shutdown after specified period of inactivity");
 		checkShutdown.setSelected(preferences.shutdown);
 		panelShutdown.add(checkShutdown);
@@ -81,14 +80,14 @@ public class SettingsManager extends JDialog {
 		for (int i = 0; i < panelWebOptions.length; i++) {
 			panelWebOptions[i] = new JPanel(new GridLayout(1, 2));
 		}
-		final JCheckBox checkWeb = new JCheckBox(msg.BINDTO);
+		final JCheckBox checkWeb = new JCheckBox(Messages.BINDTO);
 		checkWeb.setToolTipText("Remote control via web interface");
 		checkWeb.setSelected(preferences.web);
 		panelWebOptions[0].add(checkWeb);
 		final JFormattedTextField textWebBind = new JFormattedTextField(preferences.webBind);
 		textWebBind.setToolTipText("Example: localhost:9500");
 		panelWebOptions[0].add(textWebBind);
-		final JCheckBox checkWebPass = new JCheckBox(msg.USEPASSWORD);
+		final JCheckBox checkWebPass = new JCheckBox(Messages.USEPASSWORD);
 		checkWebPass.setSelected(preferences.webPassRequire);
 		panelWebOptions[1].add(checkWebPass);
 		final JPasswordField textWebPass = new JPasswordField(DEFAULT_PASSWORD);

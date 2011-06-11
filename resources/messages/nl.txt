@@ -1,0 +1,49 @@
+LANGUAGE=Nederlands
+
+FILE=Bestand
+EDIT=Bewerken
+VIEW=Weergave
+TOOLS=Tools
+HELP=Help
+
+NEWBOT=Nieuwe Bot
+CLOSEBOT=Bot Sluiten
+HIDEBOT=Verbergen
+ADDSCRIPT=Voeg Script toe
+RUNSCRIPT=Voer Script uit
+RESUMESCRIPT=Hervat Script
+STOPSCRIPT=Stop Script
+PAUSESCRIPT=Pauzeer Script
+SAVESCREENSHOT=Screenshot
+EXIT=Sluit
+
+ACCOUNTS=Accounts
+FORCEINPUT=Force Input
+DISABLEANTIRANDOMS=Zet Randoms uit
+DISABLEAUTOLOGIN=Zet Login uit
+DISABLEADS=Geen Advertenties
+DISABLECONFIRMATIONS=Geen Bevestigingen
+BINDTO=Bind to address:
+USEPASSWORD=Use password:
+LESSCPU=Minder CPU
+EXTDVIEWS=Uitgebreide Weergave
+AUTOSHUTDOWN=Sluit Bot in (mins):
+BETAPATCH=Gebruik beta client patch
+
+HIDETOOLBAR=Verberg Toolbar
+HIDELOGPANE=Verberg Log Paneel
+ALLDEBUGGING=All Debugging
+
+CLEARCACHE=Verwijder Cache
+OPTIONS=Opties
+
+SITE=Site
+PROJECT=Project
+ABOUT=Over
+
+TOGGLE=Toggle
+TOGGLEFALSE = TOGGLE + "F 
+TOGGLETRUE = TOGGLE + "T 
+MENUSEPERATOR=-
+
+TABDEFAULTTEXT=Bot

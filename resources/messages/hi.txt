@@ -1,0 +1,45 @@
+LANGUAGE=Hindi
+
+FILE=फ़ाइल
+EDIT=संपादित
+VIEW=दृश्य
+TOOLS=उपकरण
+HELP=मदद
+
+NEWBOT=नई bot
+CLOSEBOT=करीब bot
+HIDEBOT=बीओटी छिपाना
+ADDSCRIPT=स्क्रिप्ट जोड़ना
+RUNSCRIPT=स्क्रिप्ट चलाने
+RESUMESCRIPT=स्क्रिप्ट को फिर से शुरू
+STOPSCRIPT=लिपि रोक
+PAUSESCRIPT=ठहराव लिपि
+SAVESCREENSHOT=स्क्रीनशॉट को बचाने
+EXIT=निकास
+
+ACCOUNTS=खातों
+FORCEINPUT=शक्ति इनपुट
+DISABLEANTIRANDOMS=निष्क्रिय randoms
+DISABLEAUTOLOGIN=निष्क्रिय ऑटो लॉगिनg
+DISABLEADS=निष्क्रिय विज्ञापन
+DISABLECONFIRMATIONS=निष्क्रिय पुष्टियों
+BINDTO=करने के लिए बाध्य:
+USEPASSWORD=उपयोग पासवर्ड:
+LESSCPU=कम सीपीयू
+DISABLECANVAS=निष्क्रिय कैनवास
+EXTDVIEWS=विस्तारित विचार
+AUTOSHUTDOWN=स्वत: बंद (mins):
+BETAPATCH=बीटा पैच client patch
+
+HIDETOOLBAR=उपकरण पट्टी छुपाना
+HIDELOGPANE=फलक लॉग छिपाने
+ALLDEBUGGING=सभी डिबगिंग
+
+CLEARCACHE=स्पष्ट कैश
+OPTIONS=विकल्प
+
+SITE=साइट
+PROJECT=परियोजना
+ABOUT=के बारे में
+
+TABDEFAULTTEXT=bot
