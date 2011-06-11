@@ -3,7 +3,6 @@ package org.rsbot.security;
 import org.rsbot.Application;
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
-import org.rsbot.bot.Bot;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.gui.LoadScreen;
 import org.rsbot.script.AccountStore;
@@ -132,7 +131,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 				break;
 			case PORT_HTTP:
 			case PORT_HTTPS:
-				boolean allowed = getThreadGroup().getName().equals(Bot.THREADGROUPID);
+				boolean allowed = !isCallerScript();
 				if (!allowed) {
 					if (isIpAddress(host)) {
 						allowed = resolved.contains(host) || (getClassContext()[1].getName().equals(Socket.class.getName()) && !isCallerScript());
