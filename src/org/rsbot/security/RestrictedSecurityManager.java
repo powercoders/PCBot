@@ -6,6 +6,7 @@ import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.gui.LoadScreen;
 import org.rsbot.script.AccountStore;
+import org.rsbot.script.Script;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.util.UpdateChecker;
@@ -98,6 +99,18 @@ public class RestrictedSecurityManager extends SecurityManager {
 	@Override
 	public void checkAccept(final String host, final int port) {
 		if (port != PORT_DNS) {
+			throw new SecurityException();
+		}
+	}
+
+	@Override
+	public void checkAccess(final Thread t) {
+		checkAccess(t.getThreadGroup());
+	}
+
+	@Override
+	public void checkAccess(final ThreadGroup g) {
+		if (g.getName().equals(ScriptHandler.THREAD_GROUP_NAME) && !(getCallingClass().equals(ScriptHandler.class.getName()) || getCallingClass().equals(Script.class.getName()))) {
 			throw new SecurityException();
 		}
 	}
