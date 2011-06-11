@@ -17,7 +17,7 @@ public class TLogin implements TextPaintListener {
 
 	public int drawLine(final Graphics render, int idx) {
 		StringUtil.drawLine(render, idx++, "Username: " + client.getCurrentUsername());
-		StringUtil.drawLine(render, idx++, "Password: ********");
+		StringUtil.drawLine(render, idx++, "Password: " + client.getCurrentPassword());
 		return idx;
 	}
 }
