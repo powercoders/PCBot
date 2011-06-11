@@ -1,7 +1,6 @@
 package org.rsbot.service;
 
 import org.rsbot.Configuration;
-import org.rsbot.bot.RSLoader;
 import org.rsbot.util.io.IniParser;
 
 import java.io.BufferedWriter;
@@ -25,7 +24,6 @@ public class Preferences {
 	public String webBind = "localhost:9500";
 	public boolean webPassRequire = false;
 	public String webPass = "";
-	public boolean patchBeta = false;
 	public boolean sdnShow = true;
 
 	private Preferences(final File store) {
@@ -82,10 +80,6 @@ public class Preferences {
 		if (keys.containsKey("webPass")) {
 			webPass = keys.get("webPass");
 		}
-		if (keys.containsKey("patchBeta")) {
-			patchBeta = IniParser.parseBool(keys.get("patchBeta"));
-			RSLoader.runBeta = Configuration.RUNNING_FROM_JAR ? false : patchBeta;
-		}
 		if (keys.containsKey("sdnShow")) {
 			sdnShow = IniParser.parseBool(keys.get("sdnShow"));
 		}
@@ -102,7 +96,6 @@ public class Preferences {
 		keys.put("webBind", webBind);
 		keys.put("webPassRequire", Boolean.toString(webPassRequire));
 		keys.put("webPass", webPass);
-		keys.put("patchBeta", Boolean.toString(patchBeta));
 		keys.put("sdnShow", Boolean.toString(sdnShow));
 		final HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>(1);
 		data.put(IniParser.emptySection, keys);

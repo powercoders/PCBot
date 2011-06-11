@@ -5,6 +5,9 @@ import org.rsbot.client.Client;
 import org.rsbot.script.internal.InputManager;
 import org.rsbot.script.internal.reflection.Reflection;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * For internal use to link MethodProviders.
  */
@@ -204,6 +207,11 @@ public class MethodContext {
 	 */
 	public final Reflection reflection;
 
+    /**
+     * The ExecutorService
+     */
+    public final ExecutorService service;
+
 	public final Bot bot;
 
 	public MethodContext(final Bot bot) {
@@ -211,5 +219,6 @@ public class MethodContext {
 		this.reflection = new Reflection(bot);
 		client = bot.getClient();
 		inputManager = bot.getInputManager();
+        service = Executors.newCachedThreadPool();
 	}
 }

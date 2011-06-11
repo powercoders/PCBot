@@ -73,7 +73,6 @@ public class Configuration {
 			public static final String DOWNLOAD = BASE + "download";
 			public static final String DOWNLOAD_SHORT = HOST + "/download";
 			public static final String CLIENTPATCH = BASE + "modscript";
-			public static final String CLIENTPATCH_BETA = BASE + "modscript-beta";
 			public static final String VERSION = BASE + "version.txt";
 			public static final String VERSION_KILL = BASE + "version-kill";
 			public static final String PROJECT = BASE + "git-project";
@@ -224,7 +223,7 @@ public class Configuration {
 	private static final OperatingSystem CURRENT_OS;
 	public static boolean RUNNING_FROM_JAR = false;
 	public static final boolean SKINNED = false;
-	public static final boolean GOOGLEDNS = false;
+	public static final boolean GOOGLEDNS = true;
 
 	public static class Twitter {
 		public static final boolean ENABLED = true;

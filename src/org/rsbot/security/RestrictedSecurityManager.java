@@ -6,6 +6,8 @@ import org.rsbot.Configuration.OperatingSystem;
 import org.rsbot.gui.BotGUI;
 import org.rsbot.gui.LoadScreen;
 import org.rsbot.script.AccountStore;
+import org.rsbot.script.Script;
+import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.provider.ScriptDeliveryNetwork;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.JavaCompiler;
@@ -29,6 +31,35 @@ public class RestrictedSecurityManager extends SecurityManager {
 	private static HashSet<String> resolved = new HashSet<String>();
 	public static final String SCRIPTTHREAD = "Script-", SCRIPTCLASS = "org.rsbot.script.Script";
 
+	// NOTE: if whitelist item starts with a dot "." then it is checked at the end of the host
+	public final static String[] ALLOWED_HOSTS = {
+		".runescape.com",
+		".powerbot.org",
+		".imageshack.us",
+		".tinypic.com",
+		".photobucket.com",
+		".imgur.com",
+		".deviantart.com",
+		".ipcounter.de",
+		".wikia.com",
+		".wikia.nocookie.net",
+
+		".glorb.nl", // SXForce - Swamp Lizzy Paid, Snake Killah
+		"scripts.johnkeech.com", // MrSneaky - SneakyFarmerPro
+		"jtryba.com", // jtryba - autoCook, monkR8per
+		"tehgamer.info", // TehGamer - iMiner
+		"www.universalscripts.org", // Fletch To 99 - UFletch
+		"www.dunkscripts.freeiz.com", // Dunnkers
+		"www.dlolpics.com", // DlolPics
+		".logikmedia.co", // countvidal
+		"letthesmokeout.com", // MrByte
+		"zaszmedia.com", // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
+		"massacrescripting.net", // ShizZznit - Aviansie Massacre
+		".ownagebots.com", // Ownageful - OwnageGDK, OwnageBDK, OwnageFDK
+		"tablocks.com", // xCoder99 - xRedChin, xLeather, xWerewolf
+		".solarbots.org", // Wei Su
+	};
+
 	private String getCallingClass() {
 		final String prefix = Application.class.getPackage().getName() + ".";
 		for (final Class<?> c : getClassContext()) {
@@ -41,24 +72,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public boolean isCallerScript() {
-		if (Thread.currentThread().getName().startsWith(SCRIPTTHREAD) || getCallingClass().startsWith(SCRIPTCLASS)) {
-			return true;
-		}
-		ThreadGroup root = Thread.currentThread().getThreadGroup().getParent();
-		while (root.getParent() != null) {
-			root = root.getParent();
-		}
-		final Thread[] list = new Thread[root.activeCount()];
-		root.enumerate(list);
-		for (int i = 0; i < list.length; i++) {
-			try {
-				if (list[i].getName().startsWith(SCRIPTTHREAD) || list[i].getClass().getName().startsWith(SCRIPTCLASS)) {
-					return true;
-				}
-			} catch (final NullPointerException ignored) {
-			}
-		}
-		return false;
+		return getThreadGroup().getName().equals(ScriptHandler.THREAD_GROUP_NAME) || Thread.currentThread().getName().startsWith(SCRIPTTHREAD) || getCallingClass().startsWith(SCRIPTCLASS);
 	}
 
 	public static void assertNonScript() {
@@ -69,55 +83,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public static boolean isHostAllowed(final String host) {
-		// NOTE: if whitelist item starts with a dot "." then it is checked at the end of the host
-		final String[] WHITELIST = {
-				".runescape.com",
-				".powerbot.org",
-				".imageshack.us",
-				".tinypic.com",
-				".photobucket.com",
-				".imgur.com",
-				".deviantart.com",
-				".twitter.com",
-				".ipcounter.de",
-				".wikia.com",
-				".wikia.nocookie.net",
-
-				"pastie.org",
-				"pastebin.com",
-				"shadowscripting.org", // iDungeon
-				"shadowscripting.wordpress.com", // iDungeon
-				".glorb.nl", // SXForce - Swamp Lizzy Paid, Snake Killah
-				"scripts.johnkeech.com", // MrSneaky - SneakyFarmerPro
-				"myrsdatabase.x10.mx", // gravemindx - BPestControl, GhoulKiller
-				"thedealer.site11.com", // XscripterzX - PiratePlanker, DealerTanner
-				"elyzianpirate.web44.net", // XscripterzX (see above)
-				"jtryba.com", // jtryba - autoCook, monkR8per
-				"tehgamer.info", // TehGamer - iMiner
-				"www.universalscripts.org", // Fletch To 99 - UFletch
-				"www.dunkscripts.freeiz.com", // Dunnkers
-				"www.dlolpics.com", // DlolPics
-				".logikmedia.co", // countvidal
-				"letthesmokeout.com", // MrByte
-				"zaszmedia.com", // zasz - Frost Dragons Pro, Enchanter Pro, Jars Pro
-				"pumyscript.orgfree.com", // Pumy - Ape Atoll Chinner, PumyDungxFarm, PumyArtisansWorkshop
-				"noneevr2.r00t.la", // noneevr2 - TakeBury
-				"testscriptsecurity.host22.com",//Marneus901 - Runite miner
-				"massacrescripting.net",//ShizZznit - Aviansie Massacre.
-				".ownagebots.com", //Ownageful/Aut0r's scripts - OwnageGDK, OwnageBDK, OwnageFDK
-				"vassdascripts.comuf.com",//Dandan Boy - ?
-				"doout.net84.net",
-				"doout5.webs.com",
-				"terrabubble.netai.net",
-				"terrabubble.webs.com",
-				"aaimister.webs.com",
-				"xscriptx.atwebpages.com",
-				"tablocks.com", // xCoder99 - xRedChin, xLeather, xWerewolf
-				"fuser.x10.mx", // Fuser - Giant Spider Fuser, Flesh Crawler Fuser
-				".solarbots.org", // Wei Su
-		};
-
-		for (final String check : WHITELIST) {
+		for (final String check : ALLOWED_HOSTS) {
 			if (check.startsWith(".")) {
 				if (host.endsWith(check) || check.equals("." + host)) {
 					return true;
@@ -132,16 +98,19 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 	@Override
 	public void checkAccept(final String host, final int port) {
-		if (port == PORT_DNS) {
-			checkConnectDNS(host);
-		} else {
+		if (port != PORT_DNS) {
 			throw new SecurityException();
 		}
 	}
 
-	private void checkConnectDNS(final String host) {
-		if (!(host.equals(DNSA) || host.equals(DNSB))) {
-			log.warning("DNS lookup denied: " + host);
+	@Override
+	public void checkAccess(final Thread t) {
+		checkAccess(t.getThreadGroup());
+	}
+
+	@Override
+	public void checkAccess(final ThreadGroup g) {
+		if (g.getName().equals(ScriptHandler.THREAD_GROUP_NAME) && !(getCallingClass().equals(ScriptHandler.class.getName()) || getCallingClass().equals(Script.class.getName()))) {
 			throw new SecurityException();
 		}
 	}
@@ -154,17 +123,17 @@ public class RestrictedSecurityManager extends SecurityManager {
 
 		switch (port) {
 			case PORT_UNKNOWN:
-				break;
 			case PORT_DNS:
-				checkConnectDNS(host);
 				break;
 			case PORT_HTTP:
 			case PORT_HTTPS:
-				boolean allowed = false;
-				if (isIpAddress(host)) {
-					allowed = resolved.contains(host) || (getClassContext()[1].getName().equals(Socket.class.getName()) && !isCallerScript());
-				} else {
-					allowed = isHostAllowed(host);
+				boolean allowed = !isCallerScript();
+				if (!allowed) {
+					if (isIpAddress(host)) {
+						allowed = resolved.contains(host) || (getClassContext()[1].getName().equals(Socket.class.getName()) && !isCallerScript());
+					} else {
+						allowed = isHostAllowed(host);
+					}
 				}
 				if (!allowed) {
 					log.warning("Connection denied: " + host);
