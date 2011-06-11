@@ -466,10 +466,10 @@ public class AccountManager extends JDialog implements ActionListener {
 				!(s[2].getClassName().equals(AccountManager.class.getName())) ||
 				!(
 						s[3].getClassName().equals(BotGUI.class.getName()) ||
-						s[3].getClassName().equals(ScriptSelector.class.getName()) ||
-						s[3].getClassName().equals(AccountManager.class.getName()) ||
-						s[3].getClassName().equals(Bot.class.getName()) ||
-						s[3].getClassName().equals(LoginBot.class.getName()))
+								s[3].getClassName().equals(ScriptSelector.class.getName()) ||
+								s[3].getClassName().equals(AccountManager.class.getName()) ||
+								s[3].getClassName().equals(Bot.class.getName()) ||
+								s[3].getClassName().equals(LoginBot.class.getName()))
 				) {
 			throw new SecurityException();
 		}

@@ -1,7 +1,5 @@
 package org.rsbot.script.callback;
 
-import org.rsbot.script.task.MouseTask;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jeroen
@@ -11,5 +9,5 @@ import org.rsbot.script.task.MouseTask;
  */
 public interface MouseMoveCallback {
 
-    public boolean onMouseOver();
+	public boolean onMouseOver();
 }

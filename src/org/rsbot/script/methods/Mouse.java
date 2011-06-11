@@ -497,10 +497,10 @@ public class Mouse extends MethodProvider {
 		return mouse != null && mouse.isPressed();
 	}
 
-    public MouseTask create(RSTarget target,MouseMoveCallback callback){
-        MouseTask task = new MouseTask(target,callback,methods);
-        task.init(methods.service.submit(task,task));
-        return task;
-    }
+	public MouseTask create(RSTarget target, MouseMoveCallback callback) {
+		MouseTask task = new MouseTask(target, callback, methods);
+		task.init(methods.service.submit(task, task));
+		return task;
+	}
 
 }
