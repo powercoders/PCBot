@@ -5,7 +5,7 @@ import java.util.concurrent.Future;
 
 public abstract class AbstractTask implements Task {
 
-    private Future f;
+    private Future<?> f;
 
     public boolean isDone() {
         return f.isDone();
@@ -23,7 +23,7 @@ public abstract class AbstractTask implements Task {
         }
     }
 
-    public void init(Future f) {
+    public void init(Future<?> f) {
         this.f = f;
     }
 }

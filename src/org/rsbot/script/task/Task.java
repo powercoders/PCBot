@@ -24,5 +24,5 @@ public interface Task extends Runnable {
      * Provides the future for this Task
      * @param f The future
      */
-    void init(Future f);
+    void init(Future<?> f);
 }

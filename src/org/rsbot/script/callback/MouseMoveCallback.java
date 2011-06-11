@@ -1,7 +1,5 @@
 package org.rsbot.script.callback;
 
-import org.rsbot.script.task.MouseTask;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jeroen

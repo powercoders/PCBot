@@ -8,7 +8,6 @@ import org.rsbot.script.wrappers.RSTarget;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.

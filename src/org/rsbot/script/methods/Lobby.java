@@ -9,7 +9,6 @@ import java.util.ArrayList;
  *
  * @author Debauchery
  */
-@SuppressWarnings("unused")
 public class Lobby extends MethodProvider {
 	public Lobby(final MethodContext ctx) {
 		super(ctx);
