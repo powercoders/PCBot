@@ -21,6 +21,8 @@ public class Messages {
 				instance = new Messages_nl();
 			} else if (loc.startsWith("sv")) {
 				instance = new Messages_sv();
+                        } else if (loc.startsWith("hi")) {
+                                instance = new Messages_hi();
 			} else {
 				instance = new Messages();
 			}
