@@ -14,7 +14,7 @@ import java.awt.*;
  *
  * @author Qauters
  */
-public class RSComponent extends MethodProvider {
+public class RSComponent extends MethodProvider implements RSTarget{
 	/**
 	 * The index of this interface in the parent. If this
 	 * component does not have a parent component, this
@@ -966,4 +966,12 @@ public class RSComponent extends MethodProvider {
 		}
 		return null;
 	}
+
+    public Point getPoint() {
+        return getCenter();
+    }
+
+    public boolean contains(int x, int y) {
+        return getArea().contains(x,y);
+    }
 }

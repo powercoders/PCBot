@@ -13,8 +13,8 @@ public class ScriptHandler {
 	private final ArrayList<org.rsbot.script.Random> randoms = new ArrayList<org.rsbot.script.Random>();
 	private final HashMap<Integer, Script> scripts = new HashMap<Integer, Script>();
 	private final HashMap<Integer, Thread> scriptThreads = new HashMap<Integer, Thread>();
-	public final static String THREADGROUPID = "Scripts";
-	private final ThreadGroup scriptThreadGroup = new ThreadGroup(THREADGROUPID);
+	public final static String THREAD_GROUP_NAME = "Scripts";
+	private final ThreadGroup scriptThreadGroup = new ThreadGroup(THREAD_GROUP_NAME);
 
 	private final Set<ScriptListener> listeners = Collections.synchronizedSet(new HashSet<ScriptListener>());
 

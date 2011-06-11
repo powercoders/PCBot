@@ -42,7 +42,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public boolean isCallerScript() {
-		return getThreadGroup().getName().equals(ScriptHandler.THREADGROUPID) || Thread.currentThread().getName().startsWith(SCRIPTTHREAD) || getCallingClass().startsWith(SCRIPTCLASS);
+		return getThreadGroup().getName().equals(ScriptHandler.THREAD_GROUP_NAME) || Thread.currentThread().getName().startsWith(SCRIPTTHREAD) || getCallingClass().startsWith(SCRIPTCLASS);
 	}
 
 	public static void assertNonScript() {

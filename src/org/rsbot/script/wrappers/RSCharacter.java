@@ -8,7 +8,7 @@ import org.rsbot.script.methods.MethodProvider;
 
 import java.awt.*;
 
-public abstract class RSCharacter extends MethodProvider {
+public abstract class RSCharacter extends MethodProvider implements RSTarget{
 	public RSCharacter(final MethodContext ctx) {
 		super(ctx);
 	}
@@ -260,4 +260,15 @@ public abstract class RSCharacter extends MethodProvider {
 				+ ",interact=" + (inter == null ? "null" :
 				inter.isValid() ? inter.getName() : "Invalid") + "]";
 	}
+
+    public Point getPoint() {
+        return getScreenLocation();
+    }
+
+    public boolean contains(int x, int y) {
+        RSModel model = getModel();
+        if(model != null)
+            return model.contains(x, y);
+        return getScreenLocation().distance(x, y) < random(0,8);
+    }
 }

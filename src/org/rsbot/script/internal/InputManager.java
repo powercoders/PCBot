@@ -20,7 +20,7 @@ public class InputManager {
 	/**
 	 * The side of the screen off which the mouse last moved.
 	 */
-	private int side = random(1, 5);
+	public int side = random(1, 5);
 
 	public InputManager(final Bot bot) {
 		this.bot = bot;
