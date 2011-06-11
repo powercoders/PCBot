@@ -622,7 +622,9 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	public void setTray() {
+		boolean showTip = false;
 		if (tray == null) {
+			showTip = true;
 			final Image image = Configuration.getImage(Configuration.Paths.Resources.ICON);
 			tray = new TrayIcon(image, Configuration.NAME, null);
 			tray.setImageAutoSize(true);
@@ -648,8 +650,9 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		}
 		try {
 			SystemTray.getSystemTray().add(tray);
-			final String msg = "Bots are still running in the background.\nClick this icon to restore the window.";
-			tray.displayMessage(Configuration.NAME + " Hidden", msg, MessageType.INFO);
+			if (showTip) {
+				tray.displayMessage(Configuration.NAME + " Hidden", "Bots are still running in the background.\nClick this icon to restore the window.", MessageType.INFO);
+			}
 		} catch (Exception ignored) {
 			log.warning("Unable to hide window");
 		}
