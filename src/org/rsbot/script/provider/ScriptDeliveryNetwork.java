@@ -5,7 +5,6 @@ import org.rsbot.script.Script;
 import org.rsbot.script.provider.FileScriptSource.FileScriptDefinition;
 import org.rsbot.service.ServiceException;
 import org.rsbot.util.io.HttpClient;
-import org.rsbot.util.io.IOHelper;
 import org.rsbot.util.io.IniParser;
 
 import java.io.File;
@@ -162,7 +161,7 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 		final File cache = new File(getCacheDirectory(), def.path);
 		final LinkedList<ScriptDefinition> defs = new LinkedList<ScriptDefinition>();
 		try {
-			if (!cache.exists() || IOHelper.crc32(cache) != def.crc32) {
+			if (!cache.exists() || getScriptVersion(cache) < def.version) {
 				log.info("Downloading script " + def.name + "...");
 				download(def);
 			}
@@ -172,5 +171,15 @@ public class ScriptDeliveryNetwork implements ScriptSource {
 			log.severe("Unable to load script");
 		}
 		return null;
+	}
+
+	private double getScriptVersion(final File cache) {
+		final LinkedList<ScriptDefinition> defs = new LinkedList<ScriptDefinition>();
+		try {
+			FileScriptSource.load(cache, defs, null);
+		} catch (final IOException ignored) {
+			return -1;
+		}
+		return defs.getFirst().version;
 	}
 }

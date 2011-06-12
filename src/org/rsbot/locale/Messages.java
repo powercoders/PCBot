@@ -1,83 +1,88 @@
 package org.rsbot.locale;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map.Entry;
+
+import org.rsbot.Configuration;
+import org.rsbot.util.io.IniParser;
 
 public class Messages {
-	private static Messages instance;
+	private static HashMap<String, String> map;
 
-	protected Messages() {
-	}
-
-	public static Messages getInstance() {
-		if (instance == null) {
-			final String loc = Locale.getDefault().getLanguage();
-			if (loc.startsWith("de")) {
-				instance = new Messages_de();
-			} else if (loc.startsWith("de")) {
-				instance = new Messages_de();
-			} else if (loc.startsWith("fr")) {
-				instance = new Messages_fr();
-			} else if (loc.startsWith("nl")) {
-				instance = new Messages_nl();
-			} else if (loc.startsWith("sv")) {
-				instance = new Messages_sv();
-                        } else if (loc.startsWith("hi")) {
-                                instance = new Messages_hi();
-			} else {
-				instance = new Messages();
+	static {
+		final String defaultLang = "en";
+		final String lang = Locale.getDefault().getLanguage();
+		try {
+			URL src = Configuration.getResourceURL(Configuration.Paths.Resources.MESSAGES + defaultLang + ".txt");
+			map = IniParser.deserialise(src.openStream()).get(IniParser.emptySection);
+			if (!lang.startsWith(defaultLang)) {
+				for (final String avail : new String[] {"de", "hi", "nl", "sv"}) {
+					if (lang.startsWith(avail)) {
+						src = Configuration.getResourceURL(Configuration.Paths.Resources.MESSAGES + avail + ".txt");
+						final HashMap<String, String> mapNative = IniParser.deserialise(src.openStream()).get(IniParser.emptySection);
+						for (final Entry<String, String> entry : mapNative.entrySet()) {
+							map.put(entry.getKey(), entry.getValue());
+						}
+						break;
+					}
+				}
 			}
+		} catch (final IOException ignored) {
 		}
-		return instance;
 	}
 
-	public final String LANGUAGE = "English";
+	public static final String LANGUAGE = map.get("LANGUAGE");
 
-	public final String FILE = "File";
-	public final String EDIT = "Edit";
-	public final String VIEW = "View";
-	public final String TOOLS = "Tools";
-	public final String HELP = "Help";
+	public static final String FILE = map.get("FILE");
+	public static final String EDIT = map.get("EDIT");
+	public static final String VIEW = map.get("VIEW");
+	public static final String TOOLS = map.get("TOOLS");
+	public static final String HELP = map.get("HELP");
 
-	public final String NEWBOT = "New Bot";
-	public final String CLOSEBOT = "Close Bot";
-	public final String HIDEBOT = "Hide";
-	public final String ADDSCRIPT = "Add Script";
-	public final String RUNSCRIPT = "Run Script";
-	public final String RESUMESCRIPT = "Resume Script";
-	public final String STOPSCRIPT = "Stop Script";
-	public final String PAUSESCRIPT = "Pause Script";
-	public final String SAVESCREENSHOT = "Screenshot";
-	public final String EXIT = "Exit";
+	public static final String NEWBOT = map.get("NEWBOT");
+	public static final String CLOSEBOT = map.get("CLOSEBOT");
+	public static final String HIDEBOT = map.get("HIDEBOT");
+	public static final String ADDSCRIPT = map.get("ADDSCRIPT");
+	public static final String RUNSCRIPT = map.get("RUNSCRIPT");
+	public static final String RESUMESCRIPT = map.get("RESUMESCRIPT");
+	public static final String STOPSCRIPT = map.get("STOPSCRIPT");
+	public static final String PAUSESCRIPT = map.get("PAUSESCRIPT");
+	public static final String SAVESCREENSHOT = map.get("SAVESCREENSHOT");
+	public static final String EXIT = map.get("EXIT");
 
-	public final String ACCOUNTS = "Accounts";
-	public final String FORCEINPUT = "Force Input";
-	public final String DISABLEANTIRANDOMS = "Disable Randoms";
-	public final String DISABLEAUTOLOGIN = "Disable Login";
-	public final String DISABLEADS = "Disable advertisements";
-	public final String DISABLECONFIRMATIONS = "Disable confirmations";
-	public final String BINDTO = "Bind to address:";
-	public final String USEPASSWORD = "Use password:";
-	public final String LESSCPU = "Less CPU";
-	public final String DISABLECANVAS = "Disable Canvas";
-	public final String EXTDVIEWS = "Extended views";
-	public final String AUTOSHUTDOWN = "Shutdown (mins):";
-	public final String BETAPATCH = "Use beta client patch";
+	public static final String ACCOUNTS = map.get("ACCOUNTS");
+	public static final String FORCEINPUT = map.get("FORCEINPUT");
+	public static final String DISABLEANTIRANDOMS = map.get("DISABLEANTIRANDOMS");
+	public static final String DISABLEAUTOLOGIN = map.get("DISABLEAUTOLOGIN");
+	public static final String DISABLEADS = map.get("DISABLEADS");
+	public static final String DISABLECONFIRMATIONS = map.get("DISABLECONFIRMATIONS");
+	public static final String BINDTO = map.get("BINDTO");
+	public static final String USEPASSWORD = map.get("USEPASSWORD");
+	public static final String LESSCPU = map.get("LESSCPU");
+	public static final String DISABLECANVAS = map.get("DISABLECANVAS");
+	public static final String EXTDVIEWS = map.get("EXTDVIEWS");
+	public static final String AUTOSHUTDOWN = map.get("AUTOSHUTDOWN");
+	public static final String BETAPATCH = map.get("BETAPATCH");
+	public static final String ALLOWALLHOSTS = map.get("ALLOWALLHOSTS");
 
-	public final String HIDETOOLBAR = "Hide Toolbar";
-	public final String HIDELOGPANE = "Hide Log Pane";
-	public final String ALLDEBUGGING = "All Debugging";
+	public static final String HIDETOOLBAR = map.get("HIDETOOLBAR");
+	public static final String HIDELOGPANE = map.get("HIDELOGPANE");
+	public static final String ALLDEBUGGING = map.get("ALLDEBUGGING");
 
-	public final String CLEARCACHE = "Clear Cache";
-	public final String OPTIONS = "Options";
+	public static final String CLEARCACHE = map.get("CLEARCACHE");
+	public static final String OPTIONS = map.get("OPTIONS");
 
-	public final String SITE = "Site";
-	public final String PROJECT = "Project";
-	public final String ABOUT = "About";
+	public static final String SITE = map.get("SITE");
+	public static final String PROJECT = map.get("PROJECT");
+	public static final String ABOUT = map.get("ABOUT");
 
-	public final String TOGGLE = "Toggle";
-	public final String TOGGLEFALSE = TOGGLE + "F ";
-	public final String TOGGLETRUE = TOGGLE + "T ";
-	public final String MENUSEPERATOR = "-";
+	public static final String TABDEFAULTTEXT = map.get("TABDEFAULTTEXT");
 
-	public final String TABDEFAULTTEXT = "Bot";
+	public static final String TOGGLE = "Toggle";
+	public static final String TOGGLEFALSE = TOGGLE + "F ";
+	public static final String TOGGLETRUE = TOGGLE + "T ";
+	public static final String MENUSEPERATOR = "-";
 }

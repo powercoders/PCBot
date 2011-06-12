@@ -30,6 +30,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	public final static String DNSA = "8.8.8.8", DNSB = "8.8.4.4"; // Google Public DNS (http://code.google.com/speed/public-dns/)
 	private static HashSet<String> resolved = new HashSet<String>();
 	public static final String SCRIPTTHREAD = "Script-", SCRIPTCLASS = "org.rsbot.script.Script";
+	public static boolean allowAllHosts = false;
 
 	// NOTE: if whitelist item starts with a dot "." then it is checked at the end of the host
 	public final static String[] ALLOWED_HOSTS = {
@@ -84,6 +85,9 @@ public class RestrictedSecurityManager extends SecurityManager {
 	}
 
 	public static boolean isHostAllowed(final String host) {
+		if (allowAllHosts) {
+			return true;
+		}
 		for (final String check : ALLOWED_HOSTS) {
 			if (check.startsWith(".")) {
 				if (host.endsWith(check) || check.equals("." + host)) {

@@ -1,0 +1,46 @@
+LANGUAGE=English
+
+FILE=File
+EDIT=Edit
+VIEW=View
+TOOLS=Tools
+HELP=Help
+
+NEWBOT=New Bot
+CLOSEBOT=Close Bot
+HIDEBOT=Hide
+ADDSCRIPT=Add Script
+RUNSCRIPT=Run Script
+RESUMESCRIPT=Resume Script
+STOPSCRIPT=Stop Script
+PAUSESCRIPT=Pause Script
+SAVESCREENSHOT=Screenshot
+EXIT=Exit
+
+ACCOUNTS=Accounts
+FORCEINPUT=Force Input
+DISABLEANTIRANDOMS=Disable Randoms
+DISABLEAUTOLOGIN=Disable Login
+DISABLEADS=Disable advertisements
+DISABLECONFIRMATIONS=Disable confirmations
+BINDTO=Bind to address:
+USEPASSWORD=Use password:
+LESSCPU=Less CPU
+DISABLECANVAS=Disable Canvas
+EXTDVIEWS=Extended views
+AUTOSHUTDOWN=Shutdown (mins):
+BETAPATCH=Use beta client patch
+ALLOWALLHOSTS=Allow untrusted connections
+
+HIDETOOLBAR=Hide Toolbar
+HIDELOGPANE=Hide Log Pane
+ALLDEBUGGING=All Debugging
+
+CLEARCACHE=Clear Cache
+OPTIONS=Options
+
+SITE=Site
+PROJECT=Project
+ABOUT=About
+
+TABDEFAULTTEXT=Bot

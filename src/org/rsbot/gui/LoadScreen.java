@@ -65,7 +65,7 @@ public class LoadScreen extends JFrame {
 		setResizable(false);
 		setVisible(true);
 
-		log.info("Language: " + Messages.getInstance().LANGUAGE);
+		log.info("Language: " + Messages.LANGUAGE);
 
 		log.info("Registering logs");
 		bootstrap();
