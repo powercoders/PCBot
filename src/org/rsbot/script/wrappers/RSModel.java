@@ -13,10 +13,9 @@ import java.util.Arrays;
 
 /**
  * A screen space model.
- *
- * @author SpeedWing
  */
-public abstract class RSModel extends MethodProvider {
+public abstract class RSModel extends MethodProvider implements RSTarget {
+
 	/**
 	 * Returns a filter that matches against the array of point indices for the
 	 * A vertices of each triangle. Use in scripts is discouraged.
@@ -66,15 +65,17 @@ public abstract class RSModel extends MethodProvider {
 
 	protected abstract void update();
 
+	public boolean contains(final Point p) {
+		return contains(p.x, p.y);
+	}
+
+
 	/**
-	 * Checks if a model contains a point.
-	 *
-	 * @param p A point on the screen
-	 * @return <tt>true</tt> of the point is within the bounds of the model.
+	 * @param x The x location to check
+	 * @param y The y location to check
+	 * @return true of the point is within the bounds of the model
 	 */
-	private boolean contains(final Point p) {
-		int x = p.x;
-		int y = p.y;
+	public boolean contains(int x, int y) {
 		final int[][] points = projectVertices();
 		for (int i = 0; i < numFaces; i++) {
 			int index1 = indices1[i];
@@ -258,9 +259,9 @@ public abstract class RSModel extends MethodProvider {
 			final Point central = new Point(x / total, y / total);
 			final Point point = new Point();
 			/*
-			 * Find a real point on the character that is closest to the central
-			 * point
-			 */
+							* Find a real point on the character that is closest to the central
+							* point
+							*/
 			Point curCentral = new Point();
 			double dist = 20000;
 

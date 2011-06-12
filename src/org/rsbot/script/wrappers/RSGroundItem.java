@@ -5,10 +5,12 @@ import org.rsbot.client.RSGroundObject;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.MethodProvider;
 
+import java.awt.*;
+
 /**
  * Represents an item on a tile.
  */
-public class RSGroundItem extends MethodProvider {
+public class RSGroundItem extends MethodProvider implements RSTarget {
 	private final RSItem groundItem;
 	private final RSTile location;
 
@@ -107,5 +109,21 @@ public class RSGroundItem extends MethodProvider {
 		} else {
 			return methods.calc.pointOnScreen(model.getPoint());
 		}
+	}
+
+	public Point getPoint() {
+		RSModel model = getModel();
+		if (model != null) {
+			return model.getPoint();
+		}
+		return methods.calc.tileToScreen(getLocation());
+	}
+
+	public boolean contains(int x, int y) {
+		RSModel model = getModel();
+		if (model != null) {
+			return model.contains(x, y);
+		}
+		return methods.calc.tileToScreen(getLocation()).distance(x, y) < random(4, 9);
 	}
 }

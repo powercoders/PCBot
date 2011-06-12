@@ -4,7 +4,9 @@ import org.pcbot.net.methods.Worlds;
 import org.rsbot.bot.Bot;
 import org.rsbot.client.Client;
 import org.rsbot.script.internal.InputManager;
-import org.rsbot.script.internal.reflection.Reflection;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * For internal use to link MethodProviders.
@@ -206,16 +208,16 @@ public class MethodContext {
 	public final Web web = new Web(this);
 
 	/**
-	 * Reflection providers.
+	 * The ExecutorService
 	 */
-	public final Reflection reflection;
+	public final ExecutorService service;
 
 	public final Bot bot;
 
 	public MethodContext(final Bot bot) {
 		this.bot = bot;
-		this.reflection = new Reflection(bot);
 		client = bot.getClient();
 		inputManager = bot.getInputManager();
+		service = Executors.newCachedThreadPool();
 	}
 }

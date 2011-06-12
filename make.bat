@@ -56,7 +56,7 @@ IF EXIST "%lstf%" DEL /F /Q "%lstf%"
 COPY "%manifest%" "%lstf%" > NUL
 ECHO Specification-Version: "%version%" >> "%lstf%"
 ECHO Implementation-Version: "%version%" >> "%lstf%"
-jar cfm "%dist%" "%lstf%" -C "%out%" . %versionfile% %imgdir%\* %scripts%\*.class %res%\*.bat %res%\*.sh
+jar cfm "%dist%" "%lstf%" -C "%out%" . %versionfile% %imgdir%\* %res%\messages\*.txt %scripts%\*.class %res%\*.bat %res%\*.sh
 DEL /F /Q "%lstf%"
 GOTO :eof
 

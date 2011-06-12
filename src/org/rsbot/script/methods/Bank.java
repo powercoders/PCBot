@@ -11,11 +11,16 @@ import java.awt.*;
 public class Bank extends MethodProvider {
 	public static final Filter<RSObject> OBJECT_BANKS = new Filter<RSObject>() {
 		private final String[] bankNames = {"Bank booth", "Shantay chest", "Bank chest", "Counter"};
-
+                private final int[] noneBanks = {35648};
 		public boolean accept(final RSObject rsObject) {
 			final String name = rsObject != null ? rsObject.getName() : null;
 			for (String bankName : bankNames) {
 				if (name.equalsIgnoreCase(bankName)) {
+                                    for(int i : noneBanks){
+                                        if(i == rsObject.getID()){
+                                            return false;
+                                        }
+                                    }
 					return true;
 				}
 			}

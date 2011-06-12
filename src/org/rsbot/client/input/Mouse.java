@@ -33,10 +33,16 @@ public abstract class Mouse extends Focus implements MouseListener,
 	public abstract Component getComponent();
 
 	public int getX() {
+		if (clientX == -1) {
+			return 0;
+		}
 		return clientX;
 	}
 
 	public int getY() {
+		if (clientY == -1) {
+			return 0;
+		}
 		return clientY;
 	}
 

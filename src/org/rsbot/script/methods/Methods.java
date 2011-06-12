@@ -2,7 +2,6 @@ package org.rsbot.script.methods;
 
 import org.pcbot.net.methods.Worlds;
 import org.rsbot.Configuration;
-import org.rsbot.script.internal.reflection.Reflection;
 import org.rsbot.script.wrappers.*;
 
 import javax.imageio.ImageIO;
@@ -162,10 +161,6 @@ public class Methods {
 	 * The singleton of Worlds
 	 */
 	protected Worlds worlds;
-	/**
-	 * Reflection providers.
-	 */
-	protected Reflection reflection;
 
 
 	/**
@@ -214,7 +209,6 @@ public class Methods {
 		trade = ctx.trade;
 		web = ctx.web;
 		worlds = ctx.worlds;
-		reflection = ctx.reflection;
 	}
 
 	/**

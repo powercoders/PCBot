@@ -26,4 +26,6 @@ class RSObjectModel extends RSModel {
 	protected int getLocalY() {
 		return object.getY();
 	}
+
+
 }

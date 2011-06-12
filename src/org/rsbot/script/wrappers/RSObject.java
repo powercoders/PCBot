@@ -8,7 +8,9 @@ import org.rsbot.script.methods.MethodProvider;
 import java.awt.*;
 
 
-public class RSObject extends MethodProvider {
+public class RSObject extends MethodProvider implements RSTarget {
+
+
 	public static enum Type {
 		INTERACTABLE, FLOOR_DECORATION, BOUNDARY, WALL_DECORATION
 	}
@@ -254,6 +256,22 @@ public class RSObject extends MethodProvider {
 			}
 		}
 		return false;
+	}
+
+	public Point getPoint() {
+		RSModel model = getModel();
+		if (model != null) {
+			return model.getPoint();
+		}
+		return methods.calc.tileToScreen(getLocation());
+	}
+
+	public boolean contains(int x, int y) {
+		RSModel model = getModel();
+		if (model != null) {
+			return model.contains(x, y);
+		}
+		return methods.calc.tileToScreen(getLocation()).distance(x, y) < random(4, 9);
 	}
 
 	@Override

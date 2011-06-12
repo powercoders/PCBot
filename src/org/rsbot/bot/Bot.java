@@ -36,6 +36,7 @@ public class Bot {
 	private final BackgroundScriptHandler bsh;
 	private final BreakHandler bh;
 	private final Map<String, EventListener> listeners;
+	public static final String THREADGROUPID = "RSClient-";
 
 	/**
 	 * Whether or not user input is allowed despite a script's preference.
@@ -104,7 +105,7 @@ public class Bot {
 			loader.setStub(botStub);
 			eventManager.start();
 			botStub.setActive(true);
-			final ThreadGroup tg = new ThreadGroup("RSClient-" + hashCode());
+			final ThreadGroup tg = new ThreadGroup(THREADGROUPID + hashCode());
 			final Thread thread = new Thread(tg, loader, "Loader");
 			thread.start();
 			new Timer(true).schedule(new TimerTask() {

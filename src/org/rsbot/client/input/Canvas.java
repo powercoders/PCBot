@@ -3,7 +3,6 @@ package org.rsbot.client.input;
 import org.rsbot.Application;
 import org.rsbot.bot.Bot;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.image.*;
@@ -104,13 +103,5 @@ public class Canvas extends java.awt.Canvas {
 		if (!(e instanceof FocusEvent)) {
 			super.processEvent(e);
 		}
-	}
-
-	private void init() {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				setFocused(true);
-			}
-		});
 	}
 }

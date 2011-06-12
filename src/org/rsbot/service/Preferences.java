@@ -1,6 +1,7 @@
 package org.rsbot.service;
 
 import org.rsbot.Configuration;
+import org.rsbot.bot.RSLoader;
 import org.rsbot.util.io.IniParser;
 
 import java.io.BufferedWriter;
@@ -18,6 +19,7 @@ public class Preferences {
 	public boolean confirmations = true;
 	public boolean shutdown = false;
 	public int shutdownTime = 10;
+
 
 	private Preferences(final File store) {
 		this.store = store;
@@ -62,6 +64,7 @@ public class Preferences {
 		keys.put("confirmations", Boolean.toString(confirmations));
 		keys.put("shutdown", Boolean.toString(shutdown));
 		keys.put("shutdownTime", Integer.toString(shutdownTime));
+
 		final HashMap<String, HashMap<String, String>> data = new HashMap<String, HashMap<String, String>>(1);
 		data.put(IniParser.emptySection, keys);
 		try {

@@ -5,15 +5,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.CodeSigner;
+import java.security.CodeSource;
 
 /**
  */
 class ScriptClassLoader extends ClassLoader {
-
 	private final URL base;
 
 	public ScriptClassLoader(final URL url) {
 		base = url;
+		final CodeSource codeSource = new CodeSource(base, (CodeSigner[]) null);
 	}
 
 	@Override

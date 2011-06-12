@@ -18,7 +18,6 @@ import java.net.URL;
  * @author Paris
  */
 public class BotToolBar extends JToolBar {
-	private static final Messages msg = Messages.getInstance();
 	private static final long serialVersionUID = -1861866523519184211L;
 
 	public static final int RUN_SCRIPT = 0;
@@ -63,7 +62,7 @@ public class BotToolBar extends JToolBar {
 		screenshotButton = new JButton("Screenshot", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_PHOTO)));
 		screenshotButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				menu.doClick(msg.SAVESCREENSHOT);
+				menu.doClick(Messages.SAVESCREENSHOT);
 			}
 		});
 		screenshotButton.setFocusable(false);
@@ -73,7 +72,7 @@ public class BotToolBar extends JToolBar {
 		stopScriptButton = new JButton("Stop", new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_DELETE)));
 		stopScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				menu.doClick(msg.STOPSCRIPT);
+				menu.doClick(Messages.STOPSCRIPT);
 			}
 		});
 		stopScriptButton.setFocusable(false);
@@ -83,7 +82,7 @@ public class BotToolBar extends JToolBar {
 		userInputButton = new JButton("Input", new ImageIcon(getInputImage(inputOverride, inputState)));
 		userInputButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				menu.doTick(msg.FORCEINPUT);
+				menu.doTick(Messages.FORCEINPUT);
 			}
 		});
 		userInputButton.setFocusable(false);
@@ -95,11 +94,11 @@ public class BotToolBar extends JToolBar {
 			public void actionPerformed(ActionEvent e) {
 				switch (getScriptButton()) {
 					case RUN_SCRIPT:
-						menu.doClick(msg.RUNSCRIPT);
+						menu.doClick(Messages.RUNSCRIPT);
 						break;
 					case RESUME_SCRIPT:
 					case PAUSE_SCRIPT:
-						menu.doClick(msg.PAUSESCRIPT);
+						menu.doClick(Messages.PAUSESCRIPT);
 						break;
 				}
 			}
@@ -132,7 +131,7 @@ public class BotToolBar extends JToolBar {
 
 	public void addTab() {
 		final int idx = getComponentCount() - BUTTON_COUNT - TAB_INDEX + 1;
-		add(new BotButton(msg.TABDEFAULTTEXT, ICON_BOT), idx);
+		add(new BotButton(Messages.TABDEFAULTTEXT, ICON_BOT), idx);
 		validate();
 		setSelection(idx);
 	}
@@ -350,7 +349,7 @@ public class BotToolBar extends JToolBar {
 					if (hovered && close) {
 						final int idx = getComponentIndex(BotButton.this) - TAB_INDEX;
 						listener.actionPerformed(new ActionEvent(this,
-								ActionEvent.ACTION_PERFORMED, msg.CLOSEBOT + "." + idx));
+								ActionEvent.ACTION_PERFORMED, Messages.CLOSEBOT + "." + idx));
 					} else {
 						setSelection(getComponentIndex(BotButton.this));
 					}

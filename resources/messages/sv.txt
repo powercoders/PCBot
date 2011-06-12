@@ -1,0 +1,45 @@
+LANGUAGE=Svenska
+
+FILE=Arkiv
+EDIT=Redigera
+VIEW=Visa
+TOOLS=Verktyg
+HELP=Hjälp
+
+NEWBOT=Ny bot
+CLOSEBOT=Stäng bot
+HIDEBOT=Dölj
+ADDSCRIPT=Lägg till script
+RUNSCRIPT=Kör script
+RESUMESCRIPT=Återuppta script
+STOPSCRIPT=Stoppa script
+PAUSESCRIPT=Pausa script
+SAVESCREENSHOT=Skärmdump
+EXIT=Avsluta
+
+ACCOUNTS=Konton
+FORCEINPUT=Tvinga inmatning
+DISABLEANTIRANDOMS=Inaktivera randoms
+DISABLEAUTOLOGIN=Inaktivera inloggning
+DISABLEADS=Inaktivera annonser
+DISABLECONFIRMATIONS=Inaktivera bekräftelser
+BINDTO=Bind till adress:
+USEPASSWORD=Använd lösenord:
+LESSCPU=Mindre CPU
+DISABLECANVAS=Inaktivera canvas
+EXTDVIEWS=Utökad visa-meny
+AUTOSHUTDOWN=Automatisk avstängning (min):
+BETAPATCH=Använd beta client patch
+
+HIDETOOLBAR=Dölj verktygsfält
+HIDELOGPANE=Dölj loggpanel
+ALLDEBUGGING=All felsökning
+
+CLEARCACHE=Rensa cache
+OPTIONS=Alternativ
+
+SITE=Hemsida
+PROJECT=Projekt
+ABOUT=Om oss
+
+TABDEFAULTTEXT=Bot
