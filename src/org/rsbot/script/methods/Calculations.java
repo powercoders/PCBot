@@ -381,9 +381,9 @@ public class Calculations extends MethodProvider {
 			final int actDistSq = calculatedX * calculatedX + calculatedY * calculatedY;
 			final int mmDist = 10 + Math.max(mm2.getWidth() / 2, mm2.getHeight() / 2);
 			if (mmDist * mmDist >= actDistSq) {
-				int angle = 0x3fff & (int) methods.client.getMinimapOffset();
+				int angle = 0x3fff & methods.client.getMinimapAngle();
 				if (methods.client.getMinimapSetting() != 4) {
-					angle = 0x3fff & methods.client.getMinimapAngle() + (int) methods.client.getMinimapOffset();
+					angle = 0x3fff & (int) methods.client.getMinimapOffset() + methods.client.getMinimapAngle();
 				}
 				int cs = Calculations.SIN_TABLE[angle];
 				int cc = Calculations.COS_TABLE[angle];
