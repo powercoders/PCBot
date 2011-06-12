@@ -26,18 +26,10 @@ public class ModelTest implements PaintListener, MouseMotionListener {
 	}
 
 	public void onRepaint(Graphics render) {
+		render.setColor(Color.green);
 		for (final org.rsbot.script.wrappers.RSObject o : ctx.objects.getAll()) {
 			final RSModel model = o.getModel();
 			if (model != null && model.contains(mousePoint)) {
-				render.setColor(Color.green);
-				final Point pp = model.getPoint();
-				for (final org.rsbot.script.wrappers.RSObject o2 : ctx.objects.getAll()) {
-					final RSModel model2 = o2.getModel();
-					if (model2.contains(pp)) {
-						render.setColor(Color.red);
-						break;
-					}
-				}
 				model.drawWireFrame(render);
 				render.setColor(Color.black);
 				final Point p = model.getPoint();
