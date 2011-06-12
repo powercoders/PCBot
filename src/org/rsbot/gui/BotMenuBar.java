@@ -50,6 +50,7 @@ public class BotMenuBar extends JMenuBar {
 		DEBUG_MAP.put("NPCs", DrawNPCs.class);
 		DEBUG_MAP.put("Objects", DrawObjects.class);
 		DEBUG_MAP.put("Models", DrawModel.class);
+		DEBUG_MAP.put("Model Test", ModelTest.class);
 		DEBUG_MAP.put("Mouse", DrawMouse.class);
 		DEBUG_MAP.put("Inventory", DrawInventory.class);
 		DEBUG_MAP.put("Ground Items", DrawItems.class);
